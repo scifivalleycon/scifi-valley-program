@@ -6,112 +6,71 @@
   <meta name="theme-color" content="#3b2924">
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="styles.css">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
   <header class="topbar">
-    <div class="mini-brand" aria-label="Sci-Fi Valley Con">
-      <span class="mini-script">Sci-Fi</span>
-      <span class="mini-block">VALLEY CON</span>
-    </div>
-    <div class="topbar-meta">
-      <strong>OCT 16–18</strong>
-      <span>2026 • ALTOONA, PA</span>
-    </div>
+    <button class="brand-button" data-go="home" aria-label="Home">
+      <img src="assets/icons/app-icon-192.png" alt="">
+      <span><b>SCI-FI VALLEY CON</b><small>OCT 16–18, 2026 • ALTOONA, PA</small></span>
+    </button>
     <button id="installButton" class="install-button" hidden>ADD APP</button>
   </header>
 
   <main id="app">
     <section id="home" class="screen active">
       <section class="retro-hero">
-        <div class="burst burst-one">★</div>
-        <div class="burst burst-two">✦</div>
+        <img class="hero-icon" src="assets/icons/app-icon-512.png" alt="Sci-Fi Valley Con">
         <p class="kicker">THE OFFICIAL DIGITAL PROGRAM</p>
-
-        <div class="hero-logo" aria-label="Sci-Fi Valley Con">
-          <span class="hero-script">Sci-Fi</span>
-          <span class="hero-valley">Valley</span>
-          <span class="hero-con">CON</span>
-        </div>
-
-        <div class="hero-rule">
-          <span></span>
-          <strong>THE HOME OF NOSTALGIA</strong>
-          <span></span>
-        </div>
-
         <h1>OCTOBER 16–18, 2026</h1>
         <p class="location-copy">Blair County Convention Center • Altoona, Pennsylvania</p>
-        <p class="family-line">WHERE FANDOM BECOMES FAMILY</p>
+        <p class="family-line">THE HOME OF NOSTALGIA • WHERE FANDOM BECOMES FAMILY</p>
       </section>
 
-      <section class="now-panel paper-panel">
+      <a class="photo-cta" href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">
+        <span class="camera-badge">★</span>
+        <span><small>CELEBRITY PHOTO OPS</small><strong>ORDER YOUR PHOTO OPS</strong><em>Digital download included with photo-op purchase.</em></span>
+        <b>›</b>
+      </a>
+
+      <section class="paper-panel">
         <div class="section-heading">
           <div class="section-title-group">
             <span class="live-dot"></span>
-            <div>
-              <span class="section-kicker">AT THE CON</span>
-              <h2 id="nowHeading">Event Status</h2>
-            </div>
+            <div><span class="section-kicker">AT THE CON</span><h2 id="nowHeading">EVENT STATUS</h2></div>
           </div>
         </div>
         <div id="happeningNow" class="stack"></div>
       </section>
 
       <section class="quick-grid">
-        <button class="quick-card coral-card" data-go="guests">
-          <span class="quick-icon">★</span>
-          <strong>CELEBRITY GUESTS</strong>
-          <small>Prices, bios & appearances</small>
-        </button>
-        <button class="quick-card aqua-card" data-go="schedule">
-          <span class="quick-icon">▣</span>
-          <strong>SHOW SCHEDULE</strong>
-          <small>Panels, photo ops & events</small>
-        </button>
-        <button class="quick-card mustard-card" data-go="map">
-          <span class="quick-icon">⌖</span>
-          <strong>FLOOR MAP</strong>
-          <small>Find rooms, tables & vendors</small>
-        </button>
-        <button class="quick-card pink-card" data-go="more">
-          <span class="quick-icon">☰</span>
-          <strong>MORE TO EXPLORE</strong>
-          <small>Vendors, food, parking & info</small>
-        </button>
+        <button class="quick-card coral-card" data-go="guests"><span class="quick-icon">★</span><strong>CELEBRITY GUESTS</strong><small>Photos, bios, IMDb & photo ops</small></button>
+        <button class="quick-card aqua-card" data-go="schedule"><span class="quick-icon">▣</span><strong>SHOW SCHEDULE</strong><small>Everything happening by day</small></button>
+        <button class="quick-card mustard-card" data-go="map"><span class="quick-icon">⌖</span><strong>FLOOR MAP</strong><small>Map and booth locations</small></button>
+        <button class="quick-card pink-card" data-go="more"><span class="quick-icon">☰</span><strong>EVENT GUIDE</strong><small>Food, gaming, contests & more</small></button>
       </section>
 
       <section class="paper-panel">
         <div class="section-heading">
-          <div>
-            <span class="section-kicker">BUILD YOUR WEEKEND</span>
-            <h2>MY CON</h2>
-          </div>
+          <div><span class="section-kicker">BUILD YOUR WEEKEND</span><h2>MY CON</h2></div>
           <span id="favoriteCount" class="pill">0 SAVED</span>
         </div>
         <div id="favoritePreview" class="stack muted-empty">Tap the heart on a guest to save them here.</div>
-      </section>
-
-      <section class="nostalgia-banner">
-        <span>EST. 2011</span>
-        <strong>SCI-FI • HORROR • FANTASY • POP CULTURE</strong>
-        <span>ALTOONA, PA</span>
       </section>
     </section>
 
     <section id="guests" class="screen">
       <div class="page-title poster-title">
-        <p class="kicker">MEET OUR OCTOBER 16–18, 2026</p>
+        <p class="kicker">OCTOBER 16–18, 2026</p>
         <h1>CELEBRITY <span>GUESTS</span></h1>
-        <p>Browse the lineup, pricing, reunions and appearances.</p>
+        <p>Tap any guest for their full bio, credits, IMDb or Instagram and photo-op ordering.</p>
       </div>
 
-      <label class="search-box">
-        <span>⌕</span>
-        <input id="guestSearch" type="search" placeholder="Search guest, show or character">
-      </label>
+      <a class="inline-cta" href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">★ ORDER CELEBRITY PHOTO OPS ›</a>
 
+      <label class="search-box"><span>⌕</span><input id="guestSearch" type="search" placeholder="Search guest, show or character"></label>
       <div id="guestFilters" class="chip-row"></div>
       <div id="guestList" class="guest-list"></div>
     </section>
@@ -120,9 +79,8 @@
       <div class="page-title poster-title">
         <p class="kicker">PLAN YOUR WEEKEND</p>
         <h1>SHOW <span>SCHEDULE</span></h1>
-        <p>Panels, photo ops, activities and more.</p>
+        <p>Current public event times are loaded here. Celebrity panel and photo-op session times can be added as soon as the final schedule is published.</p>
       </div>
-
       <div id="dayFilters" class="chip-row"></div>
       <div id="scheduleList" class="schedule-list"></div>
     </section>
@@ -131,45 +89,25 @@
       <div class="page-title poster-title">
         <p class="kicker">KNOW WHERE TO GO</p>
         <h1>FLOOR <span>MAP</span></h1>
-        <p>We’ll plug your finished convention floor plan into this section.</p>
+        <p>Your final floor plan and complete vendor directory will go here next.</p>
       </div>
-
       <div class="paper-panel map-placeholder">
-        <div class="map-badge">YOU<br>ARE<br>HERE</div>
-        <div class="map-icon">⌖</div>
+        <div class="map-badge">YOU<br>ARE<br>HERE</div><div class="map-icon">⌖</div>
         <h2>FLOOR PLAN COMING NEXT</h2>
-        <p>We’ll make the finished map pinch-to-zoom and easy to move around on a phone.</p>
+        <p>Once you send the finished floor-plan image, this area will become a zoomable mobile map.</p>
       </div>
     </section>
 
     <section id="more" class="screen">
       <div class="page-title poster-title">
-        <p class="kicker">EVERYTHING ELSE</p>
-        <h1>CON <span>INFO</span></h1>
-        <p>All the practical stuff from the old printed program, now easy to update.</p>
+        <p class="kicker">THE WHOLE PROGRAM</p>
+        <h1>EVENT <span>GUIDE</span></h1>
+        <p>The information from your printed program, organized for quick use on a phone.</p>
       </div>
 
-      <div class="menu-list">
-        <button class="menu-item" id="vendorButton"><span><b>01</b> VENDORS & ARTISTS</span><span>›</span></button>
-        <button class="menu-item"><span><b>02</b> EVENTS & ACTIVITIES</span><span>›</span></button>
-        <button class="menu-item"><span><b>03</b> FOOD & CAFÉ</span><span>›</span></button>
-        <button class="menu-item"><span><b>04</b> PARKING & SHUTTLE</span><span>›</span></button>
-        <button class="menu-item"><span><b>05</b> CONVENTION INFO</span><span>›</span></button>
-      </div>
-
-      <section id="vendorSection" class="paper-panel hidden">
-        <div class="section-heading">
-          <div>
-            <span class="section-kicker">SHOP THE FLOOR</span>
-            <h2>VENDOR PREVIEW</h2>
-          </div>
-        </div>
-        <label class="search-box compact">
-          <span>⌕</span>
-          <input id="vendorSearch" type="search" placeholder="Search vendors or products">
-        </label>
-        <div id="vendorList" class="stack"></div>
-      </section>
+      <label class="search-box"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search food, gaming, contests, workshops..."></label>
+      <div id="eventFilters" class="chip-row"></div>
+      <div id="eventList" class="event-list"></div>
     </section>
   </main>
 
@@ -180,6 +118,11 @@
     <button class="nav-button" data-screen="map"><span>⌖</span><small>MAP</small></button>
     <button class="nav-button" data-screen="more"><span>☰</span><small>MORE</small></button>
   </nav>
+
+  <dialog id="guestModal" class="guest-modal">
+    <button id="closeGuestModal" class="modal-close" aria-label="Close">×</button>
+    <div id="guestModalContent"></div>
+  </dialog>
 
   <script src="app.js"></script>
 </body>

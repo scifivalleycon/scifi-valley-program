@@ -1,17 +1,7 @@
 [
   {
-    "name": "Sample Comic Vendor",
-    "categories": "Comics \u2022 Collectibles",
-    "location": "Table A01"
-  },
-  {
-    "name": "Sample Artist",
-    "categories": "Art \u2022 Prints",
-    "location": "Table B12"
-  },
-  {
-    "name": "Sample Game Vendor",
-    "categories": "Video Games \u2022 Retro Gaming",
-    "location": "Table C08"
+    "name": "Vendor directory coming soon",
+    "categories": "Your complete vendor list will be imported here.",
+    "location": "TBA"
   }
 ]

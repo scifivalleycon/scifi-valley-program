@@ -1,22 +1,41 @@
-# Sci-Fi Valley Con Digital Program
+# Sci-Fi Valley Con Digital Program — Version 3
 
-This is the starter version of the Sci-Fi Valley Con mobile event program.
+This is the first content-rich version of the October 16–18, 2026 digital program.
 
-## Files you will edit most often
+## Included
 
-- `data/guests.json` — guest names, reunions, prices and table locations
-- `data/schedule.json` — panels, events and times
-- `data/vendors.json` — vendor names, categories and locations
-- `data/events.json` — event descriptions
+- User-provided retro Sci-Fi Valley Con artwork as the PWA/app icon
+- Full celebrity guest lineup from the current celebrity-guests page
+- Full guest bios and known-for credits, rewritten for the app
+- IMDb links for actors
+- Instagram links for Wildefell Wolves and Samurai Jill
+- Event-specific celebrity images for the 13 actors currently sold in the Leap photo-op store
+- Current individual professional photo-op prices
+- Direct photo-op ordering buttons
+- Café menus
+- Con-Quest
+- Costume Contest
+- Charity Auction
+- Charity Quick Sketches
+- After Party
+- Medieval Combat Demos
+- Retro Gaming Arcade Vault hardware list
+- Tabletop Gaming
+- Trivia Tournament
+- Workshops
+- Current public schedule entries
+- Favorites / My Con
+- PWA manifest and offline/runtime caching
 
-## Main app files
+## Two specialty guest photos
 
-- `index.html` — page structure
-- `styles.css` — appearance
-- `app.js` — app behavior
-- `manifest.webmanifest` — installable web app information
-- `service-worker.js` — offline caching
+Wildefell Wolves and Samurai Jill use text placeholders because their public Instagram pages did not expose a stable image URL to the build process. Add their preferred event photos later as local files to avoid relying on a random third-party copy.
 
-## Important
+## Still to add
 
-Opening `index.html` directly from your computer may not load the JSON files because browsers restrict local file access. The easiest way to test it is to upload the project to GitHub and publish it with Cloudflare Pages.
+- Final floor plan
+- Complete vendor list
+- Final celebrity panel schedule
+- Final professional photo-op schedule
+- Any autograph/selfie/combo prices you want displayed
+- Final shuttle route/times
