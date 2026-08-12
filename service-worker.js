@@ -1,4 +1,4 @@
-const CACHE = "sfvc-program-v1";
+const CACHE = "sfvc-program-retro-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,6 +14,7 @@ const ASSETS = [
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", event => {
@@ -22,6 +23,7 @@ self.addEventListener("activate", event => {
       Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))
     )
   );
+  self.clients.claim();
 });
 
 self.addEventListener("fetch", event => {

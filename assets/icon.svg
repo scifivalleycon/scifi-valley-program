@@ -1,5 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#111111"/>
-  <circle cx="256" cy="256" r="176" fill="#f0b323"/>
-  <text x="256" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="118" font-weight="900" fill="#111111">SFVC</text>
+  <rect width="512" height="512" rx="92" fill="#3b2924"/>
+  <circle cx="256" cy="256" r="181" fill="#f4e6ce"/>
+  <path d="M89 211h334v90H89z" fill="#80c9c4" transform="rotate(-4 256 256)"/>
+  <text x="256" y="242" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="96" font-weight="900" fill="#df674f">Sci-Fi</text>
+  <text x="256" y="319" text-anchor="middle" font-family="Arial Narrow, Arial, sans-serif" font-size="64" font-weight="900" fill="#3b2924">VALLEY CON</text>
 </svg>

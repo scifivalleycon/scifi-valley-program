@@ -40,7 +40,7 @@ function renderGuestFilters() {
   const container = document.getElementById("guestFilters");
   container.innerHTML = filters.map(filter => `
     <button class="chip ${filter === state.guestFilter ? "active" : ""}" data-guest-filter="${filter}">
-      ${filter}
+      ${filter.toUpperCase()}
     </button>`).join("");
   container.querySelectorAll("[data-guest-filter]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -65,8 +65,8 @@ function renderGuests() {
       <div>
         <div class="guest-topline">
           <div>
-            <span class="tag">${g.reunion}</span>
-            <h3>${g.name}</h3>
+            <span class="tag">${g.reunion.toUpperCase()}</span>
+            <h3>${g.name.toUpperCase()}</h3>
           </div>
           <button class="favorite ${state.favorites.has(g.id) ? "saved" : ""}" data-favorite="${g.id}" aria-label="Save ${g.name}">
             ${state.favorites.has(g.id) ? "♥" : "♡"}
@@ -74,13 +74,13 @@ function renderGuests() {
         </div>
         <div class="guest-sub">${g.character}<br>${g.credits}</div>
         <div class="price-row">
-          <span class="price">Auto ${g.prices.autograph}</span>
-          <span class="price">Selfie ${g.prices.selfie}</span>
-          <span class="price">Combo ${g.prices.combo}</span>
+          <span class="price">AUTO ${g.prices.autograph}</span>
+          <span class="price">SELFIE ${g.prices.selfie}</span>
+          <span class="price">COMBO ${g.prices.combo}</span>
         </div>
       </div>
     </article>
-  `).join("") || `<div class="panel muted-empty">No guests match that search.</div>`;
+  `).join("") || `<div class="paper-panel muted-empty">No guests match that search.</div>`;
 
   document.querySelectorAll("[data-favorite]").forEach(btn => {
     btn.addEventListener("click", () => toggleFavorite(btn.dataset.favorite));
@@ -96,17 +96,17 @@ function toggleFavorite(id) {
 
 function renderFavorites() {
   const guests = state.guests.filter(g => state.favorites.has(g.id));
-  document.getElementById("favoriteCount").textContent = `${guests.length} saved`;
+  document.getElementById("favoriteCount").textContent = `${guests.length} SAVED`;
   const container = document.getElementById("favoritePreview");
   if (!guests.length) {
     container.className = "stack muted-empty";
-    container.innerHTML = "Tap ♡ on a guest to save them here.";
+    container.innerHTML = "Tap the heart on a guest to save them here.";
     return;
   }
   container.className = "stack";
   container.innerHTML = guests.slice(0, 4).map(g => `
     <div class="status-card">
-      <strong>${g.name}</strong>
+      <strong>${g.name.toUpperCase()}</strong>
       <div class="meta">${g.reunion} • ${g.table || "Table TBA"}</div>
     </div>`).join("");
 }
@@ -115,7 +115,7 @@ function renderDayFilters() {
   const days = ["Friday", "Saturday", "Sunday"];
   const container = document.getElementById("dayFilters");
   container.innerHTML = days.map(day => `
-    <button class="chip ${day === state.dayFilter ? "active" : ""}" data-day="${day}">${day}</button>
+    <button class="chip ${day === state.dayFilter ? "active" : ""}" data-day="${day}">${day.toUpperCase()}</button>
   `).join("");
   container.querySelectorAll("[data-day]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -132,7 +132,7 @@ function renderSchedule() {
     <article class="schedule-card">
       <div class="schedule-time">${e.time}</div>
       <div>
-        <strong>${e.title}</strong>
+        <strong>${e.title.toUpperCase()}</strong>
         <div class="meta">${e.location} • ${e.category}</div>
       </div>
     </article>`).join("");
@@ -152,21 +152,21 @@ function renderStatus() {
   const container = document.getElementById("happeningNow");
 
   if (!eventDates[key]) {
-    document.getElementById("nowHeading").textContent = "Coming October 16–18";
+    document.getElementById("nowHeading").textContent = "COMING OCTOBER 16–18";
     container.innerHTML = `
       <div class="status-card">
-        <strong>Fall 2026 Digital Program</strong>
-        <div class="meta">This area will automatically show what is happening during the convention.</div>
+        <strong>FALL 2026 DIGITAL PROGRAM</strong>
+        <div class="meta">During convention weekend, this area will automatically surface what is happening and what is coming up.</div>
       </div>`;
     return;
   }
 
   const today = eventDates[key];
   const items = state.schedule.filter(e => e.day === today).slice(0, 3);
-  document.getElementById("nowHeading").textContent = `Today • ${today}`;
+  document.getElementById("nowHeading").textContent = `TODAY • ${today.toUpperCase()}`;
   container.innerHTML = items.map(e => `
     <div class="status-card">
-      <strong>${e.time} • ${e.title}</strong>
+      <strong>${e.time} • ${e.title.toUpperCase()}</strong>
       <div class="meta">${e.location}</div>
     </div>`).join("");
 }
@@ -176,7 +176,7 @@ function renderVendors() {
   const vendors = state.vendors.filter(v => `${v.name} ${v.categories} ${v.location}`.toLowerCase().includes(q));
   document.getElementById("vendorList").innerHTML = vendors.map(v => `
     <div class="vendor-card">
-      <strong>${v.name}</strong>
+      <strong>${v.name.toUpperCase()}</strong>
       <div class="meta">${v.categories} • ${v.location}</div>
     </div>`).join("") || `<div class="muted-empty">No vendors match that search.</div>`;
 }
@@ -219,5 +219,5 @@ if ("serviceWorker" in navigator) {
 loadData().catch(err => {
   console.error(err);
   document.getElementById("happeningNow").innerHTML =
-    `<div class="status-card"><strong>App data could not load.</strong><div class="meta">If you opened these files directly from your computer, publish them to a web server first.</div></div>`;
+    `<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Refresh the page. If the problem continues, check the deployment.</div></div>`;
 });

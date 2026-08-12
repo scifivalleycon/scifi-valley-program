@@ -3,8 +3,8 @@
   "short_name": "SFVC Program",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b0b0c",
-  "theme_color": "#111111",
+  "background_color": "#f4e6ce",
+  "theme_color": "#3b2924",
   "icons": [
     {
       "src": "assets/icon.svg",

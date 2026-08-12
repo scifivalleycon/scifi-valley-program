@@ -3,114 +3,170 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#111111">
-  <meta name="description" content="Sci-Fi Valley Con digital event program">
+  <meta name="theme-color" content="#3b2924">
+  <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css">
-  <title>Sci-Fi Valley Con Program</title>
+  <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <div class="brand">SCI-FI VALLEY CON</div>
-      <div class="event-date">OCTOBER 16–18, 2026</div>
+    <div class="mini-brand" aria-label="Sci-Fi Valley Con">
+      <span class="mini-script">Sci-Fi</span>
+      <span class="mini-block">VALLEY CON</span>
     </div>
-    <button id="installButton" class="install-button" hidden>Install</button>
+    <div class="topbar-meta">
+      <strong>OCT 16–18</strong>
+      <span>2026 • ALTOONA, PA</span>
+    </div>
+    <button id="installButton" class="install-button" hidden>ADD APP</button>
   </header>
 
   <main id="app">
     <section id="home" class="screen active">
-      <div class="hero">
-        <p class="eyebrow">OFFICIAL DIGITAL PROGRAM</p>
-        <h1>Your convention, in your pocket.</h1>
-        <p>Guests, prices, schedules, maps, vendors and event information.</p>
-      </div>
+      <section class="retro-hero">
+        <div class="burst burst-one">★</div>
+        <div class="burst burst-two">✦</div>
+        <p class="kicker">THE OFFICIAL DIGITAL PROGRAM</p>
 
-      <section class="panel">
+        <div class="hero-logo" aria-label="Sci-Fi Valley Con">
+          <span class="hero-script">Sci-Fi</span>
+          <span class="hero-valley">Valley</span>
+          <span class="hero-con">CON</span>
+        </div>
+
+        <div class="hero-rule">
+          <span></span>
+          <strong>THE HOME OF NOSTALGIA</strong>
+          <span></span>
+        </div>
+
+        <h1>OCTOBER 16–18, 2026</h1>
+        <p class="location-copy">Blair County Convention Center • Altoona, Pennsylvania</p>
+        <p class="family-line">WHERE FANDOM BECOMES FAMILY</p>
+      </section>
+
+      <section class="now-panel paper-panel">
         <div class="section-heading">
-          <span class="live-dot"></span>
-          <h2 id="nowHeading">Event Status</h2>
+          <div class="section-title-group">
+            <span class="live-dot"></span>
+            <div>
+              <span class="section-kicker">AT THE CON</span>
+              <h2 id="nowHeading">Event Status</h2>
+            </div>
+          </div>
         </div>
         <div id="happeningNow" class="stack"></div>
       </section>
 
       <section class="quick-grid">
-        <button class="quick-card" data-go="guests">
-          <span>⭐</span><strong>Guests</strong><small>Prices & bios</small>
+        <button class="quick-card coral-card" data-go="guests">
+          <span class="quick-icon">★</span>
+          <strong>CELEBRITY GUESTS</strong>
+          <small>Prices, bios & appearances</small>
         </button>
-        <button class="quick-card" data-go="schedule">
-          <span>📅</span><strong>Schedule</strong><small>Panels & events</small>
+        <button class="quick-card aqua-card" data-go="schedule">
+          <span class="quick-icon">▣</span>
+          <strong>SHOW SCHEDULE</strong>
+          <small>Panels, photo ops & events</small>
         </button>
-        <button class="quick-card" data-go="map">
-          <span>🗺️</span><strong>Floor Map</strong><small>Find your way</small>
+        <button class="quick-card mustard-card" data-go="map">
+          <span class="quick-icon">⌖</span>
+          <strong>FLOOR MAP</strong>
+          <small>Find rooms, tables & vendors</small>
         </button>
-        <button class="quick-card" data-go="more">
-          <span>☰</span><strong>More</strong><small>Vendors & info</small>
+        <button class="quick-card pink-card" data-go="more">
+          <span class="quick-icon">☰</span>
+          <strong>MORE TO EXPLORE</strong>
+          <small>Vendors, food, parking & info</small>
         </button>
       </section>
 
-      <section class="panel">
+      <section class="paper-panel">
         <div class="section-heading">
-          <h2>My Con</h2>
-          <span id="favoriteCount" class="pill">0 saved</span>
+          <div>
+            <span class="section-kicker">BUILD YOUR WEEKEND</span>
+            <h2>MY CON</h2>
+          </div>
+          <span id="favoriteCount" class="pill">0 SAVED</span>
         </div>
-        <div id="favoritePreview" class="stack muted-empty">Tap ♡ on a guest to save them here.</div>
+        <div id="favoritePreview" class="stack muted-empty">Tap the heart on a guest to save them here.</div>
+      </section>
+
+      <section class="nostalgia-banner">
+        <span>EST. 2011</span>
+        <strong>SCI-FI • HORROR • FANTASY • POP CULTURE</strong>
+        <span>ALTOONA, PA</span>
       </section>
     </section>
 
     <section id="guests" class="screen">
-      <div class="page-title">
-        <p class="eyebrow">CELEBRITY GUESTS</p>
-        <h1>Guests</h1>
+      <div class="page-title poster-title">
+        <p class="kicker">MEET OUR OCTOBER 16–18, 2026</p>
+        <h1>CELEBRITY <span>GUESTS</span></h1>
+        <p>Browse the lineup, pricing, reunions and appearances.</p>
       </div>
+
       <label class="search-box">
-        <span>🔎</span>
+        <span>⌕</span>
         <input id="guestSearch" type="search" placeholder="Search guest, show or character">
       </label>
+
       <div id="guestFilters" class="chip-row"></div>
       <div id="guestList" class="guest-list"></div>
     </section>
 
     <section id="schedule" class="screen">
-      <div class="page-title">
-        <p class="eyebrow">PLAN YOUR DAY</p>
-        <h1>Schedule</h1>
+      <div class="page-title poster-title">
+        <p class="kicker">PLAN YOUR WEEKEND</p>
+        <h1>SHOW <span>SCHEDULE</span></h1>
+        <p>Panels, photo ops, activities and more.</p>
       </div>
+
       <div id="dayFilters" class="chip-row"></div>
       <div id="scheduleList" class="schedule-list"></div>
     </section>
 
     <section id="map" class="screen">
-      <div class="page-title">
-        <p class="eyebrow">GET AROUND</p>
-        <h1>Floor Map</h1>
+      <div class="page-title poster-title">
+        <p class="kicker">KNOW WHERE TO GO</p>
+        <h1>FLOOR <span>MAP</span></h1>
+        <p>We’ll plug your finished convention floor plan into this section.</p>
       </div>
-      <div class="panel map-placeholder">
-        <div class="map-icon">🗺️</div>
-        <h2>Your floor plan will go here</h2>
-        <p>When you provide the final floor plan, we will make it zoomable and easy to use on a phone.</p>
+
+      <div class="paper-panel map-placeholder">
+        <div class="map-badge">YOU<br>ARE<br>HERE</div>
+        <div class="map-icon">⌖</div>
+        <h2>FLOOR PLAN COMING NEXT</h2>
+        <p>We’ll make the finished map pinch-to-zoom and easy to move around on a phone.</p>
       </div>
     </section>
 
     <section id="more" class="screen">
-      <div class="page-title">
-        <p class="eyebrow">EVENT GUIDE</p>
-        <h1>More</h1>
+      <div class="page-title poster-title">
+        <p class="kicker">EVERYTHING ELSE</p>
+        <h1>CON <span>INFO</span></h1>
+        <p>All the practical stuff from the old printed program, now easy to update.</p>
       </div>
 
       <div class="menu-list">
-        <button class="menu-item" id="vendorButton"><span>🛍️ Vendors</span><span>›</span></button>
-        <button class="menu-item"><span>🎃 Events & Activities</span><span>›</span></button>
-        <button class="menu-item"><span>🍔 Food & Café</span><span>›</span></button>
-        <button class="menu-item"><span>🚌 Parking & Shuttle</span><span>›</span></button>
-        <button class="menu-item"><span>ℹ️ Convention Info</span><span>›</span></button>
+        <button class="menu-item" id="vendorButton"><span><b>01</b> VENDORS & ARTISTS</span><span>›</span></button>
+        <button class="menu-item"><span><b>02</b> EVENTS & ACTIVITIES</span><span>›</span></button>
+        <button class="menu-item"><span><b>03</b> FOOD & CAFÉ</span><span>›</span></button>
+        <button class="menu-item"><span><b>04</b> PARKING & SHUTTLE</span><span>›</span></button>
+        <button class="menu-item"><span><b>05</b> CONVENTION INFO</span><span>›</span></button>
       </div>
 
-      <section id="vendorSection" class="panel hidden">
-        <div class="section-heading"><h2>Vendor Preview</h2></div>
+      <section id="vendorSection" class="paper-panel hidden">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">SHOP THE FLOOR</span>
+            <h2>VENDOR PREVIEW</h2>
+          </div>
+        </div>
         <label class="search-box compact">
-          <span>🔎</span>
-          <input id="vendorSearch" type="search" placeholder="Search vendors">
+          <span>⌕</span>
+          <input id="vendorSearch" type="search" placeholder="Search vendors or products">
         </label>
         <div id="vendorList" class="stack"></div>
       </section>
@@ -118,11 +174,11 @@
   </main>
 
   <nav class="bottom-nav" aria-label="Main navigation">
-    <button class="nav-button active" data-screen="home"><span>⌂</span><small>Home</small></button>
-    <button class="nav-button" data-screen="guests"><span>★</span><small>Guests</small></button>
-    <button class="nav-button" data-screen="schedule"><span>▣</span><small>Schedule</small></button>
-    <button class="nav-button" data-screen="map"><span>⌖</span><small>Map</small></button>
-    <button class="nav-button" data-screen="more"><span>☰</span><small>More</small></button>
+    <button class="nav-button active" data-screen="home"><span>⌂</span><small>HOME</small></button>
+    <button class="nav-button" data-screen="guests"><span>★</span><small>GUESTS</small></button>
+    <button class="nav-button" data-screen="schedule"><span>▣</span><small>SCHEDULE</small></button>
+    <button class="nav-button" data-screen="map"><span>⌖</span><small>MAP</small></button>
+    <button class="nav-button" data-screen="more"><span>☰</span><small>MORE</small></button>
   </nav>
 
   <script src="app.js"></script>
