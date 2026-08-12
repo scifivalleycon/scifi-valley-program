@@ -1,0 +1,16 @@
+{
+  "name": "Sci-Fi Valley Con Digital Program",
+  "short_name": "SFVC Program",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0b0c",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
