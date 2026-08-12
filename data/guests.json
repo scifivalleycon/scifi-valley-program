@@ -1,0 +1,67 @@
+[
+  {
+    "id": "robin-lord-taylor",
+    "name": "Robin Lord Taylor",
+    "reunion": "Gotham",
+    "character": "Oswald Cobblepot / Penguin",
+    "credits": "Gotham \u2022 The Walking Dead \u2022 Accepted",
+    "table": "Table TBA",
+    "prices": {
+      "autograph": "$60",
+      "selfie": "$60",
+      "combo": "$100"
+    }
+  },
+  {
+    "id": "donal-logue",
+    "name": "Donal Logue",
+    "reunion": "Gotham",
+    "character": "Harvey Bullock",
+    "credits": "Gotham \u2022 Blade \u2022 Sons of Anarchy",
+    "table": "Table TBA",
+    "prices": {
+      "autograph": "TBA",
+      "selfie": "TBA",
+      "combo": "TBA"
+    }
+  },
+  {
+    "id": "david-giuntoli",
+    "name": "David Giuntoli",
+    "reunion": "Grimm",
+    "character": "Nick Burkhardt",
+    "credits": "Grimm \u2022 A Million Little Things",
+    "table": "Table TBA",
+    "prices": {
+      "autograph": "TBA",
+      "selfie": "TBA",
+      "combo": "TBA"
+    }
+  },
+  {
+    "id": "silas-weir-mitchell",
+    "name": "Silas Weir Mitchell",
+    "reunion": "Grimm",
+    "character": "Monroe",
+    "credits": "Grimm \u2022 Prison Break \u2022 My Name Is Earl",
+    "table": "Table TBA",
+    "prices": {
+      "autograph": "TBA",
+      "selfie": "TBA",
+      "combo": "TBA"
+    }
+  },
+  {
+    "id": "kimberly-j-brown",
+    "name": "Kimberly J. Brown",
+    "reunion": "Halloweentown",
+    "character": "Marnie Piper",
+    "credits": "Halloweentown \u2022 Quints",
+    "table": "Table TBA",
+    "prices": {
+      "autograph": "TBA",
+      "selfie": "TBA",
+      "combo": "TBA"
+    }
+  }
+]

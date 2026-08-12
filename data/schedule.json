@@ -1,0 +1,58 @@
+[
+  {
+    "day": "Friday",
+    "time": "5:00 PM",
+    "title": "Opening Day Programming",
+    "location": "Panel Room",
+    "category": "Panel"
+  },
+  {
+    "day": "Friday",
+    "time": "7:00 PM",
+    "title": "Evening Event",
+    "location": "Event Room",
+    "category": "Event"
+  },
+  {
+    "day": "Saturday",
+    "time": "11:00 AM",
+    "title": "Gotham Reunion Panel",
+    "location": "Panel Room",
+    "category": "Panel"
+  },
+  {
+    "day": "Saturday",
+    "time": "1:00 PM",
+    "title": "Grimm 15th Anniversary Reunion",
+    "location": "Panel Room",
+    "category": "Panel"
+  },
+  {
+    "day": "Saturday",
+    "time": "3:00 PM",
+    "title": "Halloweentown Reunion Panel",
+    "location": "Panel Room",
+    "category": "Panel"
+  },
+  {
+    "day": "Saturday",
+    "time": "5:00 PM",
+    "title": "Costume Contest",
+    "location": "Main Stage",
+    "category": "Event"
+  },
+  {
+    "day": "Sunday",
+    "time": "12:00 PM",
+    "title": "Sunday Guest Panel",
+    "location": "Panel Room",
+    "category": "Panel"
+  },
+  {
+    "day": "Sunday",
+    "time": "2:00 PM",
+    "title": "Charity Event",
+    "location": "Event Room",
+    "category": "Event"
+  }
+]
