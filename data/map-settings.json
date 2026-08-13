@@ -1,7 +1,7 @@
 [
   {
-    "published": false,
-    "directoryPublished": false,
+    "published": true,
+    "directoryPublished": true,
     "title": "Blair County Convention Center Interactive Floor Plan",
     "subtitle": "Main Level, Lower Level, Patio Vendors, celebrity areas, event rooms, gaming, food and convention services.",
     "conQuestNote": "Tables and booths marked in red are participating in Con-Quest.",
@@ -34,7 +34,7 @@
       },
       {
         "id": "miniCafe",
-        "label": "The Mini Caf\u00e9",
+        "label": "The Mini Café",
         "color": "#71b86c"
       },
       {
@@ -64,7 +64,7 @@
       },
       {
         "id": "cafe",
-        "label": "The Caf\u00e9",
+        "label": "The Café",
         "color": "#efc08b"
       },
       {
