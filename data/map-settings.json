@@ -5,7 +5,7 @@
     "title": "Blair County Convention Center Interactive Floor Plan",
     "subtitle": "Main Level, Lower Level, Patio Vendors, celebrity areas, event rooms, gaming, food and convention services.",
     "conQuestNote": "Tables and booths marked in red are participating in Con-Quest.",
-    "draftNote": "Draft map based on the uploaded floor-plan reference. Verify current vendor and celebrity assignments before publishing.",
+    "draftNote": "Draft map with editable coordinates, labels, and table/booth layout. Review every vendor and celebrity assignment before publishing.",
     "legend": [
       {
         "id": "panel1",

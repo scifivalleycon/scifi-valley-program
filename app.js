@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapFilter:"All", mapQuery:"", celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapFilter:"All", mapQuery:"", celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -30,9 +30,9 @@ document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=
 
 async function loadData(){
   const safeJson=(url,fallback=[])=>fetch(url).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
-  const [guests,schedule,events,vendors,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+  const [guests,schedule,events,vendors,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
     safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
-    safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
+    safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
     safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
     safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
   ]);
@@ -42,6 +42,7 @@ async function loadData(){
   state.schedule=schedule.map((e,i)=>({...e,id:e.id||`schedule-${e.day}-${e.time}-${i}`}));
   state.events=events;
   state.vendors=Array.isArray(vendors)?vendors:[];
+  state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
   state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
   state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
   state.celebrityPricing=Array.isArray(celebrityPricing)?celebrityPricing:[];
@@ -1061,9 +1062,9 @@ function initializeRecentAlerts(){
 
 
 
-/* Interactive vector floor plan — V4.0 */
+
+/* Interactive vector floor plan — V4.1 */
 let mapZoom=1;
-let mapSvgLoaded=false;
 let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
 
 function expandLocationCodes(value){
@@ -1088,88 +1089,160 @@ function vendorForLocation(code){
 }
 function mapDirectoryVisible(){return state.mapSettings.directoryPublished===true||mapPreviewMode}
 function mapVisible(){return state.mapSettings.published===true||mapPreviewMode}
-
+function mapLayout(){return state.mapLayout&&typeof state.mapLayout==="object"?state.mapLayout:{canvas:{width:1200,height:1780,defaultWidth:820},elements:[],locations:[]}}
+function svgTextLines(text){return String(text||"").split(/\n/)}
+function svgEscape(value=""){return escapeAppHtml(value)}
 function renderMapLegend(){
   const c=document.getElementById("mapLegend");if(!c)return;
   const items=Array.isArray(state.mapSettings.legend)?state.mapSettings.legend:[];
-  c.innerHTML=items.map(item=>`<div class="map-legend-item"><span style="background:${escapeAppHtml(item.color)}"></span><b>${escapeAppHtml(item.label)}</b></div>`).join("");
+  c.innerHTML=items.map(item=>`<div class="map-legend-item"><span style="background:${svgEscape(item.color)}"></span><b>${svgEscape(item.label)}</b></div>`).join("");
   const note=document.getElementById("mapConQuestNote");if(note)note.textContent=state.mapSettings.conQuestNote||"Red table markers indicate Con-Quest participation.";
 }
-function applyMapVendorData(){
-  const svg=document.querySelector("#mapSvgHost svg");if(!svg)return;
-  svg.querySelectorAll("[data-location]").forEach(el=>{
-    const code=el.dataset.location,vendor=vendorForLocation(code),table=el.matches(".map-table")?el:el.querySelector(".map-table"),cq=Boolean(vendor?.conQuest);
-    if(table)table.classList.toggle("conquest",cq);
-    const name=mapDirectoryVisible()&&vendor?vendor.name:"";
-    el.setAttribute("aria-label",name?`${code}: ${name}`:code);
+function buildMapSvg(){
+  const layout=mapLayout();
+  const canvas=layout.canvas||{};
+  const w=Number(canvas.width||1200),h=Number(canvas.height||1780);
+  const out=[];
+  out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="floorPlanTitle floorPlanDesc">`);
+  out.push(`<title id="floorPlanTitle">Sci-Fi Valley Con interactive convention center floor plan</title>`);
+  out.push(`<desc id="floorPlanDesc">Interactive venue map with rooms, exhibit halls, celebrity areas, patio vendors and table locations.</desc>`);
+  out.push(`<style>
+    .outline{fill:#fffdf4;stroke:#352720;stroke-width:5;stroke-linejoin:round}
+    .zone{stroke:#352720;stroke-width:4}
+    .zone-label,.level-label,.tiny{fill:#291f1a;text-anchor:middle}
+    .zone-label{font-family:Georgia,serif;font-weight:800}
+    .level-label{font-family:Arial,sans-serif;font-weight:900;letter-spacing:2px}
+    .hall-floor{fill:#ebe8dd;stroke:#352720;stroke-width:4}
+    .stairs{fill:#fffdf4;stroke:#352720;stroke-width:3}
+    .tiny{font-family:Arial,sans-serif;font-size:12px;font-weight:800}
+    .map-table{fill:#fffdf6;stroke:#40322b;stroke-width:2;cursor:pointer}
+    .map-table-label{font-family:Arial,sans-serif;font-size:11px;font-weight:800;fill:#2f2520;text-anchor:middle;pointer-events:none}
+    .map-table.conquest{fill:#e65338}
+    .map-table.selected{stroke:#1f6e77;stroke-width:6}
+    .map-table.match{stroke:#e2ad34;stroke-width:6}
+    .service{fill:#f2bd3f;stroke:#352720;stroke-width:3}
+  </style>`);
+  (layout.elements||[]).forEach(item=>{
+    const cls=item.className?` class="${svgEscape(item.className)}"`:'';
+    const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';
+    if(item.type==="rect")out.push(`<rect id="${svgEscape(item.id)}"${cls} x="${Number(item.x)||0}" y="${Number(item.y)||0}" width="${Number(item.width)||0}" height="${Number(item.height)||0}" rx="${Number(item.rx||0)}"${fill}/>`);
+    else if(item.type==="path")out.push(`<path id="${svgEscape(item.id)}"${cls} d="${svgEscape(item.d||'')}"${fill}/>`);
+    else if(item.type==="text"){
+      const lines=svgTextLines(item.text), x=Number(item.x)||0, y=Number(item.y)||0;
+      const anchor=item.anchor||'middle', fontSize=Number(item.fontSize||22), lineHeight=Number(item.lineHeight||1.15), fillText=item.fill||'#291f1a';
+      const weight=item.fontWeight||'800', style=item.fontStyle||'normal', family=item.fontFamily||'Georgia, serif';
+      out.push(`<text id="${svgEscape(item.id)}"${cls} x="${x}" y="${y}" text-anchor="${svgEscape(anchor)}" font-size="${fontSize}" font-weight="${svgEscape(weight)}" font-style="${svgEscape(style)}" font-family="${svgEscape(family)}" fill="${svgEscape(fillText)}">`);
+      lines.forEach((line,index)=>{
+        const dy=index===0?0:(fontSize*lineHeight);
+        out.push(`<tspan x="${x}" dy="${index===0?0:dy}">${svgEscape(line)}</tspan>`);
+      });
+      out.push(`</text>`);
+    }
   });
+  (layout.locations||[]).forEach(loc=>{
+    if(loc.hidden)return;
+    const code=String(loc.id||'').toUpperCase();
+    const shape=(loc.shape||'rect').toLowerCase();
+    const rot=Number(loc.rotation||0);
+    const x=Number(loc.x||0), y=Number(loc.y||0), w=Number(loc.w||28), h=Number(loc.h||12);
+    const cx=x+w/2, cy=y+h/2;
+    const transform=rot?` transform="rotate(${rot} ${cx} ${cy})"`:'';
+    if(shape==='booth'){
+      out.push(`<g id="booth-${code}" data-location="${code}"${transform}>`);
+      out.push(`<rect id="table-${code}" class="map-table" data-location="${code}" x="${x}" y="${y}" width="${w}" height="${h}" rx="2"/>`);
+      out.push(`<path d="M${x},${y} L${x+w/2},${y+h/2} L${x+w},${y} Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>`);
+      out.push(`<path d="M${x},${y+h} L${x+w/2},${y+h/2} L${x+w},${y+h} Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>`);
+      out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${(Number(loc.labelDy)===Number(loc.labelDy)?Number(loc.labelDy):y+h+14)}">${svgEscape(code)}</text>`);
+      out.push(`</g>`);
+    }else{
+      const tableClass=shape==='service'?'service':'map-table';
+      out.push(`<rect id="table-${code}" class="${tableClass}" data-location="${code}" x="${x}" y="${y}" width="${w}" height="${h}" rx="1"${transform}/>`);
+      out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${(Number(loc.labelDy)===Number(loc.labelDy)?Number(loc.labelDy):(y+h+11))}">${svgEscape(code)}</text>`);
+    }
+  });
+  out.push(`<text class="tiny" x="600" y="1756">VECTOR FLOOR PLAN • TAP A TABLE OR BOOTH FOR DETAILS</text>`);
+  out.push(`</svg>`);
+  return out.join('');
 }
-async function loadFloorPlanSvg(){
-  const host=document.getElementById("mapSvgHost");if(!host||mapSvgLoaded)return;
-  try{
-    const response=await fetch("assets/floor-plan.svg",{cache:"no-store"});if(!response.ok)throw new Error(`Map SVG returned ${response.status}`);
-    host.innerHTML=await response.text();mapSvgLoaded=true;applyMapVendorData();bindMapLocations();applyMapZoom();
-  }catch(err){
-    host.innerHTML=`<div class="paper-panel muted-empty">Interactive floor plan could not load. Refresh the app or check the latest deployment.</div>`;console.warn("Floor plan SVG failed",err);
-  }
+function applyMapVendorData(){
+  const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
+  svg.querySelectorAll('[data-location]').forEach(el=>{
+    const code=el.dataset.location,vendor=vendorForLocation(code),table=el.matches('.map-table,.service')?el:el.querySelector('.map-table,.service'),cq=Boolean(vendor?.conQuest);
+    if(table&&table.classList.contains('map-table'))table.classList.toggle('conquest',cq);
+    const name=mapDirectoryVisible()&&vendor?vendor.name:'';
+    el.setAttribute('aria-label',name?`${code}: ${name}`:code);
+  });
 }
 function bindMapLocations(){
-  document.querySelectorAll("#mapSvgHost [data-location]").forEach(el=>{
-    if(el.dataset.mapBound==="yes")return;el.dataset.mapBound="yes";
-    el.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openMapLocation(el.dataset.location)});
+  document.querySelectorAll('#mapSvgHost [data-location]').forEach(el=>{
+    if(el.dataset.mapBound==='yes')return;el.dataset.mapBound='yes';
+    el.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();openMapLocation(el.dataset.location)});
   });
 }
+function renderFloorPlanSvg(){
+  const host=document.getElementById('mapSvgHost');if(!host)return;
+  host.innerHTML=buildMapSvg();
+  applyMapVendorData();
+  bindMapLocations();
+  applyMapZoom();
+}
 function openMapLocation(code){
-  const vendor=vendorForLocation(code),content=document.getElementById("mapLocationModalContent"),modal=document.getElementById("mapLocationModal");if(!content||!modal)return;
+  const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
   if(vendor&&mapDirectoryVisible()){
     content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
   }else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
-  if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");
+  if(typeof modal.showModal==='function')modal.showModal();else modal.setAttribute('open','');
 }
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase(),filter=state.mapFilter;
-  const filterOk=filter==="All"||(filter==="Con-Quest"&&v.conQuest===true)||v.area===filter;
+  const filterOk=filter==='All'||(filter==='Con-Quest'&&v.conQuest===true)||v.area===filter;
   if(!filterOk)return false;if(!q)return true;
-  return `${v.name} ${v.categories||""} ${v.location||""} ${v.area||""}`.toLowerCase().includes(q);
+  return `${v.name} ${v.categories||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
 }
 function renderMapDirectory(){
-  const list=document.getElementById("mapDirectoryList"),count=document.getElementById("mapDirectoryCount"),notice=document.getElementById("mapDirectoryNotice");if(!list||!count)return;
+  const list=document.getElementById('mapDirectoryList'),count=document.getElementById('mapDirectoryCount'),notice=document.getElementById('mapDirectoryNotice');if(!list||!count)return;
   if(!mapDirectoryVisible()){
-    list.innerHTML="";count.textContent="DRAFT";notice?.classList.remove("hidden");if(notice)notice.textContent="Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.";highlightMapSearch();return;
+    list.innerHTML='';count.textContent='DRAFT';notice?.classList.remove('hidden');if(notice)notice.textContent='Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.';highlightMapSearch();return;
   }
-  notice?.classList.add("hidden");
+  notice?.classList.add('hidden');
   const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));
   count.textContent=String(rows.length);
-  list.innerHTML=rows.map(v=>`<button class="map-directory-card" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':""}<b>›</b></button>`).join("")||`<div class="paper-panel muted-empty">No vendors match this search/filter.</div>`;
-  list.querySelectorAll("[data-map-vendor]").forEach(btn=>btn.addEventListener("click",()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(!v)return;const first=expandLocationCodes(v.location)[0];focusMapLocation(first);openMapLocation(first)}));
+  list.innerHTML=rows.map(v=>`<button class="map-directory-card" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search/filter.</div>`;
+  list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(!v)return;const first=expandLocationCodes(v.location)[0];focusMapLocation(first);openMapLocation(first)}));
   highlightMapSearch();
 }
 function highlightMapSearch(){
-  const svg=document.querySelector("#mapSvgHost svg");if(!svg)return;
-  svg.querySelectorAll(".map-table").forEach(el=>el.classList.remove("match","selected"));
+  const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
+  svg.querySelectorAll('.map-table').forEach(el=>el.classList.remove('match','selected'));
   if(!mapDirectoryVisible())return;
-  state.vendors.filter(mapVendorMatches).forEach(v=>expandLocationCodes(v.location).forEach(code=>document.getElementById(`table-${code}`)?.classList.add("match")));
+  state.vendors.filter(mapVendorMatches).forEach(v=>expandLocationCodes(v.location).forEach(code=>document.getElementById(`table-${code}`)?.classList.add('match')));
 }
 function focusMapLocation(code){
   const target=document.getElementById(`table-${code}`);if(!target)return;
-  document.querySelectorAll("#mapSvgHost .map-table.selected").forEach(el=>el.classList.remove("selected"));target.classList.add("selected");target.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});
+  document.querySelectorAll('#mapSvgHost .map-table.selected').forEach(el=>el.classList.remove('selected'));
+  target.classList.add('selected');
+  target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
 }
 function applyMapZoom(){
-  const svg=document.querySelector("#mapSvgHost svg");if(!svg)return;svg.style.width=`${Math.round(760*mapZoom)}px`;svg.style.maxWidth="none";
+  const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
+  const base=Number(mapLayout().canvas?.defaultWidth||820);
+  svg.style.width=`${Math.round(base*mapZoom)}px`;
+  svg.style.maxWidth='none';
 }
 function renderMapScreen(){
-  const content=document.getElementById("mapPublishedContent"),draft=document.getElementById("mapDraftNotice"),subtitle=document.getElementById("mapSubtitle"),draftNote=document.getElementById("mapDraftNote");
-  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||"Interactive convention floor plan.";if(draftNote)draftNote.textContent=state.mapSettings.draftNote||"This map is still being prepared.";
-  const visible=mapVisible();content?.classList.toggle("hidden",!visible);draft?.classList.toggle("hidden",state.mapSettings.published===true);
-  if(!visible)return;renderMapLegend();loadFloorPlanSvg().then(()=>{applyMapVendorData();renderMapDirectory()});
+  const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
+  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';
+  const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);
+  if(!visible)return;
+  renderMapLegend();renderFloorPlanSvg();renderMapDirectory();
 }
-document.getElementById("mapSearch")?.addEventListener("input",event=>{state.mapQuery=event.target.value;renderMapDirectory()});
-document.querySelectorAll("[data-map-filter]")?.forEach(btn=>btn.addEventListener("click",()=>{state.mapFilter=btn.dataset.mapFilter;document.querySelectorAll("[data-map-filter]").forEach(x=>x.classList.toggle("active",x===btn));renderMapDirectory()}));
-document.getElementById("mapZoomIn")?.addEventListener("click",()=>{mapZoom=Math.min(2.5,mapZoom+.25);applyMapZoom()});
-document.getElementById("mapZoomOut")?.addEventListener("click",()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});
-document.getElementById("mapZoomReset")?.addEventListener("click",()=>{mapZoom=1;applyMapZoom()});
-document.getElementById("closeMapLocationModal")?.addEventListener("click",()=>document.getElementById("mapLocationModal")?.close());
-document.getElementById("mapLocationModal")?.addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
+document.querySelectorAll('[data-map-filter]')?.forEach(btn=>btn.addEventListener('click',()=>{state.mapFilter=btn.dataset.mapFilter;document.querySelectorAll('[data-map-filter]').forEach(x=>x.classList.toggle('active',x===btn));renderMapDirectory()}));
+document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});
+document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});
+document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
+document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
+document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
 function renderAll(){applyEventSettings();renderMapScreen();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);

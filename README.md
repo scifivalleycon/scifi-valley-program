@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.0 Map Preview
+# Sci-Fi Valley Con Digital Program — V4.1 Map Editor
 
 Cumulative update from V3.6.
 
@@ -243,3 +243,12 @@ Safety:
 The uploaded source map contains the June 2026 celebrity lineup, so the initial map and directory are intentionally DRAFT / unpublished. Use `?mapPreview=1` on the attendee-app URL to preview it before publishing.
 
 Seed directory contains 177 records transcribed from the uploaded map.
+
+
+## V4.1 improvements
+
+- replaced the one-off SVG asset with a data-driven `data/map-layout.json` layout
+- refined table and booth placement to better follow the original floor-plan reference
+- fixed room labels so they sit neatly inside the colored spaces
+- attendee app now renders the map from editable layout data
+- foundation added for admin-side live map editing
