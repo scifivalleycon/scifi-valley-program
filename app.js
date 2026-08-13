@@ -213,6 +213,96 @@ document.getElementById("installButton").addEventListener("click",async()=>{
     showInstallHelp();
   }
 });
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"));
+
+
+
+/* ----- Install / Add to Home Screen experience ----- */
+const installCard=document.getElementById("installAppCard");
+const installCardButton=document.getElementById("installAppCardButton");
+const installCardHint=document.getElementById("installCardHint");
+const installHelpModal=document.getElementById("installHelpModal");
+const installHelpContent=document.getElementById("installHelpContent");
+
+function isStandaloneMode(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
+}
+function isIOSDevice(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+function isAndroidDevice(){
+  return /android/i.test(navigator.userAgent);
+}
+function updateInstallExperience(){
+  if(!installCard)return;
+
+  // Already installed: never show another install promotion.
+  if(isStandaloneMode()){
+    document.body.classList.add("is-standalone");
+    installCard.classList.add("hidden");
+    const topInstall=document.getElementById("installButton");
+    if(topInstall)topInstall.hidden=true;
+    return;
+  }
+
+  document.body.classList.remove("is-standalone");
+
+  // Respect dismissal.
+  if(localStorage.getItem("sfvc-install-card-dismissed")==="yes"){
+    installCard.classList.add("hidden");
+    return;
+  }
+
+  // iPhone/iPad: manual Safari Add to Home Screen is supported.
+  if(isIOSDevice()){
+    installCard.classList.remove("hidden");
+    if(installCardButton)installCardButton.textContent="ADD TO HOME SCREEN";
+    if(installCardHint)installCardHint.textContent="Open in Safari, then use Share → Add to Home Screen.";
+    return;
+  }
+
+  // Desktop / Android: only advertise installation if the browser
+  // has explicitly provided an install prompt.
+  if(deferredPrompt){
+    installCard.classList.remove("hidden");
+    if(installCardButton){
+      installCardButton.textContent=isAndroidDevice() ? "INSTALL APP" : "INSTALL DESKTOP APP";
+    }
+    if(installCardHint){
+      installCardHint.textContent=isAndroidDevice()
+        ? "Install the web app for a Home Screen shortcut and faster access."
+        : "Install Sci-Fi Valley Con as a desktop app with its own shortcut and standalone window.";
+    }
+    return;
+  }
+
+  // Unsupported/non-installable browser: show no install control.
+  installCard.classList.add("hidden");
+}
+function showInstallHelp(){
+  if(!installHelpContent || !isIOSDevice())return;
+  installHelpContent.innerHTML=`<p>On iPhone or iPad:</p><ol><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button.</li><li>Choose <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>`;
+  if(typeof installHelpModal.showModal==="function")installHelpModal.showModal();
+}
+installCardButton?.addEventListener("click",async()=>{
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const choice=await deferredPrompt.userChoice;
+    deferredPrompt=null;
+
+    if(choice && choice.outcome==="accepted"){
+      installCard.classList.add("hidden");
+      const topInstall=document.getElementById("installButton");
+      if(topInstall)topInstall.hidden=true;
+    }else{
+      updateInstallExperience();
+    }
+  }else if(isIOSDevice()){
+    showInstallHelp();
+  }else{
+    installCard.classList.add("hidden");
+  }
+});
 document.getElementById("dismissInstallCard")?.addEventListener("click",()=>{
   localStorage.setItem("sfvc-install-card-dismissed","yes");
   installCard?.classList.add("hidden");

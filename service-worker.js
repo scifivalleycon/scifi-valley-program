@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v3-4-restored";
+const CACHE="sfvc-program-v3-4-1";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json",
