@@ -619,14 +619,17 @@ async function enablePushFromPrompt(){
 
 
 
-/* Anonymous app-usage analytics — V3.8
+/* Anonymous app-usage analytics — V3.8.2
    Tracks only a locally generated random installation ID.
    No attendee names, email addresses, favorites, schedule selections, or notification
    content are sent by this analytics feature. */
 const ANALYTICS_ID_KEY="sfvc-anonymous-analytics-id";
 const ANALYTICS_HEARTBEAT_MS=120000;
+const ANALYTICS_RETRY_MS=10000;
 let analyticsHeartbeatTimer=null;
-let analyticsLastSent=0;
+let analyticsRetryTimer=null;
+let analyticsLastSuccessfulSend=0;
+let analyticsInitialized=false;
 
 function getAnonymousAnalyticsId(){
   let id=localStorage.getItem(ANALYTICS_ID_KEY);
@@ -644,43 +647,78 @@ function getAnonymousAnalyticsId(){
   return id;
 }
 
-async function sendAnalyticsHeartbeat(eventType="heartbeat"){
-  if(document.visibilityState!=="visible")return;
+function analyticsPayload(eventType){
+  return JSON.stringify({
+    visitorId:getAnonymousAnalyticsId(),
+    eventType,
+    appOrigin:location.origin
+  });
+}
+
+function scheduleAnalyticsRetry(){
+  clearTimeout(analyticsRetryTimer);
+  analyticsRetryTimer=setTimeout(()=>{
+    if(document.visibilityState==="visible")sendAnalyticsHeartbeat("retry",{force:true});
+  },ANALYTICS_RETRY_MS);
+}
+
+async function sendAnalyticsHeartbeat(eventType="heartbeat",{force=false}={}){
+  if(document.visibilityState!=="visible")return false;
+
   const base=pushApiBase();
-  if(!base)return;
+  if(!base)return false;
 
   const now=Date.now();
-  // Avoid accidental duplicate writes caused by clustered visibility/focus events.
-  if(eventType!=="open"&&now-analyticsLastSent<45000)return;
-  analyticsLastSent=now;
+  if(!force && eventType!=="open" && now-analyticsLastSuccessfulSend<45000)return true;
 
   try{
-    await fetch(`${base}/v1/analytics/heartbeat`,{
+    // text/plain is intentionally used here. It is a CORS "simple request",
+    // which avoids the extra OPTIONS preflight that application/json requires.
+    const response=await fetch(`${base}/v1/analytics/heartbeat`,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        visitorId:getAnonymousAnalyticsId(),
-        eventType
-      }),
-      keepalive:true
+      mode:"cors",
+      credentials:"omit",
+      cache:"no-store",
+      headers:{"Content-Type":"text/plain;charset=UTF-8"},
+      body:analyticsPayload(eventType)
     });
+
+    if(!response.ok){
+      const message=await response.text().catch(()=>"");
+      console.warn("Analytics heartbeat rejected",response.status,message);
+      scheduleAnalyticsRetry();
+      return false;
+    }
+
+    analyticsLastSuccessfulSend=Date.now();
+    clearTimeout(analyticsRetryTimer);
+    return true;
   }catch(err){
-    // Analytics must never interfere with the attendee experience.
-    console.debug("Analytics heartbeat unavailable",err);
+    console.warn("Analytics heartbeat failed",err);
+    scheduleAnalyticsRetry();
+    return false;
   }
 }
 
 function initializeAppAnalytics(){
+  if(analyticsInitialized)return;
+  analyticsInitialized=true;
+
   clearInterval(analyticsHeartbeatTimer);
-  sendAnalyticsHeartbeat("open");
+  sendAnalyticsHeartbeat("open",{force:true});
+
   analyticsHeartbeatTimer=setInterval(()=>{
     if(document.visibilityState==="visible")sendAnalyticsHeartbeat("heartbeat");
   },ANALYTICS_HEARTBEAT_MS);
 
   document.addEventListener("visibilitychange",()=>{
-    if(document.visibilityState==="visible")sendAnalyticsHeartbeat("heartbeat");
+    if(document.visibilityState==="visible"){
+      sendAnalyticsHeartbeat("foreground",{force:true});
+    }
   });
-  window.addEventListener("focus",()=>sendAnalyticsHeartbeat("heartbeat"));
+
+  window.addEventListener("focus",()=>sendAnalyticsHeartbeat("focus"));
+  window.addEventListener("online",()=>sendAnalyticsHeartbeat("online",{force:true}));
 }
 
 function pushApiBase(){

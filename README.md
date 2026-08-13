@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.8.1
+# Sci-Fi Valley Con Digital Program — V3.8.2
 
 Cumulative update from V3.6.
 
@@ -125,3 +125,22 @@ Also:
 
 The test parameter displays the popup without changing notification permission or
 unsubscribing the device.
+
+
+## V3.8.2 — analytics reliability fix
+
+The original analytics heartbeat used cross-origin application/json, which required a
+CORS preflight. It also updated its local throttle timestamp before confirming that
+the analytics Worker actually accepted the request.
+
+V3.8.2:
+- sends analytics heartbeats as text/plain simple POST requests
+- checks the HTTP response before considering a heartbeat successful
+- retries a failed heartbeat after 10 seconds while the app remains visible
+- sends an immediate heartbeat when the app opens, returns to the foreground, or
+  regains network connectivity
+- only throttles after a confirmed successful heartbeat
+- prevents duplicate analytics initialization/listeners
+- bumps the PWA cache
+
+All notification prompt, schedule, celebrity and PWA features remain unchanged.
