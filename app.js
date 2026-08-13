@@ -198,7 +198,8 @@ let deferredPrompt;
 window.addEventListener("beforeinstallprompt",e=>{
   e.preventDefault();
   deferredPrompt=e;
-  document.getElementById("installButton").hidden=false;
+  const topInstall=document.getElementById("installButton");
+  if(topInstall)topInstall.hidden=false;
   updateInstallExperience();
 });
 document.getElementById("installButton").addEventListener("click",async()=>{
