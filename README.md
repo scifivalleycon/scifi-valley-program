@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.8.5
+# Sci-Fi Valley Con Digital Program — V3.9
 
 Cumulative update from V3.6.
 
@@ -199,3 +199,23 @@ Implementation:
 
 Current backend-managed JSON was checked against the live GitHub repository before
 packaging so this revision does not roll back admin-managed content.
+
+
+## V3.9 — Recent Event Alerts
+
+Adds a Recent Event Alerts section to the attendee home screen.
+
+Behavior:
+- every broadcast sent through Admin automatically becomes a home-screen update
+- newest updates appear first
+- high-urgency broadcasts receive a stronger visual treatment
+- the feed refreshes on app open, when the app returns to the foreground, when
+  internet connectivity returns, and every 5 minutes while visible
+- the public app filters out alerts older than 72 hours
+- Notify V1.5 also filters the public feed at 72 hours, so expired alerts disappear
+  even if the attendee app has remained open
+- the Admin's longer internal broadcast history is not deleted
+- optional broadcast destination URLs remain clickable when they point to the
+  attendee app
+
+No Admin update is required.

@@ -410,3 +410,90 @@ button,
   -webkit-user-select: none;
   user-select: none;
 }
+
+
+/* Recent Event Alerts — V3.9 */
+.recent-alerts-panel{
+  position:relative;
+  overflow:hidden;
+  border-color:var(--coral2);
+}
+.recent-alerts-panel::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:5px;
+  background:var(--coral);
+}
+.alert-feed-bell{
+  display:grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  flex:0 0 auto;
+  background:var(--coral);
+  border:2px solid var(--ink);
+  border-radius:50%;
+  font-size:18px;
+}
+.recent-alerts-list{
+  display:grid;
+  gap:10px;
+}
+.recent-alert-card{
+  padding:13px;
+  background:rgba(238,117,72,.10);
+  border:2px solid var(--ink);
+  border-radius:8px;
+  box-shadow:3px 4px 0 rgba(58,39,32,.12);
+}
+.recent-alert-card.high-priority{
+  background:rgba(226,173,52,.20);
+  border-width:3px;
+}
+.recent-alert-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  color:var(--coral2);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.065em;
+}
+.recent-alert-meta time{
+  color:var(--ink2);
+  white-space:nowrap;
+}
+.recent-alert-card h3{
+  margin:0 0 5px;
+  font-size:15px;
+  line-height:1.15;
+}
+.recent-alert-card p{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:11px;
+  line-height:1.45;
+}
+.recent-alert-link{
+  display:inline-block;
+  margin-top:9px;
+  padding:6px 8px;
+  background:var(--coral);
+  border:2px solid var(--ink);
+  border-radius:5px;
+  color:var(--cream);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-decoration:none;
+}
+.recent-alerts-retention{
+  margin:10px 0 0;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:8px;
+  font-style:italic;
+}

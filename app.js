@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -929,6 +929,134 @@ function renderEvents(){
     </details>`).join("") || `<div class="paper-panel muted-empty">No program information matches that search.</div>`;
 }
 
+
+/* Recent Event Alerts — V3.9
+   Broadcasts sent by staff remain visible on the home screen for 72 hours. */
+const RECENT_ALERT_RETENTION_MS=72*60*60*1000;
+const RECENT_ALERT_REFRESH_MS=5*60*1000;
+let recentAlertRefreshTimer=null;
+let recentAlertsInitialized=false;
+
+function escapeAppHtml(value=""){
+  return String(value).replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[char]));
+}
+
+function parseBroadcastTimestamp(value){
+  const date=new Date(String(value||""));
+  return Number.isNaN(date.getTime())?null:date;
+}
+
+function formatAlertAge(date){
+  if(!date)return "RECENT UPDATE";
+  const seconds=Math.max(0,Math.floor((Date.now()-date.getTime())/1000));
+  if(seconds<60)return "JUST NOW";
+  const minutes=Math.floor(seconds/60);
+  if(minutes<60)return `${minutes} MIN${minutes===1?"":"S"} AGO`;
+  const hours=Math.floor(minutes/60);
+  if(hours<24)return `${hours} HOUR${hours===1?"":"S"} AGO`;
+  const days=Math.floor(hours/24);
+  return `${days} DAY${days===1?"":"S"} AGO`;
+}
+
+function safeAlertUrl(value){
+  const raw=String(value||"/").trim();
+  if(!raw||raw==="/"||raw==="./")return "";
+
+  try{
+    const url=new URL(raw,location.origin);
+    if(url.origin!==location.origin)return "";
+    return url.href;
+  }catch{
+    return "";
+  }
+}
+
+function renderRecentAlerts(){
+  const panel=document.getElementById("recentAlertsPanel");
+  const list=document.getElementById("recentAlertsList");
+  const count=document.getElementById("recentAlertsCount");
+  if(!panel||!list||!count)return;
+
+  const cutoff=Date.now()-RECENT_ALERT_RETENTION_MS;
+  const alerts=(state.recentAlerts||[])
+    .map(item=>({...item,_date:parseBroadcastTimestamp(item.createdAt)}))
+    .filter(item=>item._date&&item._date.getTime()>=cutoff)
+    .sort((a,b)=>b._date-a._date);
+
+  state.recentAlerts=alerts.map(({_date,...item})=>item);
+
+  if(!alerts.length){
+    panel.classList.add("hidden");
+    list.innerHTML="";
+    count.textContent="0";
+    return;
+  }
+
+  panel.classList.remove("hidden");
+  count.textContent=`${alerts.length} ${alerts.length===1?"UPDATE":"UPDATES"}`;
+
+  list.innerHTML=alerts.map(item=>{
+    const url=safeAlertUrl(item.url);
+    const urgency=String(item.urgency||"normal").toLowerCase();
+    const urgencyClass=urgency==="high"?" high-priority":"";
+    return `<article class="recent-alert-card${urgencyClass}">
+      <div class="recent-alert-meta">
+        <span>${urgency==="high"?"⚠ IMPORTANT UPDATE":"🔔 EVENT UPDATE"}</span>
+        <time datetime="${escapeAppHtml(item.createdAt)}">${formatAlertAge(item._date)}</time>
+      </div>
+      <h3>${escapeAppHtml(item.title)}</h3>
+      <p>${escapeAppHtml(item.body)}</p>
+      ${url?`<a class="recent-alert-link" href="${escapeAppHtml(url)}">VIEW UPDATE ›</a>`:""}
+    </article>`;
+  }).join("");
+}
+
+async function loadRecentAlerts(){
+  const base=pushApiBase();
+  if(!base)return;
+
+  try{
+    const response=await fetch(`${base}/v1/updates`,{
+      method:"GET",
+      mode:"cors",
+      credentials:"omit",
+      cache:"no-store"
+    });
+    if(!response.ok)throw new Error(`Event alerts returned ${response.status}.`);
+
+    const result=await response.json();
+    state.recentAlerts=Array.isArray(result.broadcasts)?result.broadcasts:[];
+    renderRecentAlerts();
+  }catch(err){
+    console.warn("Recent event alerts unavailable",err);
+    // Do not remove alerts already loaded during this session if a refresh fails.
+    renderRecentAlerts();
+  }
+}
+
+function initializeRecentAlerts(){
+  if(recentAlertsInitialized)return;
+  recentAlertsInitialized=true;
+
+  loadRecentAlerts();
+  clearInterval(recentAlertRefreshTimer);
+  recentAlertRefreshTimer=setInterval(()=>{
+    if(document.visibilityState==="visible")loadRecentAlerts();
+  },RECENT_ALERT_REFRESH_MS);
+
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible")loadRecentAlerts();
+  });
+  window.addEventListener("online",loadRecentAlerts);
+}
+
+
 function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
@@ -1139,5 +1267,6 @@ document.addEventListener("dblclick",event=>{
 },{passive:false});
 
 initializeAppAnalytics();
+initializeRecentAlerts();
 
 loadData().catch(err=>{console.error(err);document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Refresh the page or check the latest Cloudflare deployment.</div></div>`});
