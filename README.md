@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.3 Editable Map Objects
+# Sci-Fi Valley Con Digital Program — V4.4 Full Map Baseline
 
 Cumulative update from V3.6.
 
@@ -270,3 +270,14 @@ Seed directory contains 177 records transcribed from the uploaded map.
 - path-based areas support translate/scale/rotation transforms
 - hidden map objects are excluded from the attendee map
 - this remains a CODE-ONLY package and does not overwrite live map-layout.json or vendors.json
+
+
+## V4.4 full map baseline
+
+Complete attendee package paired with Admin V2.4.
+
+The package includes the full `data/map-layout.json` floor plan, vendor data,
+map settings, all other event data, app code, PWA assets, and service worker.
+
+This release intentionally provides a complete known baseline while the map
+designer is being stabilized.
