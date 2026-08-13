@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.7.3
+# Sci-Fi Valley Con Digital Program — V3.8
 
 Cumulative update from V3.6.
 
@@ -87,3 +87,24 @@ No permanent dismissal is stored for the every-open modal. It is intentionally
 shown again on the next fresh app open while Event Alerts remain disabled.
 
 All V3.7.2 features remain intact.
+
+
+## V3.8 — anonymous usage analytics
+
+The attendee app now sends a lightweight anonymous heartbeat to the existing
+Sci-Fi Valley Con notification Worker while the app is visibly active.
+
+Definitions:
+- Active Now: unique anonymous app installations seen within the last 5 minutes
+- Today's Users: unique anonymous installations seen during the current
+  America/New_York calendar day
+- Peak Active: highest Active Now count observed during that day
+
+Implementation:
+- a random opaque installation ID is generated locally and stored in localStorage
+- no attendee name, email, IP address, favorites, My Schedule choices, or push message
+  content is stored in the analytics tables
+- a heartbeat is sent approximately every 2 minutes only while the app is visible
+- analytics failure never blocks or changes the attendee experience
+
+All V3.7.3 schedule, push notification, PWA and celebrity features remain intact.

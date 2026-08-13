@@ -48,6 +48,7 @@ async function loadData(){
   state.panels=Array.isArray(panels)?panels:[];
   renderAll();
   initializePushPromptExperience();
+  initializeAppAnalytics();
 }
 
 
@@ -620,6 +621,71 @@ async function enablePushFromBanner(){
   }
 
   await updatePushOptInBanner();
+}
+
+
+/* Anonymous app-usage analytics — V3.8
+   Tracks only a locally generated random installation ID.
+   No attendee names, email addresses, favorites, schedule selections, or notification
+   content are sent by this analytics feature. */
+const ANALYTICS_ID_KEY="sfvc-anonymous-analytics-id";
+const ANALYTICS_HEARTBEAT_MS=120000;
+let analyticsHeartbeatTimer=null;
+let analyticsLastSent=0;
+
+function getAnonymousAnalyticsId(){
+  let id=localStorage.getItem(ANALYTICS_ID_KEY);
+  if(id)return id;
+
+  if(globalThis.crypto?.randomUUID){
+    id=crypto.randomUUID();
+  }else{
+    const bytes=new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    id=[...bytes].map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+
+  localStorage.setItem(ANALYTICS_ID_KEY,id);
+  return id;
+}
+
+async function sendAnalyticsHeartbeat(eventType="heartbeat"){
+  if(document.visibilityState!=="visible")return;
+  const base=pushApiBase();
+  if(!base)return;
+
+  const now=Date.now();
+  // Avoid accidental duplicate writes caused by clustered visibility/focus events.
+  if(eventType!=="open"&&now-analyticsLastSent<45000)return;
+  analyticsLastSent=now;
+
+  try{
+    await fetch(`${base}/v1/analytics/heartbeat`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        visitorId:getAnonymousAnalyticsId(),
+        eventType
+      }),
+      keepalive:true
+    });
+  }catch(err){
+    // Analytics must never interfere with the attendee experience.
+    console.debug("Analytics heartbeat unavailable",err);
+  }
+}
+
+function initializeAppAnalytics(){
+  clearInterval(analyticsHeartbeatTimer);
+  sendAnalyticsHeartbeat("open");
+  analyticsHeartbeatTimer=setInterval(()=>{
+    if(document.visibilityState==="visible")sendAnalyticsHeartbeat("heartbeat");
+  },ANALYTICS_HEARTBEAT_MS);
+
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible")sendAnalyticsHeartbeat("heartbeat");
+  });
+  window.addEventListener("focus",()=>sendAnalyticsHeartbeat("heartbeat"));
 }
 
 function pushApiBase(){
