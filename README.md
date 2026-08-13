@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.2 Interactive Map Refinement
+# Sci-Fi Valley Con Digital Program — V4.3 Editable Map Objects
 
 Cumulative update from V3.6.
 
@@ -261,3 +261,12 @@ Seed directory contains 177 records transcribed from the uploaded map.
 - table/booth numbers are rendered inside the physical SVG objects
 - Con-Quest red fill remains independent from selected-table highlighting
 - this update package intentionally excludes backend-managed data JSON so Admin map edits are never rolled back
+
+
+## V4.3
+
+- supports Admin Map Designer transformations for static SVG objects and irregular areas
+- static rectangles can be moved/resized by updating their geometry
+- path-based areas support translate/scale/rotation transforms
+- hidden map objects are excluded from the attendee map
+- this remains a CODE-ONLY package and does not overwrite live map-layout.json or vendors.json

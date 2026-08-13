@@ -1,0 +1,21 @@
+Sci-Fi Valley Con Attendee App V4.3 FULL PACKAGE
+
+This is a complete replacement package, not a code-only patch.
+
+It includes:
+- index.html
+- app.js
+- styles.css
+- service-worker.js
+- manifest.webmanifest
+- all icon assets
+- floor-plan asset
+- all data/*.json files
+- map-layout.json
+- map-settings.json
+- vendors.json
+- guests, schedule, events, celebrity program data
+
+This package intentionally restores a complete known baseline and may overwrite
+changes previously made through the Admin app. That is intentional for this
+stabilization build.

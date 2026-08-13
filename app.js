@@ -1099,6 +1099,14 @@ function renderMapLegend(){
   c.innerHTML=items.map(item=>`<div class="map-legend-item"><span style="background:${svgEscape(item.color)}"></span><b>${svgEscape(item.label)}</b></div>`).join("");
   const note=document.getElementById("mapConQuestNote");if(note)note.textContent=state.mapSettings.conQuestNote||"Red table markers indicate Con-Quest participation.";
 }
+function mapElementTransform(item){
+  const tx=Number(item.translateX||0),ty=Number(item.translateY||0),sx=Number(item.scaleX??1),sy=Number(item.scaleY??1),ox=Number(item.originX||0),oy=Number(item.originY||0),rot=Number(item.rotation||0);
+  const parts=[];
+  if(tx||ty)parts.push(`translate(${tx} ${ty})`);
+  if(rot)parts.push(`rotate(${rot} ${ox} ${oy})`);
+  if(sx!==1||sy!==1)parts.push(`translate(${ox} ${oy}) scale(${sx} ${sy}) translate(${-ox} ${-oy})`);
+  return parts.length?` transform="${parts.join(' ')}"`:'';
+}
 function buildMapSvg(){
   const layout=mapLayout(),canvas=layout.canvas||{},w=Number(canvas.width||1200),h=Number(canvas.height||1780),out=[];
   out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="floorPlanTitle floorPlanDesc">`);
@@ -1111,9 +1119,10 @@ function buildMapSvg(){
     .service{fill:#f2bd3f;stroke:#352720;stroke-width:3}.map-table-label{font-family:Arial,sans-serif;font-weight:900;fill:#201916;text-anchor:middle;dominant-baseline:middle;pointer-events:none;paint-order:stroke;stroke:#fffdf4;stroke-width:1.8px;stroke-linejoin:round}
   </style>`);
   (layout.elements||[]).forEach(item=>{
-    const cls=item.className?` class="${svgEscape(item.className)}"`:'';const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';
-    if(item.type==="rect")out.push(`<rect id="${svgEscape(item.id)}"${cls} x="${Number(item.x)||0}" y="${Number(item.y)||0}" width="${Number(item.width)||0}" height="${Number(item.height)||0}" rx="${Number(item.rx||0)}"${fill}/>`);
-    else if(item.type==="path")out.push(`<path id="${svgEscape(item.id)}"${cls} d="${svgEscape(item.d||'')}"${fill}/>`);
+    if(item.hidden)return;
+    const cls=item.className?` class="${svgEscape(item.className)}"`:'';const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';const transform=mapElementTransform(item);
+    if(item.type==="rect")out.push(`<rect id="${svgEscape(item.id)}"${cls} x="${Number(item.x)||0}" y="${Number(item.y)||0}" width="${Number(item.width)||0}" height="${Number(item.height)||0}" rx="${Number(item.rx||0)}"${fill}${transform}/>`);
+    else if(item.type==="path")out.push(`<path id="${svgEscape(item.id)}"${cls} d="${svgEscape(item.d||'')}"${fill}${transform}/>`);
     else if(item.type==="text"){
       const lines=svgTextLines(item.text),x=Number(item.x)||0,y=Number(item.y)||0,anchor=item.anchor||'middle',fontSize=Number(item.fontSize||22),lineHeight=Number(item.lineHeight||1.15),fillText=item.fill||'#291f1a',weight=item.fontWeight||'800',style=item.fontStyle||'normal',family=item.fontFamily||'Georgia, serif';
       out.push(`<text id="${svgEscape(item.id)}"${cls} x="${x}" y="${y}" text-anchor="${svgEscape(anchor)}" font-size="${fontSize}" font-weight="${svgEscape(weight)}" font-style="${svgEscape(style)}" font-family="${svgEscape(family)}" fill="${svgEscape(fillText)}">`);
