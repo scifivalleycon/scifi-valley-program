@@ -619,10 +619,9 @@ async function enablePushFromPrompt(){
 
 
 
-/* Anonymous app-usage analytics — V3.8.2
-   Tracks only a locally generated random installation ID.
-   No attendee names, email addresses, favorites, schedule selections, or notification
-   content are sent by this analytics feature. */
+/* Anonymous app-usage analytics — V3.8.3
+   Uses a neutral 1x1 image beacon so activity tracking does not depend on
+   cross-origin fetch/CORS support. */
 const ANALYTICS_ID_KEY="sfvc-anonymous-analytics-id";
 const ANALYTICS_HEARTBEAT_MS=120000;
 const ANALYTICS_RETRY_MS=10000;
@@ -630,6 +629,7 @@ let analyticsHeartbeatTimer=null;
 let analyticsRetryTimer=null;
 let analyticsLastSuccessfulSend=0;
 let analyticsInitialized=false;
+let analyticsBeaconSequence=0;
 
 function getAnonymousAnalyticsId(){
   let id=localStorage.getItem(ANALYTICS_ID_KEY);
@@ -647,14 +647,6 @@ function getAnonymousAnalyticsId(){
   return id;
 }
 
-function analyticsPayload(eventType){
-  return JSON.stringify({
-    visitorId:getAnonymousAnalyticsId(),
-    eventType,
-    appOrigin:location.origin
-  });
-}
-
 function scheduleAnalyticsRetry(){
   clearTimeout(analyticsRetryTimer);
   analyticsRetryTimer=setTimeout(()=>{
@@ -662,42 +654,55 @@ function scheduleAnalyticsRetry(){
   },ANALYTICS_RETRY_MS);
 }
 
+function sendAnalyticsImageBeacon(eventType="heartbeat"){
+  return new Promise(resolve=>{
+    const base=pushApiBase();
+    if(!base){resolve(false);return;}
+
+    const image=new Image();
+    const timeout=setTimeout(()=>{
+      image.onload=null;
+      image.onerror=null;
+      resolve(false);
+    },8000);
+
+    image.onload=()=>{
+      clearTimeout(timeout);
+      resolve(true);
+    };
+    image.onerror=()=>{
+      clearTimeout(timeout);
+      resolve(false);
+    };
+
+    const params=new URLSearchParams({
+      id:getAnonymousAnalyticsId(),
+      e:String(eventType||"heartbeat").slice(0,20),
+      n:String(++analyticsBeaconSequence),
+      t:String(Date.now())
+    });
+
+    image.src=`${base}/v1/app/ping.svg?${params.toString()}`;
+  });
+}
+
 async function sendAnalyticsHeartbeat(eventType="heartbeat",{force=false}={}){
   if(document.visibilityState!=="visible")return false;
-
-  const base=pushApiBase();
-  if(!base)return false;
 
   const now=Date.now();
   if(!force && eventType!=="open" && now-analyticsLastSuccessfulSend<45000)return true;
 
-  try{
-    // text/plain is intentionally used here. It is a CORS "simple request",
-    // which avoids the extra OPTIONS preflight that application/json requires.
-    const response=await fetch(`${base}/v1/analytics/heartbeat`,{
-      method:"POST",
-      mode:"cors",
-      credentials:"omit",
-      cache:"no-store",
-      headers:{"Content-Type":"text/plain;charset=UTF-8"},
-      body:analyticsPayload(eventType)
-    });
+  const success=await sendAnalyticsImageBeacon(eventType);
 
-    if(!response.ok){
-      const message=await response.text().catch(()=>"");
-      console.warn("Analytics heartbeat rejected",response.status,message);
-      scheduleAnalyticsRetry();
-      return false;
-    }
-
+  if(success){
     analyticsLastSuccessfulSend=Date.now();
     clearTimeout(analyticsRetryTimer);
     return true;
-  }catch(err){
-    console.warn("Analytics heartbeat failed",err);
-    scheduleAnalyticsRetry();
-    return false;
   }
+
+  console.warn("App activity beacon did not complete. Retrying shortly.");
+  scheduleAnalyticsRetry();
+  return false;
 }
 
 function initializeAppAnalytics(){

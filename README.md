@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.8.2
+# Sci-Fi Valley Con Digital Program — V3.8.3
 
 Cumulative update from V3.6.
 
@@ -144,3 +144,22 @@ V3.8.2:
 - bumps the PWA cache
 
 All notification prompt, schedule, celebrity and PWA features remain unchanged.
+
+
+## V3.8.3 — CORS-independent activity tracking
+
+Replaces the client-side analytics fetch with a tiny transparent image beacon at
+`/v1/app/ping.svg`.
+
+This is more reliable because:
+- cross-origin images do not require JavaScript CORS permission
+- the public client endpoint no longer includes the word "analytics"
+- every successful image load confirms that the activity Worker responded
+- failed beacons retry after 10 seconds
+- the app still sends activity immediately on open/foreground/online and roughly
+  every two minutes while visible
+
+No attendee name, email, favorites, My Schedule data, or push content is sent.
+
+All V3.8.2 notification prompt, schedule, celebrity, analytics ID, and PWA features
+remain intact.
