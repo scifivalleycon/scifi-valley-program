@@ -1090,8 +1090,8 @@ function svgTextLines(text){return String(text||"").split(/\n/)}
 function svgEscape(value=""){return escapeAppHtml(value)}
 function mapCodeFontSize(code,w,h){
   const shortest=Math.max(8,Math.min(Number(w||20),Number(h||12)));
-  const byShape=Math.max(5.5,Math.min(8.5,shortest*.62));
-  return Math.max(5,byShape-(String(code).length>2?1:0));
+  const byShape=Math.max(6,Math.min(10,shortest*.70));
+  return Math.max(5.5,byShape-(String(code).length>2?.8:0));
 }
 function renderMapLegend(){
   const c=document.getElementById("mapLegend");if(!c)return;

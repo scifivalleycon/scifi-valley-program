@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.4 Full Map Baseline
+# Sci-Fi Valley Con Digital Program — V4.5 Full Map
 
 Cumulative update from V3.6.
 
@@ -281,3 +281,11 @@ map settings, all other event data, app code, PWA assets, and service worker.
 
 This release intentionally provides a complete known baseline while the map
 designer is being stabilized.
+
+
+## V4.5 — table-number visibility
+
+Table and booth codes remain centered inside their physical map objects and use a
+slightly larger adaptive font for easier reading at normal map zoom levels.
+
+This is a complete attendee package paired with Admin V2.5.
