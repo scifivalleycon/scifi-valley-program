@@ -435,6 +435,74 @@ function scheduleAllReminders(){for(const t of state.reminderTimers.values())cle
 async function showScheduleNotification(e){if(!("Notification"in window)||Notification.permission!=="granted")return;const reg=await navigator.serviceWorker?.ready;if(reg)reg.showNotification(`${e.title} starts soon`,{body:`${e.time} • ${e.location}`,icon:"assets/icons/app-icon-192.png",badge:"assets/icons/app-icon-192.png",data:{url:"./"}})}
 function updateReminderUI(){const s=document.getElementById("reminderSettingSummary");if(s)s.textContent=state.reminderMinutes?`${formatReminder(state.reminderMinutes)} for My Schedule events`:"No reminders for My Schedule events";document.querySelectorAll('input[name="reminder"]').forEach(i=>i.checked=+i.value===state.reminderMinutes);renderSchedule();renderMySchedule();scheduleAllReminders()}
 
+
+const PUSH_BANNER_DISMISS_KEY="sfvc-push-banner-dismissed-until";
+
+function pushBannerDismissed(){
+  const until=Number(localStorage.getItem(PUSH_BANNER_DISMISS_KEY)||0);
+  return Date.now()<until;
+}
+
+function dismissPushBanner(hours=24){
+  localStorage.setItem(PUSH_BANNER_DISMISS_KEY,String(Date.now()+hours*60*60*1000));
+  updatePushOptInBanner();
+}
+
+async function updatePushOptInBanner(){
+  const banner=document.getElementById("pushOptInBanner");
+  const enable=document.getElementById("pushBannerEnableButton");
+  if(!banner||!enable)return;
+
+  const supported=("Notification" in window)&&("serviceWorker" in navigator)&&("PushManager" in window);
+
+  // Never nag users on unsupported browsers or after they explicitly blocked notifications.
+  if(!supported||Notification.permission==="denied"){
+    banner.classList.add("hidden");
+    return;
+  }
+
+  // Respect "Not Now" for 24 hours.
+  if(pushBannerDismissed()){
+    banner.classList.add("hidden");
+    return;
+  }
+
+  let subscription=null;
+  if(Notification.permission==="granted"){
+    subscription=await getPushSubscription().catch(()=>null);
+  }
+
+  if(subscription){
+    banner.classList.add("hidden");
+    localStorage.removeItem(PUSH_BANNER_DISMISS_KEY);
+    return;
+  }
+
+  banner.classList.remove("hidden");
+  enable.disabled=false;
+  enable.textContent=Notification.permission==="granted"?"FINISH ENABLING":"ENABLE ALERTS";
+}
+
+async function enablePushFromBanner(){
+  const button=document.getElementById("pushBannerEnableButton");
+  if(button){
+    button.disabled=true;
+    button.textContent="ENABLING…";
+  }
+
+  try{
+    await enablePushNotifications();
+    const subscription=await getPushSubscription().catch(()=>null);
+    if(subscription){
+      localStorage.removeItem(PUSH_BANNER_DISMISS_KEY);
+    }
+  }catch(err){
+    console.warn("Banner push opt-in failed",err);
+  }
+
+  await updatePushOptInBanner();
+}
+
 function pushApiBase(){
   return String(state.settings.pushApiUrl||DEFAULT_SETTINGS.pushApiUrl||"").replace(/\/+$/,"");
 }
@@ -505,6 +573,7 @@ async function enablePushNotifications(){
     if(copy)copy.textContent=err.message||"Push registration could not be completed.";
   }
   await updateNotificationStatus();
+  await updatePushOptInBanner();
 }
 
 async function updateNotificationStatus(){
@@ -590,7 +659,7 @@ function renderEvents(){
     </details>`).join("") || `<div class="paper-panel muted-empty">No program information matches that search.</div>`;
 }
 
-function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
+function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();updatePushOptInBanner();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
 document.getElementById("showAllScheduleCategories")?.addEventListener("click",()=>{
@@ -607,9 +676,13 @@ document.getElementById("openReminderSheet").addEventListener("click",()=>{updat
 document.getElementById("closeReminderModal").addEventListener("click",()=>document.getElementById("reminderModal").close());
 document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListener("change",()=>{state.reminderMinutes=+i.value;localStorage.setItem("sfvc-reminder-minutes",String(state.reminderMinutes));updateReminderUI();setTimeout(()=>document.getElementById("reminderModal").close(),150)}));
 document.getElementById("enableNotificationsButton").addEventListener("click",enablePushNotifications);
+document.getElementById("pushBannerEnableButton")?.addEventListener("click",enablePushFromBanner);
+document.getElementById("pushBannerDismissButton")?.addEventListener("click",()=>dismissPushBanner(24));
 document.getElementById("disablePushNotificationsButton")?.addEventListener("click",async()=>{
   await unregisterPushSubscription();
+  localStorage.removeItem(PUSH_BANNER_DISMISS_KEY);
   await updateNotificationStatus();
+  await updatePushOptInBanner();
 });
 
 let deferredPrompt;

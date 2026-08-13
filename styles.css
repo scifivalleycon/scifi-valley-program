@@ -201,3 +201,91 @@ body.is-standalone .install-app-card{display:none!important}
   .schedule-checkbox-grid{display:grid;grid-template-columns:1fr 1fr}
   .schedule-check{min-width:0}
 }
+
+
+/* Event Alerts opt-in banner — V3.7.2 */
+.push-optin-banner{
+  position:relative;
+  z-index:30;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  margin:10px 12px 4px;
+  padding:12px 13px;
+  background:linear-gradient(135deg,var(--mustard),#f2c966);
+  border:2px solid var(--ink);
+  border-radius:10px;
+  box-shadow:4px 5px 0 rgba(58,39,32,.18);
+}
+.push-optin-banner.hidden{display:none}
+.push-optin-icon{
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  flex:0 0 auto;
+  background:var(--coral);
+  border:2px solid var(--ink);
+  border-radius:50%;
+  font-size:21px;
+}
+.push-optin-copy{min-width:0}
+.push-optin-kicker{
+  display:block;
+  margin-bottom:2px;
+  color:var(--coral2);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+.push-optin-copy>strong{
+  display:block;
+  font-family:Impact,sans-serif;
+  font-size:21px;
+  letter-spacing:.035em;
+  line-height:1;
+}
+.push-optin-copy p{
+  margin:5px 0 0;
+  font-family:Georgia,serif;
+  font-size:10px;
+  line-height:1.4;
+}
+.push-optin-actions{
+  display:grid;
+  gap:6px;
+  min-width:112px;
+}
+.push-optin-primary,
+.push-optin-secondary{
+  min-height:34px;
+  padding:7px 9px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.045em;
+}
+.push-optin-primary{
+  background:var(--coral);
+  color:#fff7df;
+}
+.push-optin-primary:disabled{opacity:.65}
+.push-optin-secondary{
+  background:var(--paper2);
+  color:var(--ink);
+}
+@media(max-width:640px){
+  .push-optin-banner{
+    grid-template-columns:auto 1fr;
+    align-items:start;
+    margin:8px 8px 4px;
+  }
+  .push-optin-actions{
+    grid-column:1/-1;
+    grid-template-columns:1fr auto;
+    width:100%;
+  }
+  .push-optin-copy>strong{font-size:19px}
+}
