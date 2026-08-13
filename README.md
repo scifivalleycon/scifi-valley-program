@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.8.3
+# Sci-Fi Valley Con Digital Program — V3.8.4
 
 Cumulative update from V3.6.
 
@@ -163,3 +163,22 @@ No attendee name, email, favorites, My Schedule data, or push content is sent.
 
 All V3.8.2 notification prompt, schedule, celebrity, analytics ID, and PWA features
 remain intact.
+
+
+## V3.8.4 — independent analytics bootstrap
+
+Manual testing proved Notify V1.4 and D1 successfully record `/v1/app/ping.svg`.
+The remaining problem was isolated to automatic attendee-app delivery.
+
+V3.8.4:
+- starts analytics before `loadData()` instead of waiting for app data/rendering
+- analytics can therefore continue even if another program feature throws an error
+- appends a real hidden 1x1 image element to the DOM for each activity heartbeat
+- also fires a redundant no-CORS GET to the same endpoint
+- duplicate delivery does not inflate unique users because D1 deduplicates on
+  calendar day + anonymous installation ID
+- immediately pings on app startup, pageshow, foreground, online and periodic use
+- retains the same anonymous local installation identifier
+- bumps the PWA cache to V3.8.4
+
+Notify V1.4 and Admin V1.8.1 require no changes for this revision.

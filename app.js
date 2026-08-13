@@ -49,7 +49,6 @@ async function loadData(){
   renderAll();
   initializePushPromptExperience();
   forcePushPromptForTesting();
-  initializeAppAnalytics();
 }
 
 
@@ -619,12 +618,13 @@ async function enablePushFromPrompt(){
 
 
 
-/* Anonymous app-usage analytics — V3.8.3
-   Uses a neutral 1x1 image beacon so activity tracking does not depend on
-   cross-origin fetch/CORS support. */
+/* Anonymous app-usage analytics — V3.8.4
+   Starts independently of the rest of the app and uses redundant browser-safe
+   delivery methods. D1 deduplicates by day + anonymous installation ID. */
 const ANALYTICS_ID_KEY="sfvc-anonymous-analytics-id";
 const ANALYTICS_HEARTBEAT_MS=120000;
 const ANALYTICS_RETRY_MS=10000;
+const ANALYTICS_FALLBACK_BASE="https://notify.scifivalleycon.com";
 let analyticsHeartbeatTimer=null;
 let analyticsRetryTimer=null;
 let analyticsLastSuccessfulSend=0;
@@ -647,52 +647,87 @@ function getAnonymousAnalyticsId(){
   return id;
 }
 
+function analyticsApiBase(){
+  return String(
+    state?.settings?.pushApiUrl ||
+    DEFAULT_SETTINGS?.pushApiUrl ||
+    ANALYTICS_FALLBACK_BASE
+  ).replace(/\/+$/,"");
+}
+
+function buildAnalyticsPingUrl(eventType="heartbeat"){
+  const params=new URLSearchParams({
+    id:getAnonymousAnalyticsId(),
+    e:String(eventType||"heartbeat").slice(0,20),
+    n:String(++analyticsBeaconSequence),
+    t:String(Date.now())
+  });
+  return `${analyticsApiBase()}/v1/app/ping.svg?${params.toString()}`;
+}
+
 function scheduleAnalyticsRetry(){
   clearTimeout(analyticsRetryTimer);
   analyticsRetryTimer=setTimeout(()=>{
-    if(document.visibilityState==="visible")sendAnalyticsHeartbeat("retry",{force:true});
+    if(document.visibilityState==="visible"){
+      sendAnalyticsHeartbeat("retry",{force:true});
+    }
   },ANALYTICS_RETRY_MS);
 }
 
-function sendAnalyticsImageBeacon(eventType="heartbeat"){
+function sendAnalyticsDomBeacon(url){
   return new Promise(resolve=>{
-    const base=pushApiBase();
-    if(!base){resolve(false);return;}
+    const image=document.createElement("img");
+    image.alt="";
+    image.width=1;
+    image.height=1;
+    image.setAttribute("aria-hidden","true");
+    image.style.cssText="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;top:-9999px;";
 
-    const image=new Image();
-    const timeout=setTimeout(()=>{
-      image.onload=null;
-      image.onerror=null;
-      resolve(false);
-    },8000);
-
-    image.onload=()=>{
+    let finished=false;
+    const finish=ok=>{
+      if(finished)return;
+      finished=true;
       clearTimeout(timeout);
-      resolve(true);
-    };
-    image.onerror=()=>{
-      clearTimeout(timeout);
-      resolve(false);
+      image.remove();
+      resolve(ok);
     };
 
-    const params=new URLSearchParams({
-      id:getAnonymousAnalyticsId(),
-      e:String(eventType||"heartbeat").slice(0,20),
-      n:String(++analyticsBeaconSequence),
-      t:String(Date.now())
-    });
+    const timeout=setTimeout(()=>finish(false),8000);
+    image.onload=()=>finish(true);
+    image.onerror=()=>finish(false);
 
-    image.src=`${base}/v1/app/ping.svg?${params.toString()}`;
+    // Appending the element before setting src ensures the browser treats this
+    // exactly like a normal page image request, even in installed PWA mode.
+    (document.body||document.documentElement).appendChild(image);
+    image.src=url;
   });
 }
 
+function sendAnalyticsNoCorsFetch(url){
+  // This is deliberately redundant. Even if the browser does not expose the
+  // response because it is cross-origin, the GET can still reach the Worker.
+  fetch(url,{
+    method:"GET",
+    mode:"no-cors",
+    credentials:"omit",
+    cache:"no-store",
+    keepalive:true
+  }).catch(()=>{});
+}
+
 async function sendAnalyticsHeartbeat(eventType="heartbeat",{force=false}={}){
-  if(document.visibilityState!=="visible")return false;
+  if(document.visibilityState==="hidden")return false;
 
   const now=Date.now();
   if(!force && eventType!=="open" && now-analyticsLastSuccessfulSend<45000)return true;
 
-  const success=await sendAnalyticsImageBeacon(eventType);
+  const url=buildAnalyticsPingUrl(eventType);
+
+  // Fire a redundant one-way request immediately.
+  sendAnalyticsNoCorsFetch(url);
+
+  // Also load the same endpoint as a real DOM image so we have a success signal.
+  const success=await sendAnalyticsDomBeacon(url);
 
   if(success){
     analyticsLastSuccessfulSend=Date.now();
@@ -709,11 +744,15 @@ function initializeAppAnalytics(){
   if(analyticsInitialized)return;
   analyticsInitialized=true;
 
-  clearInterval(analyticsHeartbeatTimer);
+  // Start immediately. This no longer depends on data JSON, rendering,
+  // notification setup, or any other attendee-app feature completing first.
   sendAnalyticsHeartbeat("open",{force:true});
 
+  clearInterval(analyticsHeartbeatTimer);
   analyticsHeartbeatTimer=setInterval(()=>{
-    if(document.visibilityState==="visible")sendAnalyticsHeartbeat("heartbeat");
+    if(document.visibilityState==="visible"){
+      sendAnalyticsHeartbeat("heartbeat");
+    }
   },ANALYTICS_HEARTBEAT_MS);
 
   document.addEventListener("visibilitychange",()=>{
@@ -722,6 +761,9 @@ function initializeAppAnalytics(){
     }
   });
 
+  window.addEventListener("pageshow",()=>{
+    sendAnalyticsHeartbeat("pageshow",{force:true});
+  });
   window.addEventListener("focus",()=>sendAnalyticsHeartbeat("focus"));
   window.addEventListener("online",()=>sendAnalyticsHeartbeat("online",{force:true}));
 }
@@ -1086,5 +1128,7 @@ function bindGuestPhotoLightboxes(){
 }
 document.getElementById("closePhotoLightbox")?.addEventListener("click",()=>document.getElementById("photoLightbox").close());
 document.getElementById("photoLightbox")?.addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+
+initializeAppAnalytics();
 
 loadData().catch(err=>{console.error(err);document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Refresh the page or check the latest Cloudflare deployment.</div></div>`});
