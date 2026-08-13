@@ -175,3 +175,29 @@ body.is-standalone .install-app-card{display:none!important}
 .autograph-days{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.autograph-days>div{padding:8px;background:rgba(115,199,203,.16);border:1px solid var(--line);border-radius:6px}.autograph-days small{font-size:8px;font-weight:900}.autograph-days p{font-family:Georgia,serif;font-size:10px;line-height:1.45}
 .panel-card-head{display:flex;justify-content:space-between;gap:9px}.panel-time{color:var(--coral2);font-size:11px;font-weight:900}.celebrity-panel-card>p{font-family:Georgia,serif;font-size:11px;line-height:1.45}
 @media(max-width:560px){.price-grid{grid-template-columns:1fr 1fr}.group-op-grid,.autograph-days{grid-template-columns:1fr}.celebrity-tabs{top:68px}}
+
+
+/* Show Schedule category filters — V3.7 */
+.schedule-filter-panel{margin:10px 0 14px;padding:11px;background:rgba(255,247,223,.72);border:2px solid var(--ink);border-radius:10px;box-shadow:3px 4px 0 rgba(58,39,32,.12)}
+.schedule-filter-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:9px}
+.schedule-filter-head h2{margin:2px 0 0;font-family:Impact,sans-serif;font-size:20px;letter-spacing:.025em}
+.mini-filter-action{padding:6px 9px;border:1.5px solid var(--ink);border-radius:999px;background:var(--paper2);color:var(--ink);font-size:8px;font-weight:900;letter-spacing:.06em}
+.schedule-checkbox-grid{display:flex;flex-wrap:wrap;gap:7px}
+.schedule-check{display:flex;align-items:center;gap:6px;padding:7px 9px;border:1.5px solid var(--ink);border-radius:7px;background:#fff7df;font-size:8px;font-weight:900;letter-spacing:.035em;cursor:pointer;user-select:none}
+.schedule-check input{position:absolute;opacity:0;pointer-events:none}
+.schedule-check-box{display:grid;place-items:center;width:17px;height:17px;border:1.5px solid var(--ink);border-radius:4px;background:transparent;color:transparent;font-size:11px}
+.schedule-check.checked{background:rgba(115,199,203,.35)}
+.schedule-check.checked .schedule-check-box{background:var(--aqua);color:var(--ink)}
+.schedule-filter-summary{margin-top:8px;color:var(--ink2);font-size:8px;font-weight:900;letter-spacing:.07em}
+.schedule-category-tag{display:inline-block;margin-top:5px;padding:3px 6px;border-radius:999px;background:rgba(226,173,52,.25);border:1px solid rgba(58,39,32,.18);font-size:7px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
+.schedule-no-reminder{align-self:center;padding:5px 6px;border:1px solid rgba(58,39,32,.25);border-radius:999px;color:var(--ink2);font-size:7px;font-weight:900;letter-spacing:.05em}
+.notification-button-stack{display:grid;gap:7px}
+.retro-action.secondary{background:var(--paper2);color:var(--ink)}
+.notification-explainer{margin-top:10px;padding:10px;border:1.5px dashed var(--ink2);border-radius:8px;background:rgba(226,173,52,.10);font-family:Georgia,serif;font-size:10px;line-height:1.45}
+.notification-explainer strong{font-family:"Trebuchet MS",Arial,sans-serif;font-size:9px;letter-spacing:.06em}
+.notification-explainer p{margin:4px 0 0}
+@media(max-width:560px){
+  .schedule-filter-head{align-items:flex-start}
+  .schedule-checkbox-grid{display:grid;grid-template-columns:1fr 1fr}
+  .schedule-check{min-width:0}
+}

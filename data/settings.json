@@ -7,6 +7,7 @@
     "venue": "Blair County Convention Center",
     "city": "Altoona",
     "state": "PA",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "pushApiUrl": "https://notify.scifivalleycon.com"
   }
 ]

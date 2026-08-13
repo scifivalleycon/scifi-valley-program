@@ -117,6 +117,14 @@
         <p>Tap the bell beside any event to add it to My Schedule. Your reminder setting applies automatically to saved events.</p>
       </div>
       <div id="dayFilters" class="chip-row"></div>
+      <section class="schedule-filter-panel" aria-labelledby="scheduleFilterTitle">
+        <div class="schedule-filter-head">
+          <div><span class="section-kicker">FOCUS THE DAY</span><h2 id="scheduleFilterTitle">SHOW ONLY WHAT YOU WANT</h2></div>
+          <button id="showAllScheduleCategories" class="mini-filter-action" type="button">SHOW ALL</button>
+        </div>
+        <div id="scheduleCategoryFilters" class="schedule-checkbox-grid"></div>
+        <div id="scheduleFilterSummary" class="schedule-filter-summary"></div>
+      </section>
       <div id="scheduleList" class="schedule-list"></div>
     </section>
 
@@ -211,8 +219,19 @@
           <b>›</b>
         </button>
         <div class="notification-permission-box">
-          <div><span class="section-kicker">SYSTEM NOTIFICATIONS</span><h2 id="notificationStatusTitle">NOTIFICATIONS NOT ENABLED</h2><p id="notificationStatusCopy">Allow notifications so the app can alert you about saved events while it is active.</p></div>
-          <button id="enableNotificationsButton" class="retro-action">ENABLE NOTIFICATIONS</button>
+          <div>
+            <span class="section-kicker">EVENT-WIDE PUSH ALERTS</span>
+            <h2 id="notificationStatusTitle">NOTIFICATIONS NOT ENABLED</h2>
+            <p id="notificationStatusCopy">Enable alerts for important convention-wide updates such as room changes, delays, cancellations, or emergency schedule updates.</p>
+          </div>
+          <div class="notification-button-stack">
+            <button id="enableNotificationsButton" class="retro-action">ENABLE EVENT ALERTS</button>
+            <button id="disablePushNotificationsButton" class="retro-action secondary hidden" type="button">DISABLE EVENT ALERTS</button>
+          </div>
+        </div>
+        <div class="notification-explainer">
+          <strong>MY SCHEDULE REMINDERS</strong>
+          <p>Your saved-event reminder preference remains separate from convention-wide push alerts.</p>
         </div>
       </section>
       <section class="paper-panel">

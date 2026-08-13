@@ -6,12 +6,13 @@ const DEFAULT_SETTINGS = {
   venue: "Blair County Convention Center",
   city: "Altoona",
   state: "PA",
-  photoShop: "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+  photoShop: "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+  pushApiUrl: "https://notify.scifivalleycon.com"
 };
 
 const state = {
   guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
-  guestFilter: "All", dayFilter: "Friday", eventFilter: "All",
+  guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
@@ -189,22 +190,138 @@ document.getElementById("guestModal").addEventListener("click",e=>{if(e.target==
 
 
 function celebrityPublished(){return state.celebrityInfo?.published===true}
+
+function primaryScheduleCategory(e){
+  if(e.filterCategory)return e.filterCategory;
+  const category=String(e.category||"").trim();
+  const location=String(e.location||"").toLowerCase();
+
+  if(/artist/i.test(category))return "Artist Panels";
+  if(location.includes("event room"))return "Event Room";
+  if(/costume|cosplay/i.test(category))return "Costume & Cosplay";
+  if(/workshop|paint/i.test(category))return "Workshops";
+  if(/gaming|game/i.test(category))return "Gaming";
+  if(/charity/i.test(category))return "Charity";
+  if(/after party/i.test(category))return "After Party";
+  if(/activity/i.test(category))return "Activities";
+  return category||"Other";
+}
+
 function panelScheduleItems(){
   if(!celebrityPublished())return [];
-  return state.panels.map((p,i)=>({id:`panel-${p.id||i}`,day:p.day,time:p.startTime,title:p.title,location:p.location||state.celebrityInfo.panelRoom||"Panel Room",category:"Celebrity Panel"}));
+  return state.panels.map((p,i)=>({
+    id:`panel-${p.id||i}`,
+    day:p.day,
+    time:p.startTime,
+    title:p.title,
+    location:p.location||state.celebrityInfo.panelRoom||"Panel Room",
+    category:"Celebrity Panel",
+    filterCategory:"Celebrity Panels",
+    remindable:true
+  }));
 }
+
 function photoOpScheduleItems(){
   if(!celebrityPublished())return [];
-  return state.photoOps.map((p,i)=>({id:`photoop-${p.id||i}`,day:p.day,time:p.time,title:`${p.title} Photo Op`,location:state.celebrityInfo.photoOpLocation||"Photo Op Area",category:`Professional Photo Op${p.type?` • ${p.type}`:""}`}));
+  return state.photoOps.map((p,i)=>({
+    id:`photoop-${p.id||i}`,
+    day:p.day,
+    time:p.time,
+    title:`${p.title} Photo Op`,
+    location:state.celebrityInfo.photoOpLocation||"Photo Op Area",
+    category:`Professional Photo Op${p.type?` • ${p.type}`:""}`,
+    filterCategory:"Photo Ops",
+    remindable:true
+  }));
 }
-function generalScheduleItems(){return [...state.schedule,...panelScheduleItems()]}
-function reminderScheduleItems(){return [...generalScheduleItems(),...photoOpScheduleItems()]}
+
+function autographScheduleItems(){
+  if(!celebrityPublished())return [];
+  const items=[];
+  state.autographs.forEach((a,guestIndex)=>{
+    ["Friday","Saturday","Sunday"].forEach(day=>{
+      String(a[day]||"").split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach((windowText,windowIndex)=>{
+        items.push({
+          id:`autograph-${a.id||guestIndex}-${day}-${windowIndex}`,
+          day,
+          time:windowText,
+          title:`${a.guestName} Autographs`,
+          location:"Celebrity Guest Tables",
+          category:"Flexible Autograph Availability",
+          filterCategory:"Autographs",
+          remindable:false
+        });
+      });
+    });
+  });
+  return items;
+}
+
+function baseScheduleItems(){
+  return state.schedule.map(e=>({...e,filterCategory:primaryScheduleCategory(e),remindable:e.remindable!==false}));
+}
+
+function showScheduleItems(){
+  return [...baseScheduleItems(),...panelScheduleItems(),...photoOpScheduleItems(),...autographScheduleItems()];
+}
+
+function headlineScheduleItems(){
+  return [...baseScheduleItems(),...panelScheduleItems(),...photoOpScheduleItems()];
+}
+
+function reminderScheduleItems(){
+  return headlineScheduleItems().filter(e=>e.remindable!==false);
+}
+
+function parseScheduleStartMinutes(value){
+  const m=String(value||"").match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if(!m)return 9999;
+  let h=Number(m[1]), min=Number(m[2]);
+  const ap=m[3].toUpperCase();
+  if(ap==="PM"&&h!==12)h+=12;
+  if(ap==="AM"&&h===12)h=0;
+  return h*60+min;
+}
+
+function sortedScheduleItems(items){
+  return [...items].sort((a,b)=>parseScheduleStartMinutes(a.time)-parseScheduleStartMinutes(b.time)||String(a.title).localeCompare(String(b.title)));
+}
+
+function scheduleCategoriesForDay(day){
+  const preferred=["Celebrity Panels","Photo Ops","Autographs","Artist Panels","Event Room","Gaming","Workshops","Costume & Cosplay","Charity","Activities","After Party","Other"];
+  const categories=[...new Set(showScheduleItems().filter(e=>e.day===day).map(primaryScheduleCategory))];
+  return categories.sort((a,b)=>{
+    const ai=preferred.indexOf(a), bi=preferred.indexOf(b);
+    if(ai!==-1||bi!==-1)return (ai===-1?999:ai)-(bi===-1?999:bi);
+    return a.localeCompare(b);
+  });
+}
+
 function scheduleCardHtml(e){
   const saved=state.mySchedule.has(e.id);
-  return `<article class="schedule-card"><div class="schedule-time">${e.time}</div><div><strong>${e.title.toUpperCase()}</strong><div class="meta">${e.location} • ${e.category}</div>${saved&&state.reminderMinutes>0?`<span class="schedule-reminder-label">🔔 ${formatReminder(state.reminderMinutes)}</span>`:""}</div><button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button></article>`;
+  const category=primaryScheduleCategory(e);
+  const saveButton=e.remindable===false
+    ? `<span class="schedule-no-reminder" title="Flexible availability">FLEX</span>`
+    : `<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`;
+
+  return `<article class="schedule-card" data-schedule-category="${category}">
+    <div class="schedule-time">${e.time}</div>
+    <div>
+      <strong>${e.title.toUpperCase()}</strong>
+      <div class="meta">${e.location} • ${e.category}</div>
+      <span class="schedule-category-tag">${category}</span>
+      ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<span class="schedule-reminder-label">🔔 ${formatReminder(state.reminderMinutes)}</span>`:""}
+    </div>
+    ${saveButton}
+  </article>`;
 }
+
 function bindScheduleSaveButtons(){
-  document.querySelectorAll("[data-schedule-save]").forEach(b=>{if(b.dataset.bound==="yes")return;b.dataset.bound="yes";b.addEventListener("click",()=>toggleScheduleItem(b.dataset.scheduleSave))});
+  document.querySelectorAll("[data-schedule-save]").forEach(b=>{
+    if(b.dataset.bound==="yes")return;
+    b.dataset.bound="yes";
+    b.addEventListener("click",()=>toggleScheduleItem(b.dataset.scheduleSave));
+  });
 }
 function renderCelebrityGuide(){
   const published=celebrityPublished();
@@ -252,9 +369,54 @@ function renderDayFilters(){
   const days=["Friday","Saturday","Sunday"];
   const c=document.getElementById("dayFilters");
   c.innerHTML=days.map(d=>`<button class="chip ${d===state.dayFilter?"active":""}" data-day="${d}">${d.toUpperCase()}</button>`).join("");
-  c.querySelectorAll("[data-day]").forEach(b=>b.addEventListener("click",()=>{state.dayFilter=b.dataset.day;renderDayFilters();renderSchedule()}));
+  c.querySelectorAll("[data-day]").forEach(b=>b.addEventListener("click",()=>{
+    state.dayFilter=b.dataset.day;
+    renderDayFilters();
+    renderScheduleCategoryFilters();
+    renderSchedule();
+  }));
 }
-function renderSchedule(){const items=generalScheduleItems().filter(e=>e.day===state.dayFilter);document.getElementById("scheduleList").innerHTML=items.map(scheduleCardHtml).join("");bindScheduleSaveButtons();}
+
+function renderScheduleCategoryFilters(){
+  const container=document.getElementById("scheduleCategoryFilters");
+  if(!container)return;
+  const categories=scheduleCategoriesForDay(state.dayFilter);
+
+  container.innerHTML=categories.map(category=>{
+    const checked=!state.scheduleHiddenCategories.has(category);
+    return `<label class="schedule-check ${checked?"checked":""}">
+      <input type="checkbox" value="${category}" ${checked?"checked":""}>
+      <span class="schedule-check-box">✓</span>
+      <span>${category.toUpperCase()}</span>
+    </label>`;
+  }).join("")||`<div class="muted-empty">No schedule categories are available for this day yet.</div>`;
+
+  container.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener("change",()=>{
+    const category=input.value;
+    input.checked?state.scheduleHiddenCategories.delete(category):state.scheduleHiddenCategories.add(category);
+    localStorage.setItem("sfvc-schedule-hidden-categories",JSON.stringify([...state.scheduleHiddenCategories]));
+    renderScheduleCategoryFilters();
+    renderSchedule();
+  }));
+
+  const summary=document.getElementById("scheduleFilterSummary");
+  if(summary){
+    const visible=categories.filter(c=>!state.scheduleHiddenCategories.has(c)).length;
+    summary.textContent=`SHOWING ${visible} OF ${categories.length} CATEGORIES`;
+  }
+}
+
+function renderSchedule(){
+  const items=sortedScheduleItems(
+    showScheduleItems().filter(e=>
+      e.day===state.dayFilter &&
+      !state.scheduleHiddenCategories.has(primaryScheduleCategory(e))
+    )
+  );
+  document.getElementById("scheduleList").innerHTML=items.map(scheduleCardHtml).join("")||
+    `<div class="paper-panel muted-empty">No schedule items match the selected categories.</div>`;
+  bindScheduleSaveButtons();
+}
 
 
 function formatReminder(m){if(m===0)return"No reminder";if(m===60)return"1 hour before";return`${m} minutes before`}
@@ -272,23 +434,124 @@ function eventDateTime(e){const d=eventDayDates()[e.day];const m=e.time.match(/^
 function scheduleAllReminders(){for(const t of state.reminderTimers.values())clearTimeout(t);state.reminderTimers.clear();if(!state.reminderMinutes)return;const now=Date.now();reminderScheduleItems().filter(e=>state.mySchedule.has(e.id)).forEach(e=>{const t=eventDateTime(e);if(!t)return;const delay=t.getTime()-state.reminderMinutes*60000-now;if(delay>0&&delay<=2147483647)state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay))})}
 async function showScheduleNotification(e){if(!("Notification"in window)||Notification.permission!=="granted")return;const reg=await navigator.serviceWorker?.ready;if(reg)reg.showNotification(`${e.title} starts soon`,{body:`${e.time} • ${e.location}`,icon:"assets/icons/app-icon-192.png",badge:"assets/icons/app-icon-192.png",data:{url:"./"}})}
 function updateReminderUI(){const s=document.getElementById("reminderSettingSummary");if(s)s.textContent=state.reminderMinutes?`${formatReminder(state.reminderMinutes)} for My Schedule events`:"No reminders for My Schedule events";document.querySelectorAll('input[name="reminder"]').forEach(i=>i.checked=+i.value===state.reminderMinutes);renderSchedule();renderMySchedule();scheduleAllReminders()}
-function updateNotificationStatus(){const t=document.getElementById("notificationStatusTitle"),c=document.getElementById("notificationStatusCopy"),b=document.getElementById("enableNotificationsButton");if(!t)return;if(!("Notification"in window)){t.textContent="NOTIFICATIONS NOT SUPPORTED";b.disabled=true}else if(Notification.permission==="granted"){t.textContent="NOTIFICATIONS ENABLED";c.textContent="This device has granted notification permission.";b.textContent="NOTIFICATIONS ENABLED";b.disabled=true}else if(Notification.permission==="denied"){t.textContent="NOTIFICATIONS BLOCKED";c.textContent="Notifications are blocked in browser settings.";b.disabled=true}else{t.textContent="NOTIFICATIONS NOT ENABLED";b.disabled=false}}
 
-function renderStatus(){
-  const now=new Date(), key=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  const byDay=eventDayDates();
-  const dates=Object.fromEntries(Object.entries(byDay).filter(([,v])=>v).map(([day,date])=>[date,day]));
-  const c=document.getElementById("happeningNow");
-  if(!dates[key]){
-    const heading=formatEventDateRange(false).replace(/,\s*\d{4}$/,"");
-    document.getElementById("nowHeading").textContent=`COMING ${heading}`;
-    const edition=(state.settings.editionLabel||formatEventDateRange(false)).toUpperCase();
-    c.innerHTML=`<div class="status-card"><strong>${edition} DIGITAL PROGRAM</strong><div class="meta">The program is being built now. During convention weekend this area will surface today's events automatically.</div></div>`;
+function pushApiBase(){
+  return String(state.settings.pushApiUrl||DEFAULT_SETTINGS.pushApiUrl||"").replace(/\/+$/,"");
+}
+function urlBase64ToUint8Array(base64String){
+  const padding="=".repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,"+").replace(/_/g,"/");
+  const raw=atob(base64);
+  return Uint8Array.from([...raw].map(ch=>ch.charCodeAt(0)));
+}
+async function getPushSubscription(){
+  if(!("serviceWorker" in navigator)||!("PushManager" in window))return null;
+  const reg=await navigator.serviceWorker.ready;
+  return reg.pushManager.getSubscription();
+}
+async function registerPushSubscription(){
+  const base=pushApiBase();
+  if(!base)throw new Error("Push service is not configured.");
+  const reg=await navigator.serviceWorker.ready;
+  let subscription=await reg.pushManager.getSubscription();
+
+  if(!subscription){
+    const keyResponse=await fetch(`${base}/v1/public-key`,{cache:"no-store"});
+    if(!keyResponse.ok)throw new Error("Push service is not ready yet.");
+    const {publicKey}=await keyResponse.json();
+    if(!publicKey)throw new Error("Push public key is missing.");
+    subscription=await reg.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:urlBase64ToUint8Array(publicKey)
+    });
+  }
+
+  const response=await fetch(`${base}/v1/subscribe`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(subscription.toJSON())
+  });
+  if(!response.ok)throw new Error("Could not register this device for event alerts.");
+  localStorage.setItem("sfvc-push-enabled","yes");
+  return subscription;
+}
+async function unregisterPushSubscription(){
+  const subscription=await getPushSubscription();
+  const base=pushApiBase();
+  if(subscription&&base){
+    fetch(`${base}/v1/unsubscribe`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({endpoint:subscription.endpoint})
+    }).catch(()=>{});
+    await subscription.unsubscribe().catch(()=>false);
+  }
+  localStorage.removeItem("sfvc-push-enabled");
+}
+async function enablePushNotifications(){
+  if(!("Notification" in window)||!("serviceWorker" in navigator)||!("PushManager" in window))return;
+  const permission=Notification.permission==="granted"?"granted":await Notification.requestPermission();
+  if(permission!=="granted"){
+    await updateNotificationStatus();
     return;
   }
-  const day=dates[key], items=generalScheduleItems().filter(e=>e.day===day).slice(0,4);
-  document.getElementById("nowHeading").textContent=`TODAY • ${day.toUpperCase()}`;
-  c.innerHTML=items.map(e=>`<div class="status-card"><strong>${e.time} • ${e.title.toUpperCase()}</strong><div class="meta">${e.location}</div></div>`).join("");
+  const button=document.getElementById("enableNotificationsButton");
+  if(button){button.disabled=true;button.textContent="CONNECTING…";}
+  try{
+    await registerPushSubscription();
+  }catch(err){
+    console.warn("Push registration failed",err);
+    const copy=document.getElementById("notificationStatusCopy");
+    if(copy)copy.textContent=err.message||"Push registration could not be completed.";
+  }
+  await updateNotificationStatus();
+}
+
+async function updateNotificationStatus(){
+  const t=document.getElementById("notificationStatusTitle"),
+        c=document.getElementById("notificationStatusCopy"),
+        b=document.getElementById("enableNotificationsButton"),
+        disable=document.getElementById("disablePushNotificationsButton");
+  if(!t)return;
+
+  const supported=("Notification" in window)&&("serviceWorker" in navigator)&&("PushManager" in window);
+  if(!supported){
+    t.textContent="PUSH ALERTS NOT SUPPORTED";
+    c.textContent="This browser or device does not currently support Web Push for this app.";
+    if(b){b.disabled=true;b.textContent="NOT SUPPORTED";}
+    disable?.classList.add("hidden");
+    return;
+  }
+
+  if(Notification.permission==="denied"){
+    t.textContent="NOTIFICATIONS BLOCKED";
+    c.textContent="Notifications are blocked in your browser or device settings.";
+    if(b){b.disabled=true;b.textContent="BLOCKED";}
+    disable?.classList.add("hidden");
+    return;
+  }
+
+  if(Notification.permission==="granted"){
+    const subscription=await getPushSubscription().catch(()=>null);
+    if(subscription){
+      t.textContent="EVENT ALERTS ENABLED";
+      c.textContent="This device is subscribed to convention-wide updates, room changes, delays and other important announcements.";
+      if(b){b.disabled=true;b.textContent="EVENT ALERTS ENABLED";}
+      disable?.classList.remove("hidden");
+      return;
+    }
+
+    t.textContent="PERMISSION GRANTED";
+    c.textContent="Notification permission is granted, but this device is not yet subscribed to convention-wide push alerts.";
+    if(b){b.disabled=false;b.textContent="CONNECT EVENT ALERTS";}
+    disable?.classList.add("hidden");
+    return;
+  }
+
+  t.textContent="EVENT ALERTS NOT ENABLED";
+  c.textContent="Enable alerts for important convention-wide updates such as room changes, delays, cancellations, or emergency schedule updates.";
+  if(b){b.disabled=false;b.textContent="ENABLE EVENT ALERTS";}
+  disable?.classList.add("hidden");
 }
 
 function renderEventFilters(){
@@ -327,9 +590,15 @@ function renderEvents(){
     </details>`).join("") || `<div class="paper-panel muted-empty">No program information matches that search.</div>`;
 }
 
-function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
+function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
+document.getElementById("showAllScheduleCategories")?.addEventListener("click",()=>{
+  state.scheduleHiddenCategories.clear();
+  localStorage.setItem("sfvc-schedule-hidden-categories","[]");
+  renderScheduleCategoryFilters();
+  renderSchedule();
+});
 document.querySelectorAll("[data-celebrity-tab]").forEach(b=>b.addEventListener("click",()=>{state.celebrityTab=b.dataset.celebrityTab;renderCelebrityTabs()}));
 
 
@@ -337,7 +606,11 @@ document.querySelectorAll("[data-mycon-tab]").forEach(b=>b.addEventListener("cli
 document.getElementById("openReminderSheet").addEventListener("click",()=>{updateReminderUI();document.getElementById("reminderModal").showModal()});
 document.getElementById("closeReminderModal").addEventListener("click",()=>document.getElementById("reminderModal").close());
 document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListener("change",()=>{state.reminderMinutes=+i.value;localStorage.setItem("sfvc-reminder-minutes",String(state.reminderMinutes));updateReminderUI();setTimeout(()=>document.getElementById("reminderModal").close(),150)}));
-document.getElementById("enableNotificationsButton").addEventListener("click",async()=>{if(!("Notification"in window))return;await Notification.requestPermission();updateNotificationStatus()});
+document.getElementById("enableNotificationsButton").addEventListener("click",enablePushNotifications);
+document.getElementById("disablePushNotificationsButton")?.addEventListener("click",async()=>{
+  await unregisterPushSubscription();
+  await updateNotificationStatus();
+});
 
 let deferredPrompt;
 window.addEventListener("beforeinstallprompt",e=>{

@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v3-6";
+const CACHE="sfvc-program-v3-7-1";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -25,4 +25,32 @@ self.addEventListener("fetch",event=>{
   );
 });
 
-self.addEventListener("notificationclick",e=>{e.notification.close();e.waitUntil(clients.openWindow("./"))});
+self.addEventListener("push",event=>{
+  let data={};
+  try{data=event.data?event.data.json():{}}catch{data={body:event.data?.text?.()||""}}
+  const title=data.title||"Sci-Fi Valley Con";
+  const options={
+    body:data.body||"Convention update",
+    icon:"./assets/icons/app-icon-192.png",
+    badge:"./assets/icons/app-icon-192.png",
+    tag:data.tag||"sfvc-update",
+    renotify:true,
+    data:{url:data.url||"./"}
+  };
+  event.waitUntil(self.registration.showNotification(title,options));
+});
+
+self.addEventListener("notificationclick",event=>{
+  event.notification.close();
+  const target=new URL(event.notification?.data?.url||"./",self.location.origin).href;
+  event.waitUntil((async()=>{
+    const windows=await clients.matchAll({type:"window",includeUncontrolled:true});
+    for(const client of windows){
+      if("focus" in client){
+        await client.navigate(target).catch(()=>{});
+        return client.focus();
+      }
+    }
+    return clients.openWindow(target);
+  })());
+});
