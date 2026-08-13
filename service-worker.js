@@ -1,7 +1,7 @@
-const CACHE="sfvc-program-v3-4-1";
+const CACHE="sfvc-program-v3-5";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
-  "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json",
+  "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/settings.json",
   "./assets/icons/app-icon-192.png","./assets/icons/app-icon-512.png",
   "./assets/icons/app-icon-maskable-512.png","./assets/icons/apple-touch-icon.png"
 ];

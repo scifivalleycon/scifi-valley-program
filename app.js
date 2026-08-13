@@ -1,5 +1,16 @@
+const DEFAULT_SETTINGS = {
+  eventName: "Sci-Fi Valley Con",
+  editionLabel: "FALL 2026",
+  startDate: "2026-10-16",
+  endDate: "2026-10-18",
+  venue: "Blair County Convention Center",
+  city: "Altoona",
+  state: "PA",
+  photoShop: "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+};
+
 const state = {
-  guests: [], schedule: [], events: [],
+  guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS},
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All",
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -17,13 +28,80 @@ navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
 
 async function loadData(){
-  const [guests,schedule,events]=await Promise.all([
+  const [guests,schedule,events,settingsData]=await Promise.all([
     fetch("data/guests.json").then(r=>r.json()),
     fetch("data/schedule.json").then(r=>r.json()),
-    fetch("data/events.json").then(r=>r.json())
+    fetch("data/events.json").then(r=>r.json()),
+    fetch("data/settings.json")
+      .then(r=>r.ok?r.json():[])
+      .catch(()=>[])
   ]);
-  state.guests=guests; state.schedule=schedule.map((e,i)=>({...e,id:e.id||`${e.day}-${e.time}-${i}`})); state.events=events;
+  const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
+  state.settings={...DEFAULT_SETTINGS,...savedSettings};
+  state.guests=guests;
+  state.schedule=schedule.map((e,i)=>({...e,id:e.id||`${e.day}-${e.time}-${i}`}));
+  state.events=events;
   renderAll();
+}
+
+
+function parseISODate(value){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||"")))return null;
+  const [y,m,d]=value.split("-").map(Number);
+  return new Date(y,m-1,d,12,0,0);
+}
+function addDaysISO(value,days){
+  const date=parseISODate(value);
+  if(!date)return "";
+  date.setDate(date.getDate()+days);
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+function formatEventDateRange(compact=false){
+  const start=parseISODate(state.settings.startDate), end=parseISODate(state.settings.endDate);
+  if(!start||!end)return compact?"EVENT DATES TBD":"EVENT DATES TBD";
+  const monthLong=new Intl.DateTimeFormat("en-US",{month:"long"});
+  const monthShort=new Intl.DateTimeFormat("en-US",{month:"short"});
+  const sm=(compact?monthShort:monthLong).format(start).toUpperCase();
+  const em=(compact?monthShort:monthLong).format(end).toUpperCase();
+  const sd=start.getDate(), ed=end.getDate(), sy=start.getFullYear(), ey=end.getFullYear();
+  if(sy===ey&&start.getMonth()===end.getMonth())return `${sm} ${sd}–${ed}, ${sy}`;
+  if(sy===ey)return `${sm} ${sd} – ${em} ${ed}, ${sy}`;
+  return `${sm} ${sd}, ${sy} – ${em} ${ed}, ${ey}`;
+}
+function eventDayDates(){
+  return {
+    Friday: state.settings.startDate,
+    Saturday: addDaysISO(state.settings.startDate,1),
+    Sunday: addDaysISO(state.settings.startDate,2)
+  };
+}
+function eventLocationText(){
+  return [state.settings.venue,[state.settings.city,state.settings.state].filter(Boolean).join(", ")].filter(Boolean).join(" • ");
+}
+function applyEventSettings(){
+  const eventName=(state.settings.eventName||"Sci-Fi Valley Con").toUpperCase();
+  const topbarName=document.getElementById("topbarEventName");
+  if(topbarName)topbarName.textContent=eventName;
+
+  const compactDates=formatEventDateRange(true);
+  const fullDates=formatEventDateRange(false);
+  const cityState=[state.settings.city,state.settings.state].filter(Boolean).join(", ").toUpperCase();
+
+  const meta=document.getElementById("topbarEventMeta");
+  if(meta)meta.textContent=[compactDates,cityState].filter(Boolean).join(" • ");
+
+  const heroDates=document.getElementById("heroEventDates");
+  if(heroDates)heroDates.textContent=fullDates;
+
+  const guestDates=document.getElementById("guestEventDates");
+  if(guestDates)guestDates.textContent=fullDates;
+
+  const heroLocation=document.getElementById("heroEventLocation");
+  if(heroLocation)heroLocation.textContent=eventLocationText();
+
+  if(state.settings.photoShop){
+    document.querySelectorAll("[data-photo-shop]").forEach(a=>a.href=state.settings.photoShop);
+  }
 }
 
 function renderGuestFilters(){
@@ -87,7 +165,7 @@ function openGuest(id){
   const external=g.imdb?`<a class="secondary-action" href="${g.imdb}" target="_blank" rel="noopener">IMDb PAGE ↗</a>`:
     g.instagram?`<a class="secondary-action" href="${g.instagram}" target="_blank" rel="noopener">INSTAGRAM ↗</a>`:"";
   const photoAction=g.photoShop?`<a class="full-action" href="${g.photoShop}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${g.photoOp?` • ${g.photoOp}`:""} ↗</a>`:
-    `<a class="full-action" href="${PHOTO_SHOP}" target="_blank" rel="noopener">BROWSE CELEBRITY PHOTO OPS ↗</a>`;
+    `<a class="full-action" href="${state.settings.photoShop||PHOTO_SHOP}" target="_blank" rel="noopener">BROWSE CELEBRITY PHOTO OPS ↗</a>`;
   document.getElementById("guestModalContent").innerHTML=`
     <div class="modal-inner">
       <div class="modal-hero">
@@ -132,7 +210,7 @@ function renderMySchedule(){
   if(preview)preview.innerHTML=html;if(list)list.innerHTML=html;document.querySelectorAll("[data-remove-schedule]").forEach(b=>b.addEventListener("click",()=>removeScheduleItem(b.dataset.removeSchedule)));updateCombinedSavedCount()
 }
 function updateCombinedSavedCount(){const b=document.getElementById("favoriteCount");if(b)b.textContent=`${state.favorites.size+state.mySchedule.size} SAVED`}
-function eventDateTime(e){const d={Friday:"2026-10-16",Saturday:"2026-10-17",Sunday:"2026-10-18"}[e.day];const m=e.time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!d||!m)return null;let h=+m[1];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return new Date(`${d}T${String(h).padStart(2,"0")}:${m[2]}:00`)}
+function eventDateTime(e){const d=eventDayDates()[e.day];const m=e.time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!d||!m)return null;let h=+m[1];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return new Date(`${d}T${String(h).padStart(2,"0")}:${m[2]}:00`)}
 function scheduleAllReminders(){for(const t of state.reminderTimers.values())clearTimeout(t);state.reminderTimers.clear();if(!state.reminderMinutes)return;const now=Date.now();state.schedule.filter(e=>state.mySchedule.has(e.id)).forEach(e=>{const t=eventDateTime(e);if(!t)return;const delay=t.getTime()-state.reminderMinutes*60000-now;if(delay>0&&delay<=2147483647)state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay))})}
 async function showScheduleNotification(e){if(!("Notification"in window)||Notification.permission!=="granted")return;const reg=await navigator.serviceWorker?.ready;if(reg)reg.showNotification(`${e.title} starts soon`,{body:`${e.time} • ${e.location}`,icon:"assets/icons/app-icon-192.png",badge:"assets/icons/app-icon-192.png",data:{url:"./"}})}
 function updateReminderUI(){const s=document.getElementById("reminderSettingSummary");if(s)s.textContent=state.reminderMinutes?`${formatReminder(state.reminderMinutes)} for My Schedule events`:"No reminders for My Schedule events";document.querySelectorAll('input[name="reminder"]').forEach(i=>i.checked=+i.value===state.reminderMinutes);renderSchedule();renderMySchedule();scheduleAllReminders()}
@@ -140,8 +218,16 @@ function updateNotificationStatus(){const t=document.getElementById("notificatio
 
 function renderStatus(){
   const now=new Date(), key=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  const dates={"2026-10-16":"Friday","2026-10-17":"Saturday","2026-10-18":"Sunday"},c=document.getElementById("happeningNow");
-  if(!dates[key]){document.getElementById("nowHeading").textContent="COMING OCTOBER 16–18";c.innerHTML=`<div class="status-card"><strong>FALL 2026 DIGITAL PROGRAM</strong><div class="meta">The program is being built now. During convention weekend this area will surface today's events automatically.</div></div>`;return;}
+  const byDay=eventDayDates();
+  const dates=Object.fromEntries(Object.entries(byDay).filter(([,v])=>v).map(([day,date])=>[date,day]));
+  const c=document.getElementById("happeningNow");
+  if(!dates[key]){
+    const heading=formatEventDateRange(false).replace(/,\s*\d{4}$/,"");
+    document.getElementById("nowHeading").textContent=`COMING ${heading}`;
+    const edition=(state.settings.editionLabel||formatEventDateRange(false)).toUpperCase();
+    c.innerHTML=`<div class="status-card"><strong>${edition} DIGITAL PROGRAM</strong><div class="meta">The program is being built now. During convention weekend this area will surface today's events automatically.</div></div>`;
+    return;
+  }
   const day=dates[key], items=state.schedule.filter(e=>e.day===day).slice(0,4);
   document.getElementById("nowHeading").textContent=`TODAY • ${day.toUpperCase()}`;
   c.innerHTML=items.map(e=>`<div class="status-card"><strong>${e.time} • ${e.title.toUpperCase()}</strong><div class="meta">${e.location}</div></div>`).join("");
@@ -183,7 +269,7 @@ function renderEvents(){
     </details>`).join("") || `<div class="paper-panel muted-empty">No program information matches that search.</div>`;
 }
 
-function renderAll(){renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderMySchedule();updateReminderUI();updateNotificationStatus();}
+function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
 

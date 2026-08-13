@@ -14,7 +14,7 @@
   <header class="topbar">
     <button class="brand-button" data-go="home" aria-label="Home">
       <img src="assets/icons/app-icon-192.png" alt="">
-      <span><b>SCI-FI VALLEY CON</b><small>OCT 16–18, 2026 • ALTOONA, PA</small></span>
+      <span><b id="topbarEventName">SCI-FI VALLEY CON</b><small id="topbarEventMeta">OCT 16–18, 2026 • ALTOONA, PA</small></span>
     </button>
     <button id="installButton" class="install-button" hidden>ADD APP</button>
   </header>
@@ -48,12 +48,12 @@
           <span></span>
         </div>
 
-        <h1>OCTOBER 16–18, 2026</h1>
-        <p class="location-copy">Blair County Convention Center • Altoona, Pennsylvania</p>
+        <h1 id="heroEventDates">OCTOBER 16–18, 2026</h1>
+        <p id="heroEventLocation" class="location-copy">Blair County Convention Center • Altoona, Pennsylvania</p>
         <p class="family-line">WHERE FANDOM BECOMES FAMILY</p>
       </section>
 
-      <a class="photo-cta" href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">
+      <a class="photo-cta" data-photo-shop href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">
         <span class="camera-badge">★</span>
         <span><small>CELEBRITY PHOTO OPS</small><strong>ORDER YOUR PHOTO OPS</strong><em>Digital download included with photo-op purchase.</em></span>
         <b>›</b>
@@ -97,12 +97,12 @@
 
     <section id="guests" class="screen">
       <div class="page-title poster-title">
-        <p class="kicker">OCTOBER 16–18, 2026</p>
+        <p id="guestEventDates" class="kicker">OCTOBER 16–18, 2026</p>
         <h1>CELEBRITY <span>GUESTS</span></h1>
         <p>Tap any guest for their full bio, credits, IMDb or Instagram and photo-op ordering.</p>
       </div>
 
-      <a class="inline-cta" href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">★ ORDER CELEBRITY PHOTO OPS ›</a>
+      <a class="inline-cta" data-photo-shop href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">★ ORDER CELEBRITY PHOTO OPS ›</a>
 
       <label class="search-box"><span>⌕</span><input id="guestSearch" type="search" placeholder="Search guest, show or character"></label>
       <div id="guestFilters" class="chip-row"></div>

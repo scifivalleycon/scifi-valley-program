@@ -1,25 +1,32 @@
-# Sci-Fi Valley Con Digital Program — V3.4.1
+# Sci-Fi Valley Con Digital Program — V3.5
 
-This is the corrected cumulative build.
+Cumulative update from the complete V3.4.1 attendee app.
 
-Built from the untouched COMPLETE V3.3 package, then only the install UX was changed.
+## New Event Settings system
 
-Verified preserved:
-- 15 guests
-- 14 Event Guide sections
-- 21 schedule entries
-- My Schedule
-- Notification Settings
-- sponsors
-- Wildefell Wolves and Samurai Jill photos
-- guest photo lightbox
-- photo-op ordering
-- retro branding and app icons
+The app now reads `data/settings.json`.
 
-V3.4.1 install behavior:
-- Desktop/Android install UI only appears when browser reports the PWA is installable.
-- iPhone/iPad retains Safari Add to Home Screen instructions.
-- Unsupported desktop browsers see no install card.
-- Installed PWA sees no install card.
+Staff-controlled fields:
+- Event name
+- Edition label
+- Start date
+- End date
+- Venue
+- City
+- State
+- Photo-op store URL
 
-The JavaScript in this package was validated with `node --check` before packaging.
+The event dates now dynamically update:
+- top app bar
+- homepage hero
+- guest-page date heading
+- Happening Now / Coming Soon messaging
+- schedule reminder calendar dates
+- notification timing
+- photo-op CTA links
+
+The existing October 16–18, 2026 information remains the default/fallback so the app
+does not break if settings.json is unavailable during a deployment.
+
+All prior guests, schedule, Event Guide, reminders, sponsors, install behavior, PWA
+icons and styling are preserved.
