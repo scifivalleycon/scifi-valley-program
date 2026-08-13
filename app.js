@@ -1129,6 +1129,15 @@ function bindGuestPhotoLightboxes(){
 document.getElementById("closePhotoLightbox")?.addEventListener("click",()=>document.getElementById("photoLightbox").close());
 document.getElementById("photoLightbox")?.addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
+
+/* V3.8.5 — suppress browser double-click/double-tap zoom inside the app.
+   CSS touch-action: manipulation is the primary control and still permits pinch zoom. */
+document.addEventListener("dblclick",event=>{
+  if(event.target.closest(".topbar,.bottom-nav,#app")){
+    event.preventDefault();
+  }
+},{passive:false});
+
 initializeAppAnalytics();
 
 loadData().catch(err=>{console.error(err);document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Refresh the page or check the latest Cloudflare deployment.</div></div>`});

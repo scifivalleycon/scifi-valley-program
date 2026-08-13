@@ -377,3 +377,36 @@ body.is-standalone .install-app-card{display:none!important}
   .push-prompt-card p{font-size:11px}
   .push-prompt-actions{grid-template-columns:1fr}
 }
+
+
+/* V3.8.5 — prevent accidental double-tap zoom while preserving pinch zoom */
+html,
+body,
+#app,
+.topbar,
+.bottom-nav,
+button,
+a,
+label,
+summary,
+[role="button"],
+.nav-button,
+.brand-button,
+.quick-card,
+.settings-link,
+.settings-menu-card,
+.chip,
+.schedule-card,
+.guest-card {
+  touch-action: manipulation;
+}
+
+/* Avoid accidental text selection from rapid toolbar taps. */
+.topbar,
+.bottom-nav,
+button,
+.nav-button,
+.brand-button {
+  -webkit-user-select: none;
+  user-select: none;
+}

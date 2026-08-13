@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.8.4
+# Sci-Fi Valley Con Digital Program — V3.8.5
 
 Cumulative update from V3.6.
 
@@ -182,3 +182,20 @@ V3.8.4:
 - bumps the PWA cache to V3.8.4
 
 Notify V1.4 and Admin V1.8.1 require no changes for this revision.
+
+
+## V3.8.5 — accidental double-tap zoom prevention
+
+Rapid taps/double taps inside the attendee app no longer trigger browser zoom,
+including taps on the top toolbar and bottom navigation.
+
+Implementation:
+- `touch-action: manipulation` is applied to the app shell and interactive controls
+- a `dblclick` default-action guard covers the app chrome/content
+- normal scrolling remains available
+- intentional pinch-to-zoom remains available for accessibility
+- no `user-scalable=no` or `maximum-scale=1` viewport restriction is used
+- PWA cache bumped to V3.8.5
+
+Current backend-managed JSON was checked against the live GitHub repository before
+packaging so this revision does not roll back admin-managed content.
