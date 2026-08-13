@@ -332,5 +332,21 @@
   </dialog>
 
   <script src="app.js"></script>
+
+  <dialog id="pushPromptModal" class="push-prompt-modal">
+    <div class="push-prompt-card">
+      <button id="closePushPromptModal" class="push-prompt-close" type="button" aria-label="Close notification prompt">×</button>
+      <div class="push-prompt-bell" aria-hidden="true">🔔</div>
+      <span class="push-optin-kicker">DON'T MISS AN UPDATE</span>
+      <h2>ENABLE EVENT ALERTS</h2>
+      <p id="pushPromptCopy">Get important Sci-Fi Valley Con notifications for schedule changes, room updates, delays, cancellations, and other convention announcements.</p>
+      <div class="push-prompt-actions">
+        <button id="pushPromptEnableButton" class="push-optin-primary" type="button">ENABLE NOTIFICATIONS</button>
+        <button id="pushPromptLaterButton" class="push-optin-secondary" type="button">NOT NOW</button>
+      </div>
+      <small id="pushPromptFootnote">You can change your notification settings at any time from Notification Settings.</small>
+    </div>
+  </dialog>
+
 </body>
 </html>

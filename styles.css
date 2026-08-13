@@ -289,3 +289,91 @@ body.is-standalone .install-app-card{display:none!important}
   }
   .push-optin-copy>strong{font-size:19px}
 }
+
+
+/* Every-open Event Alerts prompt — V3.7.3 */
+.push-prompt-modal{
+  width:min(92vw,520px);
+  max-width:520px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+}
+.push-prompt-modal::backdrop{
+  background:rgba(25,18,15,.66);
+  backdrop-filter:blur(2px);
+}
+.push-prompt-card{
+  position:relative;
+  padding:25px 22px 20px;
+  text-align:center;
+  background:var(--paper2);
+  border:3px solid var(--ink);
+  border-radius:16px;
+  box-shadow:8px 10px 0 rgba(58,39,32,.28);
+}
+.push-prompt-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  display:grid;
+  place-items:center;
+  width:36px;
+  height:36px;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--coral);
+  color:#fff7df;
+  font-size:24px;
+  font-weight:900;
+  line-height:1;
+}
+.push-prompt-bell{
+  display:grid;
+  place-items:center;
+  width:68px;
+  height:68px;
+  margin:0 auto 12px;
+  background:var(--mustard);
+  border:3px solid var(--ink);
+  border-radius:50%;
+  box-shadow:4px 5px 0 rgba(58,39,32,.16);
+  font-size:32px;
+}
+.push-prompt-card h2{
+  margin:4px 0 8px;
+  font-family:Impact,sans-serif;
+  font-size:32px;
+  letter-spacing:.035em;
+}
+.push-prompt-card p{
+  max-width:430px;
+  margin:0 auto;
+  font-family:Georgia,serif;
+  font-size:13px;
+  line-height:1.5;
+}
+.push-prompt-actions{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  margin:18px auto 11px;
+}
+.push-prompt-actions .push-optin-primary,
+.push-prompt-actions .push-optin-secondary{
+  min-height:42px;
+}
+.push-prompt-card>small{
+  display:block;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.4;
+}
+@media(max-width:520px){
+  .push-prompt-card{padding:23px 16px 17px}
+  .push-prompt-card h2{font-size:27px}
+  .push-prompt-card p{font-size:11px}
+  .push-prompt-actions{grid-template-columns:1fr}
+}

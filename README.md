@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.7.2
+# Sci-Fi Valley Con Digital Program — V3.7.3
 
 Cumulative update from V3.6.
 
@@ -66,3 +66,24 @@ The banner explains that notifications are used for schedule changes, room updat
 delays, cancellations, and other important convention announcements.
 
 All V3.7.1 features remain intact.
+
+
+## V3.7.3 — persistent notification encouragement
+
+Notification opt-in behavior now works in two stages:
+
+1. Every fresh app/browser session checks whether this device has an active Event
+   Alerts push subscription. If it does not, an Event Alerts modal appears shortly
+   after the app loads.
+2. Choosing Not Now closes the modal for only that current app session.
+3. If the attendee keeps the app open for 30 continuous minutes without subscribing,
+   the Event Alerts banner appears at the top of the app.
+4. A successful push subscription closes the modal, hides the banner, and cancels
+   the 30-minute reminder timer.
+5. Unsupported browsers and devices with notifications explicitly blocked receive
+   explanatory modal text rather than an unusable Enable button.
+
+No permanent dismissal is stored for the every-open modal. It is intentionally
+shown again on the next fresh app open while Event Alerts remain disabled.
+
+All V3.7.2 features remain intact.
