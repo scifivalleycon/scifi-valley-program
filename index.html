@@ -103,6 +103,7 @@
       </div>
 
       <a class="inline-cta" data-photo-shop href="https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops" target="_blank" rel="noopener">★ ORDER CELEBRITY PHOTO OPS ›</a>
+      <button class="celebrity-guide-link" data-go="celebrity"><span>★</span><span><strong>CELEBRITY PRICES & SCHEDULES</strong><small>Table prices, photo ops, autographs & panels</small></span><b>›</b></button>
 
       <label class="search-box"><span>⌕</span><input id="guestSearch" type="search" placeholder="Search guest, show or character"></label>
       <div id="guestFilters" class="chip-row"></div>
@@ -117,6 +118,48 @@
       </div>
       <div id="dayFilters" class="chip-row"></div>
       <div id="scheduleList" class="schedule-list"></div>
+    </section>
+
+    <section id="celebrity" class="screen">
+      <div class="page-title poster-title">
+        <p class="kicker">MEET THE STARS</p>
+        <h1>CELEBRITY <span>GUIDE</span></h1>
+        <p>Guest table prices, professional photo ops, autograph availability, group photo ops and celebrity Q&amp;A panels.</p>
+      </div>
+      <div id="celebrityUnpublished" class="paper-panel celebrity-coming-soon hidden">
+        <span class="section-kicker">COMING SOON</span><h2>CELEBRITY PRICING &amp; SCHEDULES</h2>
+        <p>Celebrity pricing, photo-op schedules, autograph availability and panel times are still being finalized.</p>
+      </div>
+      <div id="celebrityPublished" class="hidden">
+        <div id="celebrityStatusNotice" class="celebrity-alert"></div>
+        <div class="chip-row celebrity-tabs">
+          <button class="chip active" data-celebrity-tab="prices">PRICES</button>
+          <button class="chip" data-celebrity-tab="photoops">PHOTO OPS</button>
+          <button class="chip" data-celebrity-tab="autographs">AUTOGRAPHS</button>
+          <button class="chip" data-celebrity-tab="panels">PANELS</button>
+        </div>
+        <div id="celebrityPricesPanel" class="celebrity-tab-panel">
+          <div class="section-heading"><div><span class="section-kicker">CELEBRITY TABLES</span><h2>GUEST PRICES</h2></div></div>
+          <div id="celebrityPricingList" class="celebrity-price-list"></div>
+          <div class="section-heading celebrity-subheading"><div><span class="section-kicker">PROFESSIONAL PHOTOS</span><h2>GROUP &amp; DUO OPS</h2></div></div>
+          <div id="groupPhotoOpList" class="group-op-grid"></div>
+          <div id="celebrityGeneralNote" class="celebrity-note"></div>
+        </div>
+        <div id="celebrityPhotoOpsPanel" class="celebrity-tab-panel hidden">
+          <div id="photoOpInfo" class="paper-panel celebrity-info-box"></div>
+          <div id="photoOpDayFilters" class="chip-row"></div>
+          <div id="photoOpList" class="schedule-list"></div>
+        </div>
+        <div id="celebrityAutographsPanel" class="celebrity-tab-panel hidden">
+          <div id="autographInfo" class="celebrity-alert"></div>
+          <div id="autographList" class="autograph-list"></div>
+        </div>
+        <div id="celebrityPanelsPanel" class="celebrity-tab-panel hidden">
+          <div id="panelInfo" class="paper-panel celebrity-info-box"></div>
+          <div id="panelDayFilters" class="chip-row"></div>
+          <div id="panelList" class="panel-list"></div>
+        </div>
+      </div>
     </section>
 
     <section id="map" class="screen">
@@ -138,6 +181,12 @@
         <h1>EVENT <span>GUIDE</span></h1>
         <p>The information from your printed program, organized for quick use on a phone.</p>
       </div>
+
+      <button class="settings-menu-card" data-go="celebrity">
+        <span class="settings-menu-icon">★</span>
+        <span><strong>CELEBRITY GUIDE</strong><small>Prices, photo ops, autographs & panels</small></span>
+        <b>›</b>
+      </button>
 
       <button class="settings-menu-card" data-go="settings">
         <span class="settings-menu-icon">🔔</span>

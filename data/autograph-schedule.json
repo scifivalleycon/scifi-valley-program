@@ -1,0 +1,44 @@
+[
+  {
+    "id": "auto-1",
+    "guestName": "GUEST 1",
+    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
+    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
+    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+  },
+  {
+    "id": "auto-2",
+    "guestName": "GUEST 2",
+    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
+    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
+    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+  },
+  {
+    "id": "auto-3",
+    "guestName": "GUEST 3",
+    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
+    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
+    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+  },
+  {
+    "id": "auto-4",
+    "guestName": "GUEST 4",
+    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
+    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
+    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+  },
+  {
+    "id": "auto-5",
+    "guestName": "GUEST 5",
+    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
+    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
+    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+  },
+  {
+    "id": "auto-6",
+    "guestName": "GUEST 6",
+    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
+    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
+    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+  }
+]

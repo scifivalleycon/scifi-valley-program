@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS},
+  guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All",
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -28,19 +28,23 @@ navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
 
 async function loadData(){
-  const [guests,schedule,events,settingsData]=await Promise.all([
-    fetch("data/guests.json").then(r=>r.json()),
-    fetch("data/schedule.json").then(r=>r.json()),
-    fetch("data/events.json").then(r=>r.json()),
-    fetch("data/settings.json")
-      .then(r=>r.ok?r.json():[])
-      .catch(()=>[])
+  const safeJson=(url,fallback=[])=>fetch(url).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
+  const [guests,schedule,events,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/settings.json"),
+    safeJson("data/celebrity-info.json"),safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),
+    safeJson("data/autograph-schedule.json"),safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
   ]);
   const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
   state.settings={...DEFAULT_SETTINGS,...savedSettings};
   state.guests=guests;
-  state.schedule=schedule.map((e,i)=>({...e,id:e.id||`${e.day}-${e.time}-${i}`}));
+  state.schedule=schedule.map((e,i)=>({...e,id:e.id||`schedule-${e.day}-${e.time}-${i}`}));
   state.events=events;
+  state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
+  state.celebrityPricing=Array.isArray(celebrityPricing)?celebrityPricing:[];
+  state.photoOps=Array.isArray(photoOps)?photoOps:[];
+  state.autographs=Array.isArray(autographs)?autographs:[];
+  state.groupPhotoOps=Array.isArray(groupPhotoOps)?groupPhotoOps:[];
+  state.panels=Array.isArray(panels)?panels:[];
   renderAll();
 }
 
@@ -183,27 +187,81 @@ function openGuest(id){
 document.getElementById("closeGuestModal").addEventListener("click",()=>document.getElementById("guestModal").close());
 document.getElementById("guestModal").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
+
+function celebrityPublished(){return state.celebrityInfo?.published===true}
+function panelScheduleItems(){
+  if(!celebrityPublished())return [];
+  return state.panels.map((p,i)=>({id:`panel-${p.id||i}`,day:p.day,time:p.startTime,title:p.title,location:p.location||state.celebrityInfo.panelRoom||"Panel Room",category:"Celebrity Panel"}));
+}
+function photoOpScheduleItems(){
+  if(!celebrityPublished())return [];
+  return state.photoOps.map((p,i)=>({id:`photoop-${p.id||i}`,day:p.day,time:p.time,title:`${p.title} Photo Op`,location:state.celebrityInfo.photoOpLocation||"Photo Op Area",category:`Professional Photo Op${p.type?` • ${p.type}`:""}`}));
+}
+function generalScheduleItems(){return [...state.schedule,...panelScheduleItems()]}
+function reminderScheduleItems(){return [...generalScheduleItems(),...photoOpScheduleItems()]}
+function scheduleCardHtml(e){
+  const saved=state.mySchedule.has(e.id);
+  return `<article class="schedule-card"><div class="schedule-time">${e.time}</div><div><strong>${e.title.toUpperCase()}</strong><div class="meta">${e.location} • ${e.category}</div>${saved&&state.reminderMinutes>0?`<span class="schedule-reminder-label">🔔 ${formatReminder(state.reminderMinutes)}</span>`:""}</div><button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button></article>`;
+}
+function bindScheduleSaveButtons(){
+  document.querySelectorAll("[data-schedule-save]").forEach(b=>{if(b.dataset.bound==="yes")return;b.dataset.bound="yes";b.addEventListener("click",()=>toggleScheduleItem(b.dataset.scheduleSave))});
+}
+function renderCelebrityGuide(){
+  const published=celebrityPublished();
+  document.getElementById("celebrityUnpublished")?.classList.toggle("hidden",published);
+  document.getElementById("celebrityPublished")?.classList.toggle("hidden",!published);
+  if(!published)return;
+  document.getElementById("celebrityStatusNotice").textContent=state.celebrityInfo.statusNotice||"Celebrity information is subject to change.";
+  renderCelebrityTabs();renderCelebrityPrices();renderCelebrityPhotoOps();renderCelebrityAutographs();renderCelebrityPanels();
+}
+function renderCelebrityTabs(){
+  document.querySelectorAll("[data-celebrity-tab]").forEach(b=>b.classList.toggle("active",b.dataset.celebrityTab===state.celebrityTab));
+  const ids={prices:"celebrityPricesPanel",photoops:"celebrityPhotoOpsPanel",autographs:"celebrityAutographsPanel",panels:"celebrityPanelsPanel"};
+  Object.entries(ids).forEach(([k,id])=>document.getElementById(id)?.classList.toggle("hidden",k!==state.celebrityTab));
+}
+function renderCelebrityPrices(){
+  document.getElementById("celebrityPricingList").innerHTML=state.celebrityPricing.map(p=>`<article class="price-card"><div class="price-card-name">${p.guestName.toUpperCase()}</div><div class="price-grid"><div><small>AUTOGRAPH</small><strong>${p.autograph||"TBD"}</strong></div><div><small>SELFIE</small><strong>${p.selfie||"TBD"}</strong></div><div><small>COMBO</small><strong>${p.combo||"TBD"}</strong></div><div><small>PRO PHOTO</small><strong>${p.proPhoto||"TBD"}</strong></div></div>${p.notes?`<div class="price-note">${p.notes}</div>`:""}</article>`).join("")||`<div class="paper-panel muted-empty">Guest pricing has not been published yet.</div>`;
+  document.getElementById("groupPhotoOpList").innerHTML=state.groupPhotoOps.map(g=>`<article class="group-op-card"><span class="tag">PHOTO OP</span><h3>${g.title.toUpperCase()}</h3><p>${g.participants}</p><strong>${g.price||"TBD"}</strong>${g.notes?`<small>${g.notes}</small>`:""}</article>`).join("")||`<div class="muted-empty">No group photo ops currently listed.</div>`;
+  document.getElementById("celebrityGeneralNote").textContent=state.celebrityInfo.generalNote||"";
+}
+function renderCelebrityPhotoOps(){
+  const info=state.celebrityInfo;
+  document.getElementById("photoOpInfo").innerHTML=`<span class="section-kicker">PROFESSIONAL PHOTO OPS</span><h2>PHOTO OP INFORMATION</h2><p><strong>Line up ${info.photoOpLineupMinutes||15} minutes before your scheduled time.</strong></p><p>${info.photoOpNotice||""}</p><p><strong>${info.photoOpLocation||"Photo Op Area"}</strong>${info.photoOpLocationDetail?` • ${info.photoOpLocationDetail}`:""}${info.photoOpUpdatePoint?`<br>Updates: ${info.photoOpUpdatePoint}`:""}</p>`;
+  const days=["Friday","Saturday","Sunday"], filters=document.getElementById("photoOpDayFilters");
+  filters.innerHTML=days.map(d=>`<button class="chip ${d===state.celebrityPhotoDay?"active":""}" data-photo-day="${d}">${d.toUpperCase()}</button>`).join("");
+  filters.querySelectorAll("[data-photo-day]").forEach(b=>b.addEventListener("click",()=>{state.celebrityPhotoDay=b.dataset.photoDay;renderCelebrityPhotoOps()}));
+  document.getElementById("photoOpList").innerHTML=photoOpScheduleItems().filter(e=>e.day===state.celebrityPhotoDay).map(scheduleCardHtml).join("")||`<div class="paper-panel muted-empty">No photo ops listed for this day.</div>`;
+  bindScheduleSaveButtons();
+}
+function renderCelebrityAutographs(){
+  document.getElementById("autographInfo").textContent=state.celebrityInfo.autographNotice||"Autograph availability is flexible and subject to change.";
+  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3><div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${String(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
+}
+function renderCelebrityPanels(){
+  const info=state.celebrityInfo;
+  document.getElementById("panelInfo").innerHTML=`<span class="section-kicker">CELEBRITY Q&amp;A</span><h2>${(info.panelRoom||"CELEBRITY PANELS").toUpperCase()}</h2><p>${info.panelNotice||""}</p>${info.panelSeatingNote?`<p><strong>${info.panelSeatingNote}</strong></p>`:""}`;
+  const days=["Friday","Saturday","Sunday"], filters=document.getElementById("panelDayFilters");
+  filters.innerHTML=days.map(d=>`<button class="chip ${d===state.celebrityPanelDay?"active":""}" data-panel-day="${d}">${d.toUpperCase()}</button>`).join("");
+  filters.querySelectorAll("[data-panel-day]").forEach(b=>b.addEventListener("click",()=>{state.celebrityPanelDay=b.dataset.panelDay;renderCelebrityPanels()}));
+  const records=state.panels.filter(p=>p.day===state.celebrityPanelDay);
+  document.getElementById("panelList").innerHTML=records.map((p,i)=>{const e=panelScheduleItems().find(x=>x.id===`panel-${p.id||i}`),saved=e&&state.mySchedule.has(e.id);return `<article class="celebrity-panel-card"><div class="panel-card-head"><div><span class="panel-time">${p.startTime}${p.endTime?`–${p.endTime}`:""}</span><h3>${p.title}</h3></div>${e?`<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`:""}</div><div class="meta">${p.location||info.panelRoom||""}${p.participants?` • ${p.participants}`:""}</div>${p.description?`<p>${p.description}</p>`:""}</article>`}).join("")||`<div class="paper-panel muted-empty">No celebrity panels listed for this day.</div>`;
+  bindScheduleSaveButtons();
+}
+
 function renderDayFilters(){
   const days=["Friday","Saturday","Sunday"];
   const c=document.getElementById("dayFilters");
   c.innerHTML=days.map(d=>`<button class="chip ${d===state.dayFilter?"active":""}" data-day="${d}">${d.toUpperCase()}</button>`).join("");
   c.querySelectorAll("[data-day]").forEach(b=>b.addEventListener("click",()=>{state.dayFilter=b.dataset.day;renderDayFilters();renderSchedule()}));
 }
-function renderSchedule(){
-  const items=state.schedule.filter(e=>e.day===state.dayFilter);
-  document.getElementById("scheduleList").innerHTML=items.map(e=>{
-    const saved=state.mySchedule.has(e.id);
-    return `<article class="schedule-card"><div class="schedule-time">${e.time}</div><div><strong>${e.title.toUpperCase()}</strong><div class="meta">${e.location} • ${e.category}</div>${saved&&state.reminderMinutes>0?`<span class="schedule-reminder-label">🔔 ${formatReminder(state.reminderMinutes)}</span>`:""}</div><button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button></article>`;
-  }).join("");
-  document.querySelectorAll("[data-schedule-save]").forEach(b=>b.addEventListener("click",()=>toggleScheduleItem(b.dataset.scheduleSave)));
-}
+function renderSchedule(){const items=generalScheduleItems().filter(e=>e.day===state.dayFilter);document.getElementById("scheduleList").innerHTML=items.map(scheduleCardHtml).join("");bindScheduleSaveButtons();}
 
 
 function formatReminder(m){if(m===0)return"No reminder";if(m===60)return"1 hour before";return`${m} minutes before`}
-function toggleScheduleItem(id){state.mySchedule.has(id)?state.mySchedule.delete(id):state.mySchedule.add(id);localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));renderSchedule();renderMySchedule();scheduleAllReminders()}
-function removeScheduleItem(id){state.mySchedule.delete(id);localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));renderSchedule();renderMySchedule();scheduleAllReminders()}
+function toggleScheduleItem(id){state.mySchedule.has(id)?state.mySchedule.delete(id):state.mySchedule.add(id);localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders()}
+function removeScheduleItem(id){state.mySchedule.delete(id);localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders()}
 function renderMySchedule(){
-  const saved=state.schedule.filter(e=>state.mySchedule.has(e.id)), preview=document.getElementById("schedulePreview"), list=document.getElementById("settingsScheduleList");
+  const saved=reminderScheduleItems().filter(e=>state.mySchedule.has(e.id)), preview=document.getElementById("schedulePreview"), list=document.getElementById("settingsScheduleList");
   const c=document.getElementById("settingsScheduleCount");if(c)c.textContent=`${saved.length} SAVED`;
   if(!saved.length){if(preview)preview.innerHTML="Tap the bell on a schedule item to add it to My Schedule.";if(list)list.innerHTML="You have not added any events yet.";updateCombinedSavedCount();return}
   const html=saved.map(e=>`<div class="saved-schedule-card"><div class="saved-schedule-time">${e.day.slice(0,3).toUpperCase()}<br>${e.time}</div><div><strong>${e.title.toUpperCase()}</strong><div class="meta">${e.location}${state.reminderMinutes?` • 🔔 ${formatReminder(state.reminderMinutes)}`:" • No reminder"}</div></div><button class="remove-schedule" data-remove-schedule="${e.id}">×</button></div>`).join("");
@@ -211,7 +269,7 @@ function renderMySchedule(){
 }
 function updateCombinedSavedCount(){const b=document.getElementById("favoriteCount");if(b)b.textContent=`${state.favorites.size+state.mySchedule.size} SAVED`}
 function eventDateTime(e){const d=eventDayDates()[e.day];const m=e.time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!d||!m)return null;let h=+m[1];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return new Date(`${d}T${String(h).padStart(2,"0")}:${m[2]}:00`)}
-function scheduleAllReminders(){for(const t of state.reminderTimers.values())clearTimeout(t);state.reminderTimers.clear();if(!state.reminderMinutes)return;const now=Date.now();state.schedule.filter(e=>state.mySchedule.has(e.id)).forEach(e=>{const t=eventDateTime(e);if(!t)return;const delay=t.getTime()-state.reminderMinutes*60000-now;if(delay>0&&delay<=2147483647)state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay))})}
+function scheduleAllReminders(){for(const t of state.reminderTimers.values())clearTimeout(t);state.reminderTimers.clear();if(!state.reminderMinutes)return;const now=Date.now();reminderScheduleItems().filter(e=>state.mySchedule.has(e.id)).forEach(e=>{const t=eventDateTime(e);if(!t)return;const delay=t.getTime()-state.reminderMinutes*60000-now;if(delay>0&&delay<=2147483647)state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay))})}
 async function showScheduleNotification(e){if(!("Notification"in window)||Notification.permission!=="granted")return;const reg=await navigator.serviceWorker?.ready;if(reg)reg.showNotification(`${e.title} starts soon`,{body:`${e.time} • ${e.location}`,icon:"assets/icons/app-icon-192.png",badge:"assets/icons/app-icon-192.png",data:{url:"./"}})}
 function updateReminderUI(){const s=document.getElementById("reminderSettingSummary");if(s)s.textContent=state.reminderMinutes?`${formatReminder(state.reminderMinutes)} for My Schedule events`:"No reminders for My Schedule events";document.querySelectorAll('input[name="reminder"]').forEach(i=>i.checked=+i.value===state.reminderMinutes);renderSchedule();renderMySchedule();scheduleAllReminders()}
 function updateNotificationStatus(){const t=document.getElementById("notificationStatusTitle"),c=document.getElementById("notificationStatusCopy"),b=document.getElementById("enableNotificationsButton");if(!t)return;if(!("Notification"in window)){t.textContent="NOTIFICATIONS NOT SUPPORTED";b.disabled=true}else if(Notification.permission==="granted"){t.textContent="NOTIFICATIONS ENABLED";c.textContent="This device has granted notification permission.";b.textContent="NOTIFICATIONS ENABLED";b.disabled=true}else if(Notification.permission==="denied"){t.textContent="NOTIFICATIONS BLOCKED";c.textContent="Notifications are blocked in browser settings.";b.disabled=true}else{t.textContent="NOTIFICATIONS NOT ENABLED";b.disabled=false}}
@@ -228,7 +286,7 @@ function renderStatus(){
     c.innerHTML=`<div class="status-card"><strong>${edition} DIGITAL PROGRAM</strong><div class="meta">The program is being built now. During convention weekend this area will surface today's events automatically.</div></div>`;
     return;
   }
-  const day=dates[key], items=state.schedule.filter(e=>e.day===day).slice(0,4);
+  const day=dates[key], items=generalScheduleItems().filter(e=>e.day===day).slice(0,4);
   document.getElementById("nowHeading").textContent=`TODAY • ${day.toUpperCase()}`;
   c.innerHTML=items.map(e=>`<div class="status-card"><strong>${e.time} • ${e.title.toUpperCase()}</strong><div class="meta">${e.location}</div></div>`).join("");
 }
@@ -269,9 +327,10 @@ function renderEvents(){
     </details>`).join("") || `<div class="paper-panel muted-empty">No program information matches that search.</div>`;
 }
 
-function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderMySchedule();updateReminderUI();updateNotificationStatus();}
+function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
+document.querySelectorAll("[data-celebrity-tab]").forEach(b=>b.addEventListener("click",()=>{state.celebrityTab=b.dataset.celebrityTab;renderCelebrityTabs()}));
 
 
 document.querySelectorAll("[data-mycon-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-mycon-tab]").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("schedulePreview").classList.toggle("hidden",b.dataset.myconTab!=="schedule");document.getElementById("favoritePreview").classList.toggle("hidden",b.dataset.myconTab!=="guests")}));

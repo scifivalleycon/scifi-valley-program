@@ -1,32 +1,16 @@
-# Sci-Fi Valley Con Digital Program — V3.5
+# Sci-Fi Valley Con Digital Program — V3.6
 
-Cumulative update from the complete V3.4.1 attendee app.
+Cumulative update from V3.5.
 
-## New Event Settings system
+Adds a draftable Celebrity Guide with:
+- guest autograph, selfie, combo and pro-photo pricing
+- tentative pro photo-op schedules
+- flexible autograph schedules
+- group and duo photo ops
+- celebrity Q&A panels with descriptions
+- photo-op location and panel policy notices
 
-The app now reads `data/settings.json`.
-
-Staff-controlled fields:
-- Event name
-- Edition label
-- Start date
-- End date
-- Venue
-- City
-- State
-- Photo-op store URL
-
-The event dates now dynamically update:
-- top app bar
-- homepage hero
-- guest-page date heading
-- Happening Now / Coming Soon messaging
-- schedule reminder calendar dates
-- notification timing
-- photo-op CTA links
-
-The existing October 16–18, 2026 information remains the default/fallback so the app
-does not break if settings.json is unavailable during a deployment.
-
-All prior guests, schedule, Event Guide, reminders, sponsors, install behavior, PWA
-icons and styling are preserved.
+Template data uses GUEST 1, GUEST 2, REUNION 1 and DUO 1 placeholders.
+The guide is hidden from attendees until the admin enables Publish Celebrity Guide.
+Published panels also appear in the Show Schedule. Published panels and photo ops
+can be saved to My Schedule and use existing reminders.

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "panel-1",
+    "day": "Friday",
+    "startTime": "4:00 PM",
+    "endTime": "5:00 PM",
+    "title": "GUEST 1 Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "GUEST 1",
+    "description": "Join GUEST 1 for a fan Q&A featuring career highlights, behind-the-scenes stories, favorite roles, and audience questions."
+  },
+  {
+    "id": "panel-2",
+    "day": "Friday",
+    "startTime": "5:30 PM",
+    "endTime": "6:00 PM",
+    "title": "DUO 1 Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "GUEST 1 / GUEST 2",
+    "description": "Join GUEST 1 and GUEST 2 for a special duo Q&A with stories, character discussion, and fan questions."
+  },
+  {
+    "id": "panel-3",
+    "day": "Saturday",
+    "startTime": "12:00 PM",
+    "endTime": "1:00 PM",
+    "title": "GUEST 3 Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "GUEST 3",
+    "description": "A one-hour Q&A with GUEST 3 covering career memories, behind-the-scenes stories, and fan-favorite projects."
+  },
+  {
+    "id": "panel-4",
+    "day": "Saturday",
+    "startTime": "1:30 PM",
+    "endTime": "2:30 PM",
+    "title": "REUNION 1 Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "GUEST 1 / GUEST 2 / GUEST 3",
+    "description": "Celebrate REUNION 1 with cast stories, behind-the-scenes memories, fan-favorite moments, and audience questions."
+  },
+  {
+    "id": "panel-5",
+    "day": "Saturday",
+    "startTime": "3:00 PM",
+    "endTime": "4:00 PM",
+    "title": "REUNION 2 Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "GUEST 4 / GUEST 5 / GUEST 6",
+    "description": "Join the cast of REUNION 2 for a reunion Q&A celebrating the project, its legacy, and stories from the set."
+  },
+  {
+    "id": "panel-6",
+    "day": "Sunday",
+    "startTime": "12:00 PM",
+    "endTime": "1:00 PM",
+    "title": "DUO 2 Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "GUEST 4 / GUEST 5",
+    "description": "An intimate duo Q&A with GUEST 4 and GUEST 5 featuring behind-the-scenes stories and audience questions."
+  }
+]

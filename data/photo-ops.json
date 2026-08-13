@@ -1,0 +1,74 @@
+[
+  {
+    "id": "photo-1",
+    "day": "Friday",
+    "time": "3:00 PM",
+    "title": "GUEST 1",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-2",
+    "day": "Friday",
+    "time": "3:15 PM",
+    "title": "GUEST 2",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-3",
+    "day": "Friday",
+    "time": "3:30 PM",
+    "title": "REUNION 1",
+    "type": "Reunion",
+    "notes": ""
+  },
+  {
+    "id": "photo-4",
+    "day": "Saturday",
+    "time": "11:00 AM",
+    "title": "GUEST 3",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-5",
+    "day": "Saturday",
+    "time": "11:20 AM",
+    "title": "DUO 1",
+    "type": "Duo",
+    "notes": ""
+  },
+  {
+    "id": "photo-6",
+    "day": "Saturday",
+    "time": "11:40 AM",
+    "title": "REUNION 2",
+    "type": "Reunion",
+    "notes": ""
+  },
+  {
+    "id": "photo-7",
+    "day": "Sunday",
+    "time": "12:00 PM",
+    "title": "GUEST 4",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-8",
+    "day": "Sunday",
+    "time": "12:15 PM",
+    "title": "DUO 2",
+    "type": "Duo",
+    "notes": ""
+  },
+  {
+    "id": "photo-9",
+    "day": "Sunday",
+    "time": "12:30 PM",
+    "title": "REUNION 1",
+    "type": "Reunion",
+    "notes": ""
+  }
+]

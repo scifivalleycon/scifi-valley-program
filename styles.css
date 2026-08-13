@@ -161,3 +161,17 @@ body.is-standalone .install-app-card{display:none!important}
   .install-card-button{grid-column:1/-1;justify-self:stretch}
   .sponsor-logos{grid-template-columns:1fr 1fr}
 }
+
+/* Celebrity Guide V3.6 */
+.celebrity-guide-link{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:11px 13px;text-align:left;background:var(--mustard);border:2px solid var(--ink);border-radius:9px;box-shadow:3px 4px 0 rgba(58,39,32,.14)}
+.celebrity-guide-link span:nth-child(2){display:grid}.celebrity-guide-link strong{font-family:Impact,sans-serif;font-size:17px}.celebrity-guide-link small{color:var(--ink2);font-size:9px}
+.celebrity-coming-soon{text-align:center;padding:30px 18px}.celebrity-coming-soon h2{font-family:Impact,sans-serif;font-size:27px}.celebrity-alert{margin:12px 0;padding:12px 13px;background:#efb1a0;border:2px solid var(--ink);border-radius:8px;font-family:Georgia,serif;font-size:12px;line-height:1.45}
+.celebrity-tabs{position:sticky;top:72px;z-index:15;padding:8px 0;background:var(--paper)}.celebrity-subheading{margin-top:20px}.celebrity-price-list{display:grid;gap:9px}
+.price-card{padding:12px;background:var(--paper2);border:2px solid var(--ink);border-radius:9px;box-shadow:3px 4px 0 rgba(58,39,32,.12)}.price-card-name{padding-bottom:7px;border-bottom:1px dashed var(--line);font-family:Impact,sans-serif;font-size:20px}
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.price-grid>div{padding:8px 5px;text-align:center;background:rgba(115,199,203,.18);border:1px solid var(--line);border-radius:6px}.price-grid small{display:block;color:var(--ink2);font-size:7px;font-weight:900}.price-grid strong{display:block;margin-top:3px;font-size:13px}
+.group-op-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.group-op-card{padding:12px;background:#f0c66f;border:2px solid var(--ink);border-radius:9px;box-shadow:3px 4px 0 rgba(58,39,32,.12)}.group-op-card h3{margin:7px 0 3px;font-family:Impact,sans-serif;font-size:19px}.group-op-card p{font-family:Georgia,serif;font-size:11px}
+.celebrity-note{margin:13px 0;padding:11px;border-left:5px solid var(--coral);background:rgba(238,117,72,.12);font-family:Georgia,serif;font-size:11px;line-height:1.5}.celebrity-info-box h2{font-family:Impact,sans-serif;font-size:24px}.celebrity-info-box p{font-family:Georgia,serif;font-size:11px;line-height:1.5}
+.autograph-list,.panel-list{display:grid;gap:10px}.autograph-card,.celebrity-panel-card{padding:12px;background:var(--paper2);border:2px solid var(--ink);border-radius:9px;box-shadow:3px 4px 0 rgba(58,39,32,.12)}.autograph-card h3,.celebrity-panel-card h3{margin:0;font-family:Impact,sans-serif;font-size:20px}
+.autograph-days{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.autograph-days>div{padding:8px;background:rgba(115,199,203,.16);border:1px solid var(--line);border-radius:6px}.autograph-days small{font-size:8px;font-weight:900}.autograph-days p{font-family:Georgia,serif;font-size:10px;line-height:1.45}
+.panel-card-head{display:flex;justify-content:space-between;gap:9px}.panel-time{color:var(--coral2);font-size:11px;font-weight:900}.celebrity-panel-card>p{font-family:Georgia,serif;font-size:11px;line-height:1.45}
+@media(max-width:560px){.price-grid{grid-template-columns:1fr 1fr}.group-op-grid,.autograph-days{grid-template-columns:1fr}.celebrity-tabs{top:68px}}
