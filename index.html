@@ -21,6 +21,16 @@
 
   <main id="app">
     <section id="home" class="screen active">
+      <section id="installAppCard" class="install-app-card hidden" aria-label="Install Sci-Fi Valley Con app">
+        <img src="assets/icons/app-icon-192.png" alt="Sci-Fi Valley Con app icon">
+        <div class="install-card-copy">
+          <span class="section-kicker">KEEP THE PROGRAM HANDY</span>
+          <strong>ADD SCI-FI VALLEY CON TO YOUR HOME SCREEN</strong>
+          <small id="installCardHint">Open it like an app for faster access during the convention.</small>
+        </div>
+        <button id="installAppCardButton" class="install-card-button">INSTALL</button>
+        <button id="dismissInstallCard" class="install-card-dismiss" aria-label="Dismiss install suggestion">×</button>
+      </section>
       <section class="retro-hero">
         <div class="burst burst-one">★</div>
         <div class="burst burst-two">✦</div>
@@ -71,7 +81,17 @@
           <div><span class="section-kicker">BUILD YOUR WEEKEND</span><h2>MY CON</h2></div>
           <span id="favoriteCount" class="pill">0 SAVED</span>
         </div>
-        <div id="favoritePreview" class="stack muted-empty">Tap the heart on a guest to save them here.</div>
+        <div class="mycon-tabs">
+          <button class="mycon-tab active" data-mycon-tab="schedule">MY SCHEDULE</button>
+          <button class="mycon-tab" data-mycon-tab="guests">MY GUESTS</button>
+        </div>
+        <div id="schedulePreview" class="stack muted-empty">Tap the bell on a schedule item to add it to My Schedule.</div>
+        <div id="favoritePreview" class="stack muted-empty hidden">Tap the heart on a guest to save them here.</div>
+        <button class="settings-link" data-go="settings">
+          <span>🔔</span>
+          <span><strong>NOTIFICATION SETTINGS</strong><small>Choose when schedule reminders appear</small></span>
+          <b>›</b>
+        </button>
       </section>
     </section>
 
@@ -93,7 +113,7 @@
       <div class="page-title poster-title">
         <p class="kicker">PLAN YOUR WEEKEND</p>
         <h1>SHOW <span>SCHEDULE</span></h1>
-        <p>Current public event times are loaded here. Celebrity panel and photo-op session times can be added as soon as the final schedule is published.</p>
+        <p>Tap the bell beside any event to add it to My Schedule. Your reminder setting applies automatically to saved events.</p>
       </div>
       <div id="dayFilters" class="chip-row"></div>
       <div id="scheduleList" class="schedule-list"></div>
@@ -119,10 +139,65 @@
         <p>The information from your printed program, organized for quick use on a phone.</p>
       </div>
 
+      <button class="settings-menu-card" data-go="settings">
+        <span class="settings-menu-icon">🔔</span>
+        <span><strong>NOTIFICATION SETTINGS</strong><small>Schedule reminders & notification permissions</small></span>
+        <b>›</b>
+      </button>
+
       <label class="search-box"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search food, gaming, contests, workshops..."></label>
       <div id="eventFilters" class="chip-row"></div>
       <div id="eventList" class="event-list"></div>
     </section>
+
+    <section id="settings" class="screen">
+      <div class="page-title poster-title">
+        <p class="kicker">PERSONALIZE YOUR PROGRAM</p>
+        <h1>NOTIFICATION <span>SETTINGS</span></h1>
+        <p>Choose the default reminder for events you add to My Schedule.</p>
+      </div>
+      <section class="paper-panel">
+        <button class="settings-row" id="openReminderSheet">
+          <span><strong>SCHEDULE REMINDERS</strong><small id="reminderSettingSummary">Alerts for events added to My Schedule</small></span>
+          <b>›</b>
+        </button>
+        <div class="notification-permission-box">
+          <div><span class="section-kicker">SYSTEM NOTIFICATIONS</span><h2 id="notificationStatusTitle">NOTIFICATIONS NOT ENABLED</h2><p id="notificationStatusCopy">Allow notifications so the app can alert you about saved events while it is active.</p></div>
+          <button id="enableNotificationsButton" class="retro-action">ENABLE NOTIFICATIONS</button>
+        </div>
+      </section>
+      <section class="paper-panel">
+        <div class="section-heading">
+          <div><span class="section-kicker">YOUR SAVED EVENTS</span><h2>MY SCHEDULE</h2></div>
+          <span id="settingsScheduleCount" class="pill">0 SAVED</span>
+        </div>
+        <div id="settingsScheduleList" class="stack muted-empty">You have not added any events yet.</div>
+      </section>
+      <section class="paper-panel reminder-note">
+        <span class="section-kicker">ABOUT REMINDERS</span>
+        <p>Your selected reminder is saved on this device. This version can alert you while the web app is running. Guaranteed background alerts after the app is fully closed will be added later with the push-notification service.</p>
+      </section>
+    </section>
+
+
+    <section class="sponsor-strip" aria-label="Sci-Fi Valley Con sponsors">
+      <span class="sponsor-label">THANK YOU TO OUR SPONSORS</span>
+      <div class="sponsor-logos">
+        <a class="sponsor sponsor-image" href="https://www.breezeline.com/" target="_blank" rel="noopener" aria-label="Breezeline">
+          <img src="https://plainfieldbusinessassociation.org/wp-content/uploads/2024/01/breezeline_vrt_tag_full-color-1024x733.png" alt="Breezeline">
+        </a>
+        <a class="sponsor sponsor-wordmark codex-wordmark" href="https://codexcomicshop.com/" target="_blank" rel="noopener" aria-label="Codex Comics and Collectibles">
+          <span>CODEX</span><small>COMICS &amp; COLLECTIBLES</small>
+        </a>
+        <a class="sponsor sponsor-image" href="https://www.cartridgesgaloregames.com/" target="_blank" rel="noopener" aria-label="Cartridges Galore">
+          <img src="https://www.cartridgesgaloregames.com/wp-content/uploads/2021/02/CG-New-Logo-Medium.png" alt="Cartridges Galore">
+        </a>
+        <a class="sponsor sponsor-wordmark snake-wordmark" href="https://www.se-gaming.com/" target="_blank" rel="noopener" aria-label="Snake Eyes Gaming">
+          <span>SNAKE EYES</span><small>GAMING LLC</small>
+        </a>
+      </div>
+    </section>
+
   </main>
 
   <nav class="bottom-nav" aria-label="Main navigation">
@@ -132,6 +207,42 @@
     <button class="nav-button" data-screen="map"><span>⌖</span><small>MAP</small></button>
     <button class="nav-button" data-screen="more"><span>☰</span><small>MORE</small></button>
   </nav>
+
+
+
+  <dialog id="installHelpModal" class="install-help-modal">
+    <div class="install-help-sheet">
+      <button id="closeInstallHelpModal" class="sheet-close install-help-close" aria-label="Close">×</button>
+      <img src="assets/icons/app-icon-192.png" alt="Sci-Fi Valley Con app icon">
+      <span class="section-kicker">ADD TO HOME SCREEN</span>
+      <h2>INSTALL SCI-FI VALLEY CON</h2>
+      <div id="installHelpContent"></div>
+    </div>
+  </dialog>
+
+  <dialog id="photoLightbox" class="photo-lightbox">
+    <button id="closePhotoLightbox" class="photo-lightbox-close" aria-label="Close image">×</button>
+    <img id="photoLightboxImage" src="" alt="">
+    <div id="photoLightboxCaption" class="photo-lightbox-caption"></div>
+  </dialog>
+
+  <dialog id="reminderModal" class="reminder-modal">
+    <div class="reminder-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-heading">
+        <div><span class="section-kicker">SET YOUR</span><h2>SCHEDULE REMINDERS</h2></div>
+        <button id="closeReminderModal" class="sheet-close" aria-label="Close">×</button>
+      </div>
+      <p>Will apply to events in My Schedule. You can change this anytime.</p>
+      <div class="reminder-options">
+        <label><input type="radio" name="reminder" value="0"><span class="radio-art"></span><span>No reminder</span></label>
+        <label><input type="radio" name="reminder" value="5"><span class="radio-art"></span><span>5 minutes before</span></label>
+        <label><input type="radio" name="reminder" value="15"><span class="radio-art"></span><span>15 minutes before</span></label>
+        <label><input type="radio" name="reminder" value="30"><span class="radio-art"></span><span>30 minutes before</span></label>
+        <label><input type="radio" name="reminder" value="60"><span class="radio-art"></span><span>1 hour before</span></label>
+      </div>
+    </div>
+  </dialog>
 
   <dialog id="guestModal" class="guest-modal">
     <button id="closeGuestModal" class="modal-close" aria-label="Close">×</button>

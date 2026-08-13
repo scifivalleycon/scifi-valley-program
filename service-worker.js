@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v3-1";
+const CACHE="sfvc-program-v3-3";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json",
@@ -24,3 +24,5 @@ self.addEventListener("fetch",event=>{
     }).catch(()=>caches.match(event.request).then(cached=>cached||caches.match("./index.html")))
   );
 });
+
+self.addEventListener("notificationclick",e=>{e.notification.close();e.waitUntil(clients.openWindow("./"))});
