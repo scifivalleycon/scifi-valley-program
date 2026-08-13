@@ -513,3 +513,7 @@ button,
 .map-location-modal{width:min(92vw,480px);padding:0;border:0;background:transparent}.map-location-modal::backdrop{background:rgba(30,22,18,.68)}.map-location-modal>button{position:absolute;z-index:4;right:10px;top:10px}
 #mapLocationModalContent{padding:24px;background:var(--paper2);border:3px solid var(--ink);border-radius:12px;box-shadow:7px 8px 0 rgba(58,39,32,.25)}#mapLocationModalContent h2{margin:7px 0 4px;font-size:22px}.map-modal-meta{color:var(--ink2);font-size:9px;font-weight:800}.map-modal-location{margin-top:12px;padding:9px;background:rgba(115,199,203,.15);border:1px solid var(--ink);font-size:9px}.map-conquest-badge{display:inline-block;margin-top:10px;padding:6px 8px;background:var(--coral);border:2px solid var(--ink);border-radius:5px;color:var(--cream);font-size:8px;font-weight:900}
 @media(max-width:700px){.map-toolbar{grid-template-columns:1fr}.map-tools{justify-content:flex-end}.map-legend-grid{grid-template-columns:repeat(2,1fr)}.map-directory-list{grid-template-columns:1fr}.map-viewport{max-height:65vh}}
+
+
+/* V4.2 map selection refinement */
+.map-selection-chip{background:var(--paper2);border-style:dashed}.map-selection-chip.has-selection{background:var(--aqua);border-style:solid}.map-directory-card.selected-vendor{outline:4px solid var(--aqua);outline-offset:1px}.map-directory-card b{font-size:7px;white-space:nowrap}.map-svg-host .map-location-group{touch-action:manipulation}

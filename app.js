@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapFilter:"All", mapQuery:"", celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapFilter:"All", mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -1063,7 +1063,7 @@ function initializeRecentAlerts(){
 
 
 
-/* Interactive vector floor plan — V4.1 */
+/* Interactive vector floor plan — V4.2 */
 let mapZoom=1;
 let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
 
@@ -1073,15 +1073,11 @@ function expandLocationCodes(value){
     const m=part.match(/^([A-Z]+)(\d+)\s*-\s*([A-Z]+)?(\d+)$/i);
     if(m){
       const p1=m[1].toUpperCase(),start=Number(m[2]),p2=(m[3]||m[1]).toUpperCase(),end=Number(m[4]);
-      if(p1===p2){
-        const step=start<=end?1:-1;
-        for(let n=start;step>0?n<=end:n>=end;n+=step)result.push(`${p1}${n}`);
-        return;
-      }
+      if(p1===p2){const step=start<=end?1:-1;for(let n=start;step>0?n<=end:n>=end;n+=step)result.push(`${p1}${n}`);return;}
     }
-    result.push(part.toUpperCase());
+    result.push(part.toUpperCase().replace(/\s+/g,""));
   });
-  return result;
+  return [...new Set(result)];
 }
 function vendorForLocation(code){
   const target=String(code||"").toUpperCase();
@@ -1092,6 +1088,11 @@ function mapVisible(){return state.mapSettings.published===true||mapPreviewMode}
 function mapLayout(){return state.mapLayout&&typeof state.mapLayout==="object"?state.mapLayout:{canvas:{width:1200,height:1780,defaultWidth:820},elements:[],locations:[]}}
 function svgTextLines(text){return String(text||"").split(/\n/)}
 function svgEscape(value=""){return escapeAppHtml(value)}
+function mapCodeFontSize(code,w,h){
+  const shortest=Math.max(8,Math.min(Number(w||20),Number(h||12)));
+  const byShape=Math.max(5.5,Math.min(8.5,shortest*.62));
+  return Math.max(5,byShape-(String(code).length>2?1:0));
+}
 function renderMapLegend(){
   const c=document.getElementById("mapLegend");if(!c)return;
   const items=Array.isArray(state.mapSettings.legend)?state.mapSettings.legend:[];
@@ -1099,150 +1100,96 @@ function renderMapLegend(){
   const note=document.getElementById("mapConQuestNote");if(note)note.textContent=state.mapSettings.conQuestNote||"Red table markers indicate Con-Quest participation.";
 }
 function buildMapSvg(){
-  const layout=mapLayout();
-  const canvas=layout.canvas||{};
-  const w=Number(canvas.width||1200),h=Number(canvas.height||1780);
-  const out=[];
+  const layout=mapLayout(),canvas=layout.canvas||{},w=Number(canvas.width||1200),h=Number(canvas.height||1780),out=[];
   out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="floorPlanTitle floorPlanDesc">`);
-  out.push(`<title id="floorPlanTitle">Sci-Fi Valley Con interactive convention center floor plan</title>`);
-  out.push(`<desc id="floorPlanDesc">Interactive venue map with rooms, exhibit halls, celebrity areas, patio vendors and table locations.</desc>`);
+  out.push(`<title id="floorPlanTitle">Sci-Fi Valley Con interactive convention center floor plan</title><desc id="floorPlanDesc">Interactive venue map with rooms, exhibit halls, celebrity areas, patio vendors and table locations.</desc>`);
   out.push(`<style>
-    .outline{fill:#fffdf4;stroke:#352720;stroke-width:5;stroke-linejoin:round}
-    .zone{stroke:#352720;stroke-width:4}
-    .zone-label,.level-label,.tiny{fill:#291f1a;text-anchor:middle}
-    .zone-label{font-family:Georgia,serif;font-weight:800}
-    .level-label{font-family:Arial,sans-serif;font-weight:900;letter-spacing:2px}
-    .hall-floor{fill:#ebe8dd;stroke:#352720;stroke-width:4}
-    .stairs{fill:#fffdf4;stroke:#352720;stroke-width:3}
-    .tiny{font-family:Arial,sans-serif;font-size:12px;font-weight:800}
-    .map-table{fill:#fffdf6;stroke:#40322b;stroke-width:2;cursor:pointer}
-    .map-table-label{font-family:Arial,sans-serif;font-size:11px;font-weight:800;fill:#2f2520;text-anchor:middle;pointer-events:none}
-    .map-table.conquest{fill:#e65338}
-    .map-table.selected{stroke:#1f6e77;stroke-width:6}
-    .map-table.match{stroke:#e2ad34;stroke-width:6}
-    .service{fill:#f2bd3f;stroke:#352720;stroke-width:3}
+    .outline{fill:#fffdf4;stroke:#352720;stroke-width:5;stroke-linejoin:round}.zone{stroke:#352720;stroke-width:4}
+    .zone-label,.level-label,.tiny{fill:#291f1a;text-anchor:middle}.zone-label{font-family:Georgia,serif;font-weight:800}.level-label{font-family:Arial,sans-serif;font-weight:900;letter-spacing:2px}
+    .hall-floor{fill:#ebe8dd;stroke:#352720;stroke-width:4}.stairs{fill:#fffdf4;stroke:#352720;stroke-width:3}.tiny{font-family:Arial,sans-serif;font-size:12px;font-weight:800}
+    .map-location-group{cursor:pointer}.map-table{fill:#fffdf6;stroke:#40322b;stroke-width:2}.map-table.conquest{fill:#e65338}.map-table.selected,.service.selected{stroke:#167985;stroke-width:7;filter:drop-shadow(0 0 5px rgba(22,121,133,.7))}
+    .service{fill:#f2bd3f;stroke:#352720;stroke-width:3}.map-table-label{font-family:Arial,sans-serif;font-weight:900;fill:#201916;text-anchor:middle;dominant-baseline:middle;pointer-events:none;paint-order:stroke;stroke:#fffdf4;stroke-width:1.8px;stroke-linejoin:round}
   </style>`);
   (layout.elements||[]).forEach(item=>{
-    const cls=item.className?` class="${svgEscape(item.className)}"`:'';
-    const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';
+    const cls=item.className?` class="${svgEscape(item.className)}"`:'';const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';
     if(item.type==="rect")out.push(`<rect id="${svgEscape(item.id)}"${cls} x="${Number(item.x)||0}" y="${Number(item.y)||0}" width="${Number(item.width)||0}" height="${Number(item.height)||0}" rx="${Number(item.rx||0)}"${fill}/>`);
     else if(item.type==="path")out.push(`<path id="${svgEscape(item.id)}"${cls} d="${svgEscape(item.d||'')}"${fill}/>`);
     else if(item.type==="text"){
-      const lines=svgTextLines(item.text), x=Number(item.x)||0, y=Number(item.y)||0;
-      const anchor=item.anchor||'middle', fontSize=Number(item.fontSize||22), lineHeight=Number(item.lineHeight||1.15), fillText=item.fill||'#291f1a';
-      const weight=item.fontWeight||'800', style=item.fontStyle||'normal', family=item.fontFamily||'Georgia, serif';
+      const lines=svgTextLines(item.text),x=Number(item.x)||0,y=Number(item.y)||0,anchor=item.anchor||'middle',fontSize=Number(item.fontSize||22),lineHeight=Number(item.lineHeight||1.15),fillText=item.fill||'#291f1a',weight=item.fontWeight||'800',style=item.fontStyle||'normal',family=item.fontFamily||'Georgia, serif';
       out.push(`<text id="${svgEscape(item.id)}"${cls} x="${x}" y="${y}" text-anchor="${svgEscape(anchor)}" font-size="${fontSize}" font-weight="${svgEscape(weight)}" font-style="${svgEscape(style)}" font-family="${svgEscape(family)}" fill="${svgEscape(fillText)}">`);
-      lines.forEach((line,index)=>{
-        const dy=index===0?0:(fontSize*lineHeight);
-        out.push(`<tspan x="${x}" dy="${index===0?0:dy}">${svgEscape(line)}</tspan>`);
-      });
-      out.push(`</text>`);
+      lines.forEach((line,index)=>out.push(`<tspan x="${x}" dy="${index===0?0:fontSize*lineHeight}">${svgEscape(line)}</tspan>`));out.push(`</text>`);
     }
   });
   (layout.locations||[]).forEach(loc=>{
     if(loc.hidden)return;
-    const code=String(loc.id||'').toUpperCase();
-    const shape=(loc.shape||'rect').toLowerCase();
-    const rot=Number(loc.rotation||0);
-    const x=Number(loc.x||0), y=Number(loc.y||0), w=Number(loc.w||28), h=Number(loc.h||12);
-    const cx=x+w/2, cy=y+h/2;
-    const transform=rot?` transform="rotate(${rot} ${cx} ${cy})"`:'';
+    const code=String(loc.id||'').toUpperCase(),shape=(loc.shape||'rect').toLowerCase(),rot=Number(loc.rotation||0),x=Number(loc.x||0),y=Number(loc.y||0),ww=Number(loc.w||28),hh=Number(loc.h||12),cx=x+ww/2,cy=y+hh/2;
+    const rotate=rot?`rotate(${rot} ${cx} ${cy})`:'';const fs=mapCodeFontSize(code,ww,hh);
+    out.push(`<g class="map-location-group" data-location="${svgEscape(code)}" transform="${rotate}">`);
     if(shape==='booth'){
-      out.push(`<g id="booth-${code}" data-location="${code}"${transform}>`);
-      out.push(`<rect id="table-${code}" class="map-table" data-location="${code}" x="${x}" y="${y}" width="${w}" height="${h}" rx="2"/>`);
-      out.push(`<path d="M${x},${y} L${x+w/2},${y+h/2} L${x+w},${y} Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>`);
-      out.push(`<path d="M${x},${y+h} L${x+w/2},${y+h/2} L${x+w},${y+h} Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>`);
-      out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${(Number(loc.labelDy)===Number(loc.labelDy)?Number(loc.labelDy):y+h+14)}">${svgEscape(code)}</text>`);
-      out.push(`</g>`);
+      out.push(`<rect id="table-${svgEscape(code)}" class="map-table" data-location="${svgEscape(code)}" x="${x}" y="${y}" width="${ww}" height="${hh}" rx="2"/>`);
+      out.push(`<path d="M${x},${y} L${cx},${cy} L${x+ww},${y} Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1" pointer-events="none"/><path d="M${x},${y+hh} L${cx},${cy} L${x+ww},${y+hh} Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1" pointer-events="none"/>`);
     }else{
-      const tableClass=shape==='service'?'service':'map-table';
-      out.push(`<rect id="table-${code}" class="${tableClass}" data-location="${code}" x="${x}" y="${y}" width="${w}" height="${h}" rx="1"${transform}/>`);
-      out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${(Number(loc.labelDy)===Number(loc.labelDy)?Number(loc.labelDy):(y+h+11))}">${svgEscape(code)}</text>`);
+      const tableClass=shape==='service'?'service':'map-table';out.push(`<rect id="table-${svgEscape(code)}" class="${tableClass}" data-location="${svgEscape(code)}" x="${x}" y="${y}" width="${ww}" height="${hh}" rx="1"/>`);
     }
+    out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${cy+(Number(loc.labelDy)||0)}" font-size="${fs}">${svgEscape(code)}</text></g>`);
   });
-  out.push(`<text class="tiny" x="600" y="1756">VECTOR FLOOR PLAN • TAP A TABLE OR BOOTH FOR DETAILS</text>`);
-  out.push(`</svg>`);
-  return out.join('');
+  out.push(`<text class="tiny" x="600" y="1756">VECTOR FLOOR PLAN • TAP A TABLE OR BOOTH FOR DETAILS</text></svg>`);return out.join('');
 }
 function applyMapVendorData(){
   const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
-  svg.querySelectorAll('[data-location]').forEach(el=>{
-    const code=el.dataset.location,vendor=vendorForLocation(code),table=el.matches('.map-table,.service')?el:el.querySelector('.map-table,.service'),cq=Boolean(vendor?.conQuest);
-    if(table&&table.classList.contains('map-table'))table.classList.toggle('conquest',cq);
-    const name=mapDirectoryVisible()&&vendor?vendor.name:'';
-    el.setAttribute('aria-label',name?`${code}: ${name}`:code);
+  svg.querySelectorAll('.map-location-group').forEach(group=>{
+    const code=group.dataset.location,vendor=vendorForLocation(code),table=group.querySelector('.map-table,.service'),cq=Boolean(vendor?.conQuest);
+    if(table?.classList.contains('map-table'))table.classList.toggle('conquest',cq);
+    group.setAttribute('aria-label',mapDirectoryVisible()&&vendor?`${code}: ${vendor.name}`:code);
   });
+  applyMapSelection();
 }
 function bindMapLocations(){
-  document.querySelectorAll('#mapSvgHost [data-location]').forEach(el=>{
-    if(el.dataset.mapBound==='yes')return;el.dataset.mapBound='yes';
-    el.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();openMapLocation(el.dataset.location)});
+  document.querySelectorAll('#mapSvgHost .map-location-group').forEach(group=>{
+    group.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();selectMapLocation(group.dataset.location);openMapLocation(group.dataset.location)});
   });
 }
-function renderFloorPlanSvg(){
-  const host=document.getElementById('mapSvgHost');if(!host)return;
-  host.innerHTML=buildMapSvg();
-  applyMapVendorData();
-  bindMapLocations();
-  applyMapZoom();
-}
+function renderFloorPlanSvg(){const host=document.getElementById('mapSvgHost');if(!host)return;host.innerHTML=buildMapSvg();applyMapVendorData();bindMapLocations();applyMapZoom()}
 function openMapLocation(code){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible()){
-    content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
-  }else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
   if(typeof modal.showModal==='function')modal.showModal();else modal.setAttribute('open','');
 }
 function mapVendorMatches(v){
-  const q=state.mapQuery.trim().toLowerCase(),filter=state.mapFilter;
-  const filterOk=filter==='All'||(filter==='Con-Quest'&&v.conQuest===true)||v.area===filter;
-  if(!filterOk)return false;if(!q)return true;
+  const q=state.mapQuery.trim().toLowerCase(),filter=state.mapFilter;const filterOk=filter==='All'||(filter==='Con-Quest'&&v.conQuest===true)||v.area===filter;if(!filterOk)return false;if(!q)return true;
   return `${v.name} ${v.categories||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
 }
 function renderMapDirectory(){
   const list=document.getElementById('mapDirectoryList'),count=document.getElementById('mapDirectoryCount'),notice=document.getElementById('mapDirectoryNotice');if(!list||!count)return;
-  if(!mapDirectoryVisible()){
-    list.innerHTML='';count.textContent='DRAFT';notice?.classList.remove('hidden');if(notice)notice.textContent='Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.';highlightMapSearch();return;
-  }
-  notice?.classList.add('hidden');
-  const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));
-  count.textContent=String(rows.length);
-  list.innerHTML=rows.map(v=>`<button class="map-directory-card" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search/filter.</div>`;
-  list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(!v)return;const first=expandLocationCodes(v.location)[0];focusMapLocation(first);openMapLocation(first)}));
-  highlightMapSearch();
+  if(!mapDirectoryVisible()){list.innerHTML='';count.textContent='DRAFT';notice?.classList.remove('hidden');if(notice)notice.textContent='Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.';return;}
+  notice?.classList.add('hidden');const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));count.textContent=String(rows.length);
+  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search/filter.</div>`;
+  list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(v)selectVendorOnMap(v)}));
 }
-function highlightMapSearch(){
-  const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
-  svg.querySelectorAll('.map-table').forEach(el=>el.classList.remove('match','selected'));
-  if(!mapDirectoryVisible())return;
-  state.vendors.filter(mapVendorMatches).forEach(v=>expandLocationCodes(v.location).forEach(code=>document.getElementById(`table-${code}`)?.classList.add('match')));
+function clearMapSelection({scroll=false}={}){
+  state.mapSelectedVendorId='';state.mapSelectedCodes.clear();applyMapSelection();renderMapDirectory();if(scroll)document.getElementById('mapViewport')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function focusMapLocation(code){
-  const target=document.getElementById(`table-${code}`);if(!target)return;
-  document.querySelectorAll('#mapSvgHost .map-table.selected').forEach(el=>el.classList.remove('selected'));
-  target.classList.add('selected');
-  target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+function selectMapLocation(code){state.mapSelectedVendorId='';state.mapSelectedCodes=new Set([String(code||'').toUpperCase()]);applyMapSelection();renderMapDirectory()}
+function selectVendorOnMap(v){
+  state.mapSelectedVendorId=v.id;state.mapSelectedCodes=new Set(expandLocationCodes(v.location));applyMapSelection();renderMapDirectory();
+  const first=[...state.mapSelectedCodes][0],target=document.querySelector(`#mapSvgHost .map-location-group[data-location="${CSS.escape(first||'')}"]`);
+  document.getElementById('mapViewport')?.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>target?.scrollIntoView({behavior:'smooth',block:'center',inline:'center'}),250);
 }
-function applyMapZoom(){
-  const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
-  const base=Number(mapLayout().canvas?.defaultWidth||820);
-  svg.style.width=`${Math.round(base*mapZoom)}px`;
-  svg.style.maxWidth='none';
+function applyMapSelection(){
+  const svg=document.querySelector('#mapSvgHost svg');if(svg){svg.querySelectorAll('.map-table.selected,.service.selected').forEach(el=>el.classList.remove('selected'));state.mapSelectedCodes.forEach(code=>svg.querySelectorAll(`.map-location-group[data-location="${CSS.escape(code)}"] .map-table,.map-location-group[data-location="${CSS.escape(code)}"] .service`).forEach(el=>el.classList.add('selected')))}
+  const status=document.getElementById('mapSelectionStatus');if(status){if(!state.mapSelectedCodes.size){status.textContent='NONE SELECTED';status.classList.remove('has-selection')}else{const vendor=state.vendors.find(v=>v.id===state.mapSelectedVendorId);status.textContent=vendor?`SELECTED • ${vendor.location}`:`SELECTED • ${[...state.mapSelectedCodes].join(', ')}`;status.classList.add('has-selection')}}
 }
+function applyMapZoom(){const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;const base=Number(mapLayout().canvas?.defaultWidth||820);svg.style.width=`${Math.round(base*mapZoom)}px`;svg.style.maxWidth='none'}
 function renderMapScreen(){
   const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
-  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';
-  const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);
-  if(!visible)return;
-  renderMapLegend();renderFloorPlanSvg();renderMapDirectory();
+  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();
 }
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
 document.querySelectorAll('[data-map-filter]')?.forEach(btn=>btn.addEventListener('click',()=>{state.mapFilter=btn.dataset.mapFilter;document.querySelectorAll('[data-map-filter]').forEach(x=>x.classList.toggle('active',x===btn));renderMapDirectory()}));
-document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});
-document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});
-document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
-document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
-document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+document.getElementById('mapSelectionStatus')?.addEventListener('click',()=>clearMapSelection());
+document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
+document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
 function renderAll(){applyEventSettings();renderMapScreen();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
