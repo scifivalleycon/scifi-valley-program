@@ -1,21 +1,12 @@
-# Sci-Fi Valley Con Digital Program — Version 3.3
+# Sci-Fi Valley Con Digital Program — Version 3.4
 
-New in V3.3:
+Improved install behavior:
 
-- Browser-only install / Add to Home Screen card using the event app icon
-- Automatic install prompt on browsers that support it
-- iPhone-specific Safari → Share → Add to Home Screen instructions
-- Install card automatically hidden when launched as an installed/standalone PWA
-- Install card can be dismissed in normal browser mode
-- Wildefell Wolves profile now uses the current Sci-Fi Valley Con website image
-- Samurai Jill profile now uses the current Sci-Fi Valley Con website image
-- Celebrity photos can be tapped/clicked to open a full-screen larger view
-- Added a subtle sponsor footer for current homepage sponsors:
-  - Breezeline
-  - Codex Comics & Collectibles
-  - Cartridges Galore
-  - Snake Eyes Gaming
-- Each sponsor links to the sponsor's website
-- Cache version bumped to V3.3
+- Desktop browsers show "Install Desktop App" only when the browser confirms PWA installation is available.
+- Android shows "Install App" only when installability is confirmed.
+- iPhone/iPad continues to show Safari "Add to Home Screen" instructions.
+- Unsupported desktop browsers do not show an install card or dead-end popup.
+- Installed/standalone copies never show the install promotion.
+- Successful installation immediately hides the install UI.
 
-Note: Breezeline and Cartridges Galore use image logos. Codex and Snake Eyes use lightweight branded wordmark treatments to keep the sponsor strip compact and avoid dependence on unstable third-party image URLs.
+Everything else from V3.3 remains intact.

@@ -195,61 +195,20 @@ document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListene
 document.getElementById("enableNotificationsButton").addEventListener("click",async()=>{if(!("Notification"in window))return;await Notification.requestPermission();updateNotificationStatus()});
 
 let deferredPrompt;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installButton").hidden=false;if(installCardButton)installCardButton.textContent="INSTALL APP";if(installCard)installCard.classList.remove("hidden")});
-document.getElementById("installButton").addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installButton").hidden=true});
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"));
-
-
-
-/* ----- Install / Add to Home Screen experience ----- */
-const installCard=document.getElementById("installAppCard");
-const installCardButton=document.getElementById("installAppCardButton");
-const installCardHint=document.getElementById("installCardHint");
-const installHelpModal=document.getElementById("installHelpModal");
-const installHelpContent=document.getElementById("installHelpContent");
-
-function isStandaloneMode(){
-  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
-}
-function isIOSDevice(){
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
-}
-function isAndroidDevice(){
-  return /android/i.test(navigator.userAgent);
-}
-function updateInstallExperience(){
-  if(isStandaloneMode()){
-    document.body.classList.add("is-standalone");
-    if(installCard)installCard.classList.add("hidden");
-    return;
-  }
-  document.body.classList.remove("is-standalone");
-  if(localStorage.getItem("sfvc-install-card-dismissed")!=="yes"){
-    installCard?.classList.remove("hidden");
-  }
-  if(isIOSDevice()){
-    if(installCardButton)installCardButton.textContent="HOW TO INSTALL";
-    if(installCardHint)installCardHint.textContent="Add this site to your iPhone Home Screen for an app shortcut.";
-  }else if(isAndroidDevice()){
-    if(installCardHint)installCardHint.textContent="Install the web app for a Home Screen shortcut and faster access.";
-  }
-}
-function showInstallHelp(){
-  if(!installHelpContent)return;
-  if(isIOSDevice()){
-    installHelpContent.innerHTML=`<p>On iPhone or iPad:</p><ol><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button.</li><li>Choose <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>`;
-  }else{
-    installHelpContent.innerHTML=`<p>Your browser does not currently show its automatic install prompt. Open the browser menu and look for <b>Install app</b> or <b>Add to Home Screen</b>.</p>`;
-  }
-  if(typeof installHelpModal.showModal==="function")installHelpModal.showModal();
-}
-installCardButton?.addEventListener("click",async()=>{
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  document.getElementById("installButton").hidden=false;
+  updateInstallExperience();
+});
+document.getElementById("installButton").addEventListener("click",async()=>{
   if(deferredPrompt){
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt=null;
-    if(installCard)installCard.classList.add("hidden");
-  }else{
+    document.getElementById("installButton").hidden=true;
+    updateInstallExperience();
+  }else if(isIOSDevice()){
     showInstallHelp();
   }
 });
@@ -260,6 +219,13 @@ document.getElementById("dismissInstallCard")?.addEventListener("click",()=>{
 document.getElementById("closeInstallHelpModal")?.addEventListener("click",()=>installHelpModal.close());
 installHelpModal?.addEventListener("click",e=>{if(e.target===installHelpModal)installHelpModal.close()});
 window.matchMedia("(display-mode: standalone)").addEventListener?.("change",updateInstallExperience);
+window.addEventListener("appinstalled",()=>{
+  deferredPrompt=null;
+  document.body.classList.add("is-standalone");
+  installCard?.classList.add("hidden");
+  const topInstall=document.getElementById("installButton");
+  if(topInstall)topInstall.hidden=true;
+});
 updateInstallExperience();
 
 /* ----- Guest photo lightbox ----- */
