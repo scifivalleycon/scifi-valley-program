@@ -201,15 +201,51 @@
 
     <section id="map" class="screen">
       <div class="page-title poster-title">
-        <p class="kicker">KNOW WHERE TO GO</p>
-        <h1>FLOOR <span>MAP</span></h1>
-        <p>Your final floor plan and complete vendor directory will go here next.</p>
+        <p class="kicker">FIND YOUR WAY</p>
+        <h1>INTERACTIVE <span>FLOOR MAP</span></h1>
+        <p id="mapSubtitle">Main Level, Lower Level, patio vendors, celebrity areas, event rooms, food, gaming and services.</p>
       </div>
-      <div class="paper-panel map-placeholder">
-        <div class="map-badge">YOU<br>ARE<br>HERE</div><div class="map-icon">⌖</div>
-        <h2>FLOOR PLAN COMING NEXT</h2>
-        <p>Once you send the finished floor-plan image, this area will become a zoomable mobile map.</p>
+
+      <div id="mapDraftNotice" class="map-draft-notice hidden">
+        <strong>STAFF PREVIEW / DRAFT MAP</strong>
+        <p id="mapDraftNote">This interactive map is still being prepared.</p>
       </div>
+
+      <section id="mapPublishedContent" class="interactive-map-shell hidden">
+        <div class="map-toolbar">
+          <label class="search-box map-search"><span>⌕</span><input id="mapSearch" type="search" placeholder="Search vendor, artist or table number"></label>
+          <div class="map-tools">
+            <button id="mapZoomOut" class="map-tool-button" type="button" aria-label="Zoom out">−</button>
+            <button id="mapZoomReset" class="map-tool-button wide" type="button">RESET</button>
+            <button id="mapZoomIn" class="map-tool-button" type="button" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+
+        <div id="mapFilters" class="chip-row map-filter-row">
+          <button class="chip active" data-map-filter="All">ALL</button>
+          <button class="chip" data-map-filter="Main Level">MAIN LEVEL</button>
+          <button class="chip" data-map-filter="Lower Level">LOWER LEVEL</button>
+          <button class="chip" data-map-filter="Patio">PATIO</button>
+          <button class="chip" data-map-filter="Con-Quest">CON-QUEST</button>
+        </div>
+
+        <details class="map-legend-panel" open>
+          <summary>MAP LEGEND</summary>
+          <div id="mapLegend" class="map-legend-grid"></div>
+          <p id="mapConQuestNote" class="map-legend-note"></p>
+        </details>
+
+        <div id="mapViewport" class="map-viewport">
+          <div id="mapSvgHost" class="map-svg-host"><div class="map-loading">Loading vector floor plan…</div></div>
+        </div>
+
+        <div class="map-directory-head">
+          <div><span class="section-kicker">TABLE & BOOTH DIRECTORY</span><h2>VENDORS & LOCATIONS</h2></div>
+          <span id="mapDirectoryCount" class="pill">0</span>
+        </div>
+        <div id="mapDirectoryNotice" class="info-note hidden"></div>
+        <div id="mapDirectoryList" class="map-directory-list"></div>
+      </section>
     </section>
 
     <section id="more" class="screen">
@@ -364,6 +400,12 @@
       </div>
       <small id="pushPromptFootnote">You can change your notification settings at any time from Notification Settings.</small>
     </div>
+  </dialog>
+
+  
+  <dialog id="mapLocationModal" class="map-location-modal">
+    <button id="closeMapLocationModal" class="modal-close" aria-label="Close">×</button>
+    <div id="mapLocationModalContent"></div>
   </dialog>
 
   <script src="app.js"></script>

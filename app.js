@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapFilter:"All", mapQuery:"", celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -30,16 +30,19 @@ document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=
 
 async function loadData(){
   const safeJson=(url,fallback=[])=>fetch(url).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
-  const [guests,schedule,events,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
-    safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/settings.json"),
-    safeJson("data/celebrity-info.json"),safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),
-    safeJson("data/autograph-schedule.json"),safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
+  const [guests,schedule,events,vendors,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
+    safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
+    safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
+    safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
   ]);
   const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
   state.settings={...DEFAULT_SETTINGS,...savedSettings};
   state.guests=guests;
   state.schedule=schedule.map((e,i)=>({...e,id:e.id||`schedule-${e.day}-${e.time}-${i}`}));
   state.events=events;
+  state.vendors=Array.isArray(vendors)?vendors:[];
+  state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
   state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
   state.celebrityPricing=Array.isArray(celebrityPricing)?celebrityPricing:[];
   state.photoOps=Array.isArray(photoOps)?photoOps:[];
@@ -1057,7 +1060,118 @@ function initializeRecentAlerts(){
 }
 
 
-function renderAll(){applyEventSettings();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
+
+/* Interactive vector floor plan — V4.0 */
+let mapZoom=1;
+let mapSvgLoaded=false;
+let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
+
+function expandLocationCodes(value){
+  const result=[];
+  String(value||"").split(",").map(x=>x.trim()).filter(Boolean).forEach(part=>{
+    const m=part.match(/^([A-Z]+)(\d+)\s*-\s*([A-Z]+)?(\d+)$/i);
+    if(m){
+      const p1=m[1].toUpperCase(),start=Number(m[2]),p2=(m[3]||m[1]).toUpperCase(),end=Number(m[4]);
+      if(p1===p2){
+        const step=start<=end?1:-1;
+        for(let n=start;step>0?n<=end:n>=end;n+=step)result.push(`${p1}${n}`);
+        return;
+      }
+    }
+    result.push(part.toUpperCase());
+  });
+  return result;
+}
+function vendorForLocation(code){
+  const target=String(code||"").toUpperCase();
+  return state.vendors.find(v=>expandLocationCodes(v.location).includes(target))||null;
+}
+function mapDirectoryVisible(){return state.mapSettings.directoryPublished===true||mapPreviewMode}
+function mapVisible(){return state.mapSettings.published===true||mapPreviewMode}
+
+function renderMapLegend(){
+  const c=document.getElementById("mapLegend");if(!c)return;
+  const items=Array.isArray(state.mapSettings.legend)?state.mapSettings.legend:[];
+  c.innerHTML=items.map(item=>`<div class="map-legend-item"><span style="background:${escapeAppHtml(item.color)}"></span><b>${escapeAppHtml(item.label)}</b></div>`).join("");
+  const note=document.getElementById("mapConQuestNote");if(note)note.textContent=state.mapSettings.conQuestNote||"Red table markers indicate Con-Quest participation.";
+}
+function applyMapVendorData(){
+  const svg=document.querySelector("#mapSvgHost svg");if(!svg)return;
+  svg.querySelectorAll("[data-location]").forEach(el=>{
+    const code=el.dataset.location,vendor=vendorForLocation(code),table=el.matches(".map-table")?el:el.querySelector(".map-table"),cq=Boolean(vendor?.conQuest);
+    if(table)table.classList.toggle("conquest",cq);
+    const name=mapDirectoryVisible()&&vendor?vendor.name:"";
+    el.setAttribute("aria-label",name?`${code}: ${name}`:code);
+  });
+}
+async function loadFloorPlanSvg(){
+  const host=document.getElementById("mapSvgHost");if(!host||mapSvgLoaded)return;
+  try{
+    const response=await fetch("assets/floor-plan.svg",{cache:"no-store"});if(!response.ok)throw new Error(`Map SVG returned ${response.status}`);
+    host.innerHTML=await response.text();mapSvgLoaded=true;applyMapVendorData();bindMapLocations();applyMapZoom();
+  }catch(err){
+    host.innerHTML=`<div class="paper-panel muted-empty">Interactive floor plan could not load. Refresh the app or check the latest deployment.</div>`;console.warn("Floor plan SVG failed",err);
+  }
+}
+function bindMapLocations(){
+  document.querySelectorAll("#mapSvgHost [data-location]").forEach(el=>{
+    if(el.dataset.mapBound==="yes")return;el.dataset.mapBound="yes";
+    el.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openMapLocation(el.dataset.location)});
+  });
+}
+function openMapLocation(code){
+  const vendor=vendorForLocation(code),content=document.getElementById("mapLocationModalContent"),modal=document.getElementById("mapLocationModal");if(!content||!modal)return;
+  if(vendor&&mapDirectoryVisible()){
+    content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  }else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
+  if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");
+}
+function mapVendorMatches(v){
+  const q=state.mapQuery.trim().toLowerCase(),filter=state.mapFilter;
+  const filterOk=filter==="All"||(filter==="Con-Quest"&&v.conQuest===true)||v.area===filter;
+  if(!filterOk)return false;if(!q)return true;
+  return `${v.name} ${v.categories||""} ${v.location||""} ${v.area||""}`.toLowerCase().includes(q);
+}
+function renderMapDirectory(){
+  const list=document.getElementById("mapDirectoryList"),count=document.getElementById("mapDirectoryCount"),notice=document.getElementById("mapDirectoryNotice");if(!list||!count)return;
+  if(!mapDirectoryVisible()){
+    list.innerHTML="";count.textContent="DRAFT";notice?.classList.remove("hidden");if(notice)notice.textContent="Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.";highlightMapSearch();return;
+  }
+  notice?.classList.add("hidden");
+  const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));
+  count.textContent=String(rows.length);
+  list.innerHTML=rows.map(v=>`<button class="map-directory-card" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':""}<b>›</b></button>`).join("")||`<div class="paper-panel muted-empty">No vendors match this search/filter.</div>`;
+  list.querySelectorAll("[data-map-vendor]").forEach(btn=>btn.addEventListener("click",()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(!v)return;const first=expandLocationCodes(v.location)[0];focusMapLocation(first);openMapLocation(first)}));
+  highlightMapSearch();
+}
+function highlightMapSearch(){
+  const svg=document.querySelector("#mapSvgHost svg");if(!svg)return;
+  svg.querySelectorAll(".map-table").forEach(el=>el.classList.remove("match","selected"));
+  if(!mapDirectoryVisible())return;
+  state.vendors.filter(mapVendorMatches).forEach(v=>expandLocationCodes(v.location).forEach(code=>document.getElementById(`table-${code}`)?.classList.add("match")));
+}
+function focusMapLocation(code){
+  const target=document.getElementById(`table-${code}`);if(!target)return;
+  document.querySelectorAll("#mapSvgHost .map-table.selected").forEach(el=>el.classList.remove("selected"));target.classList.add("selected");target.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});
+}
+function applyMapZoom(){
+  const svg=document.querySelector("#mapSvgHost svg");if(!svg)return;svg.style.width=`${Math.round(760*mapZoom)}px`;svg.style.maxWidth="none";
+}
+function renderMapScreen(){
+  const content=document.getElementById("mapPublishedContent"),draft=document.getElementById("mapDraftNotice"),subtitle=document.getElementById("mapSubtitle"),draftNote=document.getElementById("mapDraftNote");
+  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||"Interactive convention floor plan.";if(draftNote)draftNote.textContent=state.mapSettings.draftNote||"This map is still being prepared.";
+  const visible=mapVisible();content?.classList.toggle("hidden",!visible);draft?.classList.toggle("hidden",state.mapSettings.published===true);
+  if(!visible)return;renderMapLegend();loadFloorPlanSvg().then(()=>{applyMapVendorData();renderMapDirectory()});
+}
+document.getElementById("mapSearch")?.addEventListener("input",event=>{state.mapQuery=event.target.value;renderMapDirectory()});
+document.querySelectorAll("[data-map-filter]")?.forEach(btn=>btn.addEventListener("click",()=>{state.mapFilter=btn.dataset.mapFilter;document.querySelectorAll("[data-map-filter]").forEach(x=>x.classList.toggle("active",x===btn));renderMapDirectory()}));
+document.getElementById("mapZoomIn")?.addEventListener("click",()=>{mapZoom=Math.min(2.5,mapZoom+.25);applyMapZoom()});
+document.getElementById("mapZoomOut")?.addEventListener("click",()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});
+document.getElementById("mapZoomReset")?.addEventListener("click",()=>{mapZoom=1;applyMapZoom()});
+document.getElementById("closeMapLocationModal")?.addEventListener("click",()=>document.getElementById("mapLocationModal")?.close());
+document.getElementById("mapLocationModal")?.addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+
+function renderAll(){applyEventSettings();renderMapScreen();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
 document.getElementById("showAllScheduleCategories")?.addEventListener("click",()=>{

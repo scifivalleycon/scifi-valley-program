@@ -1,0 +1,647 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1780" role="img" aria-labelledby="floorPlanTitle floorPlanDesc">
+<title id="floorPlanTitle">Sci-Fi Valley Con interactive convention center floor plan</title>
+<desc id="floorPlanDesc">Vector floor plan showing the main level, lower level, patio vendor booths, event spaces, panel rooms, celebrity guest areas, food, gaming and table locations.</desc>
+<style>
+  .outline{fill:#fffdf4;stroke:#352720;stroke-width:5;stroke-linejoin:round}
+  .zone{stroke:#352720;stroke-width:4}
+  .zone-label{font-family:Georgia,serif;font-weight:800;fill:#291f1a;text-anchor:middle}
+  .zone-label.small{font-size:18px} .zone-label.med{font-size:26px}
+  .level-label{font-family:Arial,sans-serif;font-size:48px;font-weight:900;fill:#251e1a;letter-spacing:2px}
+  .hall-floor{fill:#ebe8dd;stroke:#352720;stroke-width:4}
+  .map-table{fill:#fffdf6;stroke:#40322b;stroke-width:2;cursor:pointer}
+  .map-table-label{font-family:Arial,sans-serif;font-size:11px;font-weight:800;fill:#2f2520;text-anchor:middle;pointer-events:none}
+  .map-table.conquest{fill:#e65338} .map-table.selected{stroke:#1f6e77;stroke-width:6} .map-table.match{stroke:#e2ad34;stroke-width:6}
+  .service{fill:#f2bd3f;stroke:#352720;stroke-width:3}
+  .stairs{fill:#fffdf4;stroke:#352720;stroke-width:3}
+  .tiny{font-family:Arial,sans-serif;font-size:12px;font-weight:700;fill:#352720;text-anchor:middle}
+</style>
+<g id="main-level">
+<path class="outline" d="M80 60 L790 60 L790 140 L865 140 L865 590 L970 590 L970 790 L770 790 L770 840 L320 840 L250 750 L160 750 L110 640 L80 620 Z"/>
+<text class="level-label" x="280" y="115">MAIN LEVEL</text>
+<rect id="zone-panel1" class="zone" x="300" y="160" width="480" height="160" fill="#73c7cb" rx="3"/>
+<text class="zone-label med" x="540" y="235">Panel Room 1</text>
+<rect id="zone-panel2" class="zone" x="150" y="160" width="120" height="190" fill="#efc448" rx="3"/>
+<text class="zone-label small" x="210" y="235">Panel Room 2</text>
+<rect id="zone-paint" class="zone" x="150" y="350" width="120" height="210" fill="#eaa069" rx="3"/>
+<text class="zone-label small" x="210" y="430">Paint &amp; Hobby</text>
+<rect id="zone-event" class="zone" x="55" y="350" width="95" height="210" fill="#ed6f8a" rx="3"/>
+<text class="zone-label small" x="102" y="435">Event Room</text>
+<rect id="zone-mini" class="zone" x="55" y="560" width="140" height="120" fill="#71b86c" rx="3"/>
+<text class="zone-label small" x="125" y="615">The Mini Café</text>
+<rect id="zone-retro" class="zone" x="790" y="190" width="110" height="340" fill="#d36a9b" rx="3"/>
+<text class="zone-label small" x="845" y="335">Retro Gaming</text>
+<rect id="zone-main-hall" class="hall-floor" x="285" y="335" width="490" height="340"/>
+<text class="zone-label small" x="530" y="365">EXHIBIT HALL - MAIN</text>
+<rect class="zone" x="335" y="690" width="350" height="55" fill="#e65338"/><text class="tiny" x="510" y="724">CON-QUEST SIGN-UP</text>
+<rect id="zone-admissions" class="zone" x="690" y="690" width="120" height="100" fill="#f2bd3f"/><text class="zone-label small" x="750" y="745">Admissions</text>
+<rect class="stairs" x="380" y="755" width="270" height="60"/><text class="tiny" x="515" y="790">STAIRS ↔</text>
+<rect id="table-A1" class="map-table" data-location="A1" x="742" y="625" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="661">A1</text>
+<rect id="table-A2" class="map-table" data-location="A2" x="742" y="594" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="630">A2</text>
+<rect id="table-A3" class="map-table" data-location="A3" x="742" y="563" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="599">A3</text>
+<rect id="table-A4" class="map-table" data-location="A4" x="742" y="532" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="568">A4</text>
+<rect id="table-A5" class="map-table" data-location="A5" x="742" y="501" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="537">A5</text>
+<rect id="table-A6" class="map-table" data-location="A6" x="742" y="470" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="506">A6</text>
+<rect id="table-A7" class="map-table" data-location="A7" x="742" y="439" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="475">A7</text>
+<rect id="table-A8" class="map-table" data-location="A8" x="742" y="408" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="444">A8</text>
+<rect id="table-A9" class="map-table" data-location="A9" x="742" y="377" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="748.0" y="413">A9</text>
+<rect id="table-B1" class="map-table" data-location="B1" x="294" y="625" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="661">B1</text>
+<rect id="table-B2" class="map-table" data-location="B2" x="294" y="587" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="623">B2</text>
+<rect id="table-B3" class="map-table" data-location="B3" x="294" y="549" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="585">B3</text>
+<rect id="table-B4" class="map-table" data-location="B4" x="294" y="511" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="547">B4</text>
+<rect id="table-B5" class="map-table" data-location="B5" x="294" y="473" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="509">B5</text>
+<rect id="table-B6" class="map-table" data-location="B6" x="294" y="435" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="471">B6</text>
+<rect id="table-B7" class="map-table" data-location="B7" x="294" y="397" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="300.0" y="433">B7</text>
+<rect id="table-C1" class="map-table" data-location="C1" x="305" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="322.5" y="668">C1</text>
+<rect id="table-C2" class="map-table" data-location="C2" x="354" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="371.5" y="668">C2</text>
+<rect id="table-C3" class="map-table" data-location="C3" x="403" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="420.5" y="668">C3</text>
+<rect id="table-C4" class="map-table" data-location="C4" x="452" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="469.5" y="668">C4</text>
+<rect id="table-C5" class="map-table" data-location="C5" x="501" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="518.5" y="668">C5</text>
+<rect id="table-C6" class="map-table" data-location="C6" x="550" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="567.5" y="668">C6</text>
+<rect id="table-C7" class="map-table" data-location="C7" x="599" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="616.5" y="668">C7</text>
+<rect id="table-C8" class="map-table" data-location="C8" x="648" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="665.5" y="668">C8</text>
+<rect id="table-C9" class="map-table" data-location="C9" x="697" y="645" width="35" height="12" rx="1"/>
+<text class="map-table-label" x="714.5" y="668">C9</text>
+<rect id="table-D1" class="map-table" data-location="D1" x="355" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="371.0" y="743">D1</text>
+<rect id="table-D2" class="map-table" data-location="D2" x="400" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="416.0" y="743">D2</text>
+<rect id="table-D3" class="map-table" data-location="D3" x="445" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="461.0" y="743">D3</text>
+<rect id="table-D4" class="map-table" data-location="D4" x="490" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="506.0" y="743">D4</text>
+<rect id="table-D5" class="map-table" data-location="D5" x="535" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="551.0" y="743">D5</text>
+<rect id="table-D6" class="map-table" data-location="D6" x="580" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="596.0" y="743">D6</text>
+<rect id="table-D7" class="map-table" data-location="D7" x="625" y="720" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="641.0" y="743">D7</text>
+<rect id="table-D8" class="map-table" data-location="D8" x="245" y="700" width="28" height="10" rx="1" transform="rotate(55 259.0 705.0)"/>
+<text class="map-table-label" x="259.0" y="721">D8</text>
+<rect id="table-D9" class="map-table" data-location="D9" x="263" y="728" width="28" height="10" rx="1" transform="rotate(55 277.0 733.0)"/>
+<text class="map-table-label" x="277.0" y="749">D9</text>
+<rect id="table-D10" class="map-table" data-location="D10" x="281" y="756" width="28" height="10" rx="1" transform="rotate(55 295.0 761.0)"/>
+<text class="map-table-label" x="295.0" y="777">D10</text>
+<rect id="table-D11" class="map-table" data-location="D11" x="299" y="784" width="28" height="10" rx="1" transform="rotate(55 313.0 789.0)"/>
+<text class="map-table-label" x="313.0" y="805">D11</text>
+<rect id="table-D12" class="map-table" data-location="D12" x="335" y="760" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="341.0" y="796">D12</text>
+<rect id="table-D13" class="map-table" data-location="D13" x="335" y="795" width="12" height="25" rx="1"/>
+<text class="map-table-label" x="341.0" y="831">D13</text>
+<rect id="table-E1" class="map-table" data-location="E1" x="355.0" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="372.0" y="627">E1</text>
+<rect id="table-E2" class="map-table" data-location="E2" x="404.1666666666667" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="421.1666666666667" y="627">E2</text>
+<rect id="table-E3" class="map-table" data-location="E3" x="453.3333333333333" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="470.3333333333333" y="627">E3</text>
+<rect id="table-E4" class="map-table" data-location="E4" x="502.5" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="519.5" y="627">E4</text>
+<rect id="table-E5" class="map-table" data-location="E5" x="551.6666666666666" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="568.6666666666666" y="627">E5</text>
+<rect id="table-E6" class="map-table" data-location="E6" x="600.8333333333333" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="617.8333333333333" y="627">E6</text>
+<rect id="table-E7" class="map-table" data-location="E7" x="650.0" y="605" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="667.0" y="627">E7</text>
+<rect id="table-E8" class="map-table" data-location="E8" x="668" y="575.0" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="673.5" y="614.0">E8</text>
+<rect id="table-E9" class="map-table" data-location="E9" x="668" y="545.0" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="673.5" y="584.0">E9</text>
+<rect id="table-E10" class="map-table" data-location="E10" x="650.0" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="667.0" y="537">E10</text>
+<rect id="table-E11" class="map-table" data-location="E11" x="600.8333333333334" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="617.8333333333334" y="537">E11</text>
+<rect id="table-E12" class="map-table" data-location="E12" x="551.6666666666666" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="568.6666666666666" y="537">E12</text>
+<rect id="table-E13" class="map-table" data-location="E13" x="502.5" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="519.5" y="537">E13</text>
+<rect id="table-E14" class="map-table" data-location="E14" x="453.33333333333337" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="470.33333333333337" y="537">E14</text>
+<rect id="table-E15" class="map-table" data-location="E15" x="404.1666666666667" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="421.1666666666667" y="537">E15</text>
+<rect id="table-E16" class="map-table" data-location="E16" x="355.0" y="515" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="372.0" y="537">E16</text>
+<rect id="table-E17" class="map-table" data-location="E17" x="335" y="545.0" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="340.5" y="584.0">E17</text>
+<rect id="table-E18" class="map-table" data-location="E18" x="335" y="575.0" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="340.5" y="614.0">E18</text>
+<rect id="table-F1" class="map-table" data-location="F1" x="355.0" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="372.0" y="517">F1</text>
+<rect id="table-F2" class="map-table" data-location="F2" x="404.1666666666667" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="421.1666666666667" y="517">F2</text>
+<rect id="table-F3" class="map-table" data-location="F3" x="453.3333333333333" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="470.3333333333333" y="517">F3</text>
+<rect id="table-F4" class="map-table" data-location="F4" x="502.5" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="519.5" y="517">F4</text>
+<rect id="table-F5" class="map-table" data-location="F5" x="551.6666666666666" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="568.6666666666666" y="517">F5</text>
+<rect id="table-F6" class="map-table" data-location="F6" x="600.8333333333333" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="617.8333333333333" y="517">F6</text>
+<rect id="table-F7" class="map-table" data-location="F7" x="650.0" y="495" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="667.0" y="517">F7</text>
+<rect id="table-F8" class="map-table" data-location="F8" x="668" y="466.6666666666667" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="673.5" y="505.6666666666667">F8</text>
+<rect id="table-F9" class="map-table" data-location="F9" x="668" y="438.3333333333333" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="673.5" y="477.3333333333333">F9</text>
+<rect id="table-F10" class="map-table" data-location="F10" x="650.0" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="667.0" y="432">F10</text>
+<rect id="table-F11" class="map-table" data-location="F11" x="600.8333333333334" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="617.8333333333334" y="432">F11</text>
+<rect id="table-F12" class="map-table" data-location="F12" x="551.6666666666666" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="568.6666666666666" y="432">F12</text>
+<rect id="table-F13" class="map-table" data-location="F13" x="502.5" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="519.5" y="432">F13</text>
+<rect id="table-F14" class="map-table" data-location="F14" x="453.33333333333337" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="470.33333333333337" y="432">F14</text>
+<rect id="table-F15" class="map-table" data-location="F15" x="404.1666666666667" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="421.1666666666667" y="432">F15</text>
+<rect id="table-F16" class="map-table" data-location="F16" x="355.0" y="410" width="34" height="11" rx="1"/>
+<text class="map-table-label" x="372.0" y="432">F16</text>
+<rect id="table-F17" class="map-table" data-location="F17" x="335" y="438.3333333333333" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="340.5" y="477.3333333333333">F17</text>
+<rect id="table-F18" class="map-table" data-location="F18" x="335" y="466.6666666666667" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="340.5" y="505.6666666666667">F18</text>
+<rect id="table-G1" class="map-table" data-location="G1" x="375" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="390.0" y="419">G1</text>
+<rect id="table-G2" class="map-table" data-location="G2" x="417" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="432.0" y="419">G2</text>
+<rect id="table-G3" class="map-table" data-location="G3" x="459" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="474.0" y="419">G3</text>
+<rect id="table-G4" class="map-table" data-location="G4" x="501" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="516.0" y="419">G4</text>
+<rect id="table-G5" class="map-table" data-location="G5" x="543" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="558.0" y="419">G5</text>
+<rect id="table-G6" class="map-table" data-location="G6" x="585" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="600.0" y="419">G6</text>
+<rect id="table-G7" class="map-table" data-location="G7" x="627" y="397" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="642.0" y="419">G7</text>
+<rect id="table-G8" class="map-table" data-location="G8" x="668" y="397" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="673.5" y="436">G8</text>
+<rect id="table-G9" class="map-table" data-location="G9" x="668" y="360" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="673.5" y="399">G9</text>
+<rect id="table-G10" class="map-table" data-location="G10" x="340" y="360" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="345.5" y="399">G10</text>
+<rect id="table-G11" class="map-table" data-location="G11" x="340" y="398" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="345.5" y="437">G11</text>
+<rect id="table-Z1" class="map-table" data-location="Z1" x="710" y="770" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="726.0" y="793">Z1</text>
+<rect id="table-Z2" class="map-table" data-location="Z2" x="760" y="770" width="32" height="12" rx="1"/>
+<text class="map-table-label" x="776.0" y="793">Z2</text>
+<rect id="table-Z3" class="map-table" data-location="Z3" x="665" y="805" width="20" height="25" rx="1"/>
+<text class="map-table-label" x="675.0" y="841">Z3</text>
+</g>
+<g id="lower-level">
+<path class="outline" d="M75 900 L760 900 L760 1000 L860 1000 L860 1325 L920 1325 L980 1480 L910 1530 L910 1660 L720 1660 L720 1710 L300 1710 L230 1645 L145 1645 L70 1550 L45 1370 L45 1120 Z"/>
+<text class="level-label" x="190" y="965">LOWER LEVEL</text>
+<path id="zone-celebrity-left" class="zone" fill="#ef744f" d="M75 1030 H300 V1185 H75 Z"/>
+<path id="zone-celebrity-top" class="zone" fill="#ef744f" d="M300 980 H820 V1130 H300 Z"/>
+<text class="zone-label med" x="190" y="1110">Celebrity Guest Alley</text><text class="zone-label med" x="555" y="1065">Celebrity Guest Alley</text>
+<path id="zone-photo" class="zone" fill="#f3b444" d="M75 1185 H300 V1390 L210 1450 H75 Z"/><text class="zone-label med" x="185" y="1290">Photo Op Area</text>
+<path id="zone-lawn" class="zone" fill="#a3ca4b" d="M45 1220 Q-5 1380 75 1580 L210 1655 L210 1450 L75 1390 Z"/><text class="zone-label med" x="105" y="1450">The Lawn</text>
+<path id="zone-cafe" class="zone" fill="#efc08b" d="M210 1450 L300 1390 L360 1390 L360 1630 L260 1630 Z"/><text class="zone-label med" x="295" y="1530">The Café</text>
+<rect id="zone-lower-hall" class="hall-floor" x="330" y="1130" width="500" height="430"/><text class="zone-label small" x="580" y="1162">EXHIBIT HALL - LOWER</text>
+<path id="zone-tattoo" class="zone" fill="#6fb7a7" d="M830 1190 L950 1140 L1015 1325 L855 1410 Z"/><text class="zone-label med" x="915" y="1285">Tattoo Parlor</text>
+<path id="zone-wolves" class="zone" fill="#eee9dc" d="M830 1410 L1000 1330 L1080 1490 L950 1550 Z"/><text class="zone-label small" x="955" y="1470">Wildefell Wolves</text>
+<rect id="zone-gaming" class="zone" x="750" y="1580" width="210" height="125" fill="#60b9dc"/><text class="zone-label med" x="855" y="1640">Gaming Room</text>
+<text class="zone-label med" x="1070" y="1230">The Patio</text><text class="zone-label small" x="1070" y="1260">Outdoor Vendors</text>
+<rect id="table-K1" class="map-table" data-location="K1" x="120" y="1055" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="127.0" y="1111">K1</text>
+<rect id="table-K2" class="map-table" data-location="K2" x="158" y="1055" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="165.0" y="1111">K2</text>
+<rect id="table-K3" class="map-table" data-location="K3" x="196" y="1055" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="203.0" y="1111">K3</text>
+<rect id="table-K4" class="map-table" data-location="K4" x="234" y="1055" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="241.0" y="1111">K4</text>
+<rect id="table-K5" class="map-table" data-location="K5" x="272" y="1055" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="279.0" y="1111">K5</text>
+<rect id="table-K6" class="map-table" data-location="K6" x="310" y="1055" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="317.0" y="1111">K6</text>
+<rect id="table-K7" class="map-table" data-location="K7" x="360" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="367.0" y="1056">K7</text>
+<rect id="table-K8" class="map-table" data-location="K8" x="397" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="404.0" y="1056">K8</text>
+<rect id="table-K9" class="map-table" data-location="K9" x="434" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="441.0" y="1056">K9</text>
+<rect id="table-K10" class="map-table" data-location="K10" x="471" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="478.0" y="1056">K10</text>
+<rect id="table-K11" class="map-table" data-location="K11" x="508" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="515.0" y="1056">K11</text>
+<rect id="table-K12" class="map-table" data-location="K12" x="545" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="552.0" y="1056">K12</text>
+<rect id="table-K13" class="map-table" data-location="K13" x="582" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="589.0" y="1056">K13</text>
+<rect id="table-K14" class="map-table" data-location="K14" x="619" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="626.0" y="1056">K14</text>
+<rect id="table-K15" class="map-table" data-location="K15" x="656" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="663.0" y="1056">K15</text>
+<rect id="table-K16" class="map-table" data-location="K16" x="693" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="700.0" y="1056">K16</text>
+<rect id="table-K17" class="map-table" data-location="K17" x="730" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="737.0" y="1056">K17</text>
+<rect id="table-K18" class="map-table" data-location="K18" x="767" y="1000" width="14" height="45" rx="1"/>
+<text class="map-table-label" x="774.0" y="1056">K18</text>
+<rect id="table-R20" class="map-table" data-location="R20" x="365" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="381.0" y="1207">R20</text>
+<rect id="table-R19" class="map-table" data-location="R19" x="412" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="428.0" y="1207">R19</text>
+<rect id="table-R18" class="map-table" data-location="R18" x="459" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="475.0" y="1207">R18</text>
+<rect id="table-R17" class="map-table" data-location="R17" x="506" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="522.0" y="1207">R17</text>
+<rect id="table-R16" class="map-table" data-location="R16" x="553" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="569.0" y="1207">R16</text>
+<rect id="table-R15" class="map-table" data-location="R15" x="600" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="616.0" y="1207">R15</text>
+<rect id="table-R14" class="map-table" data-location="R14" x="647" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="663.0" y="1207">R14</text>
+<rect id="table-R13" class="map-table" data-location="R13" x="694" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="710.0" y="1207">R13</text>
+<rect id="table-R12" class="map-table" data-location="R12" x="741" y="1185" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="757.0" y="1207">R12</text>
+<rect id="table-R21" class="map-table" data-location="R21" x="345" y="1218" width="11" height="26" rx="1"/>
+<text class="map-table-label" x="350.5" y="1255">R21</text>
+<rect id="table-R22" class="map-table" data-location="R22" x="345" y="1248" width="11" height="26" rx="1"/>
+<text class="map-table-label" x="350.5" y="1285">R22</text>
+<rect id="table-R1" class="map-table" data-location="R1" x="365" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="381.0" y="1282">R1</text>
+<rect id="table-R2" class="map-table" data-location="R2" x="412" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="428.0" y="1282">R2</text>
+<rect id="table-R3" class="map-table" data-location="R3" x="459" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="475.0" y="1282">R3</text>
+<rect id="table-R4" class="map-table" data-location="R4" x="506" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="522.0" y="1282">R4</text>
+<rect id="table-R5" class="map-table" data-location="R5" x="553" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="569.0" y="1282">R5</text>
+<rect id="table-R6" class="map-table" data-location="R6" x="600" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="616.0" y="1282">R6</text>
+<rect id="table-R7" class="map-table" data-location="R7" x="647" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="663.0" y="1282">R7</text>
+<rect id="table-R8" class="map-table" data-location="R8" x="694" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="710.0" y="1282">R8</text>
+<rect id="table-R9" class="map-table" data-location="R9" x="741" y="1260" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="757.0" y="1282">R9</text>
+<rect id="table-R10" class="map-table" data-location="R10" x="785" y="1240" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="790.5" y="1276">R10</text>
+<rect id="table-R11" class="map-table" data-location="R11" x="785" y="1208" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="790.5" y="1244">R11</text>
+<rect id="table-P20" class="map-table" data-location="P20" x="365" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="381.0" y="1327">P20</text>
+<rect id="table-P19" class="map-table" data-location="P19" x="412" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="428.0" y="1327">P19</text>
+<rect id="table-P18" class="map-table" data-location="P18" x="459" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="475.0" y="1327">P18</text>
+<rect id="table-P17" class="map-table" data-location="P17" x="506" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="522.0" y="1327">P17</text>
+<rect id="table-P16" class="map-table" data-location="P16" x="553" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="569.0" y="1327">P16</text>
+<rect id="table-P15" class="map-table" data-location="P15" x="600" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="616.0" y="1327">P15</text>
+<rect id="table-P14" class="map-table" data-location="P14" x="647" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="663.0" y="1327">P14</text>
+<rect id="table-P13" class="map-table" data-location="P13" x="694" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="710.0" y="1327">P13</text>
+<rect id="table-P12" class="map-table" data-location="P12" x="741" y="1305" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="757.0" y="1327">P12</text>
+<rect id="table-P21" class="map-table" data-location="P21" x="345" y="1320" width="11" height="24" rx="1"/>
+<text class="map-table-label" x="350.5" y="1355">P21</text>
+<rect id="table-P22" class="map-table" data-location="P22" x="345" y="1352" width="11" height="24" rx="1"/>
+<text class="map-table-label" x="350.5" y="1387">P22</text>
+<rect id="table-P1" class="map-table" data-location="P1" x="365" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="381.0" y="1394">P1</text>
+<rect id="table-P2" class="map-table" data-location="P2" x="412" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="428.0" y="1394">P2</text>
+<rect id="table-P3" class="map-table" data-location="P3" x="459" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="475.0" y="1394">P3</text>
+<rect id="table-P4" class="map-table" data-location="P4" x="506" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="522.0" y="1394">P4</text>
+<rect id="table-P5" class="map-table" data-location="P5" x="553" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="569.0" y="1394">P5</text>
+<rect id="table-P6" class="map-table" data-location="P6" x="600" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="616.0" y="1394">P6</text>
+<rect id="table-P7" class="map-table" data-location="P7" x="647" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="663.0" y="1394">P7</text>
+<rect id="table-P8" class="map-table" data-location="P8" x="694" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="710.0" y="1394">P8</text>
+<rect id="table-P9" class="map-table" data-location="P9" x="741" y="1372" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="757.0" y="1394">P9</text>
+<rect id="table-P10" class="map-table" data-location="P10" x="785" y="1355" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="790.5" y="1391">P10</text>
+<rect id="table-P11" class="map-table" data-location="P11" x="785" y="1324" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="790.5" y="1360">P11</text>
+<rect id="table-O20" class="map-table" data-location="O20" x="365" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="381.0" y="1437">O20</text>
+<rect id="table-O19" class="map-table" data-location="O19" x="412" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="428.0" y="1437">O19</text>
+<rect id="table-O18" class="map-table" data-location="O18" x="459" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="475.0" y="1437">O18</text>
+<rect id="table-O17" class="map-table" data-location="O17" x="506" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="522.0" y="1437">O17</text>
+<rect id="table-O16" class="map-table" data-location="O16" x="553" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="569.0" y="1437">O16</text>
+<rect id="table-O15" class="map-table" data-location="O15" x="600" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="616.0" y="1437">O15</text>
+<rect id="table-O14" class="map-table" data-location="O14" x="647" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="663.0" y="1437">O14</text>
+<rect id="table-O13" class="map-table" data-location="O13" x="694" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="710.0" y="1437">O13</text>
+<rect id="table-O12" class="map-table" data-location="O12" x="741" y="1415" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="757.0" y="1437">O12</text>
+<rect id="table-O21" class="map-table" data-location="O21" x="345" y="1430" width="11" height="24" rx="1"/>
+<text class="map-table-label" x="350.5" y="1465">O21</text>
+<rect id="table-O22" class="map-table" data-location="O22" x="345" y="1462" width="11" height="24" rx="1"/>
+<text class="map-table-label" x="350.5" y="1497">O22</text>
+<rect id="table-O1" class="map-table" data-location="O1" x="365" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="381.0" y="1504">O1</text>
+<rect id="table-O2" class="map-table" data-location="O2" x="412" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="428.0" y="1504">O2</text>
+<rect id="table-O3" class="map-table" data-location="O3" x="459" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="475.0" y="1504">O3</text>
+<rect id="table-O4" class="map-table" data-location="O4" x="506" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="522.0" y="1504">O4</text>
+<rect id="table-O5" class="map-table" data-location="O5" x="553" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="569.0" y="1504">O5</text>
+<rect id="table-O6" class="map-table" data-location="O6" x="600" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="616.0" y="1504">O6</text>
+<rect id="table-O7" class="map-table" data-location="O7" x="647" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="663.0" y="1504">O7</text>
+<rect id="table-O8" class="map-table" data-location="O8" x="694" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="710.0" y="1504">O8</text>
+<rect id="table-O9" class="map-table" data-location="O9" x="741" y="1482" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="757.0" y="1504">O9</text>
+<rect id="table-O10" class="map-table" data-location="O10" x="785" y="1465" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="790.5" y="1501">O10</text>
+<rect id="table-O11" class="map-table" data-location="O11" x="785" y="1434" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="790.5" y="1470">O11</text>
+<rect id="table-I1" class="map-table" data-location="I1" x="350" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="366.0" y="1544">I1</text>
+<rect id="table-I2" class="map-table" data-location="I2" x="397" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="413.0" y="1544">I2</text>
+<rect id="table-I3" class="map-table" data-location="I3" x="444" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="460.0" y="1544">I3</text>
+<rect id="table-I4" class="map-table" data-location="I4" x="491" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="507.0" y="1544">I4</text>
+<rect id="table-I5" class="map-table" data-location="I5" x="538" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="554.0" y="1544">I5</text>
+<rect id="table-I6" class="map-table" data-location="I6" x="585" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="601.0" y="1544">I6</text>
+<rect id="table-I7" class="map-table" data-location="I7" x="632" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="648.0" y="1544">I7</text>
+<rect id="table-I8" class="map-table" data-location="I8" x="679" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="695.0" y="1544">I8</text>
+<rect id="table-I9" class="map-table" data-location="I9" x="726" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="742.0" y="1544">I9</text>
+<rect id="table-I10" class="map-table" data-location="I10" x="773" y="1522" width="32" height="11" rx="1"/>
+<text class="map-table-label" x="789.0" y="1544">I10</text>
+<rect id="table-J1" class="map-table" data-location="J1" x="815" y="1515" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1551">J1</text>
+<rect id="table-J2" class="map-table" data-location="J2" x="815" y="1480" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1516">J2</text>
+<rect id="table-J3" class="map-table" data-location="J3" x="815" y="1445" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1481">J3</text>
+<rect id="table-J4" class="map-table" data-location="J4" x="815" y="1410" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1446">J4</text>
+<rect id="table-J5" class="map-table" data-location="J5" x="815" y="1375" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1411">J5</text>
+<rect id="table-J6" class="map-table" data-location="J6" x="815" y="1340" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1376">J6</text>
+<rect id="table-J7" class="map-table" data-location="J7" x="815" y="1305" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1341">J7</text>
+<rect id="table-J8" class="map-table" data-location="J8" x="815" y="1270" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1306">J8</text>
+<rect id="table-J9" class="map-table" data-location="J9" x="815" y="1235" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1271">J9</text>
+<rect id="table-J10" class="map-table" data-location="J10" x="815" y="1200" width="11" height="25" rx="1"/>
+<text class="map-table-label" x="820.5" y="1236">J10</text>
+<rect id="table-U1" class="map-table" data-location="U1" x="350" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="365.0" y="1584">U1</text>
+<rect id="table-U2" class="map-table" data-location="U2" x="388" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="403.0" y="1584">U2</text>
+<rect id="table-U3" class="map-table" data-location="U3" x="426" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="441.0" y="1584">U3</text>
+<rect id="table-U4" class="map-table" data-location="U4" x="464" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="479.0" y="1584">U4</text>
+<rect id="table-U5" class="map-table" data-location="U5" x="502" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="517.0" y="1584">U5</text>
+<rect id="table-U6" class="map-table" data-location="U6" x="540" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="555.0" y="1584">U6</text>
+<rect id="table-U7" class="map-table" data-location="U7" x="578" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="593.0" y="1584">U7</text>
+<rect id="table-U8" class="map-table" data-location="U8" x="616" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="631.0" y="1584">U8</text>
+<rect id="table-U9" class="map-table" data-location="U9" x="650" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="665.0" y="1584">U9</text>
+<rect id="table-U10" class="map-table" data-location="U10" x="688" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="703.0" y="1584">U10</text>
+<rect id="table-U11" class="map-table" data-location="U11" x="726" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="741.0" y="1584">U11</text>
+<rect id="table-U12" class="map-table" data-location="U12" x="764" y="1562" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="779.0" y="1584">U12</text>
+<rect id="table-V1" class="map-table" data-location="V1" x="330" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="345.0" y="1627">V1</text>
+<rect id="table-V2" class="map-table" data-location="V2" x="370" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="385.0" y="1627">V2</text>
+<rect id="table-V3" class="map-table" data-location="V3" x="410" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="425.0" y="1627">V3</text>
+<rect id="table-V4" class="map-table" data-location="V4" x="450" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="465.0" y="1627">V4</text>
+<rect id="table-V5" class="map-table" data-location="V5" x="490" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="505.0" y="1627">V5</text>
+<rect id="table-V6" class="map-table" data-location="V6" x="530" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="545.0" y="1627">V6</text>
+<rect id="table-V7" class="map-table" data-location="V7" x="650" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="665.0" y="1627">V7</text>
+<rect id="table-V8" class="map-table" data-location="V8" x="690" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="705.0" y="1627">V8</text>
+<rect id="table-V9" class="map-table" data-location="V9" x="730" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="745.0" y="1627">V9</text>
+<rect id="table-V10" class="map-table" data-location="V10" x="770" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="785.0" y="1627">V10</text>
+<rect id="table-V11" class="map-table" data-location="V11" x="810" y="1605" width="30" height="11" rx="1"/>
+<text class="map-table-label" x="825.0" y="1627">V11</text>
+<rect id="table-N1" class="map-table" data-location="N1" x="300" y="1510" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="305.5" y="1549">N1</text>
+<rect id="table-N2" class="map-table" data-location="N2" x="300" y="1468" width="11" height="28" rx="1"/>
+<text class="map-table-label" x="305.5" y="1507">N2</text>
+<rect id="table-T1" class="map-table" data-location="T1" x="845" y="1290" width="12" height="32" rx="1"/>
+<text class="map-table-label" x="851.0" y="1333">T1</text>
+<rect id="table-T2" class="map-table" data-location="T2" x="845" y="1250" width="12" height="32" rx="1"/>
+<text class="map-table-label" x="851.0" y="1293">T2</text>
+<rect id="table-T3" class="map-table" data-location="T3" x="885" y="1240" width="12" height="32" rx="1" transform="rotate(-20 891.0 1256.0)"/>
+<text class="map-table-label" x="891.0" y="1283">T3</text>
+<rect id="table-T4" class="map-table" data-location="T4" x="900" y="1280" width="12" height="32" rx="1" transform="rotate(-20 906.0 1296.0)"/>
+<text class="map-table-label" x="906.0" y="1323">T4</text>
+<g id="booth-X1" data-location="X1" transform="rotate(-16 1027 1540)">
+<rect class="map-table" id="table-X1" data-location="X1" x="1005" y="1518" width="44" height="44" rx="2"/>
+<path d="M1005,1518 L1027,1540 L1049,1518 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1005,1562 L1027,1540 L1049,1562 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1027" y="1578">X1</text></g>
+<g id="booth-X2" data-location="X2" transform="rotate(-16 1024 1488)">
+<rect class="map-table" id="table-X2" data-location="X2" x="1002" y="1466" width="44" height="44" rx="2"/>
+<path d="M1002,1466 L1024,1488 L1046,1466 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1002,1510 L1024,1488 L1046,1510 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1024" y="1526">X2</text></g>
+<g id="booth-X3" data-location="X3" transform="rotate(-16 1021 1436)">
+<rect class="map-table" id="table-X3" data-location="X3" x="999" y="1414" width="44" height="44" rx="2"/>
+<path d="M999,1414 L1021,1436 L1043,1414 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M999,1458 L1021,1436 L1043,1458 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1021" y="1474">X3</text></g>
+<g id="booth-X4" data-location="X4" transform="rotate(-16 1018 1384)">
+<rect class="map-table" id="table-X4" data-location="X4" x="996" y="1362" width="44" height="44" rx="2"/>
+<path d="M996,1362 L1018,1384 L1040,1362 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M996,1406 L1018,1384 L1040,1406 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1018" y="1422">X4</text></g>
+<g id="booth-X5" data-location="X5" transform="rotate(-16 1015 1332)">
+<rect class="map-table" id="table-X5" data-location="X5" x="993" y="1310" width="44" height="44" rx="2"/>
+<path d="M993,1310 L1015,1332 L1037,1310 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M993,1354 L1015,1332 L1037,1354 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1015" y="1370">X5</text></g>
+<g id="booth-X6" data-location="X6" transform="rotate(-16 1012 1280)">
+<rect class="map-table" id="table-X6" data-location="X6" x="990" y="1258" width="44" height="44" rx="2"/>
+<path d="M990,1258 L1012,1280 L1034,1258 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M990,1302 L1012,1280 L1034,1302 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1012" y="1318">X6</text></g>
+<g id="booth-X7" data-location="X7" transform="rotate(-16 1009 1228)">
+<rect class="map-table" id="table-X7" data-location="X7" x="987" y="1206" width="44" height="44" rx="2"/>
+<path d="M987,1206 L1009,1228 L1031,1206 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M987,1250 L1009,1228 L1031,1250 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1009" y="1266">X7</text></g>
+<g id="booth-X8" data-location="X8" transform="rotate(-16 1006 1176)">
+<rect class="map-table" id="table-X8" data-location="X8" x="984" y="1154" width="44" height="44" rx="2"/>
+<path d="M984,1154 L1006,1176 L1028,1154 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M984,1198 L1006,1176 L1028,1198 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1006" y="1214">X8</text></g>
+<g id="booth-X9" data-location="X9" transform="rotate(-16 1003 1124)">
+<rect class="map-table" id="table-X9" data-location="X9" x="981" y="1102" width="44" height="44" rx="2"/>
+<path d="M981,1102 L1003,1124 L1025,1102 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M981,1146 L1003,1124 L1025,1146 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1003" y="1162">X9</text></g>
+<g id="booth-X10" data-location="X10" transform="rotate(-16 1000 1072)">
+<rect class="map-table" id="table-X10" data-location="X10" x="978" y="1050" width="44" height="44" rx="2"/>
+<path d="M978,1050 L1000,1072 L1022,1050 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M978,1094 L1000,1072 L1022,1094 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1000" y="1110">X10</text></g>
+<g id="booth-X11" data-location="X11" transform="rotate(-16 997 1020)">
+<rect class="map-table" id="table-X11" data-location="X11" x="975" y="998" width="44" height="44" rx="2"/>
+<path d="M975,998 L997,1020 L1019,998 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M975,1042 L997,1020 L1019,1042 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="997" y="1058">X11</text></g>
+<g id="booth-X12" data-location="X12" transform="rotate(-16 994 968)">
+<rect class="map-table" id="table-X12" data-location="X12" x="972" y="946" width="44" height="44" rx="2"/>
+<path d="M972,946 L994,968 L1016,946 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M972,990 L994,968 L1016,990 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="994" y="1006">X12</text></g>
+<g id="booth-X13" data-location="X13" transform="rotate(-16 991 916)">
+<rect class="map-table" id="table-X13" data-location="X13" x="969" y="894" width="44" height="44" rx="2"/>
+<path d="M969,894 L991,916 L1013,894 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M969,938 L991,916 L1013,938 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="991" y="954">X13</text></g>
+<g id="booth-Y1" data-location="Y1" transform="rotate(16 1140.0 1545)">
+<rect class="map-table" id="table-Y1" data-location="Y1" x="1118.0" y="1523" width="44" height="44" rx="2"/>
+<path d="M1118.0,1523 L1140.0,1545 L1162.0,1523 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1118.0,1567 L1140.0,1545 L1162.0,1567 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1140.0" y="1583">Y1</text></g>
+<g id="booth-Y2" data-location="Y2" transform="rotate(16 1141.5 1497)">
+<rect class="map-table" id="table-Y2" data-location="Y2" x="1119.5" y="1475" width="44" height="44" rx="2"/>
+<path d="M1119.5,1475 L1141.5,1497 L1163.5,1475 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1119.5,1519 L1141.5,1497 L1163.5,1519 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1141.5" y="1535">Y2</text></g>
+<g id="booth-Y3" data-location="Y3" transform="rotate(16 1143.0 1449)">
+<rect class="map-table" id="table-Y3" data-location="Y3" x="1121.0" y="1427" width="44" height="44" rx="2"/>
+<path d="M1121.0,1427 L1143.0,1449 L1165.0,1427 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1121.0,1471 L1143.0,1449 L1165.0,1471 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1143.0" y="1487">Y3</text></g>
+<g id="booth-Y4" data-location="Y4" transform="rotate(16 1144.5 1401)">
+<rect class="map-table" id="table-Y4" data-location="Y4" x="1122.5" y="1379" width="44" height="44" rx="2"/>
+<path d="M1122.5,1379 L1144.5,1401 L1166.5,1379 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1122.5,1423 L1144.5,1401 L1166.5,1423 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1144.5" y="1439">Y4</text></g>
+<g id="booth-Y5" data-location="Y5" transform="rotate(16 1146.0 1353)">
+<rect class="map-table" id="table-Y5" data-location="Y5" x="1124.0" y="1331" width="44" height="44" rx="2"/>
+<path d="M1124.0,1331 L1146.0,1353 L1168.0,1331 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1124.0,1375 L1146.0,1353 L1168.0,1375 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1146.0" y="1391">Y5</text></g>
+<g id="booth-Y6" data-location="Y6" transform="rotate(16 1147.5 1305)">
+<rect class="map-table" id="table-Y6" data-location="Y6" x="1125.5" y="1283" width="44" height="44" rx="2"/>
+<path d="M1125.5,1283 L1147.5,1305 L1169.5,1283 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1125.5,1327 L1147.5,1305 L1169.5,1327 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1147.5" y="1343">Y6</text></g>
+<g id="booth-Y7" data-location="Y7" transform="rotate(16 1149.0 1257)">
+<rect class="map-table" id="table-Y7" data-location="Y7" x="1127.0" y="1235" width="44" height="44" rx="2"/>
+<path d="M1127.0,1235 L1149.0,1257 L1171.0,1235 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1127.0,1279 L1149.0,1257 L1171.0,1279 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1149.0" y="1295">Y7</text></g>
+<g id="booth-Y8" data-location="Y8" transform="rotate(16 1150.5 1209)">
+<rect class="map-table" id="table-Y8" data-location="Y8" x="1128.5" y="1187" width="44" height="44" rx="2"/>
+<path d="M1128.5,1187 L1150.5,1209 L1172.5,1187 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1128.5,1231 L1150.5,1209 L1172.5,1231 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1150.5" y="1247">Y8</text></g>
+<g id="booth-Y9" data-location="Y9" transform="rotate(16 1152.0 1161)">
+<rect class="map-table" id="table-Y9" data-location="Y9" x="1130.0" y="1139" width="44" height="44" rx="2"/>
+<path d="M1130.0,1139 L1152.0,1161 L1174.0,1139 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1130.0,1183 L1152.0,1161 L1174.0,1183 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1152.0" y="1199">Y9</text></g>
+<g id="booth-Y10" data-location="Y10" transform="rotate(16 1153.5 1113)">
+<rect class="map-table" id="table-Y10" data-location="Y10" x="1131.5" y="1091" width="44" height="44" rx="2"/>
+<path d="M1131.5,1091 L1153.5,1113 L1175.5,1091 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1131.5,1135 L1153.5,1113 L1175.5,1135 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1153.5" y="1151">Y10</text></g>
+<g id="booth-Y11" data-location="Y11" transform="rotate(16 1155.0 1065)">
+<rect class="map-table" id="table-Y11" data-location="Y11" x="1133.0" y="1043" width="44" height="44" rx="2"/>
+<path d="M1133.0,1043 L1155.0,1065 L1177.0,1043 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1133.0,1087 L1155.0,1065 L1177.0,1087 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1155.0" y="1103">Y11</text></g>
+<g id="booth-Y12" data-location="Y12" transform="rotate(16 1156.5 1017)">
+<rect class="map-table" id="table-Y12" data-location="Y12" x="1134.5" y="995" width="44" height="44" rx="2"/>
+<path d="M1134.5,995 L1156.5,1017 L1178.5,995 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1134.5,1039 L1156.5,1017 L1178.5,1039 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1156.5" y="1055">Y12</text></g>
+<g id="booth-Y13" data-location="Y13" transform="rotate(16 1158.0 969)">
+<rect class="map-table" id="table-Y13" data-location="Y13" x="1136.0" y="947" width="44" height="44" rx="2"/>
+<path d="M1136.0,947 L1158.0,969 L1180.0,947 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1136.0,991 L1158.0,969 L1180.0,991 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1158.0" y="1007">Y13</text></g>
+<g id="booth-Y14" data-location="Y14" transform="rotate(16 1159.5 921)">
+<rect class="map-table" id="table-Y14" data-location="Y14" x="1137.5" y="899" width="44" height="44" rx="2"/>
+<path d="M1137.5,899 L1159.5,921 L1181.5,899 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1137.5,943 L1159.5,921 L1181.5,943 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1159.5" y="959">Y14</text></g>
+<g id="booth-Y15" data-location="Y15" transform="rotate(16 1161.0 873)">
+<rect class="map-table" id="table-Y15" data-location="Y15" x="1139.0" y="851" width="44" height="44" rx="2"/>
+<path d="M1139.0,851 L1161.0,873 L1183.0,851 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1139.0,895 L1161.0,873 L1183.0,895 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1161.0" y="911">Y15</text></g>
+<g id="booth-Y16" data-location="Y16" transform="rotate(16 1162.5 825)">
+<rect class="map-table" id="table-Y16" data-location="Y16" x="1140.5" y="803" width="44" height="44" rx="2"/>
+<path d="M1140.5,803 L1162.5,825 L1184.5,803 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1140.5,847 L1162.5,825 L1184.5,847 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1162.5" y="863">Y16</text></g>
+<g id="booth-Y0" data-location="Y0">
+<rect class="map-table" id="table-Y0" data-location="Y0" x="1028" y="878" width="44" height="44" rx="2"/>
+<path d="M1028,878 L1050,900 L1072,878 Z" fill="#f4f4f4" stroke="#d8d8d8" stroke-width="1"/>
+<path d="M1028,922 L1050,900 L1072,922 Z" fill="#eeeeee" stroke="#d8d8d8" stroke-width="1"/>
+<text class="map-table-label" x="1050" y="938">Y0</text></g>
+<rect id="table-Z4" class="service" data-location="Z4" x="80" y="1325" width="85" height="45"/><text class="map-table-label" x="122" y="1385">Z4</text>
+</g>
+<text class="tiny" x="600" y="1755">VECTOR FLOOR PLAN • TAP A TABLE OR BOOTH FOR DETAILS</text></svg>

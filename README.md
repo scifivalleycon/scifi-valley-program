@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.9
+# Sci-Fi Valley Con Digital Program — V4.0 Map Preview
 
 Cumulative update from V3.6.
 
@@ -219,3 +219,27 @@ Behavior:
   attendee app
 
 No Admin update is required.
+
+
+## V4.0 — interactive vector floor-plan foundation
+
+Adds a true SVG floor plan built from vector shapes rather than embedding the uploaded JPG.
+
+Features:
+- detailed Main Level and Lower Level venue zones
+- Patio outdoor vendor booths
+- individual SVG table/booth objects with stable IDs such as `table-A1`
+- crisp vector scaling at any zoom level
+- app zoom controls and scroll/pan viewport
+- color legend
+- vendor/table search
+- Main Level / Lower Level / Patio / Con-Quest filters
+- click a table or booth to see its assigned vendor
+- Con-Quest participants are shaded red from backend data
+- `data/map-settings.json` controls publication
+- `data/vendors.json` now supports map-aware assignments
+
+Safety:
+The uploaded source map contains the June 2026 celebrity lineup, so the initial map and directory are intentionally DRAFT / unpublished. Use `?mapPreview=1` on the attendee-app URL to preview it before publishing.
+
+Seed directory contains 177 records transcribed from the uploaded map.
