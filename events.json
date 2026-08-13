@@ -1,0 +1,968 @@
+[
+  {
+    "id": "regular-cafe",
+    "title": "Regular Café Menu",
+    "category": "Food",
+    "summary": "Downstairs café menu with entrées, sandwiches, pizza, sides and drinks.",
+    "content": [
+      {
+        "type": "note",
+        "text": "Regular Café • Downstairs"
+      },
+      {
+        "type": "heading",
+        "text": "Entrées & Platters"
+      },
+      {
+        "type": "menu",
+        "items": [
+          {
+            "name": "Tossed Salad",
+            "price": "$7.00",
+            "desc": "Mixed greens, tomatoes, cucumbers, red onion, cheddar, mild pepper rings, olives, chopped egg, roll and dressing. Add grilled chicken for $9.00 or rib-eye steak for $9.25."
+          },
+          {
+            "name": "Grilled Half Chicken Platter",
+            "price": "$11.00",
+            "desc": "Half chicken with salad du jour, cowboy baked beans, corn, roll and butter."
+          },
+          {
+            "name": "Yuengling Meatloaf",
+            "price": "$8.50",
+            "desc": "Angus beef meatloaf made with onions, garlic-seasoned breadcrumbs and Yuengling lager, served with fries, brown sauce, corn, roll and butter."
+          },
+          {
+            "name": "Penne Pasta with Chunky Marinara",
+            "price": "$6.75",
+            "desc": "Penne with marinara, roll and butter. With meatballs $8.75 or chicken $9.25."
+          },
+          {
+            "name": "Fritters & Fries",
+            "price": "$9.00",
+            "desc": "Breaded chicken tenders, fries and ranch."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Sandwich Platters"
+      },
+      {
+        "type": "p",
+        "text": "Sandwich platters include pickles and salad du jour. Gluten-free rolls are available by request."
+      },
+      {
+        "type": "menu",
+        "items": [
+          {
+            "name": "Charcoal Roasted BBQ Pork",
+            "price": "$8.25",
+            "desc": "Slow-roasted pork shoulder, Texas BBQ sauce and cheddar on a Kaiser roll."
+          },
+          {
+            "name": "Cheese Steak",
+            "price": "$9.50",
+            "desc": "Steak with peppers, onions and cheddar on a steak roll."
+          },
+          {
+            "name": "Hot Sausage",
+            "price": "$7.50",
+            "desc": "Hot sausage with peppers, onions and garlic on a steak roll."
+          },
+          {
+            "name": "Grilled Chicken",
+            "price": "$8.25",
+            "desc": "Marinated chicken breast with lettuce, tomato and house ranch-style sauce on a Kaiser roll."
+          },
+          {
+            "name": "Meatball Grinder",
+            "price": "$8.50",
+            "desc": "House meatballs, tomato sauce, mozzarella and provolone."
+          },
+          {
+            "name": "Meatless Chicken Patty",
+            "price": "$8.50",
+            "desc": "Vegetable-based chicken patty with lettuce and tomato on a Kaiser roll."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Pizza, Fries & Sides"
+      },
+      {
+        "type": "menu",
+        "items": [
+          {
+            "name": "Cheese Pizza or Pepperoni",
+            "price": "$8.25",
+            "desc": ""
+          },
+          {
+            "name": "Mac & Cheese",
+            "price": "$4.75",
+            "desc": "Macaroni with house cheese sauce, olive oil and breadcrumbs."
+          },
+          {
+            "name": "Cowboy Baked Beans",
+            "price": "$5.00",
+            "desc": ""
+          },
+          {
+            "name": "Frankfurters",
+            "price": "$3.00",
+            "desc": "All-beef hot dogs, with or without kraut."
+          },
+          {
+            "name": "Nachos with Cheese",
+            "price": "$4.00",
+            "desc": ""
+          },
+          {
+            "name": "French Fries",
+            "price": "$4.50",
+            "desc": "Add cheese for $1.75."
+          },
+          {
+            "name": "Salad Du Jour",
+            "price": "$4.00",
+            "desc": ""
+          },
+          {
+            "name": "Assorted Chips and Pretzels",
+            "price": "$1.25",
+            "desc": ""
+          },
+          {
+            "name": "Assorted Ice Cream Novelties",
+            "price": "$3.50",
+            "desc": ""
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Beverages"
+      },
+      {
+        "type": "menu",
+        "items": [
+          {
+            "name": "Assorted Soda",
+            "price": "$3.25",
+            "desc": ""
+          },
+          {
+            "name": "Spring Water",
+            "price": "$2.25",
+            "desc": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mini-cafe",
+    "title": "Mini Café Menu",
+    "category": "Food",
+    "summary": "Upstairs café with sandwiches, walking tacos, chili, sides and drinks.",
+    "content": [
+      {
+        "type": "note",
+        "text": "Mini Café • Upstairs"
+      },
+      {
+        "type": "heading",
+        "text": "Sandwich Platters"
+      },
+      {
+        "type": "p",
+        "text": "Sandwich platters include pickles and salad du jour."
+      },
+      {
+        "type": "menu",
+        "items": [
+          {
+            "name": "Pizza Burger",
+            "price": "$8.75",
+            "desc": "Italian-seasoned beef with julienne pepperoni, house pizza sauce, provolone and parmesan on a Kaiser roll."
+          },
+          {
+            "name": "Chicken Parmesan",
+            "price": "$9.00",
+            "desc": "Italian-seasoned chicken breast with marinara, provolone and parmesan on a Kaiser roll."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Walking Tacos"
+      },
+      {
+        "type": "p",
+        "text": "Choose nacho-cheese or ranch Doritos with cheddar, lettuce, tomatoes, onions, jalapeños, sour cream, guacamole and salsa."
+      },
+      {
+        "type": "menu",
+        "items": [
+          {
+            "name": "Seasoned Beef",
+            "price": "$8.25",
+            "desc": "Ground beef seasoned with chili, cumin, salt and pepper."
+          },
+          {
+            "name": "Fajita Style Chicken",
+            "price": "$8.00",
+            "desc": "Chicken seasoned with chili, cumin and coriander, with sautéed peppers and onions."
+          },
+          {
+            "name": "Three Bean Chili",
+            "price": "$7.25",
+            "desc": "Peppers, onions, kidney beans, white beans, black beans and tomato."
+          },
+          {
+            "name": "Mac & Cheese",
+            "price": "$4.75",
+            "desc": ""
+          },
+          {
+            "name": "Nachos with Cheese",
+            "price": "$4.00",
+            "desc": ""
+          },
+          {
+            "name": "Assorted Chips and Pretzels",
+            "price": "$1.25",
+            "desc": ""
+          },
+          {
+            "name": "Assorted Ice Cream Novelties",
+            "price": "$3.50",
+            "desc": ""
+          },
+          {
+            "name": "Assorted Soda",
+            "price": "$3.25",
+            "desc": ""
+          },
+          {
+            "name": "Spring Water",
+            "price": "$2.25",
+            "desc": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "con-quest",
+    "title": "Con-Quest",
+    "category": "Activities",
+    "summary": "A $5 interactive charity adventure from the Gearbox Union, built around challenges, bottle caps and raffle tickets.",
+    "content": [
+      {
+        "type": "p",
+        "text": "Donate $5 to receive a GBU Con-Quest pouch, five raffle tickets and a one-day questing pass. Use the event map to visit participating tables and complete playful challenges."
+      },
+      {
+        "type": "list",
+        "items": [
+          "Complete table quests such as character impressions, dances, quotes and other challenges.",
+          "Earn GBU Con-Quest bottle caps for completed quests.",
+          "Trade bottle caps at the Mega-Table for more raffle tickets.",
+          "Quests, trade values and hidden surprises can change each day.",
+          "Start at the Gearbox Union Con-Quest Mega-Table, Tables D1–D7 upstairs outside the ballroom."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Vendors, Artists & Guests"
+      },
+      {
+        "type": "p",
+        "text": "Exhibitors can volunteer as quest stops by contributing to the charity raffle and offering a simple interactive challenge at their table. Contact GearboxUnion@gmail.com to participate."
+      }
+    ]
+  },
+  {
+    "id": "costume-contest",
+    "title": "Costume Contest",
+    "category": "Activities",
+    "summary": "Annual costume competition with junior, teen and adult divisions plus special adult awards.",
+    "content": [
+      {
+        "type": "schedule",
+        "items": [
+          "Registration & optional prejudging: Saturday, Oct. 17 • 2:30–5:00 PM • Panel Room 2",
+          "Costume Contest: Saturday, Oct. 17 • 6:00 PM • Panel Room 1"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Costumes may draw from fantasy, science fiction, anime, steampunk, horror, movies, television, books and other fandoms."
+      },
+      {
+        "type": "list",
+        "items": [
+          "Trophies: 1st, 2nd and 3rd place in each age division.",
+          "Adult entries are also eligible for Best of Show and Judge's Choice.",
+          "Juniors: ages 0–12.",
+          "Teens: ages 13–17.",
+          "Adults: ages 18 and up."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Entry Information"
+      },
+      {
+        "type": "p",
+        "text": "Entrants should be ready to provide a costume title, the source or genre that inspired it, and information for the judges about construction, materials and the story behind the costume."
+      }
+    ]
+  },
+  {
+    "id": "charity-auction",
+    "title": "Charity Auction",
+    "category": "Charity",
+    "summary": "Live auction of donated art, collectibles and memorabilia benefiting Extra Life and Children's Miracle Network Hospitals.",
+    "content": [
+      {
+        "type": "schedule",
+        "items": [
+          "Saturday, Oct. 17 • 3:30 PM • Event Room"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Artists and creators donate art, sculptures, collectibles and memorabilia for a live auction. Proceeds support Extra Life and Children's Miracle Network Hospitals."
+      }
+    ]
+  },
+  {
+    "id": "quick-sketches",
+    "title": "Charity Quick Sketches",
+    "category": "Charity",
+    "summary": "Artists create fast, one-of-a-kind drawings live, then the pieces are immediately auctioned for charity.",
+    "content": [
+      {
+        "type": "schedule",
+        "items": [
+          "Friday • 6:00–7:00 PM • Event Room",
+          "Saturday • 2:00–3:00 PM • Event Room",
+          "Sunday • 1:30–2:30 PM • Event Room"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Attendees can call out ideas, watch artists create pieces on the spot and bid using raffle tickets. Sci-Fi Valley Con supplies the art materials."
+      }
+    ]
+  },
+  {
+    "id": "shuttle",
+    "title": "Friday & Saturday Shuttle Service",
+    "category": "Practical",
+    "summary": "The current Events page lists a Friday & Saturday shuttle-service section. Route and timetable details can be added here as soon as they are published.",
+    "content": [
+      {
+        "type": "note",
+        "text": "Shuttle details are not yet displayed in the public Events-page text."
+      }
+    ]
+  },
+  {
+    "id": "after-party",
+    "title": "Saturday Night After Party",
+    "category": "Activities",
+    "summary": "Official bowling and karaoke after party at Holiday Bowl.",
+    "content": [
+      {
+        "type": "schedule",
+        "items": [
+          "Saturday, Oct. 17 • 10:00 PM–2:00 AM • Holiday Bowl, 181 Bowling Lane, Altoona, PA"
+        ]
+      },
+      {
+        "type": "list",
+        "items": [
+          "$20 per lane per hour, up to six people per lane.",
+          "Shoe rentals are free.",
+          "Karaoke is available.",
+          "No registration is required."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "guest-panels",
+    "title": "Guest Panels",
+    "category": "Activities",
+    "summary": "Celebrity guest panels will appear here when individual panel times are published.",
+    "content": [
+      {
+        "type": "note",
+        "text": "The public Events page currently shows the Guest Panels section heading without individual panel listings."
+      }
+    ]
+  },
+  {
+    "id": "medieval-combat",
+    "title": "Medieval Combat Demos",
+    "category": "Activities",
+    "summary": "Dagorhir battle-game demonstrations outside on the lawn, followed by opportunities for attendees to try foam combat.",
+    "content": [
+      {
+        "type": "schedule",
+        "items": [
+          "Saturday • 1:00–2:00 PM and 4:00–5:00 PM • Outside on the Lawn"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Members of the Wolves of Asgard and Iron Mountain units demonstrate full-contact foam-weapon combat, rules, techniques, safety and equipment, with support from the Gearbox Union."
+      },
+      {
+        "type": "p",
+        "text": "After the demonstration, attendees can try foam weapons. Waivers are required and minors must be supervised by a parent or guardian."
+      }
+    ]
+  },
+  {
+    "id": "retro-gaming",
+    "title": "Retro Gaming Arcade Vault",
+    "category": "Gaming",
+    "summary": "A playable museum celebrating more than 50 years of game hardware with 75+ consoles and computers.",
+    "content": [
+      {
+        "type": "p",
+        "text": "The Retro Gaming Arcade Vault is designed as a hands-on history of home and portable gaming. Systems span the early 1970s through today's hardware."
+      },
+      {
+        "type": "systems",
+        "title": "1970s",
+        "items": [
+          {
+            "name": "Magnavox Odyssey",
+            "year": "1972",
+            "desc": "The pioneering first-generation home console."
+          },
+          {
+            "name": "National Semiconductor Adversary",
+            "year": "1976",
+            "desc": "An early dedicated Pong-style home system."
+          },
+          {
+            "name": "Atari 2600",
+            "year": "1977",
+            "desc": "The cartridge-based console that helped define early home gaming."
+          },
+          {
+            "name": "Magnavox Odyssey²",
+            "year": "1978",
+            "desc": "A console-computer hybrid with a built-in keyboard."
+          },
+          {
+            "name": "Mattel Intellivision",
+            "year": "1979",
+            "desc": "Known for its distinctive disc controller and advanced-for-the-time sports games."
+          }
+        ]
+      },
+      {
+        "type": "systems",
+        "title": "1980s",
+        "items": [
+          {
+            "name": "ColecoVision",
+            "year": "1982",
+            "desc": "A home console remembered for strong arcade conversions."
+          },
+          {
+            "name": "Atari 5200",
+            "year": "1982",
+            "desc": "Atari's more powerful follow-up to the 2600."
+          },
+          {
+            "name": "Vectrex",
+            "year": "1982",
+            "desc": "A unique vector-graphics console with its own CRT display."
+          },
+          {
+            "name": "Apple IIe",
+            "year": "1983",
+            "desc": "A landmark home computer used for games, education and programming."
+          },
+          {
+            "name": "Nintendo Famicom",
+            "year": "1983",
+            "desc": "Japan's version of the hardware that became the NES."
+          },
+          {
+            "name": "Commodore SX-64",
+            "year": "1984",
+            "desc": "A portable color computer based on the Commodore 64."
+          },
+          {
+            "name": "Nintendo Entertainment System (NES)",
+            "year": "1985",
+            "desc": "Nintendo's 8-bit home console with Mario, Zelda and a huge library."
+          },
+          {
+            "name": "Sega Master System",
+            "year": "1985",
+            "desc": "Sega's crisp 8-bit competitor to Nintendo."
+          },
+          {
+            "name": "Atari 7800",
+            "year": "1986",
+            "desc": "An Atari console with backward compatibility for many 2600 titles."
+          },
+          {
+            "name": "Twin Famicom",
+            "year": "1986",
+            "desc": "A combined Famicom and Disk System unit."
+          },
+          {
+            "name": "Commodore 64C",
+            "year": "1986",
+            "desc": "A redesigned version of the hugely successful Commodore 64."
+          },
+          {
+            "name": "NEC TurboGrafx-16 / PC Engine",
+            "year": "1987",
+            "desc": "An early entrant in the 16-bit era with strong arcade-style games."
+          },
+          {
+            "name": "Sega Genesis",
+            "year": "1988",
+            "desc": "Sega's signature 16-bit console and home of Sonic."
+          },
+          {
+            "name": "Nintendo Game Boy",
+            "year": "1989",
+            "desc": "The portable system that became a global phenomenon."
+          }
+        ]
+      },
+      {
+        "type": "systems",
+        "title": "1990s",
+        "items": [
+          {
+            "name": "Sega Game Gear",
+            "year": "1990",
+            "desc": "Sega's full-color handheld rival to the Game Boy."
+          },
+          {
+            "name": "SNK Neo Geo AES",
+            "year": "1990",
+            "desc": "Premium home hardware closely related to SNK arcade systems."
+          },
+          {
+            "name": "Nintendo Super Famicom",
+            "year": "1990",
+            "desc": "The Japanese version of the Super Nintendo."
+          },
+          {
+            "name": "Super Nintendo (SNES)",
+            "year": "1991",
+            "desc": "Nintendo's colorful 16-bit console with an iconic game library."
+          },
+          {
+            "name": "Philips CD-i",
+            "year": "1991",
+            "desc": "An ambitious CD-based multimedia system."
+          },
+          {
+            "name": "NEC PC Engine Duo-R",
+            "year": "1991",
+            "desc": "A PC Engine with integrated CD-ROM support."
+          },
+          {
+            "name": "Atari Lynx II",
+            "year": "1991",
+            "desc": "A refined version of Atari's color handheld."
+          },
+          {
+            "name": "Goldstar 3DO",
+            "year": "1993",
+            "desc": "An early 32-bit CD-based console."
+          },
+          {
+            "name": "Atari Jaguar",
+            "year": "1993",
+            "desc": "Atari's unusual high-powered final major home console."
+          },
+          {
+            "name": "Nintendo AV Famicom",
+            "year": "1993",
+            "desc": "A revised Famicom with improved audio/video connections."
+          },
+          {
+            "name": "Sega Pico",
+            "year": "1993",
+            "desc": "An educational storybook-style system aimed at children."
+          },
+          {
+            "name": "Sega Saturn",
+            "year": "1994",
+            "desc": "Sega's powerful 2D and 3D CD console."
+          },
+          {
+            "name": "SNK Neo Geo CD",
+            "year": "1994",
+            "desc": "A CD-based alternative to the cartridge Neo Geo."
+          },
+          {
+            "name": "Sony PlayStation",
+            "year": "1994",
+            "desc": "Sony's breakout 3D console that reshaped the industry."
+          },
+          {
+            "name": "Nintendo Virtual Boy",
+            "year": "1995",
+            "desc": "Nintendo's experimental red-and-black stereoscopic tabletop system."
+          },
+          {
+            "name": "Game Boy 'Play It Loud!'",
+            "year": "1995",
+            "desc": "Colorful shell variants of the original Game Boy."
+          },
+          {
+            "name": "Sega Genesis Nomad",
+            "year": "1995",
+            "desc": "A portable Genesis capable of using standard cartridges."
+          },
+          {
+            "name": "Nintendo Game Boy Pocket",
+            "year": "1996",
+            "desc": "A slimmer redesign of Nintendo's original handheld."
+          },
+          {
+            "name": "Nintendo 64",
+            "year": "1996",
+            "desc": "Nintendo's cartridge-based 3D console with the trident controller."
+          },
+          {
+            "name": "Apple Bandai Pippin",
+            "year": "1996",
+            "desc": "A short-lived Apple/Bandai multimedia console-computer hybrid."
+          },
+          {
+            "name": "Game Boy Light",
+            "year": "1998",
+            "desc": "A Japan-only Game Boy model with a built-in light."
+          },
+          {
+            "name": "Game Boy Color",
+            "year": "1998",
+            "desc": "Color-screen Game Boy hardware with backward compatibility."
+          },
+          {
+            "name": "Sega Dreamcast",
+            "year": "1998",
+            "desc": "An inventive online-capable Sega console with a devoted following."
+          },
+          {
+            "name": "iMac G3",
+            "year": "1998",
+            "desc": "Apple's colorful all-in-one computer and a late-'90s design icon."
+          },
+          {
+            "name": "Sony PlayStation 2",
+            "year": "2000",
+            "desc": "The best-selling console generation's giant, with DVD playback and an enormous library."
+          }
+        ]
+      },
+      {
+        "type": "systems",
+        "title": "2000s",
+        "items": [
+          {
+            "name": "Nintendo GameCube",
+            "year": "2001",
+            "desc": "Nintendo's compact disc-based console."
+          },
+          {
+            "name": "Microsoft Xbox",
+            "year": "2001",
+            "desc": "Microsoft's first console, built around a hard drive and later Xbox Live."
+          },
+          {
+            "name": "Game Boy Advance",
+            "year": "2001",
+            "desc": "Nintendo's 32-bit successor to the Game Boy line."
+          },
+          {
+            "name": "Game Boy Advance SP",
+            "year": "2003",
+            "desc": "A clamshell GBA with rechargeable power and an illuminated display."
+          },
+          {
+            "name": "Nintendo DS",
+            "year": "2004",
+            "desc": "A dual-screen handheld built around touch input."
+          },
+          {
+            "name": "Sony PSP-1000",
+            "year": "2004",
+            "desc": "Sony's widescreen portable system with strong multimedia capabilities."
+          },
+          {
+            "name": "Game Boy Micro",
+            "year": "2005",
+            "desc": "A tiny premium redesign of the Game Boy Advance."
+          },
+          {
+            "name": "Xbox 360",
+            "year": "2005",
+            "desc": "Microsoft's major HD-era console with extensive online play."
+          },
+          {
+            "name": "Nintendo DS Lite",
+            "year": "2006",
+            "desc": "A slimmer, brighter redesign of the Nintendo DS."
+          },
+          {
+            "name": "Nintendo Wii",
+            "year": "2006",
+            "desc": "Nintendo's motion-control phenomenon."
+          },
+          {
+            "name": "Sony PlayStation 3",
+            "year": "2006",
+            "desc": "Sony's Blu-ray equipped third PlayStation console."
+          },
+          {
+            "name": "PSP-2000 (Slim & Lite)",
+            "year": "2007",
+            "desc": "A lighter PSP revision with improved performance and TV output."
+          },
+          {
+            "name": "Nintendo DSi",
+            "year": "2008",
+            "desc": "A DS revision adding cameras and downloadable DSiWare."
+          },
+          {
+            "name": "PSP-3000 (Brite)",
+            "year": "2008",
+            "desc": "An updated PSP with a revised screen and built-in microphone."
+          },
+          {
+            "name": "Nintendo DSi XL",
+            "year": "2009",
+            "desc": "A larger-screen version of the DSi."
+          },
+          {
+            "name": "Sony PSP Go",
+            "year": "2009",
+            "desc": "A compact slider-style, download-only PSP."
+          }
+        ]
+      },
+      {
+        "type": "systems",
+        "title": "2010s–2020s",
+        "items": [
+          {
+            "name": "PSP Street",
+            "year": "2011",
+            "desc": "A budget PSP model released primarily in Europe."
+          },
+          {
+            "name": "Nintendo 3DS",
+            "year": "2011",
+            "desc": "Nintendo's handheld with glasses-free 3D and DS compatibility."
+          },
+          {
+            "name": "Sony PS Vita",
+            "year": "2011",
+            "desc": "Sony's dual-stick handheld, originally known for its OLED display."
+          },
+          {
+            "name": "Nintendo 3DS XL",
+            "year": "2012",
+            "desc": "A larger version of the 3DS."
+          },
+          {
+            "name": "Nintendo Wii U",
+            "year": "2012",
+            "desc": "Nintendo's home console centered on the GamePad second screen."
+          },
+          {
+            "name": "Nintendo 2DS",
+            "year": "2013",
+            "desc": "A slate-style 3DS-family handheld without stereoscopic 3D."
+          },
+          {
+            "name": "Xbox One",
+            "year": "2013",
+            "desc": "Microsoft's third major Xbox generation."
+          },
+          {
+            "name": "PlayStation 4",
+            "year": "2013",
+            "desc": "Sony's highly successful developer-friendly fourth PlayStation."
+          },
+          {
+            "name": "Nintendo Switch",
+            "year": "2017",
+            "desc": "Nintendo's hybrid home and portable console."
+          },
+          {
+            "name": "Nintendo 2DS XL",
+            "year": "2017",
+            "desc": "A clamshell 3DS-family system without the 3D feature."
+          },
+          {
+            "name": "Xbox Series X",
+            "year": "2020",
+            "desc": "Microsoft's current high-performance 4K console."
+          },
+          {
+            "name": "PlayStation 5",
+            "year": "2020",
+            "desc": "Sony's SSD-driven current-generation PlayStation."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tabletop",
+    "title": "Tabletop Gaming",
+    "category": "Gaming",
+    "summary": "All-weekend tabletop play hosted by Snake Eyes Gaming and Sentinels' Keep Gaming Society.",
+    "content": [
+      {
+        "type": "note",
+        "text": "Friday through Sunday • All day • Game Room"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Dungeons & Dragons",
+          "Warhammer 40,000",
+          "Warhammer Age of Sigmar",
+          "Blood Bowl",
+          "HeroClix",
+          "Magic: The Gathering",
+          "Disney Lorcana",
+          "Star Wars Unlimited",
+          "Pokémon",
+          "Various board games"
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Warhammer 40k: Bug Hunt"
+      },
+      {
+        "type": "p",
+        "text": "A weekend-long drop-in, drop-out scenario. Players control a unit, complete objectives and earn points. Play as many times as you like; a special prize goes to the top-scoring player at the end of the weekend. New players are welcome."
+      },
+      {
+        "type": "heading",
+        "text": "Magic: The Gathering – Casual Commander"
+      },
+      {
+        "type": "schedule",
+        "items": [
+          "Saturday • 11:00 AM–7:00 PM • Free admission"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Four-player Commander pods launch on demand, with promos for winners. Decks can be purchased if needed."
+      },
+      {
+        "type": "heading",
+        "text": "HeroClix – Battle Royale"
+      },
+      {
+        "type": "schedule",
+        "items": [
+          "Saturday • 12:00–3:00 PM",
+          "Sunday • 1:00–4:00 PM",
+          "Admission: $5 or $15 depending on booster"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Draft a booster and join a four-player group battle with 50-minute rounds. Promos are added to the prize pool."
+      }
+    ]
+  },
+  {
+    "id": "trivia",
+    "title": "Trivia Tournament",
+    "category": "Gaming",
+    "summary": "Geek-culture trivia spanning sci-fi, fantasy, comics, movies, TV and games, with trophies and Best Buy gift cards.",
+    "content": [
+      {
+        "type": "schedule",
+        "items": [
+          "Friday • 3:30–4:30 PM • Event Room",
+          "Saturday • 5:00–6:00 PM • Event Room",
+          "Sunday • 2:30–3:30 PM • Event Room"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Play solo or with friends and compete across a wide range of fandom categories."
+      }
+    ]
+  },
+  {
+    "id": "workshops",
+    "title": "Workshops",
+    "category": "Activities",
+    "summary": "Miniature painting, model building, 3D printing and foam-smithing activities throughout the weekend.",
+    "content": [
+      {
+        "type": "heading",
+        "text": "Paint & Take / Build & Battle by Snake Eyes Gaming"
+      },
+      {
+        "type": "schedule",
+        "items": [
+          "Friday • 2:00–8:00 PM",
+          "Saturday • 10:00 AM–7:00 PM",
+          "Sunday • 10:00 AM–3:00 PM",
+          "Location: Paint and Hobby Room"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Paint & Take provides a miniature, paints and tools with guidance available. Build & Battle offers models such as Gundam, Pokémon and Warhammer kits with supplies and assistance. Anyone under 18 must be accompanied by an adult for Build & Battle. Pricing depends on the chosen miniature or model."
+      },
+      {
+        "type": "heading",
+        "text": "Miniature Painting Competition"
+      },
+      {
+        "type": "list",
+        "items": [
+          "$15 entry fee.",
+          "Register on Friday.",
+          "Saturday sessions: 1:00–3:00 PM and 4:00–6:00 PM.",
+          "Youth division: age 15 and under. Adult division: age 16 and up.",
+          "Maximum 20 participants per category.",
+          "Models and supplies are provided; personal models and hobby supplies are not permitted.",
+          "Winners announced Sunday at 2:00 PM in the Paint and Hobby Room.",
+          "1st, 2nd and 3rd place prizes in each category, based on attendance."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "3D Printing & Foam Smithing by Snowtiger Designs"
+      },
+      {
+        "type": "p",
+        "text": "Visit Snowtiger Designs at Table D9 for demonstrations and hands-on workshops covering 3D printing and foam-smithing techniques used in cosplay and prop making."
+      }
+    ]
+  }
+]

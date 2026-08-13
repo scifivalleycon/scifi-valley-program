@@ -1,0 +1,97 @@
+[
+  {
+    "published": false,
+    "directoryPublished": false,
+    "title": "Blair County Convention Center Interactive Floor Plan",
+    "subtitle": "Main Level, Lower Level, Patio Vendors, celebrity areas, event rooms, gaming, food and convention services.",
+    "conQuestNote": "Tables and booths marked in red are participating in Con-Quest.",
+    "draftNote": "Draft map with editable coordinates, labels, and table/booth layout. Review every vendor and celebrity assignment before publishing.",
+    "legend": [
+      {
+        "id": "panel1",
+        "label": "Panel Room 1",
+        "color": "#73c7cb"
+      },
+      {
+        "id": "retro",
+        "label": "Retro Gaming Arcade",
+        "color": "#d36a9b"
+      },
+      {
+        "id": "mainHall",
+        "label": "Exhibit Hall - Main",
+        "color": "#e9e6dc"
+      },
+      {
+        "id": "panel2",
+        "label": "Panel Room 2",
+        "color": "#efc448"
+      },
+      {
+        "id": "event",
+        "label": "Event Room",
+        "color": "#ed6f8a"
+      },
+      {
+        "id": "miniCafe",
+        "label": "The Mini Caf\u00e9",
+        "color": "#71b86c"
+      },
+      {
+        "id": "paint",
+        "label": "Paint & Hobby Room",
+        "color": "#eaa069"
+      },
+      {
+        "id": "admissions",
+        "label": "Admissions",
+        "color": "#f2bd3f"
+      },
+      {
+        "id": "celebrity",
+        "label": "Celebrity Guests",
+        "color": "#ef744f"
+      },
+      {
+        "id": "lowerHall",
+        "label": "Exhibit Hall - Lower",
+        "color": "#eee9dc"
+      },
+      {
+        "id": "photo",
+        "label": "Photo Op Area",
+        "color": "#f3b444"
+      },
+      {
+        "id": "cafe",
+        "label": "The Caf\u00e9",
+        "color": "#efc08b"
+      },
+      {
+        "id": "lawn",
+        "label": "The Lawn",
+        "color": "#a3ca4b"
+      },
+      {
+        "id": "gaming",
+        "label": "Gaming Room",
+        "color": "#60b9dc"
+      },
+      {
+        "id": "patio",
+        "label": "Patio Vendors",
+        "color": "#f3efe2"
+      },
+      {
+        "id": "tattoo",
+        "label": "Tattoo Parlor",
+        "color": "#6fb7a7"
+      },
+      {
+        "id": "conquest",
+        "label": "Con-Quest Participant",
+        "color": "#e65338"
+      }
+    ]
+  }
+]

@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapFilter:"All", mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -1158,7 +1158,18 @@ function bindMapLocations(){
     group.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();selectMapLocation(group.dataset.location);openMapLocation(group.dataset.location)});
   });
 }
-function renderFloorPlanSvg(){const host=document.getElementById('mapSvgHost');if(!host)return;host.innerHTML=buildMapSvg();applyMapVendorData();bindMapLocations();applyMapZoom()}
+function renderFloorPlanSvg(){
+  const host=document.getElementById('mapSvgHost');
+  if(!host)return;
+  host.innerHTML=buildMapSvg();
+  applyMapVendorData();
+  bindMapLocations();
+  const svg=host.querySelector('svg');
+  svg?.addEventListener('click',event=>{
+    if(!event.target.closest('.map-location-group'))clearMapSelection();
+  });
+  applyMapZoom();
+}
 function openMapLocation(code){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
   if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
@@ -1166,14 +1177,15 @@ function openMapLocation(code){
   if(typeof modal.showModal==='function')modal.showModal();else modal.setAttribute('open','');
 }
 function mapVendorMatches(v){
-  const q=state.mapQuery.trim().toLowerCase(),filter=state.mapFilter;const filterOk=filter==='All'||(filter==='Con-Quest'&&v.conQuest===true)||v.area===filter;if(!filterOk)return false;if(!q)return true;
+  const q=state.mapQuery.trim().toLowerCase();
+  if(!q)return true;
   return `${v.name} ${v.categories||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
 }
 function renderMapDirectory(){
   const list=document.getElementById('mapDirectoryList'),count=document.getElementById('mapDirectoryCount'),notice=document.getElementById('mapDirectoryNotice');if(!list||!count)return;
   if(!mapDirectoryVisible()){list.innerHTML='';count.textContent='DRAFT';notice?.classList.remove('hidden');if(notice)notice.textContent='Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.';return;}
   notice?.classList.add('hidden');const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));count.textContent=String(rows.length);
-  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search/filter.</div>`;
+  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search.</div>`;
   list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(v)selectVendorOnMap(v)}));
 }
 function clearMapSelection({scroll=false}={}){
@@ -1187,7 +1199,6 @@ function selectVendorOnMap(v){
 }
 function applyMapSelection(){
   const svg=document.querySelector('#mapSvgHost svg');if(svg){svg.querySelectorAll('.map-table.selected,.service.selected').forEach(el=>el.classList.remove('selected'));state.mapSelectedCodes.forEach(code=>svg.querySelectorAll(`.map-location-group[data-location="${CSS.escape(code)}"] .map-table,.map-location-group[data-location="${CSS.escape(code)}"] .service`).forEach(el=>el.classList.add('selected')))}
-  const status=document.getElementById('mapSelectionStatus');if(status){if(!state.mapSelectedCodes.size){status.textContent='NONE SELECTED';status.classList.remove('has-selection')}else{const vendor=state.vendors.find(v=>v.id===state.mapSelectedVendorId);status.textContent=vendor?`SELECTED • ${vendor.location}`:`SELECTED • ${[...state.mapSelectedCodes].join(', ')}`;status.classList.add('has-selection')}}
 }
 function applyMapZoom(){const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;const base=Number(mapLayout().canvas?.defaultWidth||820);svg.style.width=`${Math.round(base*mapZoom)}px`;svg.style.maxWidth='none'}
 function renderMapScreen(){
@@ -1195,8 +1206,6 @@ function renderMapScreen(){
   if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();
 }
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
-document.querySelectorAll('[data-map-filter]')?.forEach(btn=>btn.addEventListener('click',()=>{state.mapFilter=btn.dataset.mapFilter;document.querySelectorAll('[data-map-filter]').forEach(x=>x.classList.toggle('active',x===btn));renderMapDirectory()}));
-document.getElementById('mapSelectionStatus')?.addEventListener('click',()=>clearMapSelection());
 document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
 document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 

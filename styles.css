@@ -517,3 +517,7 @@ button,
 
 /* V4.2 map selection refinement */
 .map-selection-chip{background:var(--paper2);border-style:dashed}.map-selection-chip.has-selection{background:var(--aqua);border-style:solid}.map-directory-card.selected-vendor{outline:4px solid var(--aqua);outline-offset:1px}.map-directory-card b{font-size:7px;white-space:nowrap}.map-svg-host .map-location-group{touch-action:manipulation}
+
+
+/* V4.6 — category/filter chip row removed from Interactive Floor Map.
+   Vendor search + direct vendor selection are the only attendee navigation tools. */

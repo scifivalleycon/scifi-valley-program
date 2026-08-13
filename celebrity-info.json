@@ -1,0 +1,16 @@
+[
+  {
+    "published": true,
+    "statusNotice": "All celebrity pricing, pro photo op times, autograph availability, panel times, participants, and group photo ops are tentative, pending final approval from representatives and talent, and subject to change.",
+    "photoOpLineupMinutes": "15",
+    "photoOpLocation": "PHOTO OP AREA",
+    "photoOpLocationDetail": "LOCATION TBD",
+    "photoOpUpdatePoint": "PHOTO OP BOOTH AT TABLE XX",
+    "photoOpNotice": "Line up before your scheduled photo op time. Guest names, group photo ops, pricing, and photo op times are subject to change.",
+    "autographNotice": "Autograph schedule times are general and flexible. Times may change for photo ops, panels, breaks, travel, cancellations, or other scheduling needs.",
+    "panelRoom": "PANEL ROOM 1",
+    "panelNotice": "Celebrity panel times, participants, and descriptions are tentative, pending final guest approval, and subject to change.",
+    "panelSeatingNote": "Very limited seating may be available. Add any advance seating or pass-holder policy here.",
+    "generalNote": "Guest table prices supersede prices listed in the app if they vary. Combo pricing generally includes one autograph and one selfie unless otherwise noted. Professional photo ops are separate from table purchases."
+  }
+]

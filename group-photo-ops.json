@@ -1,0 +1,30 @@
+[
+  {
+    "id": "group-1",
+    "title": "REUNION 1",
+    "participants": "GUEST 1 / GUEST 2 / GUEST 3",
+    "price": "TBD",
+    "notes": ""
+  },
+  {
+    "id": "group-2",
+    "title": "DUO 1",
+    "participants": "GUEST 1 / GUEST 2",
+    "price": "TBD",
+    "notes": ""
+  },
+  {
+    "id": "group-3",
+    "title": "REUNION 2",
+    "participants": "GUEST 4 / GUEST 5 / GUEST 6",
+    "price": "TBD",
+    "notes": ""
+  },
+  {
+    "id": "group-4",
+    "title": "DUO 2",
+    "participants": "GUEST 4 / GUEST 5",
+    "price": "TBD",
+    "notes": ""
+  }
+]

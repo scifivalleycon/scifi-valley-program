@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.5 Full Map
+# Sci-Fi Valley Con Digital Program — V4.6 Full Map
 
 Cumulative update from V3.6.
 
@@ -289,3 +289,25 @@ Table and booth codes remain centered inside their physical map objects and use 
 slightly larger adaptive font for easier reading at normal map zoom levels.
 
 This is a complete attendee package paired with Admin V2.5.
+
+
+## V4.6 — simplified Interactive Floor Map controls
+
+Removed the attendee-facing:
+- All
+- None Selected
+- Main Level
+- Lower Level
+- Patio
+- Con-Quest
+
+chip/button row.
+
+The directory is now driven by the vendor/table search field only.
+
+Vendor locating still works:
+- clicking a vendor highlights only that vendor's assigned table/booth
+- choosing another vendor moves the highlight to that vendor
+- clicking empty space on the SVG clears the current highlight
+
+Con-Quest red table fills and the map color legend remain unchanged.
