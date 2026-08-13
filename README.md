@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V3.8
+# Sci-Fi Valley Con Digital Program — V3.8.1
 
 Cumulative update from V3.6.
 
@@ -108,3 +108,20 @@ Implementation:
 - analytics failure never blocks or changes the attendee experience
 
 All V3.7.3 schedule, push notification, PWA and celebrity features remain intact.
+
+
+## V3.8.1 — notification prompt reliability fix
+
+Fixes the Event Alerts popup load order by placing the popup dialog in the page
+before app.js executes.
+
+Also:
+- removes a stale duplicate push-banner function
+- prompts again when a PWA/browser page is restored from memory
+- treats returning after 30+ seconds in the background as a new app-use session
+- preserves the 30-minute persistent top banner
+- keeps the popup hidden for devices that already have an active push subscription
+- adds a staff-only visual test URL parameter: `?forcePushPrompt=1`
+
+The test parameter displays the popup without changing notification permission or
+unsubscribing the device.

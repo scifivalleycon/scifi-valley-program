@@ -48,6 +48,7 @@ async function loadData(){
   state.panels=Array.isArray(panels)?panels:[];
   renderAll();
   initializePushPromptExperience();
+  forcePushPromptForTesting();
   initializeAppAnalytics();
 }
 
@@ -439,9 +440,11 @@ function updateReminderUI(){const s=document.getElementById("reminderSettingSumm
 
 
 const PUSH_BANNER_DELAY_MS=30*60*1000;
+const PUSH_REOPEN_RESET_MS=30000;
 let pushBannerEligible=false;
 let pushBannerTimer=null;
 let pushPromptShownThisSession=false;
+let pushLastHiddenAt=0;
 
 function notificationsSupported(){
   return ("Notification" in window)&&("serviceWorker" in navigator)&&("PushManager" in window);
@@ -537,21 +540,29 @@ async function updatePushOptInBanner(){
   enable.textContent=Notification.permission==="granted"?"FINISH ENABLING":"ENABLE NOTIFICATIONS";
 }
 
-async function initializePushPromptExperience(){
+
+function forcePushPromptForTesting(){
+  const params=new URLSearchParams(location.search);
+  if(params.get("forcePushPrompt")!=="1")return;
+  pushPromptShownThisSession=false;
+  setTimeout(()=>showPushPromptForSession(),300);
+}
+
+async function initializePushPromptExperience({forceSessionPrompt=false}={}){
   const subscribed=await hasActivePushSubscription();
 
   if(subscribed){
+    pushPromptShownThisSession=true;
     pushBannerEligible=false;
     clearTimeout(pushBannerTimer);
+    closePushPrompt();
     updatePushOptInBanner();
     return;
   }
 
-  // Every fresh page/app session asks once.
-  setTimeout(()=>showPushPromptForSession(),700);
+  if(forceSessionPrompt)pushPromptShownThisSession=false;
 
-  // If they continue using the app without enabling notifications,
-  // show the persistent top banner after 30 minutes.
+  setTimeout(()=>showPushPromptForSession(),450);
   startPushBannerTimer();
 }
 
@@ -604,24 +615,8 @@ async function enablePushFromPrompt(){
 }
 
 
-async function enablePushFromBanner(){
-  const button=document.getElementById("pushBannerEnableButton");
-  if(button){
-    button.disabled=true;
-    button.textContent="ENABLING…";
-  }
 
-  try{
-    await enablePushNotifications();
-    const subscription=await getPushSubscription().catch(()=>null);
-    if(subscription){
-        }
-  }catch(err){
-    console.warn("Banner push opt-in failed",err);
-  }
 
-  await updatePushOptInBanner();
-}
 
 
 /* Anonymous app-usage analytics — V3.8
@@ -873,6 +868,25 @@ document.getElementById("closePushPromptModal")?.addEventListener("click",closeP
 document.getElementById("pushPromptModal")?.addEventListener("click",event=>{
   if(event.target===event.currentTarget)closePushPrompt();
 });
+window.addEventListener("pageshow",event=>{
+  if(event.persisted){
+    initializePushPromptExperience({forceSessionPrompt:true});
+  }
+});
+
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="hidden"){
+    pushLastHiddenAt=Date.now();
+    return;
+  }
+
+  if(document.visibilityState==="visible" &&
+     pushLastHiddenAt &&
+     Date.now()-pushLastHiddenAt>=PUSH_REOPEN_RESET_MS){
+    initializePushPromptExperience({forceSessionPrompt:true});
+  }
+});
+
 document.getElementById("pushBannerDismissButton")?.addEventListener("click",()=>{pushBannerEligible=false;document.getElementById("pushOptInBanner")?.classList.add("hidden");startPushBannerTimer();});
 document.getElementById("disablePushNotificationsButton")?.addEventListener("click",async()=>{
   await unregisterPushSubscription();
