@@ -340,34 +340,6 @@
         "editable": true
       },
       {
-        "id": "yo-box",
-        "type": "rect",
-        "x": 734,
-        "y": 218,
-        "width": 24,
-        "height": 45,
-        "fill": null,
-        "className": "service",
-        "rx": 2,
-        "editable": false
-      },
-      {
-        "id": "yo-label",
-        "type": "text",
-        "text": "YO",
-        "x": 746,
-        "y": 245,
-        "fontSize": 12,
-        "className": "tiny",
-        "anchor": "middle",
-        "lineHeight": 1.15,
-        "fontWeight": "800",
-        "fontStyle": "normal",
-        "fontFamily": "Georgia, serif",
-        "fill": "#291f1a",
-        "editable": true
-      },
-      {
         "id": "entrance-main",
         "type": "text",
         "text": "Entrance",
@@ -3518,8 +3490,8 @@
       {
         "id": "Y0",
         "shape": "booth",
-        "x": 920,
-        "y": 980,
+        "x": 955.1,
+        "y": 295.1,
         "w": 40,
         "h": 40,
         "rotation": 0,
