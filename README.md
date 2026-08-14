@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.9 Responsive Floor Map
+# Sci-Fi Valley Con Digital Program — V4.10 Con-Quest Roster
 
 Cumulative update from V3.6.
 
@@ -342,3 +342,26 @@ Zoom behavior:
   the SVG beyond the available width
 
 The saved V4.8 map placement remains unchanged.
+
+
+## V4.10 — Con-Quest spreadsheet roster
+
+Vendor/table data was rebuilt from the supplied `Tables(1).xlsx`.
+
+Spreadsheet columns:
+- #
+- Total Tables
+- Business Name
+- Con Quest
+
+Imported:
+- 176 vendor / guest / service roster rows
+- 91 rows marked `Con Quest = Yes`
+- 120 expanded physical table/booth codes marked for Con-Quest
+
+`Con Quest = Yes` is stored as `conQuest: true`.
+
+The Interactive Floor Map already uses `conQuest: true` to shade the associated
+table/booth objects red. Blank/non-Yes Con Quest cells remain false.
+
+The existing saved map geometry and placement were not changed by this roster import.
