@@ -13,7 +13,9 @@
         "d": "M84 58 L782 58 L782 138 L862 138 L862 585 L964 585 L964 786 L770 786 L770 842 L324 842 L250 752 L160 752 L114 644 L84 620 Z",
         "fill": null,
         "className": "outline",
-        "editable": false
+        "editable": false,
+        "translateX": 0,
+        "translateY": 0
       },
       {
         "id": "main-title",
@@ -231,7 +233,7 @@
         "id": "retro-box",
         "type": "rect",
         "x": 724,
-        "y": 170,
+        "y": 168.5,
         "width": 100,
         "height": 192,
         "fill": "#d36a9b",
