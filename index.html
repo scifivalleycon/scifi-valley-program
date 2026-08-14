@@ -300,7 +300,16 @@
       </section>
       <section class="paper-panel reminder-note">
         <span class="section-kicker">ABOUT REMINDERS</span>
-        <p>Your selected reminder is saved on this device. This version can alert you while the web app is running. Guaranteed background alerts after the app is fully closed will be added later with the push-notification service.</p>
+        <p>My Schedule reminders are synced to the Sci-Fi Valley Con notification service so they can arrive even when the installed app is closed or suspended. Keep notifications enabled on your device.</p>
+        <div id="reminderDeliveryStatus" class="reminder-delivery-status">BACKGROUND REMINDERS CONNECTING…</div>
+      </section>
+
+      <section class="paper-panel reminder-test-panel">
+        <span class="section-kicker">DELIVERY TEST</span>
+        <h2>TEST BACKGROUND REMINDERS</h2>
+        <p>Schedule a private test notification for this device, then close the app. Delivery is processed once per minute, so it may arrive shortly after the two-minute mark.</p>
+        <button id="testReminderButton" class="retro-action" type="button">TEST REMINDER IN 2 MINUTES</button>
+        <p id="testReminderStatus" class="test-reminder-status"></p>
       </section>
     </section>
 

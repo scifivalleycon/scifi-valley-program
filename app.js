@@ -437,9 +437,202 @@ function renderMySchedule(){
 }
 function updateCombinedSavedCount(){const b=document.getElementById("favoriteCount");if(b)b.textContent=`${state.favorites.size+state.mySchedule.size} SAVED`}
 function eventDateTime(e){const d=eventDayDates()[e.day];const m=e.time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!d||!m)return null;let h=+m[1];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return new Date(`${d}T${String(h).padStart(2,"0")}:${m[2]}:00`)}
-function scheduleAllReminders(){for(const t of state.reminderTimers.values())clearTimeout(t);state.reminderTimers.clear();if(!state.reminderMinutes)return;const now=Date.now();reminderScheduleItems().filter(e=>state.mySchedule.has(e.id)).forEach(e=>{const t=eventDateTime(e);if(!t)return;const delay=t.getTime()-state.reminderMinutes*60000-now;if(delay>0&&delay<=2147483647)state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay))})}
-async function showScheduleNotification(e){if(!("Notification"in window)||Notification.permission!=="granted")return;const reg=await navigator.serviceWorker?.ready;if(reg)reg.showNotification(`${e.title} starts soon`,{body:`${e.time} • ${e.location}`,icon:"assets/icons/app-icon-192.png",badge:"assets/icons/app-icon-192.png",data:{url:"./"}})}
-function updateReminderUI(){const s=document.getElementById("reminderSettingSummary");if(s)s.textContent=state.reminderMinutes?`${formatReminder(state.reminderMinutes)} for My Schedule events`:"No reminders for My Schedule events";document.querySelectorAll('input[name="reminder"]').forEach(i=>i.checked=+i.value===state.reminderMinutes);renderSchedule();renderMySchedule();scheduleAllReminders()}
+let reminderSyncTimer=null;
+let reminderSyncInFlight=null;
+
+function buildServerReminderPayload(){
+  if(!state.reminderMinutes)return [];
+  const now=Date.now();
+
+  return reminderScheduleItems()
+    .filter(e=>state.mySchedule.has(e.id)&&e.remindable!==false)
+    .map(e=>{
+      const eventTime=eventDateTime(e);
+      if(!eventTime)return null;
+
+      const eventAt=eventTime.getTime();
+      const notifyAt=eventAt-(state.reminderMinutes*60000);
+      if(notifyAt<=now)return null;
+
+      return {
+        key:`${e.id}:${state.reminderMinutes}`,
+        eventId:e.id,
+        title:`${e.title} starts soon`,
+        body:`${e.time} • ${e.location}`,
+        url:"/",
+        tag:`sfvc-reminder-${String(e.id).replace(/[^A-Za-z0-9_-]/g,"-").slice(0,20)}`,
+        urgency:"high",
+        notifyAt,
+        eventAt
+      };
+    })
+    .filter(Boolean);
+}
+
+async function syncServerReminders({force=false}={}){
+  if(!notificationsSupported()||Notification.permission!=="granted")return {ok:false,reason:"permission"};
+  if(pushWasExplicitlyDisabled())return {ok:false,reason:"disabled"};
+
+  if(reminderSyncInFlight&&!force)return reminderSyncInFlight;
+
+  reminderSyncInFlight=(async()=>{
+    try{
+      await ensurePushSubscriptionHealthy({force});
+      const subscription=await getPushSubscription();
+      if(!subscription)return {ok:false,reason:"subscription"};
+
+      const base=pushApiBase();
+      if(!base)return {ok:false,reason:"api"};
+
+      const response=await fetch(`${base}/v1/reminders/sync`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          endpoint:subscription.endpoint,
+          reminders:buildServerReminderPayload()
+        })
+      });
+
+      if(!response.ok){
+        const info=await response.json().catch(()=>({}));
+        throw new Error(info.error||`Reminder sync returned ${response.status}.`);
+      }
+
+      const result=await response.json();
+      localStorage.setItem("sfvc-reminders-last-sync",new Date().toISOString());
+      updateReminderDeliveryStatus(`BACKGROUND REMINDERS READY • ${Number(result.scheduled||0)} SCHEDULED`,"ready");
+      return {ok:true,...result};
+    }catch(err){
+      console.warn("Server reminder sync failed",err);
+      updateReminderDeliveryStatus("BACKGROUND REMINDERS NEED CONNECTION","warning");
+      return {ok:false,error:err.message};
+    }finally{
+      reminderSyncInFlight=null;
+    }
+  })();
+
+  return reminderSyncInFlight;
+}
+
+function scheduleServerReminderSync(delay=250){
+  clearTimeout(reminderSyncTimer);
+  reminderSyncTimer=setTimeout(()=>syncServerReminders().catch(()=>{}),delay);
+}
+
+function updateReminderDeliveryStatus(message="",kind=""){
+  const el=document.getElementById("reminderDeliveryStatus");
+  if(!el)return;
+
+  if(message){
+    el.textContent=message;
+    el.dataset.kind=kind;
+    return;
+  }
+
+  if(!notificationsSupported()){
+    el.textContent="BACKGROUND REMINDERS NOT SUPPORTED ON THIS DEVICE";
+    el.dataset.kind="warning";
+  }else if(Notification.permission!=="granted"){
+    el.textContent="ENABLE NOTIFICATIONS FOR BACKGROUND REMINDERS";
+    el.dataset.kind="warning";
+  }else if(pushWasExplicitlyDisabled()){
+    el.textContent="EVENT ALERT CONNECTION IS OFF";
+    el.dataset.kind="warning";
+  }else{
+    const last=localStorage.getItem("sfvc-reminders-last-sync");
+    el.textContent=last?"BACKGROUND REMINDERS CONNECTED":"BACKGROUND REMINDERS CONNECTING…";
+    el.dataset.kind=last?"ready":"";
+  }
+}
+
+function scheduleAllReminders(){
+  // Foreground fallback. The push Worker is the reliable background delivery path.
+  for(const t of state.reminderTimers.values())clearTimeout(t);
+  state.reminderTimers.clear();
+
+  if(state.reminderMinutes){
+    const now=Date.now();
+    reminderScheduleItems()
+      .filter(e=>state.mySchedule.has(e.id)&&e.remindable!==false)
+      .forEach(e=>{
+        const t=eventDateTime(e);
+        if(!t)return;
+        const delay=t.getTime()-state.reminderMinutes*60000-now;
+        if(delay>0&&delay<=2147483647){
+          state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay));
+        }
+      });
+  }
+
+  updateReminderDeliveryStatus();
+  scheduleServerReminderSync();
+}
+
+async function showScheduleNotification(e){
+  if(!("Notification"in window)||Notification.permission!=="granted")return;
+  const reg=await navigator.serviceWorker?.ready;
+  if(reg)reg.showNotification(`${e.title} starts soon`,{
+    body:`${e.time} • ${e.location}`,
+    icon:"assets/icons/app-icon-192.png",
+    badge:"assets/icons/app-icon-192.png",
+    tag:`sfvc-local-${e.id}`,
+    data:{url:"./"}
+  });
+}
+
+async function scheduleReminderDeliveryTest(){
+  const button=document.getElementById("testReminderButton");
+  const copy=document.getElementById("testReminderStatus");
+
+  if(button){
+    button.disabled=true;
+    button.textContent="SCHEDULING…";
+  }
+
+  try{
+    if(!notificationsSupported())throw new Error("This device does not support Web Push.");
+    if(Notification.permission!=="granted")throw new Error("Enable Event Alerts first so this device can receive the test.");
+    if(pushWasExplicitlyDisabled())throw new Error("Event Alerts are disabled inside the app.");
+
+    await ensurePushSubscriptionHealthy({force:true});
+    const subscription=await getPushSubscription();
+    if(!subscription)throw new Error("The push subscription could not be created.");
+
+    const response=await fetch(`${pushApiBase()}/v1/reminders/test`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({endpoint:subscription.endpoint,delaySeconds:120})
+    });
+
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||`Test scheduling returned ${response.status}.`);
+
+    if(copy){
+      const time=new Date(result.notifyAt);
+      copy.textContent=`Test scheduled. Close the app now. It should arrive around ${time.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}.`;
+      copy.dataset.kind="ready";
+    }
+  }catch(err){
+    if(copy){
+      copy.textContent=err.message||"The reminder test could not be scheduled.";
+      copy.dataset.kind="warning";
+    }
+  }finally{
+    if(button){
+      button.disabled=false;
+      button.textContent="TEST REMINDER IN 2 MINUTES";
+    }
+  }
+}
+
+function updateReminderUI(){
+  const s=document.getElementById("reminderSettingSummary");
+  if(s)s.textContent=state.reminderMinutes?`${formatReminder(state.reminderMinutes)} for My Schedule events`:"No reminders for My Schedule events";
+  document.querySelectorAll('input[name="reminder"]').forEach(i=>i.checked=+i.value===state.reminderMinutes);
+  renderSchedule();
+  renderMySchedule();
+  scheduleAllReminders();
+}
 
 
 const PUSH_BANNER_DELAY_MS=30*60*1000;
@@ -934,6 +1127,7 @@ async function ensurePushSubscriptionHealthy({force=false}={}){
 
       rememberPushEnabled();
       pushHealthLastCheckedAt=Date.now();
+      scheduleServerReminderSync(100);
       return true;
     }catch(err){
       console.warn("Push subscription health check failed",err);
@@ -1359,6 +1553,7 @@ document.querySelectorAll("[data-mycon-tab]").forEach(b=>b.addEventListener("cli
 document.getElementById("openReminderSheet").addEventListener("click",()=>{updateReminderUI();document.getElementById("reminderModal").showModal()});
 document.getElementById("closeReminderModal").addEventListener("click",()=>document.getElementById("reminderModal").close());
 document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListener("change",()=>{state.reminderMinutes=+i.value;localStorage.setItem("sfvc-reminder-minutes",String(state.reminderMinutes));updateReminderUI();setTimeout(()=>document.getElementById("reminderModal").close(),150)}));
+document.getElementById("testReminderButton")?.addEventListener("click",scheduleReminderDeliveryTest);
 document.getElementById("enableNotificationsButton").addEventListener("click",enablePushNotifications);
 document.getElementById("pushBannerEnableButton")?.addEventListener("click",enablePushFromBanner);
 document.getElementById("pushPromptEnableButton")?.addEventListener("click",enablePushFromPrompt);
@@ -1392,7 +1587,10 @@ document.addEventListener("visibilitychange",()=>{
 });
 
 window.addEventListener("online",()=>{
-  ensurePushSubscriptionHealthy({force:true}).then(()=>updateNotificationStatus()).catch(()=>{});
+  ensurePushSubscriptionHealthy({force:true}).then(()=>{
+    updateNotificationStatus();
+    syncServerReminders({force:true}).catch(()=>{});
+  }).catch(()=>{});
 });
 window.addEventListener("pageshow",()=>{
   ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});

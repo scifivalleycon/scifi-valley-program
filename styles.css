@@ -557,3 +557,23 @@ button,
 /* V4.9 — responsive full-floor-plan display
    Default state fits the complete SVG to the map card width.
    The map card grows with the SVG, so there is no internal vertical scrollbar. */
+
+
+/* V4.12 — reliable background My Schedule reminders */
+.reminder-delivery-status{
+  margin-top:10px;
+  padding:8px 10px;
+  border:2px solid var(--ink);
+  border-radius:6px;
+  background:rgba(115,199,203,.16);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.05em;
+}
+.reminder-delivery-status[data-kind="ready"]{background:rgba(115,199,203,.24)}
+.reminder-delivery-status[data-kind="warning"]{background:rgba(238,117,72,.14)}
+.reminder-test-panel h2{margin:3px 0 6px}
+.reminder-test-panel p{font-family:Georgia,serif;font-size:9px;line-height:1.45}
+.test-reminder-status{min-height:18px;margin:8px 0 0;font-weight:800}
+.test-reminder-status[data-kind="ready"]{color:#1e5558}
+.test-reminder-status[data-kind="warning"]{color:#9c3f2b}

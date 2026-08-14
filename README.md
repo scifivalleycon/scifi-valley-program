@@ -391,3 +391,15 @@ V4.11 behavior:
   to Enable
 
 Explicitly pressing Disable Event Alerts still turns the app-level alert state off.
+
+
+## V4.12 — background My Schedule reminders
+
+The old 5 / 15 / 30 / 60 minute reminders were page timers. iOS can suspend those
+timers when the Home Screen app is backgrounded.
+
+V4.12 keeps the local timer as a foreground fallback and also sends future
+reminders to Notify V1.6 for server-side Web Push delivery.
+
+Notification Settings now includes TEST REMINDER IN 2 MINUTES so the full
+closed-app delivery path can be tested directly.
