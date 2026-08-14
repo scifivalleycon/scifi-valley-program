@@ -1996,7 +1996,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2068,7 +2068,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2112,7 +2112,7 @@
       {
         "id": "K11",
         "shape": "rect",
-        "x": 488,
+        "x": 485.1,
         "y": 1003,
         "w": 14,
         "h": 44,
