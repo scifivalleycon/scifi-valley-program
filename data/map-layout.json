@@ -405,7 +405,9 @@
         "d": "M82 876 L780 876 L780 946 L860 946 L860 1568 L706 1568 L706 1694 L322 1694 L236 1620 L158 1620 L102 1518 L82 1390 Z",
         "fill": null,
         "className": "outline",
-        "editable": false
+        "editable": false,
+        "translateX": 0,
+        "translateY": 0
       },
       {
         "id": "lower-title",
