@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-15";
+const CACHE="sfvc-program-v4-16";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/map-layout.json","./data/map-settings.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -51,16 +51,64 @@ self.addEventListener("fetch",event=>{
 self.addEventListener("push",event=>{
   let data={};
   try{data=event.data?event.data.json():{}}catch{data={body:event.data?.text?.()||""}}
-  const title=data.title||"Sci-Fi Valley Con";
+
+  // Declarative Web Push places visible fields inside `notification`.
+  // Legacy payloads use the top level. Support both.
+  const proposed=(data&&typeof data.notification==="object")?data.notification:data;
+  const title=proposed.title||data.title||"Sci-Fi Valley Con";
+  const body=proposed.body||data.body||"Convention update";
+  const navigate=proposed.navigate||data.url||"./";
+  const tag=data.tag||"sfvc-update";
+
   const options={
-    body:data.body||"Convention update",
+    body,
     icon:"./assets/icons/app-icon-192.png",
     badge:"./assets/icons/app-icon-192.png",
-    tag:data.tag||"sfvc-update",
+    tag,
     renotify:true,
-    data:{url:data.url||"./"}
+    data:{url:navigate}
   };
+
   event.waitUntil(self.registration.showNotification(title,options));
+});
+
+self.addEventListener("pushsubscriptionchange",event=>{
+  event.waitUntil((async()=>{
+    try{
+      let newSubscription=event.newSubscription;
+
+      if(!newSubscription){
+        const response=await fetch("https://notify.scifivalleycon.com/v1/public-key",{cache:"no-store"});
+        if(!response.ok)return;
+        const {publicKey}=await response.json();
+        if(!publicKey)return;
+
+        const padding="=".repeat((4-publicKey.length%4)%4);
+        const base64=(publicKey+padding).replace(/-/g,"+").replace(/_/g,"/");
+        const raw=atob(base64);
+        const applicationServerKey=Uint8Array.from([...raw].map(ch=>ch.charCodeAt(0)));
+
+        newSubscription=await self.registration.pushManager.subscribe({
+          userVisibleOnly:true,
+          applicationServerKey
+        });
+      }
+
+      const oldEndpoint=event.oldSubscription?.endpoint;
+      if(!oldEndpoint||!newSubscription)return;
+
+      await fetch("https://notify.scifivalleycon.com/v1/subscription-change",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          oldEndpoint,
+          subscription:newSubscription.toJSON()
+        })
+      });
+    }catch(err){
+      console.warn("Push subscription change sync failed",err);
+    }
+  })());
 });
 
 self.addEventListener("notificationclick",event=>{

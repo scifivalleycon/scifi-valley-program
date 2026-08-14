@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.15 Anonymous Device Schedule Sync
+# Sci-Fi Valley Con Digital Program — V4.16 Direct Device Reminder Status
 
 Cumulative update from V3.6.
 
@@ -452,3 +452,16 @@ No attendee name or email is required.
 
 Regular schedule items now include permanent IDs so a server reminder follows the
 same event when staff edits its time or location.
+
+
+## V4.16
+
+Pairs with Notify V1.10.
+
+Changes:
+- settings no longer claims reminders are ready when the server says pushLinked=false
+- shows the actual next server-stored notification time
+- health re-registration always includes Anonymous Device ID
+- unsubscribe includes Anonymous Device ID
+- service worker reads both Declarative Web Push and legacy payload shapes
+- pushsubscriptionchange updates the backend if the browser rotates its endpoint

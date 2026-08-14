@@ -796,15 +796,25 @@ function buildServerReminderPayload(){
 
 async function syncServerReminders({force=false}={}){
   const result=await syncAnonymousDevice({force});
-  if(result?.ok){
+
+  if(result?.ok&&result.pushLinked){
     localStorage.setItem("sfvc-reminders-last-sync",new Date().toISOString());
+    const next=result.nextNotifyAt
+      ? new Date(Number(result.nextNotifyAt)).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})
+      : "NONE";
     updateReminderDeliveryStatus(
-      `BACKGROUND REMINDERS READY • ${Number(result.remindersStaged||0)} QUEUED • ${Number(result.favorites||0)} SAVED`,
+      `SERVER REMINDERS READY • ${Number(result.remindersSaved||0)} SAVED • NEXT ${next}`,
       "ready"
+    );
+  }else if(result?.ok&&!result.pushLinked){
+    updateReminderDeliveryStatus(
+      "PUSH IS NOT LINKED TO THIS DEVICE • RECONNECT EVENT ALERTS",
+      "warning"
     );
   }else if(result?.error){
     updateReminderDeliveryStatus("BACKGROUND REMINDERS NEED CONNECTION","warning");
   }
+
   return result;
 }
 
@@ -874,6 +884,40 @@ async function showScheduleNotification(e){
   });
 }
 
+
+
+async function refreshAnonymousDeviceStatus(){
+  const status=document.getElementById("reminderDeliveryStatus");
+  if(!status)return;
+
+  try{
+    const response=await fetch(`${pushApiBase()}/v1/device/status`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({deviceId:getAnonymousDeviceId()})
+    });
+
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok)return;
+
+    if(!result.pushLinked){
+      status.textContent="PUSH IS NOT LINKED TO THIS DEVICE • RECONNECT EVENT ALERTS";
+      status.dataset.kind="warning";
+      return;
+    }
+
+    if(result.next?.notify_at){
+      const next=new Date(Number(result.next.notify_at));
+      status.textContent=`SERVER REMINDERS CONNECTED • NEXT ${next.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}`;
+      status.dataset.kind="ready";
+    }else{
+      status.textContent=`SERVER REMINDERS CONNECTED • ${Number(result.favorites||0)} SAVED`;
+      status.dataset.kind="ready";
+    }
+  }catch(err){
+    console.warn("Could not read anonymous device status",err);
+  }
+}
 
 async function refreshRemoteReminderStatus(){
   const copy=document.getElementById("testReminderStatus");
@@ -975,6 +1019,7 @@ function updateReminderUI(){
   renderMySchedule();
   scheduleAllReminders();
   refreshRemoteReminderStatus().catch(()=>{});
+  refreshAnonymousDeviceStatus().catch(()=>{});
 }
 
 
@@ -1395,7 +1440,7 @@ async function unregisterPushSubscription(){
     fetch(`${base}/v1/unsubscribe`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({endpoint:subscription.endpoint})
+      body:JSON.stringify({endpoint:subscription.endpoint,deviceId:getAnonymousDeviceId()})
     }).catch(()=>{});
     await subscription.unsubscribe().catch(()=>false);
   }
@@ -1464,7 +1509,7 @@ async function ensurePushSubscriptionHealthy({force=false}={}){
       const response=await fetch(`${base}/v1/subscribe`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(subscription.toJSON())
+        body:JSON.stringify({deviceId:getAnonymousDeviceId(),subscription:subscription.toJSON()})
       });
       if(!response.ok)throw new Error("Event-alert subscription could not be refreshed.");
 
@@ -1928,6 +1973,7 @@ document.addEventListener("visibilitychange",()=>{
     ensurePushSubscriptionHealthy().catch(()=>{});
     updateNotificationStatus().catch(()=>{});
     refreshRemoteReminderStatus().catch(()=>{});
+    refreshAnonymousDeviceStatus().catch(()=>{});
     refreshAppData("foreground").catch(()=>{});
     scheduleAnonymousDeviceSync(100);
   }
