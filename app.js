@@ -1132,7 +1132,9 @@ function buildMapSvg(){
   (layout.locations||[]).forEach(loc=>{
     if(loc.hidden)return;
     const code=String(loc.id||'').toUpperCase(),shape=(loc.shape||'rect').toLowerCase(),rot=Number(loc.rotation||0),x=Number(loc.x||0),y=Number(loc.y||0),ww=Number(loc.w||28),hh=Number(loc.h||12),cx=x+ww/2,cy=y+hh/2;
-    const rotate=rot?`rotate(${rot} ${cx} ${cy})`:'';const fs=mapCodeFontSize(code,ww,hh);
+    const rotate=rot?`rotate(${rot} ${cx} ${cy})`:'';
+    const counterRotate=rot?` transform="rotate(${-rot} ${cx} ${cy})"`:'';
+    const fs=mapCodeFontSize(code,ww,hh);
     out.push(`<g class="map-location-group" data-location="${svgEscape(code)}" transform="${rotate}">`);
     if(shape==='booth'){
       out.push(`<rect id="table-${svgEscape(code)}" class="map-table" data-location="${svgEscape(code)}" x="${x}" y="${y}" width="${ww}" height="${hh}" rx="2"/>`);
@@ -1140,7 +1142,7 @@ function buildMapSvg(){
     }else{
       const tableClass=shape==='service'?'service':'map-table';out.push(`<rect id="table-${svgEscape(code)}" class="${tableClass}" data-location="${svgEscape(code)}" x="${x}" y="${y}" width="${ww}" height="${hh}" rx="1"/>`);
     }
-    out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${cy+(Number(loc.labelDy)||0)}" font-size="${fs}">${svgEscape(code)}</text></g>`);
+    out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${cy+(Number(loc.labelDy)||0)}" font-size="${fs}"${counterRotate}>${svgEscape(code)}</text></g>`);
   });
   out.push(`<text class="tiny" x="600" y="1756">VECTOR FLOOR PLAN • TAP A TABLE OR BOOTH FOR DETAILS</text></svg>`);return out.join('');
 }
