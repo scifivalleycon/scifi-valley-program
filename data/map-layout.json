@@ -137,7 +137,9 @@
         "d": "M74 524 L170 524 L170 622 L120 680 L74 605 Z",
         "fill": "#71b86c",
         "className": "zone",
-        "editable": false
+        "editable": false,
+        "translateX": 0,
+        "translateY": 0
       },
       {
         "id": "mini-cafe-label",
@@ -413,9 +415,9 @@
         "id": "celeb-top-box",
         "type": "rect",
         "x": 300,
-        "y": 984,
-        "width": 414,
-        "height": 128,
+        "y": 945.9511108398438,
+        "width": 554.4884033203125,
+        "height": 166.04888916015625,
         "fill": "#ef744f",
         "className": "zone",
         "rx": 3,
@@ -459,7 +461,9 @@
         "d": "M120 1164 L300 1164 L300 1388 L210 1442 L120 1388 Z",
         "fill": "#f3b444",
         "className": "zone",
-        "editable": false
+        "editable": false,
+        "translateX": -4.4,
+        "translateY": 1.5
       },
       {
         "id": "photo-label",
@@ -483,7 +487,9 @@
         "d": "M74 1220 Q18 1390 96 1568 L210 1620 L210 1442 L120 1388 Z",
         "fill": "#a3ca4b",
         "className": "zone",
-        "editable": false
+        "editable": false,
+        "translateX": 0,
+        "translateY": 0
       },
       {
         "id": "lawn-label",
@@ -559,7 +565,9 @@
         "d": "M690 1188 L810 1142 L852 1326 L740 1378 Z",
         "fill": "#6fb7a7",
         "className": "zone",
-        "editable": false
+        "editable": false,
+        "translateX": -1.4,
+        "translateY": 93.7
       },
       {
         "id": "tattoo-label",
@@ -583,14 +591,16 @@
         "d": "M820 1128 L1110 1060 L1080 1506 L840 1452 L780 1380 Z",
         "fill": "#f3efe2",
         "className": "zone",
-        "editable": false
+        "editable": false,
+        "translateX": 58.6,
+        "translateY": 83.4
       },
       {
         "id": "patio-label",
         "type": "text",
         "text": "The Patio\nOutdoor Vendors",
-        "x": 949,
-        "y": 1244,
+        "x": 959.2,
+        "y": 1242.5,
         "fontSize": 30,
         "className": "zone-label",
         "anchor": "middle",
@@ -607,7 +617,9 @@
         "d": "M780 1382 L905 1512 L832 1560 L742 1468 Z",
         "fill": "#e6e2d8",
         "className": "zone",
-        "editable": false
+        "editable": false,
+        "translateX": 0,
+        "translateY": 0
       },
       {
         "id": "wolves-label",
@@ -3010,8 +3022,8 @@
       {
         "id": "T2",
         "shape": "rect",
-        "x": 770,
-        "y": 1296,
+        "x": 774.4,
+        "y": 1291.6,
         "w": 12,
         "h": 28,
         "rotation": -20,
