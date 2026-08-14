@@ -505,14 +505,45 @@ button,
 .map-filter-row{margin:0}.map-legend-panel{background:var(--paper2);border:2px solid var(--ink);border-radius:8px;padding:10px}.map-legend-panel summary{cursor:pointer;font-size:9px;font-weight:900;letter-spacing:.07em}
 .map-legend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.map-legend-item{display:flex;align-items:center;gap:6px;font-size:8px;line-height:1.15}.map-legend-item span{width:18px;height:13px;border:1px solid var(--ink);border-radius:2px;flex:0 0 auto}
 .map-legend-note{margin:8px 0 0;padding-top:7px;border-top:1px solid rgba(58,39,32,.2);font-family:Georgia,serif;font-size:8px}
-.map-viewport{overflow:auto;max-height:72vh;background:#fffdf4;border:3px solid var(--ink);border-radius:10px;box-shadow:5px 6px 0 rgba(58,39,32,.16);touch-action:pan-x pan-y pinch-zoom}
-.map-svg-host{min-width:100%;min-height:400px;display:flex;justify-content:center;align-items:flex-start}.map-svg-host svg{display:block;height:auto;transition:width .15s ease;touch-action:pan-x pan-y pinch-zoom}.map-svg-host .map-table:hover,.map-svg-host .map-table:focus{stroke:#1f6e77;stroke-width:5}.map-loading{padding:40px;font-family:Georgia,serif}
+.map-viewport{
+  width:100%;
+  max-height:none;
+  overflow-x:hidden;
+  overflow-y:visible;
+  background:#fffdf4;
+  border:3px solid var(--ink);
+  border-radius:10px;
+  box-shadow:5px 6px 0 rgba(58,39,32,.16);
+  touch-action:pan-x pan-y pinch-zoom;
+}
+.map-viewport.map-is-zoomed{
+  overflow-x:auto;
+}
+.map-svg-host{
+  width:100%;
+  min-width:0;
+  min-height:0;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+.map-svg-host svg{
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:none;
+  flex:0 0 auto;
+  transition:width .15s ease;
+  touch-action:pan-x pan-y pinch-zoom;
+}
+.map-svg-host .map-table:hover,.map-svg-host .map-table:focus{stroke:#1f6e77;stroke-width:5}
+.map-loading{padding:40px;font-family:Georgia,serif}
 .map-directory-head{display:flex;justify-content:space-between;align-items:end}.map-directory-head h2{margin:2px 0 0}.map-directory-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .map-directory-card{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:8px;text-align:left;padding:9px;background:var(--paper2);border:2px solid var(--ink);border-radius:7px;color:var(--ink)}.map-directory-location{display:grid;place-items:center;min-width:46px;height:35px;padding:0 5px;background:var(--ink);color:var(--cream);font-weight:900;font-size:9px;border-radius:5px}
 .map-directory-copy{min-width:0}.map-directory-copy strong{display:block;font-size:9px}.map-directory-copy small{display:block;margin-top:2px;font-family:Georgia,serif;font-size:7px;color:var(--ink2)}.map-directory-cq{padding:4px;background:var(--coral);border:1px solid var(--ink);border-radius:4px;color:var(--cream);font-size:7px;font-weight:900}
 .map-location-modal{width:min(92vw,480px);padding:0;border:0;background:transparent}.map-location-modal::backdrop{background:rgba(30,22,18,.68)}.map-location-modal>button{position:absolute;z-index:4;right:10px;top:10px}
 #mapLocationModalContent{padding:24px;background:var(--paper2);border:3px solid var(--ink);border-radius:12px;box-shadow:7px 8px 0 rgba(58,39,32,.25)}#mapLocationModalContent h2{margin:7px 0 4px;font-size:22px}.map-modal-meta{color:var(--ink2);font-size:9px;font-weight:800}.map-modal-location{margin-top:12px;padding:9px;background:rgba(115,199,203,.15);border:1px solid var(--ink);font-size:9px}.map-conquest-badge{display:inline-block;margin-top:10px;padding:6px 8px;background:var(--coral);border:2px solid var(--ink);border-radius:5px;color:var(--cream);font-size:8px;font-weight:900}
-@media(max-width:700px){.map-toolbar{grid-template-columns:1fr}.map-tools{justify-content:flex-end}.map-legend-grid{grid-template-columns:repeat(2,1fr)}.map-directory-list{grid-template-columns:1fr}.map-viewport{max-height:65vh}}
+@media(max-width:700px){.map-toolbar{grid-template-columns:1fr}.map-tools{justify-content:flex-end}.map-legend-grid{grid-template-columns:repeat(2,1fr)}.map-directory-list{grid-template-columns:1fr}}
 
 
 /* V4.2 map selection refinement */
@@ -521,3 +552,8 @@ button,
 
 /* V4.6 — category/filter chip row removed from Interactive Floor Map.
    Vendor search + direct vendor selection are the only attendee navigation tools. */
+
+
+/* V4.9 — responsive full-floor-plan display
+   Default state fits the complete SVG to the map card width.
+   The map card grows with the SVG, so there is no internal vertical scrollbar. */

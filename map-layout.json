@@ -142,7 +142,7 @@
       {
         "id": "mini-cafe-label",
         "type": "text",
-        "text": "The\nMini\nCaf\u00e9",
+        "text": "The\nMini\nCafé",
         "x": 117,
         "y": 595,
         "fontSize": 25,
@@ -214,7 +214,7 @@
       {
         "id": "main-hall-label",
         "type": "text",
-        "text": "EXHIBIT HALL \u2013 MAIN",
+        "text": "EXHIBIT HALL – MAIN",
         "x": 453,
         "y": 334,
         "fontSize": 18,
@@ -326,7 +326,7 @@
       {
         "id": "stairs-main-label",
         "type": "text",
-        "text": "Stairs  \u2194",
+        "text": "Stairs  ↔",
         "x": 425,
         "y": 662,
         "fontSize": 16,
@@ -405,7 +405,9 @@
         "d": "M82 876 L780 876 L780 946 L860 946 L860 1568 L706 1568 L706 1694 L322 1694 L236 1620 L158 1620 L102 1518 L82 1390 Z",
         "fill": null,
         "className": "outline",
-        "editable": false
+        "editable": false,
+        "translateX": 0,
+        "translateY": 0
       },
       {
         "id": "lower-title",
@@ -538,7 +540,7 @@
       {
         "id": "cafe-label",
         "type": "text",
-        "text": "The\nCaf\u00e9",
+        "text": "The\nCafé",
         "x": 290,
         "y": 1516,
         "fontSize": 34,
@@ -566,7 +568,7 @@
       {
         "id": "lower-hall-label",
         "type": "text",
-        "text": "EXHIBIT HALL \u2013 LOWER",
+        "text": "EXHIBIT HALL – LOWER",
         "x": 496,
         "y": 1150,
         "fontSize": 18,
@@ -710,7 +712,7 @@
       {
         "id": "stairs-lower-label",
         "type": "text",
-        "text": "Stairs  \u2194",
+        "text": "Stairs  ↔",
         "x": 434,
         "y": 1562,
         "fontSize": 16,
@@ -1996,7 +1998,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2005,10 +2007,10 @@
         "id": "K2",
         "shape": "rect",
         "x": 166,
-        "y": 1060,
+        "y": 1058.5,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2020,7 +2022,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2032,7 +2034,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2044,7 +2046,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2056,7 +2058,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2064,11 +2066,11 @@
       {
         "id": "K7",
         "shape": "rect",
-        "x": 360,
+        "x": 361.5,
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2076,11 +2078,11 @@
       {
         "id": "K8",
         "shape": "rect",
-        "x": 392,
-        "y": 1003,
+        "x": 393.5,
+        "y": 1004.5,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2092,7 +2094,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2104,7 +2106,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2116,7 +2118,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2128,7 +2130,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2140,7 +2142,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2152,7 +2154,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2164,7 +2166,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2176,7 +2178,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2188,7 +2190,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2200,7 +2202,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false

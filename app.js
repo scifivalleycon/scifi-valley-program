@@ -1202,7 +1202,21 @@ function selectVendorOnMap(v){
 function applyMapSelection(){
   const svg=document.querySelector('#mapSvgHost svg');if(svg){svg.querySelectorAll('.map-table.selected,.service.selected').forEach(el=>el.classList.remove('selected'));state.mapSelectedCodes.forEach(code=>svg.querySelectorAll(`.map-location-group[data-location="${CSS.escape(code)}"] .map-table,.map-location-group[data-location="${CSS.escape(code)}"] .service`).forEach(el=>el.classList.add('selected')))}
 }
-function applyMapZoom(){const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;const base=Number(mapLayout().canvas?.defaultWidth||820);svg.style.width=`${Math.round(base*mapZoom)}px`;svg.style.maxWidth='none'}
+function applyMapZoom(){
+  const svg=document.querySelector('#mapSvgHost svg');
+  const viewport=document.getElementById('mapViewport');
+  if(!svg)return;
+
+  // 1.0 means FIT TO AVAILABLE WIDTH. This keeps the complete map visible
+  // in the normal document flow instead of trapping it inside a 72vh box.
+  const percent=Math.max(50,Math.round(mapZoom*100));
+  svg.style.width=`${percent}%`;
+  svg.style.height='auto';
+  svg.style.maxWidth='none';
+
+  // Horizontal scrolling is only useful after the visitor intentionally zooms in.
+  viewport?.classList.toggle('map-is-zoomed',mapZoom>1.001);
+}
 function renderMapScreen(){
   const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
   if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();

@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.6 Full Map
+# Sci-Fi Valley Con Digital Program — V4.9 Responsive Floor Map
 
 Cumulative update from V3.6.
 
@@ -311,3 +311,34 @@ Vendor locating still works:
 - clicking empty space on the SVG clears the current highlight
 
 Con-Quest red table fills and the map color legend remain unchanged.
+
+
+## V4.8 — map placement imported from ChatGPT backup
+
+The floor-map geometry in `data/map-layout.json` was replaced with the exact
+layout supplied in `sfvc-mapLayout-backup-2026-08-14.json`.
+
+Imported:
+- 252 location records
+- 54 map elements / labels / areas
+
+The V4.7 upright table-number rotation fix is included.
+
+
+## V4.9 — full-map responsive display
+
+The Interactive Floor Map no longer uses a 72vh internal scrolling window.
+
+Default / Reset behavior:
+- the entire SVG fits the available map-card width
+- the map card grows vertically to contain the complete Main + Lower Level map
+- no internal vertical scrollbar
+- the vendor directory naturally begins after the complete floor plan
+
+Zoom behavior:
+- Reset = Fit Map to Space
+- Zoom Out scales the complete map smaller
+- Zoom In may create horizontal scrolling only when the user intentionally enlarges
+  the SVG beyond the available width
+
+The saved V4.8 map placement remains unchanged.
