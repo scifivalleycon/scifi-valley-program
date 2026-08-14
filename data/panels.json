@@ -68,5 +68,15 @@
     "location": "PANEL ROOM 1",
     "participants": "",
     "description": ""
+  },
+  {
+    "id": "panel-1786730624454",
+    "day": "Friday",
+    "startTime": "2:20 PM",
+    "endTime": "3:00 PM",
+    "title": "NEW PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "",
+    "description": ""
   }
 ]
