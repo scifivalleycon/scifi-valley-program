@@ -74,16 +74,152 @@ function snapshotScheduleEvent(event){
 
 function migrateLegacyScheduleIds(schedule){
   let changed=false;
-  schedule.forEach((event,index)=>{
-    const legacy=`schedule-${event.day}-${event.time}-${index}`;
-    const stable=stableBaseScheduleId(event);
-    if(state.mySchedule.has(legacy)&&legacy!==stable){
-      state.mySchedule.delete(legacy);
-      state.mySchedule.add(stable);
-      changed=true;
+
+  const normalized=schedule.map((event,index)=>({
+    event,
+    explicit:String(event.id||""),
+    oldArrayId:`schedule-${event.day}-${event.time}-${index}`,
+    oldHashId:(()=>{
+      const key=[event.day||"",event.time||"",event.title||"",event.location||"",event.category||""].join("|").toLowerCase();
+      return `schedule-${stableScheduleHash(key)}`;
+    })()
+  }));
+
+  normalized.forEach(({explicit,oldArrayId,oldHashId})=>{
+    if(!explicit)return;
+    for(const legacy of [oldArrayId,oldHashId]){
+      if(state.mySchedule.has(legacy)&&legacy!==explicit){
+        state.mySchedule.delete(legacy);
+        state.mySchedule.add(explicit);
+        if(savedScheduleSnapshots[legacy]&&!savedScheduleSnapshots[explicit]){
+          savedScheduleSnapshots[explicit]={...savedScheduleSnapshots[legacy],id:explicit};
+        }
+        delete savedScheduleSnapshots[legacy];
+        changed=true;
+      }
     }
   });
-  if(changed)localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+
+  for(const oldId of [...state.mySchedule]){
+    if(normalized.some(x=>x.explicit===oldId))continue;
+    const snap=savedScheduleSnapshots[oldId];
+    if(!snap)continue;
+    const matches=normalized.filter(x=>
+      String(x.event.title||"").trim().toLowerCase()===String(snap.title||"").trim().toLowerCase() &&
+      String(x.event.day||"")===String(snap.day||"")
+    );
+    if(matches.length===1&&matches[0].explicit){
+      state.mySchedule.delete(oldId);
+      state.mySchedule.add(matches[0].explicit);
+      savedScheduleSnapshots[matches[0].explicit]={...snap,id:matches[0].explicit};
+      delete savedScheduleSnapshots[oldId];
+      changed=true;
+    }
+  }
+
+  if(changed){
+    localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+    saveScheduleSnapshots();
+  }
+}
+
+
+const ANONYMOUS_DEVICE_ID_KEY="sfvc-anonymous-device-id-v1";
+const DEVICE_SYNC_DEBOUNCE_MS=300;
+let deviceSyncTimer=null;
+let deviceSyncPromise=null;
+
+function getAnonymousDeviceId(){
+  let id=localStorage.getItem(ANONYMOUS_DEVICE_ID_KEY);
+  if(id)return id;
+
+  if(globalThis.crypto?.randomUUID){
+    id=crypto.randomUUID();
+  }else{
+    const bytes=new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    bytes[6]=(bytes[6]&15)|64;
+    bytes[8]=(bytes[8]&63)|128;
+    const hex=[...bytes].map(b=>b.toString(16).padStart(2,"0")).join("");
+    id=`${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+  }
+  localStorage.setItem(ANONYMOUS_DEVICE_ID_KEY,id);
+  return id;
+}
+
+function deviceSchedulePayload(){
+  const liveById=new Map(reminderScheduleItems().map(e=>[e.id,e]));
+  const now=Date.now();
+
+  return [...state.mySchedule].map(id=>{
+    const event=liveById.get(id)||savedScheduleSnapshots[id];
+    if(!event)return null;
+
+    const eventTime=eventDateTime(event);
+    const eventAt=eventTime?.getTime()||null;
+    const reminderMinutes=Number(state.reminderMinutes||0);
+    const notifyAt=eventAt&&reminderMinutes?eventAt-(reminderMinutes*60000):null;
+
+    return {
+      eventId:String(id),
+      title:String(event.title||""),
+      day:String(event.day||""),
+      time:String(event.time||""),
+      location:String(event.location||""),
+      category:String(event.filterCategory||event.category||""),
+      remindable:event.remindable!==false,
+      reminderMinutes,
+      eventAt,
+      notifyAt,
+      savedAt:String(savedScheduleSnapshots[id]?.savedAt||new Date().toISOString()),
+      future:Boolean(eventAt&&eventAt>now)
+    };
+  }).filter(Boolean);
+}
+
+async function syncAnonymousDevice({force=false}={}){
+  if(deviceSyncPromise&&!force)return deviceSyncPromise;
+  deviceSyncPromise=(async()=>{
+    try{
+      const base=pushApiBase();
+      if(!base)return {ok:false,reason:"api"};
+
+      let subscription=null;
+      if(notificationsSupported()&&Notification.permission==="granted"){
+        subscription=await getPushSubscription().catch(()=>null);
+      }
+
+      const response=await fetch(`${base}/v1/device/sync`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          deviceId:getAnonymousDeviceId(),
+          endpoint:subscription?.endpoint||null,
+          pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
+          reminderMinutes:Number(state.reminderMinutes||0),
+          favorites:deviceSchedulePayload(),
+          appVersion:"4.15",
+          timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
+        })
+      });
+
+      const info=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(info.error||`Device sync returned ${response.status}.`);
+      localStorage.setItem("sfvc-device-last-sync",new Date().toISOString());
+      return info;
+    }catch(err){
+      console.warn("Anonymous device sync failed",err);
+      return {ok:false,error:err.message};
+    }finally{
+      deviceSyncPromise=null;
+    }
+  })();
+  return deviceSyncPromise;
+}
+
+function scheduleAnonymousDeviceSync(delay=DEVICE_SYNC_DEBOUNCE_MS){
+  clearTimeout(deviceSyncTimer);
+  deviceSyncTimer=setTimeout(()=>syncAnonymousDevice().catch(()=>{}),delay);
 }
 
 const PHOTO_SHOP = "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops";
@@ -146,6 +282,7 @@ async function loadData({silent=false,force=false}={}){
     appDataLastRefreshAt=Date.now();
     renderAll();
     scheduleServerReminderSync(50);
+    scheduleAnonymousDeviceSync(80);
 
     if(!silent){
       initializePushPromptExperience();
@@ -561,14 +698,14 @@ function toggleScheduleItem(id){
     if(event)snapshotScheduleEvent(event);
   }
   localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
-  renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();
+  renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();scheduleAnonymousDeviceSync();
 }
 function removeScheduleItem(id){
   state.mySchedule.delete(id);
   delete savedScheduleSnapshots[id];
   saveScheduleSnapshots();
   localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
-  renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();
+  renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();scheduleAnonymousDeviceSync();
 }
 function renderMySchedule(){
   const liveById=new Map(reminderScheduleItems().map(e=>[e.id,e]));
@@ -658,51 +795,17 @@ function buildServerReminderPayload(){
 }
 
 async function syncServerReminders({force=false}={}){
-  if(!notificationsSupported()||Notification.permission!=="granted")return {ok:false,reason:"permission"};
-  if(pushWasExplicitlyDisabled())return {ok:false,reason:"disabled"};
-
-  if(reminderSyncInFlight&&!force)return reminderSyncInFlight;
-
-  reminderSyncInFlight=(async()=>{
-    try{
-      await ensurePushSubscriptionHealthy({force});
-      const subscription=await getPushSubscription();
-      if(!subscription)return {ok:false,reason:"subscription"};
-
-      const base=pushApiBase();
-      if(!base)return {ok:false,reason:"api"};
-
-      const response=await fetch(`${base}/v1/reminders/sync`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          endpoint:subscription.endpoint,
-          reminders:buildServerReminderPayload()
-        })
-      });
-
-      if(!response.ok){
-        const info=await response.json().catch(()=>({}));
-        throw new Error(info.error||`Reminder sync returned ${response.status}.`);
-      }
-
-      const result=await response.json();
-      localStorage.setItem("sfvc-reminders-last-sync",new Date().toISOString());
-      updateReminderDeliveryStatus(
-        `BACKGROUND REMINDERS READY • ${Number(result.staged||0)} QUEUED • ${Number(result.scheduled||0)} SAVED`,
-        "ready"
-      );
-      return {ok:true,...result};
-    }catch(err){
-      console.warn("Server reminder sync failed",err);
-      updateReminderDeliveryStatus("BACKGROUND REMINDERS NEED CONNECTION","warning");
-      return {ok:false,error:err.message};
-    }finally{
-      reminderSyncInFlight=null;
-    }
-  })();
-
-  return reminderSyncInFlight;
+  const result=await syncAnonymousDevice({force});
+  if(result?.ok){
+    localStorage.setItem("sfvc-reminders-last-sync",new Date().toISOString());
+    updateReminderDeliveryStatus(
+      `BACKGROUND REMINDERS READY • ${Number(result.remindersStaged||0)} QUEUED • ${Number(result.favorites||0)} SAVED`,
+      "ready"
+    );
+  }else if(result?.error){
+    updateReminderDeliveryStatus("BACKGROUND REMINDERS NEED CONNECTION","warning");
+  }
+  return result;
 }
 
 function scheduleServerReminderSync(delay=250){
@@ -783,7 +886,7 @@ async function refreshRemoteReminderStatus(){
     const response=await fetch(`${pushApiBase()}/v1/reminders/status`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({endpoint:subscription.endpoint})
+      body:JSON.stringify({endpoint:subscription.endpoint,deviceId:getAnonymousDeviceId()})
     });
     if(!response.ok)return;
 
@@ -1279,7 +1382,7 @@ async function registerPushSubscription(){
   const response=await fetch(`${base}/v1/subscribe`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(subscription.toJSON())
+    body:JSON.stringify({deviceId:getAnonymousDeviceId(),subscription:subscription.toJSON()})
   });
   if(!response.ok)throw new Error("Could not register this device for event alerts.");
   rememberPushEnabled();
@@ -1368,6 +1471,7 @@ async function ensurePushSubscriptionHealthy({force=false}={}){
       rememberPushEnabled();
       pushHealthLastCheckedAt=Date.now();
       scheduleServerReminderSync(100);
+      scheduleAnonymousDeviceSync(120);
       return true;
     }catch(err){
       console.warn("Push subscription health check failed",err);
@@ -1792,7 +1896,13 @@ document.querySelectorAll("[data-celebrity-tab]").forEach(b=>b.addEventListener(
 document.querySelectorAll("[data-mycon-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-mycon-tab]").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("schedulePreview").classList.toggle("hidden",b.dataset.myconTab!=="schedule");document.getElementById("favoritePreview").classList.toggle("hidden",b.dataset.myconTab!=="guests")}));
 document.getElementById("openReminderSheet").addEventListener("click",()=>{updateReminderUI();document.getElementById("reminderModal").showModal()});
 document.getElementById("closeReminderModal").addEventListener("click",()=>document.getElementById("reminderModal").close());
-document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListener("change",()=>{state.reminderMinutes=+i.value;localStorage.setItem("sfvc-reminder-minutes",String(state.reminderMinutes));updateReminderUI();setTimeout(()=>document.getElementById("reminderModal").close(),150)}));
+document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListener("change",()=>{
+  state.reminderMinutes=+i.value;
+  localStorage.setItem("sfvc-reminder-minutes",String(state.reminderMinutes));
+  updateReminderUI();
+  scheduleAnonymousDeviceSync(50);
+  setTimeout(()=>document.getElementById("reminderModal").close(),150);
+}));
 document.getElementById("testReminderButton")?.addEventListener("click",scheduleReminderDeliveryTest);
 document.getElementById("enableNotificationsButton").addEventListener("click",enablePushNotifications);
 document.getElementById("pushBannerEnableButton")?.addEventListener("click",enablePushFromBanner);
@@ -1819,6 +1929,7 @@ document.addEventListener("visibilitychange",()=>{
     updateNotificationStatus().catch(()=>{});
     refreshRemoteReminderStatus().catch(()=>{});
     refreshAppData("foreground").catch(()=>{});
+    scheduleAnonymousDeviceSync(100);
   }
 
   if(document.visibilityState==="visible" &&
@@ -1832,6 +1943,7 @@ window.addEventListener("online",()=>{
   ensurePushSubscriptionHealthy({force:true}).then(()=>{
     updateNotificationStatus();
     syncServerReminders({force:true}).catch(()=>{});
+    syncAnonymousDevice({force:true}).catch(()=>{});
   }).catch(()=>{});
 });
 window.addEventListener("pageshow",()=>{

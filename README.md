@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.14 Live Refresh + Reliable My Con
+# Sci-Fi Valley Con Digital Program — V4.15 Anonymous Device Schedule Sync
 
 Cumulative update from V3.6.
 
@@ -440,3 +440,15 @@ Changes:
   gets current data
 
 Pairs with Notify V1.8 for redundant Queue + direct Cron fallback delivery.
+
+
+## V4.15
+
+Each app installation receives a random anonymous Device ID. The backend stores
+that Device ID's hearted My Schedule items, reminder lead time, event timestamps,
+and push endpoint when available.
+
+No attendee name or email is required.
+
+Regular schedule items now include permanent IDs so a server reminder follows the
+same event when staff edits its time or location.

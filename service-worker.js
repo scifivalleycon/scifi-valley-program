@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-14";
+const CACHE="sfvc-program-v4-15";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/map-layout.json","./data/map-settings.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",

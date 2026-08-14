@@ -4,146 +4,167 @@
     "time": "2:00 PM",
     "title": "Paint & Take / Build & Battle Opens",
     "location": "Paint and Hobby Room",
-    "category": "Workshop"
+    "category": "Workshop",
+    "id": "sched-friday-paint-take-build-battle-opens"
   },
   {
     "day": "Friday",
     "time": "3:30 PM",
     "title": "Trivia Tournament",
     "location": "Event Room",
-    "category": "Gaming"
+    "category": "Gaming",
+    "id": "sched-friday-trivia-tournament"
   },
   {
     "day": "Friday",
     "time": "6:00 PM",
     "title": "Charity Quick Sketches",
     "location": "Event Room",
-    "category": "Charity"
+    "category": "Charity",
+    "id": "sched-friday-charity-quick-sketches"
   },
   {
     "day": "Saturday",
     "time": "10:00 AM",
     "title": "Paint & Take / Build & Battle Opens",
     "location": "Paint and Hobby Room",
-    "category": "Workshop"
+    "category": "Workshop",
+    "id": "sched-saturday-paint-take-build-battle-opens"
   },
   {
     "day": "Saturday",
     "time": "11:00 AM",
     "title": "Magic: The Gathering – Casual Commander",
     "location": "Game Room",
-    "category": "Gaming"
+    "category": "Gaming",
+    "id": "sched-saturday-magic-the-gathering-casual-commander"
   },
   {
     "day": "Saturday",
     "time": "12:00 PM",
     "title": "HeroClix – Battle Royale",
     "location": "Game Room",
-    "category": "Gaming"
+    "category": "Gaming",
+    "id": "sched-saturday-heroclix-battle-royale"
   },
   {
     "day": "Saturday",
     "time": "1:00 PM",
     "title": "Medieval Combat Demo",
     "location": "Outside Lawn",
-    "category": "Activity"
+    "category": "Activity",
+    "id": "sched-saturday-medieval-combat-demo"
   },
   {
     "day": "Saturday",
     "time": "1:00 PM",
     "title": "Miniature Painting Competition – Session 1",
     "location": "Paint and Hobby Room",
-    "category": "Workshop"
+    "category": "Workshop",
+    "id": "sched-saturday-miniature-painting-competition-session-1"
   },
   {
     "day": "Saturday",
     "time": "2:00 PM",
     "title": "Charity Quick Sketches",
     "location": "Event Room",
-    "category": "Charity"
+    "category": "Charity",
+    "id": "sched-saturday-charity-quick-sketches"
   },
   {
     "day": "Saturday",
     "time": "2:30 PM",
     "title": "Costume Contest Registration & Prejudging",
     "location": "Panel Room 2",
-    "category": "Costume Contest"
+    "category": "Costume Contest",
+    "id": "sched-saturday-costume-contest-registration-prejudging"
   },
   {
     "day": "Saturday",
     "time": "3:30 PM",
     "title": "Charity Auction",
     "location": "Event Room",
-    "category": "Charity"
+    "category": "Charity",
+    "id": "sched-saturday-charity-auction"
   },
   {
     "day": "Saturday",
     "time": "4:00 PM",
     "title": "Medieval Combat Demo",
     "location": "Outside Lawn",
-    "category": "Activity"
+    "category": "Activity",
+    "id": "sched-saturday-medieval-combat-demo-2"
   },
   {
     "day": "Saturday",
     "time": "4:00 PM",
     "title": "Miniature Painting Competition – Session 2",
     "location": "Paint and Hobby Room",
-    "category": "Workshop"
+    "category": "Workshop",
+    "id": "sched-saturday-miniature-painting-competition-session-2"
   },
   {
     "day": "Saturday",
     "time": "5:00 PM",
     "title": "Trivia Tournament",
     "location": "Event Room",
-    "category": "Gaming"
+    "category": "Gaming",
+    "id": "sched-saturday-trivia-tournament"
   },
   {
     "day": "Saturday",
     "time": "6:00 PM",
     "title": "Costume Contest",
     "location": "Panel Room 1",
-    "category": "Costume Contest"
+    "category": "Costume Contest",
+    "id": "sched-saturday-costume-contest"
   },
   {
     "day": "Saturday",
     "time": "10:00 PM",
     "title": "Official After Party",
     "location": "Holiday Bowl",
-    "category": "After Party"
+    "category": "After Party",
+    "id": "sched-saturday-official-after-party"
   },
   {
     "day": "Sunday",
     "time": "10:00 AM",
     "title": "Paint & Take / Build & Battle Opens",
     "location": "Paint and Hobby Room",
-    "category": "Workshop"
+    "category": "Workshop",
+    "id": "sched-sunday-paint-take-build-battle-opens"
   },
   {
     "day": "Sunday",
     "time": "1:00 PM",
     "title": "HeroClix – Battle Royale",
     "location": "Game Room",
-    "category": "Gaming"
+    "category": "Gaming",
+    "id": "sched-sunday-heroclix-battle-royale"
   },
   {
     "day": "Sunday",
     "time": "1:30 PM",
     "title": "Charity Quick Sketches",
     "location": "Event Room",
-    "category": "Charity"
+    "category": "Charity",
+    "id": "sched-sunday-charity-quick-sketches"
   },
   {
     "day": "Sunday",
     "time": "2:00 PM",
     "title": "Miniature Painting Competition Winners",
     "location": "Paint and Hobby Room",
-    "category": "Workshop"
+    "category": "Workshop",
+    "id": "sched-sunday-miniature-painting-competition-winners"
   },
   {
     "day": "Sunday",
     "time": "2:30 PM",
     "title": "Trivia Tournament",
     "location": "Event Room",
-    "category": "Gaming"
+    "category": "Gaming",
+    "id": "sched-sunday-trivia-tournament"
   }
 ]
