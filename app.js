@@ -500,7 +500,10 @@ async function syncServerReminders({force=false}={}){
 
       const result=await response.json();
       localStorage.setItem("sfvc-reminders-last-sync",new Date().toISOString());
-      updateReminderDeliveryStatus(`BACKGROUND REMINDERS READY • ${Number(result.scheduled||0)} SCHEDULED`,"ready");
+      updateReminderDeliveryStatus(
+        `BACKGROUND REMINDERS READY • ${Number(result.staged||0)} QUEUED • ${Number(result.scheduled||0)} SAVED`,
+        "ready"
+      );
       return {ok:true,...result};
     }catch(err){
       console.warn("Server reminder sync failed",err);
@@ -580,6 +583,41 @@ async function showScheduleNotification(e){
   });
 }
 
+
+async function refreshRemoteReminderStatus(){
+  const copy=document.getElementById("testReminderStatus");
+  if(!copy||!notificationsSupported()||Notification.permission!=="granted")return;
+
+  try{
+    const subscription=await getPushSubscription();
+    if(!subscription)return;
+
+    const response=await fetch(`${pushApiBase()}/v1/reminders/status`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({endpoint:subscription.endpoint})
+    });
+    if(!response.ok)return;
+
+    const result=await response.json();
+    const last=result.last;
+    if(!last)return;
+
+    if(String(last.reminder_key||"").startsWith("test:")){
+      if(last.status==="delivered"){
+        const delivered=last.delivered_at?new Date(Number(last.delivered_at)):null;
+        copy.textContent=`LAST REMOTE TEST: DELIVERED${delivered?` • ${delivered.toLocaleTimeString([],{hour:"numeric",minute:"2-digit",second:"2-digit"})}`:""}`;
+        copy.dataset.kind="ready";
+      }else{
+        copy.textContent=`LAST REMOTE TEST STATUS: ${String(last.status||"unknown").toUpperCase()}`;
+        copy.dataset.kind=last.status==="queued"?"ready":"warning";
+      }
+    }
+  }catch(err){
+    console.warn("Could not read remote reminder status",err);
+  }
+}
+
 async function scheduleReminderDeliveryTest(){
   const button=document.getElementById("testReminderButton");
   const copy=document.getElementById("testReminderStatus");
@@ -601,7 +639,7 @@ async function scheduleReminderDeliveryTest(){
     const response=await fetch(`${pushApiBase()}/v1/reminders/test`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({endpoint:subscription.endpoint,delaySeconds:120})
+      body:JSON.stringify({endpoint:subscription.endpoint,delaySeconds:60})
     });
 
     const result=await response.json().catch(()=>({}));
@@ -609,7 +647,7 @@ async function scheduleReminderDeliveryTest(){
 
     if(copy){
       const time=new Date(result.notifyAt);
-      copy.textContent=`Test scheduled. Close the app now. It should arrive around ${time.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}.`;
+      copy.textContent=`REMOTE TEST QUEUED. Close the app and lock the iPhone now. It should arrive around ${time.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}, without reopening the app.`;
       copy.dataset.kind="ready";
     }
   }catch(err){
@@ -620,7 +658,7 @@ async function scheduleReminderDeliveryTest(){
   }finally{
     if(button){
       button.disabled=false;
-      button.textContent="TEST REMINDER IN 2 MINUTES";
+      button.textContent="TEST LOCK-SCREEN PUSH IN 1 MINUTE";
     }
   }
 }
@@ -632,6 +670,7 @@ function updateReminderUI(){
   renderSchedule();
   renderMySchedule();
   scheduleAllReminders();
+  refreshRemoteReminderStatus().catch(()=>{});
 }
 
 
@@ -1577,6 +1616,7 @@ document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible"){
     ensurePushSubscriptionHealthy().catch(()=>{});
     updateNotificationStatus().catch(()=>{});
+    refreshRemoteReminderStatus().catch(()=>{});
   }
 
   if(document.visibilityState==="visible" &&

@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.11 Persistent Push State
+# Sci-Fi Valley Con Digital Program — V4.13 Lock-Screen Reminders
 
 Cumulative update from V3.6.
 
@@ -403,3 +403,18 @@ reminders to Notify V1.6 for server-side Web Push delivery.
 
 Notification Settings now includes TEST REMINDER IN 2 MINUTES so the full
 closed-app delivery path can be tested directly.
+
+
+## V4.13 — lock-screen reminder test
+
+Pairs with Notify V1.7.
+
+The new one-minute lock-screen test is staged directly into Cloudflare Queue with
+a delivery delay. It does not depend on page JavaScript timers and does not depend
+on Cron firing at the test time.
+
+After reopening the app, Notification Settings also reports the last server-side
+test state such as QUEUED or DELIVERED.
+
+Normal My Schedule reminders within the next 23 hours are now staged in the same
+delayed-Queue system.
