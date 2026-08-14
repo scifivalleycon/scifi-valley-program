@@ -2005,10 +2005,10 @@
         "id": "K2",
         "shape": "rect",
         "x": 166,
-        "y": 1060,
+        "y": 1058.5,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2020,7 +2020,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2032,7 +2032,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2044,7 +2044,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2056,7 +2056,7 @@
         "y": 1060,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2064,7 +2064,7 @@
       {
         "id": "K7",
         "shape": "rect",
-        "x": 360,
+        "x": 361.5,
         "y": 1003,
         "w": 14,
         "h": 44,
@@ -2076,11 +2076,11 @@
       {
         "id": "K8",
         "shape": "rect",
-        "x": 392,
-        "y": 1003,
+        "x": 393.5,
+        "y": 1004.5,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2092,7 +2092,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2104,7 +2104,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2112,11 +2112,11 @@
       {
         "id": "K11",
         "shape": "rect",
-        "x": 485.1,
+        "x": 488,
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2128,7 +2128,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2140,7 +2140,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2152,7 +2152,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2164,7 +2164,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2176,7 +2176,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2188,7 +2188,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
@@ -2200,7 +2200,7 @@
         "y": 1003,
         "w": 14,
         "h": 44,
-        "rotation": 0,
+        "rotation": 90,
         "labelDx": 0,
         "labelDy": null,
         "hidden": false
