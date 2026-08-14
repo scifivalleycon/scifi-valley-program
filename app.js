@@ -444,10 +444,30 @@ function updateReminderUI(){const s=document.getElementById("reminderSettingSumm
 
 const PUSH_BANNER_DELAY_MS=30*60*1000;
 const PUSH_REOPEN_RESET_MS=30000;
+const PUSH_HEALTH_RECHECK_MS=5*60*1000;
+const PUSH_ENABLED_KEY="sfvc-push-enabled";
+const PUSH_DISABLED_KEY="sfvc-push-user-disabled";
 let pushBannerEligible=false;
 let pushBannerTimer=null;
 let pushPromptShownThisSession=false;
 let pushLastHiddenAt=0;
+let pushHealthRepairPromise=null;
+let pushHealthLastCheckedAt=0;
+
+function pushWasPreviouslyEnabled(){
+  return localStorage.getItem(PUSH_ENABLED_KEY)==="yes";
+}
+function pushWasExplicitlyDisabled(){
+  return localStorage.getItem(PUSH_DISABLED_KEY)==="yes";
+}
+function rememberPushEnabled(){
+  localStorage.setItem(PUSH_ENABLED_KEY,"yes");
+  localStorage.removeItem(PUSH_DISABLED_KEY);
+}
+function rememberPushDisabled(){
+  localStorage.removeItem(PUSH_ENABLED_KEY);
+  localStorage.setItem(PUSH_DISABLED_KEY,"yes");
+}
 
 function notificationsSupported(){
   return ("Notification" in window)&&("serviceWorker" in navigator)&&("PushManager" in window);
@@ -456,7 +476,27 @@ function notificationsSupported(){
 async function hasActivePushSubscription(){
   if(!notificationsSupported())return false;
   if(Notification.permission!=="granted")return false;
-  return Boolean(await getPushSubscription().catch(()=>null));
+  if(pushWasExplicitlyDisabled())return false;
+
+  const subscription=await getPushSubscription().catch(()=>null);
+  if(subscription){
+    rememberPushEnabled();
+    return true;
+  }
+
+  // iOS can occasionally return no PushManager subscription during a service
+  // worker/app lifecycle transition even though notification permission is still
+  // enabled in Settings. Preserve the user's enabled state and repair it silently.
+  if(pushWasPreviouslyEnabled()){
+    ensurePushSubscriptionHealthy().catch(()=>{});
+    return true;
+  }
+
+  // If iOS permission is still granted and the user has never explicitly
+  // disabled alerts inside the app, treat the OS permission as an enabled intent.
+  // The health check below recreates the Web Push subscription if necessary.
+  ensurePushSubscriptionHealthy().catch(()=>{});
+  return true;
 }
 
 function closePushPrompt(){
@@ -809,7 +849,7 @@ async function registerPushSubscription(){
     body:JSON.stringify(subscription.toJSON())
   });
   if(!response.ok)throw new Error("Could not register this device for event alerts.");
-  localStorage.setItem("sfvc-push-enabled","yes");
+  rememberPushEnabled();
   return subscription;
 }
 async function unregisterPushSubscription(){
@@ -823,10 +863,11 @@ async function unregisterPushSubscription(){
     }).catch(()=>{});
     await subscription.unsubscribe().catch(()=>false);
   }
-  localStorage.removeItem("sfvc-push-enabled");
+  rememberPushDisabled();
 }
 async function enablePushNotifications(){
   if(!("Notification" in window)||!("serviceWorker" in navigator)||!("PushManager" in window))return;
+  localStorage.removeItem(PUSH_DISABLED_KEY);
   const permission=Notification.permission==="granted"?"granted":await Notification.requestPermission();
   if(permission!=="granted"){
     await updateNotificationStatus();
@@ -848,6 +889,63 @@ async function enablePushNotifications(){
     clearTimeout(pushBannerTimer);
   }
   await updatePushOptInBanner();
+}
+
+
+async function ensurePushSubscriptionHealthy({force=false}={}){
+  if(!notificationsSupported())return false;
+  if(Notification.permission!=="granted")return false;
+  if(pushWasExplicitlyDisabled())return false;
+
+  const now=Date.now();
+  if(!force && pushHealthLastCheckedAt && now-pushHealthLastCheckedAt<PUSH_HEALTH_RECHECK_MS){
+    return true;
+  }
+  if(pushHealthRepairPromise)return pushHealthRepairPromise;
+
+  pushHealthRepairPromise=(async()=>{
+    try{
+      const base=pushApiBase();
+      if(!base)return false;
+
+      const reg=await navigator.serviceWorker.ready;
+      let subscription=await reg.pushManager.getSubscription();
+
+      if(!subscription){
+        const keyResponse=await fetch(`${base}/v1/public-key`,{cache:"no-store"});
+        if(!keyResponse.ok)throw new Error("Push public key could not be refreshed.");
+        const {publicKey}=await keyResponse.json();
+        if(!publicKey)throw new Error("Push public key is missing.");
+
+        subscription=await reg.pushManager.subscribe({
+          userVisibleOnly:true,
+          applicationServerKey:urlBase64ToUint8Array(publicKey)
+        });
+      }
+
+      // Re-register even an existing browser subscription. This makes the repair
+      // idempotent and restores the backend record if it was ever pruned.
+      const response=await fetch(`${base}/v1/subscribe`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(subscription.toJSON())
+      });
+      if(!response.ok)throw new Error("Event-alert subscription could not be refreshed.");
+
+      rememberPushEnabled();
+      pushHealthLastCheckedAt=Date.now();
+      return true;
+    }catch(err){
+      console.warn("Push subscription health check failed",err);
+      // Do not flip the UI back to disabled just because a background repair
+      // failed while offline or during an iOS/service-worker lifecycle transition.
+      return false;
+    }finally{
+      pushHealthRepairPromise=null;
+    }
+  })();
+
+  return pushHealthRepairPromise;
 }
 
 async function updateNotificationStatus(){
@@ -875,19 +973,39 @@ async function updateNotificationStatus(){
   }
 
   if(Notification.permission==="granted"){
+    if(pushWasExplicitlyDisabled()){
+      t.textContent="EVENT ALERTS OFF IN APP";
+      c.textContent="Notifications are allowed on this device, but event alerts were turned off inside the Sci-Fi Valley Con app.";
+      if(b){b.disabled=false;b.textContent="ENABLE EVENT ALERTS";}
+      disable?.classList.add("hidden");
+      return;
+    }
+
     const subscription=await getPushSubscription().catch(()=>null);
+
     if(subscription){
+      rememberPushEnabled();
       t.textContent="EVENT ALERTS ENABLED";
       c.textContent="This device is subscribed to convention-wide updates, room changes, delays and other important announcements.";
       if(b){b.disabled=true;b.textContent="EVENT ALERTS ENABLED";}
       disable?.classList.remove("hidden");
+
+      // Refresh the backend registration periodically without changing the UI.
+      ensurePushSubscriptionHealthy().catch(()=>{});
       return;
     }
 
-    t.textContent="PERMISSION GRANTED";
-    c.textContent="Notification permission is granted, but this device is not yet subscribed to convention-wide push alerts.";
-    if(b){b.disabled=false;b.textContent="CONNECT EVENT ALERTS";}
-    disable?.classList.add("hidden");
+    // iOS permission is still ON. Do not tell the attendee to enable it again.
+    // Keep the persistent enabled state and silently recreate the Push subscription.
+    t.textContent="EVENT ALERTS ENABLED";
+    c.textContent="Notifications are enabled on this device. The app is automatically verifying the event-alert connection in the background.";
+    if(b){b.disabled=true;b.textContent="EVENT ALERTS ENABLED";}
+    disable?.classList.remove("hidden");
+    ensurePushSubscriptionHealthy({force:true}).then(ok=>{
+      if(ok){
+        c.textContent="This device is subscribed to convention-wide updates, room changes, delays and other important announcements.";
+      }
+    }).catch(()=>{});
     return;
   }
 
@@ -1261,11 +1379,27 @@ document.addEventListener("visibilitychange",()=>{
     return;
   }
 
+  if(document.visibilityState==="visible"){
+    ensurePushSubscriptionHealthy().catch(()=>{});
+    updateNotificationStatus().catch(()=>{});
+  }
+
   if(document.visibilityState==="visible" &&
      pushLastHiddenAt &&
      Date.now()-pushLastHiddenAt>=PUSH_REOPEN_RESET_MS){
     initializePushPromptExperience({forceSessionPrompt:true});
   }
+});
+
+window.addEventListener("online",()=>{
+  ensurePushSubscriptionHealthy({force:true}).then(()=>updateNotificationStatus()).catch(()=>{});
+});
+window.addEventListener("pageshow",()=>{
+  ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});
+});
+navigator.serviceWorker?.addEventListener?.("controllerchange",()=>{
+  pushHealthLastCheckedAt=0;
+  ensurePushSubscriptionHealthy({force:true}).then(()=>updateNotificationStatus()).catch(()=>{});
 });
 
 document.getElementById("pushBannerDismissButton")?.addEventListener("click",()=>{pushBannerEligible=false;document.getElementById("pushOptInBanner")?.classList.add("hidden");startPushBannerTimer();});
@@ -1296,7 +1430,16 @@ document.getElementById("installButton").addEventListener("click",async()=>{
     showInstallHelp();
   }
 });
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"));
+if("serviceWorker" in navigator)window.addEventListener("load",async()=>{
+  try{
+    await navigator.serviceWorker.register("service-worker.js");
+    if(Notification.permission==="granted"&&!pushWasExplicitlyDisabled()){
+      ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});
+    }
+  }catch(err){
+    console.warn("Service worker registration failed",err);
+  }
+});
 
 
 

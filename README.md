@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.10 Con-Quest Roster
+# Sci-Fi Valley Con Digital Program — V4.11 Persistent Push State
 
 Cumulative update from V3.6.
 
@@ -365,3 +365,29 @@ The Interactive Floor Map already uses `conQuest: true` to shade the associated
 table/booth objects red. Blank/non-Yes Con Quest cells remain false.
 
 The existing saved map geometry and placement were not changed by this roster import.
+
+
+## V4.11 — persistent / self-healing event-alert status
+
+Fixes an iOS/PWA issue where Settings could return to `ENABLE EVENT ALERTS`
+even though iOS still showed Sci-Fi Valley Con notifications as allowed.
+
+Previous behavior:
+- Settings trusted only the immediate result of `PushManager.getSubscription()`
+- a temporarily missing/unavailable subscription made the UI look disabled
+- the already-saved `sfvc-push-enabled` state was not used by the status display
+
+V4.11 behavior:
+- iOS/browser `Notification.permission` remains the OS permission source
+- a successful app opt-in is remembered persistently
+- explicit in-app Disable is remembered separately
+- if permission remains granted, Settings stays `EVENT ALERTS ENABLED`
+- a missing PushManager subscription is silently recreated
+- existing browser subscriptions are periodically re-posted to the notification
+  backend so a pruned backend record can also self-repair
+- repairs run on app load, foreground return, online return, pageshow, and service
+  worker controller changes
+- a temporary offline/iOS/service-worker failure no longer flips the button back
+  to Enable
+
+Explicitly pressing Disable Event Alerts still turns the app-level alert state off.
