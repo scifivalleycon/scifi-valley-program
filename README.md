@@ -1,4 +1,4 @@
-# Sci-Fi Valley Con Digital Program — V4.13 Lock-Screen Reminders
+# Sci-Fi Valley Con Digital Program — V4.14 Live Refresh + Reliable My Con
 
 Cumulative update from V3.6.
 
@@ -418,3 +418,25 @@ test state such as QUEUED or DELIVERED.
 
 Normal My Schedule reminders within the next 23 hours are now staged in the same
 delayed-Queue system.
+
+
+## V4.14 — live refresh and resilient My Con
+
+Fixes intermittent missing/delayed saved schedule cards.
+
+Changes:
+- program JSON refreshes on every app open/pageshow
+- program JSON refreshes whenever the app returns to the foreground
+- while open, program data refreshes every 60 seconds
+- data requests use cache:no-store with timestamp cache-busting
+- service worker treats data/*.json as network-first/no-store with offline fallback
+- regular schedule items use stable content-derived IDs instead of array positions
+- legacy array-position IDs are migrated automatically
+- saved My Schedule items keep local snapshots so they remain visible during a
+  slow/offline refresh
+- each successful refresh rewrites snapshots with the newest time/location/title
+- every refresh re-syncs the server-side reminder schedule, so a staff schedule
+  time change updates the attendee's future reminder as soon as their app next
+  gets current data
+
+Pairs with Notify V1.8 for redundant Queue + direct Cron fallback delivery.

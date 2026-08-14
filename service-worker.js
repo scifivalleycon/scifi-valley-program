@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-13";
+const CACHE="sfvc-program-v4-14";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/map-layout.json","./data/map-settings.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -16,6 +16,29 @@ self.addEventListener("activate",event=>{
 });
 self.addEventListener("fetch",event=>{
   if(event.request.method!=="GET")return;
+
+  const url=new URL(event.request.url);
+  const isProgramData=url.origin===self.location.origin && url.pathname.includes("/data/") && url.pathname.endsWith(".json");
+
+  if(isProgramData){
+    event.respondWith((async()=>{
+      try{
+        const network=await fetch(event.request,{cache:"no-store"});
+        if(network.ok){
+          const copy=network.clone();
+          caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
+        }
+        return network;
+      }catch{
+        return (await caches.match(event.request)) || new Response("[]",{
+          status:200,
+          headers:{"Content-Type":"application/json"}
+        });
+      }
+    })());
+    return;
+  }
+
   event.respondWith(
     fetch(event.request).then(response=>{
       const copy=response.clone();

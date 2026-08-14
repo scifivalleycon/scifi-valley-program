@@ -16,6 +16,76 @@ const state = {
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
+const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
+const APP_REFRESH_INTERVAL_MS=60*1000;
+const APP_REFRESH_MIN_GAP_MS=10*1000;
+let appDataRefreshPromise=null;
+let appDataLastRefreshAt=0;
+let appVisibleRefreshTimer=null;
+
+function loadSavedScheduleSnapshots(){
+  try{
+    const value=JSON.parse(localStorage.getItem(MY_SCHEDULE_SNAPSHOT_KEY)||"{}");
+    return value&&typeof value==="object"?value:{};
+  }catch{return {}}
+}
+let savedScheduleSnapshots=loadSavedScheduleSnapshots();
+
+function saveScheduleSnapshots(){
+  localStorage.setItem(MY_SCHEDULE_SNAPSHOT_KEY,JSON.stringify(savedScheduleSnapshots));
+}
+
+function stableScheduleHash(value){
+  let hash=2166136261;
+  for(const ch of String(value||"")){
+    hash^=ch.charCodeAt(0);
+    hash=Math.imul(hash,16777619);
+  }
+  return (hash>>>0).toString(36);
+}
+
+function stableBaseScheduleId(event){
+  if(event?.id)return String(event.id);
+  const key=[
+    event?.day||"",
+    event?.time||"",
+    event?.title||"",
+    event?.location||"",
+    event?.category||""
+  ].join("|").toLowerCase();
+  return `schedule-${stableScheduleHash(key)}`;
+}
+
+function snapshotScheduleEvent(event){
+  if(!event?.id)return;
+  savedScheduleSnapshots[event.id]={
+    id:event.id,
+    day:event.day||"",
+    time:event.time||"",
+    title:event.title||"",
+    location:event.location||"",
+    category:event.category||"",
+    filterCategory:event.filterCategory||"",
+    remindable:event.remindable!==false,
+    savedAt:new Date().toISOString()
+  };
+  saveScheduleSnapshots();
+}
+
+function migrateLegacyScheduleIds(schedule){
+  let changed=false;
+  schedule.forEach((event,index)=>{
+    const legacy=`schedule-${event.day}-${event.time}-${index}`;
+    const stable=stableBaseScheduleId(event);
+    if(state.mySchedule.has(legacy)&&legacy!==stable){
+      state.mySchedule.delete(legacy);
+      state.mySchedule.add(stable);
+      changed=true;
+    }
+  });
+  if(changed)localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+}
+
 const PHOTO_SHOP = "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops";
 const screens = [...document.querySelectorAll(".screen")];
 const navButtons = [...document.querySelectorAll(".nav-button")];
@@ -28,32 +98,81 @@ function goTo(screenId){
 navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
 
-async function loadData(){
-  const safeJson=(url,fallback=[])=>fetch(url).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
-  const [guests,schedule,events,vendors,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
-    safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
-    safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
-    safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
-    safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
-  ]);
-  const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
-  state.settings={...DEFAULT_SETTINGS,...savedSettings};
-  state.guests=guests;
-  state.schedule=schedule.map((e,i)=>({...e,id:e.id||`schedule-${e.day}-${e.time}-${i}`}));
-  state.events=events;
-  state.vendors=Array.isArray(vendors)?vendors:[];
-  state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
-  state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
-  state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
-  state.celebrityPricing=Array.isArray(celebrityPricing)?celebrityPricing:[];
-  state.photoOps=Array.isArray(photoOps)?photoOps:[];
-  state.autographs=Array.isArray(autographs)?autographs:[];
-  state.groupPhotoOps=Array.isArray(groupPhotoOps)?groupPhotoOps:[];
-  state.panels=Array.isArray(panels)?panels:[];
-  renderAll();
-  initializePushPromptExperience();
-  forcePushPromptForTesting();
+async function loadData({silent=false,force=false}={}){
+  if(appDataRefreshPromise&&!force)return appDataRefreshPromise;
+  const now=Date.now();
+  if(!force&&appDataLastRefreshAt&&now-appDataLastRefreshAt<APP_REFRESH_MIN_GAP_MS){
+    return;
+  }
+
+  appDataRefreshPromise=(async()=>{
+    const stamp=`v=${Date.now()}`;
+    const safeJson=(url,fallback=[])=>fetch(`${url}${url.includes("?")?"&":"?"}${stamp}`,{
+      cache:"no-store",
+      credentials:"same-origin"
+    }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
+
+    const [guests,schedule,events,vendors,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
+      safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
+      safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
+      safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
+    ]);
+
+    const rawSchedule=Array.isArray(schedule)?schedule:[];
+    migrateLegacyScheduleIds(rawSchedule);
+    const normalizedSchedule=rawSchedule.map(e=>({...e,id:stableBaseScheduleId(e)}));
+
+    const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
+    state.settings={...DEFAULT_SETTINGS,...savedSettings};
+    state.guests=Array.isArray(guests)?guests:[];
+    state.schedule=normalizedSchedule;
+    state.events=Array.isArray(events)?events:[];
+    state.vendors=Array.isArray(vendors)?vendors:[];
+    state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
+    state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
+    state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
+    state.celebrityPricing=Array.isArray(celebrityPricing)?celebrityPricing:[];
+    state.photoOps=Array.isArray(photoOps)?photoOps:[];
+    state.autographs=Array.isArray(autographs)?autographs:[];
+    state.groupPhotoOps=Array.isArray(groupPhotoOps)?groupPhotoOps:[];
+    state.panels=Array.isArray(panels)?panels:[];
+
+    // Refresh stored snapshots using the newest event time/location/title.
+    reminderScheduleItems().forEach(event=>{
+      if(state.mySchedule.has(event.id))snapshotScheduleEvent(event);
+    });
+
+    appDataLastRefreshAt=Date.now();
+    renderAll();
+    scheduleServerReminderSync(50);
+
+    if(!silent){
+      initializePushPromptExperience();
+      forcePushPromptForTesting();
+    }
+  })().finally(()=>{appDataRefreshPromise=null});
+
+  return appDataRefreshPromise;
 }
+
+async function refreshAppData(reason="foreground"){
+  try{
+    await loadData({silent:true,force:true});
+    console.info(`SFVC app data refreshed: ${reason}`);
+  }catch(err){
+    console.warn(`SFVC app refresh failed: ${reason}`,err);
+    renderMySchedule();
+  }
+}
+
+function startVisibleAppRefresh(){
+  clearInterval(appVisibleRefreshTimer);
+  appVisibleRefreshTimer=setInterval(()=>{
+    if(document.visibilityState==="visible")refreshAppData("visible-interval");
+  },APP_REFRESH_INTERVAL_MS);
+}
+
 
 
 function parseISODate(value){
@@ -264,7 +383,12 @@ function autographScheduleItems(){
 }
 
 function baseScheduleItems(){
-  return state.schedule.map(e=>({...e,filterCategory:primaryScheduleCategory(e),remindable:e.remindable!==false}));
+  return state.schedule.map(e=>({
+    ...e,
+    id:e.id||stableBaseScheduleId(e),
+    filterCategory:primaryScheduleCategory(e),
+    remindable:e.remindable!==false
+  }));
 }
 
 function showScheduleItems(){
@@ -426,16 +550,80 @@ function renderSchedule(){
 
 
 function formatReminder(m){if(m===0)return"No reminder";if(m===60)return"1 hour before";return`${m} minutes before`}
-function toggleScheduleItem(id){state.mySchedule.has(id)?state.mySchedule.delete(id):state.mySchedule.add(id);localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders()}
-function removeScheduleItem(id){state.mySchedule.delete(id);localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders()}
-function renderMySchedule(){
-  const saved=reminderScheduleItems().filter(e=>state.mySchedule.has(e.id)), preview=document.getElementById("schedulePreview"), list=document.getElementById("settingsScheduleList");
-  const c=document.getElementById("settingsScheduleCount");if(c)c.textContent=`${saved.length} SAVED`;
-  if(!saved.length){if(preview)preview.innerHTML="Tap the bell on a schedule item to add it to My Schedule.";if(list)list.innerHTML="You have not added any events yet.";updateCombinedSavedCount();return}
-  const html=saved.map(e=>`<div class="saved-schedule-card"><div class="saved-schedule-time">${e.day.slice(0,3).toUpperCase()}<br>${e.time}</div><div><strong>${e.title.toUpperCase()}</strong><div class="meta">${e.location}${state.reminderMinutes?` • 🔔 ${formatReminder(state.reminderMinutes)}`:" • No reminder"}</div></div><button class="remove-schedule" data-remove-schedule="${e.id}">×</button></div>`).join("");
-  if(preview)preview.innerHTML=html;if(list)list.innerHTML=html;document.querySelectorAll("[data-remove-schedule]").forEach(b=>b.addEventListener("click",()=>removeScheduleItem(b.dataset.removeSchedule)));updateCombinedSavedCount()
+function toggleScheduleItem(id){
+  if(state.mySchedule.has(id)){
+    state.mySchedule.delete(id);
+    delete savedScheduleSnapshots[id];
+    saveScheduleSnapshots();
+  }else{
+    state.mySchedule.add(id);
+    const event=reminderScheduleItems().find(e=>e.id===id);
+    if(event)snapshotScheduleEvent(event);
+  }
+  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();
 }
-function updateCombinedSavedCount(){const b=document.getElementById("favoriteCount");if(b)b.textContent=`${state.favorites.size+state.mySchedule.size} SAVED`}
+function removeScheduleItem(id){
+  state.mySchedule.delete(id);
+  delete savedScheduleSnapshots[id];
+  saveScheduleSnapshots();
+  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();
+}
+function renderMySchedule(){
+  const liveById=new Map(reminderScheduleItems().map(e=>[e.id,e]));
+  const saved=[...state.mySchedule].map(id=>{
+    const live=liveById.get(id);
+    if(live){
+      snapshotScheduleEvent(live);
+      return live;
+    }
+    const snapshot=savedScheduleSnapshots[id];
+    return snapshot?{...snapshot,_snapshot:true}:null;
+  }).filter(Boolean);
+
+  saved.sort((a,b)=>{
+    const da=eventDateTime(a)?.getTime()||Number.MAX_SAFE_INTEGER;
+    const db=eventDateTime(b)?.getTime()||Number.MAX_SAFE_INTEGER;
+    return da-db;
+  });
+
+  const preview=document.getElementById("schedulePreview"),
+        list=document.getElementById("settingsScheduleList");
+
+  updateCombinedSavedCount();
+
+  if(!saved.length){
+    if(preview)preview.innerHTML='<div class="muted-empty">Tap the bell on a schedule item to add it to My Schedule.</div>';
+    if(list)list.innerHTML='<div class="muted-empty">Your saved schedule is empty.</div>';
+    return;
+  }
+
+  const markup=saved.map(e=>`
+    <div class="saved-schedule-item${e._snapshot?" saved-schedule-snapshot":""}">
+      <div>
+        <strong>${escapeAppHtml(e.title)}</strong>
+        <div class="meta">${escapeAppHtml(e.day)} • ${escapeAppHtml(e.time)} • ${escapeAppHtml(e.location)}</div>
+        ${e._snapshot?'<div class="saved-sync-note">REFRESHING CURRENT SCHEDULE…</div>':""}
+      </div>
+      <button class="schedule-remove" data-remove-schedule="${escapeAppHtml(e.id)}" aria-label="Remove ${escapeAppHtml(e.title)}">×</button>
+    </div>`).join("");
+
+  if(preview)preview.innerHTML=markup;
+  if(list)list.innerHTML=markup;
+
+  document.querySelectorAll("[data-remove-schedule]").forEach(button=>{
+    button.addEventListener("click",()=>removeScheduleItem(button.dataset.removeSchedule));
+  });
+}
+
+function updateCombinedSavedCount(){
+  const b=document.getElementById("favoriteCount");
+  if(!b)return;
+  const liveIds=new Set(reminderScheduleItems().map(e=>e.id));
+  const scheduleCount=[...state.mySchedule].filter(id=>liveIds.has(id)||savedScheduleSnapshots[id]).length;
+  b.textContent=`${state.favorites.size+scheduleCount} SAVED`;
+}
 function eventDateTime(e){const d=eventDayDates()[e.day];const m=e.time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!d||!m)return null;let h=+m[1];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return new Date(`${d}T${String(h).padStart(2,"0")}:${m[2]}:00`)}
 let reminderSyncTimer=null;
 let reminderSyncInFlight=null;
@@ -601,7 +789,20 @@ async function refreshRemoteReminderStatus(){
 
     const result=await response.json();
     const last=result.last;
+    const delivery=result.lastDelivery;
     if(!last)return;
+
+    if(delivery&&String(last.reminder_key||"").startsWith("test:")){
+      const statusCode=Number(delivery.push_service_status||0);
+      const type=String(delivery.delivery_type||"").toUpperCase();
+      if(delivery.outcome==="accepted"){
+        copy.textContent=`REMOTE PUSH ACCEPTED BY PUSH SERVICE • ${type}${statusCode?` • HTTP ${statusCode}`:""}`;
+        copy.dataset.kind="ready";
+      }else if(delivery.outcome==="error"){
+        copy.textContent=`REMOTE PUSH ERROR • ${type}${statusCode?` • HTTP ${statusCode}`:""}`;
+        copy.dataset.kind="warning";
+      }
+    }
 
     if(String(last.reminder_key||"").startsWith("test:")){
       if(last.status==="delivered"){
@@ -1617,6 +1818,7 @@ document.addEventListener("visibilitychange",()=>{
     ensurePushSubscriptionHealthy().catch(()=>{});
     updateNotificationStatus().catch(()=>{});
     refreshRemoteReminderStatus().catch(()=>{});
+    refreshAppData("foreground").catch(()=>{});
   }
 
   if(document.visibilityState==="visible" &&
@@ -1634,6 +1836,7 @@ window.addEventListener("online",()=>{
 });
 window.addEventListener("pageshow",()=>{
   ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});
+  refreshAppData("pageshow").catch(()=>{});
 });
 navigator.serviceWorker?.addEventListener?.("controllerchange",()=>{
   pushHealthLastCheckedAt=0;
@@ -1818,4 +2021,10 @@ document.addEventListener("dblclick",event=>{
 initializeAppAnalytics();
 initializeRecentAlerts();
 
-loadData().catch(err=>{console.error(err);document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Refresh the page or check the latest Cloudflare deployment.</div></div>`});
+loadData().then(()=>{
+  startVisibleAppRefresh();
+}).catch(err=>{
+  console.error(err);
+  renderMySchedule();
+  document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Saved My Con items remain available while the app retries the latest program data.</div></div>`;
+});

@@ -577,3 +577,16 @@ button,
 .test-reminder-status{min-height:18px;margin:8px 0 0;font-weight:800}
 .test-reminder-status[data-kind="ready"]{color:#1e5558}
 .test-reminder-status[data-kind="warning"]{color:#9c3f2b}
+
+
+/* V4.14 — resilient My Con saved-schedule display */
+.saved-schedule-snapshot{
+  opacity:.92;
+}
+.saved-sync-note{
+  margin-top:3px;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.06em;
+  color:var(--coral2);
+}
