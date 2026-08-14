@@ -58,5 +58,15 @@
     "location": "PANEL ROOM 1",
     "participants": "GUEST 4 / GUEST 5",
     "description": "An intimate duo Q&A with GUEST 4 and GUEST 5 featuring behind-the-scenes stories and audience questions."
+  },
+  {
+    "id": "panel-1786725934372",
+    "day": "Friday",
+    "startTime": "12:55 PM",
+    "endTime": "2:00 PM",
+    "title": "NEW PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "",
+    "description": ""
   }
 ]
