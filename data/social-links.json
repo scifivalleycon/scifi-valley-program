@@ -1,0 +1,66 @@
+[
+  {
+    "id": "facebook-page",
+    "platform": "facebook",
+    "label": "Facebook Page",
+    "subtitle": "NEWS & ANNOUNCEMENTS",
+    "url": "https://www.facebook.com/SciFiValleyCon",
+    "enabled": true
+  },
+  {
+    "id": "facebook-group",
+    "platform": "facebook-group",
+    "label": "Facebook Group",
+    "subtitle": "JOIN THE COMMUNITY",
+    "url": "https://www.facebook.com/groups/scifivalleycon",
+    "enabled": true
+  },
+  {
+    "id": "facebook-event",
+    "platform": "facebook-event",
+    "label": "Facebook Event",
+    "subtitle": "RSVP FOR THE CON",
+    "url": "https://www.facebook.com/share/19B8HYD4En/",
+    "enabled": true
+  },
+  {
+    "id": "instagram",
+    "platform": "instagram",
+    "label": "Instagram",
+    "subtitle": "@SCIFIVALLEYCON",
+    "url": "https://www.instagram.com/scifivalleycon/",
+    "enabled": true
+  },
+  {
+    "id": "youtube",
+    "platform": "youtube",
+    "label": "YouTube",
+    "subtitle": "PANELS, INTERVIEWS & VIDEOS",
+    "url": "https://www.youtube.com/channel/UCDcdt8zf-HnRXxTpoL1izRw",
+    "enabled": true
+  },
+  {
+    "id": "threads",
+    "platform": "threads",
+    "label": "Threads",
+    "subtitle": "@SCIFIVALLEYCON",
+    "url": "https://www.threads.net/@scifivalleycon",
+    "enabled": true
+  },
+  {
+    "id": "bluesky",
+    "platform": "bluesky",
+    "label": "Bluesky",
+    "subtitle": "@SCIFIVALLEYCON.BSKY.SOCIAL",
+    "url": "https://bsky.app/profile/scifivalleycon.bsky.social",
+    "enabled": true
+  },
+  {
+    "id": "tiktok",
+    "platform": "tiktok",
+    "label": "TikTok",
+    "subtitle": "@SCIFIVALLEYCON",
+    "url": "https://www.tiktok.com/@scifivalleycon",
+    "enabled": true
+  }
+]

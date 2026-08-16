@@ -1,0 +1,34 @@
+[
+  {
+    "id": "breezeline",
+    "name": "Breezeline",
+    "url": "https://www.breezeline.com/",
+    "logo": "https://plainfieldbusinessassociation.org/wp-content/uploads/2024/01/breezeline_vrt_tag_full-color-1024x733.png",
+    "label": "",
+    "enabled": true
+  },
+  {
+    "id": "codex",
+    "name": "CODEX",
+    "url": "https://codexcomicshop.com/",
+    "logo": "",
+    "label": "COMICS & COLLECTIBLES",
+    "enabled": true
+  },
+  {
+    "id": "cartridges-galore",
+    "name": "Cartridges Galore",
+    "url": "https://www.cartridgesgaloregames.com/",
+    "logo": "https://www.cartridgesgaloregames.com/wp-content/uploads/2021/02/CG-New-Logo-Medium.png",
+    "label": "",
+    "enabled": true
+  },
+  {
+    "id": "snake-eyes-gaming",
+    "name": "SNAKE EYES",
+    "url": "https://www.se-gaming.com/",
+    "logo": "",
+    "label": "GAMING LLC",
+    "enabled": true
+  }
+]

@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.15",
+          appVersion:"4.17",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -248,8 +248,9 @@ async function loadData({silent=false,force=false}={}){
       credentials:"same-origin"
     }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
 
-    const [guests,schedule,events,vendors,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,socialLinks,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
+      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -265,6 +266,8 @@ async function loadData({silent=false,force=false}={}){
     state.schedule=normalizedSchedule;
     state.events=Array.isArray(events)?events:[];
     state.vendors=Array.isArray(vendors)?vendors:[];
+    state.sponsors=Array.isArray(sponsors)?sponsors:[];
+    state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
     state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
     state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
@@ -1926,7 +1929,80 @@ document.getElementById('mapSearch')?.addEventListener('input',event=>{state.map
 document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
 document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
-function renderAll(){applyEventSettings();renderMapScreen();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();updateReminderUI();updateNotificationStatus();}
+
+function socialIconSvg(platform){
+  const p=String(platform||"").toLowerCase();
+  if(p==="facebook"||p==="facebook-page"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M18.7 29V17.2h4l.6-4.6h-4.6V9.7c0-1.3.4-2.2 2.3-2.2h2.5V3.4c-.4-.1-1.9-.2-3.6-.2-3.6 0-6 2.2-6 6.1v3.4h-4v4.6h4V29h4.8z"/></svg>';
+  }
+  if(p==="facebook-group"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="12" cy="11" r="5"/><circle cx="22.5" cy="12" r="3.8"/><path d="M3 27c.5-6 3.3-9.3 9-9.3s8.5 3.3 9 9.3H3zm17.3-.2c-.2-2.8-1-5.1-2.5-6.8 1.1-.7 2.5-1.1 4.2-1.1 4.5 0 6.7 2.7 7 7.9h-8.7z"/></svg>';
+  }
+  if(p==="facebook-event"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="22" rx="3"/><path class="cut" d="M4 12h24M10 3v7M22 3v7"/><path class="cut" d="M10 18h4v4h-4zM18 18h4v4h-4z"/></svg>';
+  }
+  if(p==="instagram"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24" rx="7"/><circle class="cut" cx="16" cy="16" r="6"/><circle cx="23.5" cy="8.5" r="1.7"/></svg>';
+  }
+  if(p==="youtube"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2.5" y="7" width="27" height="18" rx="6"/><path class="inverse" d="M13 11.5 22 16l-9 4.5v-9z"/></svg>';
+  }
+  if(p==="threads"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C8.8 3 4 8.2 4 15.7 4 24 9 29 16.1 29c6.1 0 10.2-3.5 10.2-8.4 0-3.5-2.2-6.1-5.9-7.2-.6-4-3.1-6.2-7-6.2-3.4 0-5.9 1.8-6.8 4.9l4 1c.4-1.5 1.4-2.3 2.9-2.3 1.6 0 2.6.8 2.9 2.3-5.4.1-8.5 2.4-8.5 6.2 0 3.5 2.8 5.9 6.8 5.9 3.8 0 6.1-2.1 6.4-5.8.8.6 1.2 1.4 1.2 2.4 0 2.2-2.1 3.7-5.3 3.7-5.1 0-8-3.6-8-10.1C8 10.4 11 7 16 7c4.8 0 7.8 2.9 8.3 8.1l4-.4C27.6 7.4 23 3 16 3zm-1.1 18.6c-1.7 0-2.8-.9-2.8-2.3 0-1.6 1.6-2.5 4.4-2.5h.3v.9c0 2.5-.6 3.9-1.9 3.9z"/></svg>';
+  }
+  if(p==="bluesky"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7.1 5.4C10.7 8.1 14.5 13.7 16 16.7c1.5-3 5.3-8.6 8.9-11.3 2.6-2 6.8-3.5 6.8 1.4 0 1-.6 8.3-1 9.5-1.4 4.3-6.5 5.4-11 4.7 7.9 1.3 9.9 5.7 5.6 10.1-8.1 8.3-11.6-2.1-12.5-4.7-.2-.5-.3-.8-.4-.8-.1 0-.2.3-.4.8-.9 2.6-4.4 13-12.5 4.7-4.3-4.4-2.3-8.8 5.6-10.1-4.5.7-9.6-.4-11-4.7-.4-1.2-1-8.5-1-9.5 0-4.9 4.2-3.4 6.8-1.4z" transform="scale(.78) translate(4 1)"/></svg>';
+  }
+  if(p==="tiktok"){
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M18.2 3h5c.2 2.5 1.7 4.7 4 5.9v5c-1.5-.1-2.9-.5-4-1.2v8.5c0 5-4 8.8-9 8.8s-9-3.8-9-8.8 4-8.8 9-8.8c.7 0 1.4.1 2 .2v5.1a4.3 4.3 0 0 0-2-.5c-2.3 0-4.1 1.8-4.1 4s1.8 4 4.1 4 4-1.8 4-4V3z"/></svg>';
+  }
+  return '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path class="inverse" d="M10 15h12v3H10z"/></svg>';
+}
+
+function renderSocialLinks(){
+  const host=document.getElementById("socialLinksGrid");
+  if(!host)return;
+
+  const links=(state.socialLinks||[]).filter(item=>item&&item.url&&item.enabled!==false);
+  if(!links.length){
+    host.innerHTML='<div class="muted-empty social-empty">Social links are being updated.</div>';
+    return;
+  }
+
+  host.innerHTML=links.map(item=>`
+    <a class="social-link-card social-${escapeAppHtml(String(item.platform||"other").replace(/[^a-z0-9-]/gi,"").toLowerCase())}"
+       href="${escapeAppHtml(item.url)}" target="_blank" rel="noopener noreferrer">
+      <span class="social-link-icon">${socialIconSvg(item.platform)}</span>
+      <span class="social-link-copy">
+        <strong>${escapeAppHtml(item.label||item.platform||"Social Media")}</strong>
+        <small>${escapeAppHtml(item.subtitle||"FOLLOW SCI-FI VALLEY CON")}</small>
+      </span>
+      <b>↗</b>
+    </a>`).join("");
+}
+
+function renderSponsors(){
+  const host=document.getElementById("sponsorLogos");
+  if(!host)return;
+
+  const sponsors=(state.sponsors||[]).filter(item=>item&&item.name&&item.enabled!==false);
+  if(!sponsors.length){
+    host.innerHTML='<span class="sponsor-empty">Sponsor information coming soon.</span>';
+    return;
+  }
+
+  host.innerHTML=sponsors.map(item=>{
+    const content=item.logo
+      ? `<img src="${escapeAppHtml(item.logo)}" alt="${escapeAppHtml(item.name)}" loading="lazy">`
+      : `<span>${escapeAppHtml(item.name)}</span>${item.label?`<small>${escapeAppHtml(item.label)}</small>`:""}`;
+
+    return `<a class="sponsor ${item.logo?"sponsor-image":"sponsor-wordmark"}"
+       href="${escapeAppHtml(item.url||"#")}" ${item.url?'target="_blank" rel="noopener noreferrer"':""}
+       aria-label="${escapeAppHtml(item.name)}">${content}</a>`;
+  }).join("");
+}
+
+function renderAll(){applyEventSettings();renderMapScreen();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();renderSocialLinks();renderSponsors();updateReminderUI();updateNotificationStatus();}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
 document.getElementById("showAllScheduleCategories")?.addEventListener("click",()=>{
