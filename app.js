@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.17",
+          appVersion:"4.18",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -268,6 +268,11 @@ async function loadData({silent=false,force=false}={}){
     state.vendors=Array.isArray(vendors)?vendors:[];
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
+
+    // Render these immediately instead of waiting for the rest of the program.
+    renderSocialLinks();
+    renderSponsors();
+
     state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
     state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
     state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
@@ -2002,7 +2007,41 @@ function renderSponsors(){
   }).join("");
 }
 
-function renderAll(){applyEventSettings();renderMapScreen();renderGuestFilters();renderGuests();renderFavorites();renderDayFilters();renderScheduleCategoryFilters();renderSchedule();renderStatus();renderEventFilters();renderEvents();renderCelebrityGuide();renderMySchedule();renderSocialLinks();renderSponsors();updateReminderUI();updateNotificationStatus();}
+function safeRenderSection(name,fn){
+  try{
+    const result=fn();
+    if(result&&typeof result.catch==="function"){
+      result.catch(err=>console.error(`SFVC ${name} render failed`,err));
+    }
+    return result;
+  }catch(err){
+    console.error(`SFVC ${name} render failed`,err);
+    return null;
+  }
+}
+
+function renderAll(){
+  // These two are intentionally first so a failure elsewhere in the app can
+  // never leave their original "Loading..." placeholders on screen.
+  safeRenderSection("social links",renderSocialLinks);
+  safeRenderSection("sponsors",renderSponsors);
+
+  safeRenderSection("event settings",applyEventSettings);
+  safeRenderSection("map",renderMapScreen);
+  safeRenderSection("guest filters",renderGuestFilters);
+  safeRenderSection("guests",renderGuests);
+  safeRenderSection("favorites",renderFavorites);
+  safeRenderSection("day filters",renderDayFilters);
+  safeRenderSection("schedule category filters",renderScheduleCategoryFilters);
+  safeRenderSection("schedule",renderSchedule);
+  safeRenderSection("event status",renderStatus);
+  safeRenderSection("event filters",renderEventFilters);
+  safeRenderSection("event guide",renderEvents);
+  safeRenderSection("celebrity guide",renderCelebrityGuide);
+  safeRenderSection("My Con",renderMySchedule);
+  safeRenderSection("reminder UI",updateReminderUI);
+  safeRenderSection("notification status",updateNotificationStatus);
+}
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
 document.getElementById("showAllScheduleCategories")?.addEventListener("click",()=>{
@@ -2107,7 +2146,8 @@ document.getElementById("installButton").addEventListener("click",async()=>{
 });
 if("serviceWorker" in navigator)window.addEventListener("load",async()=>{
   try{
-    await navigator.serviceWorker.register("service-worker.js");
+    const swRegistration=await navigator.serviceWorker.register("service-worker.js",{updateViaCache:"none"});
+    swRegistration.update().catch(()=>{});
     if(Notification.permission==="granted"&&!pushWasExplicitlyDisabled()){
       ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});
     }

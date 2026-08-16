@@ -1,14 +1,18 @@
-Sci-Fi Valley Con Attendee App V4.17 SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.18 SAFE PATCH
 
-Upload these extracted files/folders into the attendee GitHub repository.
-This patch intentionally DOES NOT contain map, guest, vendor, schedule, settings,
-or other existing Admin-managed JSON files.
+Fixes Social Media and Sponsors remaining stuck on "Loading...".
 
 Changes:
-- Adds Admin-managed Social Media links from data/social-links.json
-- Adds social platform icons and links to More > Event Guide
-- Connects the sponsor strip to data/sponsors.json
-- Removes hard-coded sponsor markup
-- Bumps service-worker cache to V4.17
+- Forces fresh app.js and styles.css with V4.18 cache-busting URLs
+- Service worker updates with updateViaCache:none
+- Adds data/social-links.json and data/sponsors.json to the PWA cache
+- Program-data offline cache lookup ignores cache-busting query strings
+- Social links and sponsors render immediately after their JSON loads
+- renderAll now isolates each program section, so one unrelated rendering error
+  cannot prevent later sections from appearing
+- Service-worker cache bumped to sfvc-program-v4-18
 
-Important: unzip this package first, then upload the files inside it.
+This package does NOT contain map-layout.json, vendors.json, guests.json,
+schedule.json, settings.json, or other existing Admin-managed data.
+
+UNZIP FIRST, then upload the files inside the package.
