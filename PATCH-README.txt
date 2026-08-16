@@ -1,18 +1,27 @@
-Sci-Fi Valley Con Attendee App V4.18 SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.19 Event Guide Content Patch
 
-Fixes Social Media and Sponsors remaining stuck on "Loading...".
+This patch updates ONLY:
+  data/events.json
 
-Changes:
-- Forces fresh app.js and styles.css with V4.18 cache-busting URLs
-- Service worker updates with updateViaCache:none
-- Adds data/social-links.json and data/sponsors.json to the PWA cache
-- Program-data offline cache lookup ignores cache-busting query strings
-- Social links and sponsors render immediately after their JSON loads
-- renderAll now isolates each program section, so one unrelated rendering error
-  cannot prevent later sections from appearing
-- Service-worker cache bumped to sfvc-program-v4-18
+It includes the Event Guide content requested from the current public Events page:
+- Con-Quest
+- Costume Contest
+- Charity Quick Sketches
+- Charity Auction
+- Friday & Saturday Shuttle Service
+- Saturday Night After Party
+- Medieval Combat Demos
+- Retro Gaming Arcade Vault
+- Tabletop Gaming
+- Trivia Tournament
+- Workshops
 
-This package does NOT contain map-layout.json, vendors.json, guests.json,
-schedule.json, settings.json, or other existing Admin-managed data.
+It also preserves the existing café menus and Guest Panels Event Guide entry.
 
-UNZIP FIRST, then upload the files inside the package.
+The current public Events page lists Friday & Saturday Shuttle Service but does not
+publish route, pickup location, or operating hours in the visible page text. This
+patch therefore does not invent shuttle details. The entry clearly notes that those
+details should be updated through Program Admin when published.
+
+UNZIP FIRST, then upload the data folder / events.json file to the attendee GitHub repository.
+No app.js, map data, vendors, guests, schedules, settings, or other files are changed.

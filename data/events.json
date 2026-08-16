@@ -258,21 +258,33 @@
     "id": "con-quest",
     "title": "Con-Quest",
     "category": "Activities",
-    "summary": "A $5 interactive charity adventure from the Gearbox Union, built around challenges, bottle caps and raffle tickets.",
+    "summary": "A $5 interactive charity adventure hosted by the Gearbox Union, with table challenges, bottle caps, raffle tickets and prizes.",
     "content": [
       {
         "type": "p",
-        "text": "Donate $5 to receive a GBU Con-Quest pouch, five raffle tickets and a one-day questing pass. Use the event map to visit participating tables and complete playful challenges."
+        "text": "Con-Quest turns the convention floor into an interactive charity adventure benefiting children's hospitals. Donate $5 to receive a GBU Con-Quest pouch, five raffle tickets and a one-day questing pass."
+      },
+      {
+        "type": "heading",
+        "text": "How to Participate"
       },
       {
         "type": "list",
         "items": [
-          "Complete table quests such as character impressions, dances, quotes and other challenges.",
+          "Use the convention map to find participating Con-Quest tables.",
+          "Complete playful challenges such as character impressions, dances, quotes and other table activities.",
           "Earn GBU Con-Quest bottle caps for completed quests.",
-          "Trade bottle caps at the Mega-Table for more raffle tickets.",
-          "Quests, trade values and hidden surprises can change each day.",
-          "Start at the Gearbox Union Con-Quest Mega-Table, Tables D1–D7 upstairs outside the ballroom."
+          "Trade bottle caps at the Mega-Table for additional raffle tickets and more chances to win donated prizes.",
+          "New quests, changing trade values and hidden surprises can appear each day."
         ]
+      },
+      {
+        "type": "heading",
+        "text": "Start Your Quest"
+      },
+      {
+        "type": "p",
+        "text": "Begin at the Gearbox Union Con-Quest Mega-Table at Tables D1-D7, upstairs outside the ballroom. Pick up your materials, learn how the quest works and start exploring."
       },
       {
         "type": "heading",
@@ -280,7 +292,7 @@
       },
       {
         "type": "p",
-        "text": "Exhibitors can volunteer as quest stops by contributing to the charity raffle and offering a simple interactive challenge at their table. Contact GearboxUnion@gmail.com to participate."
+        "text": "Exhibitors can participate as quest stops by contributing to the charity raffle and offering a simple interactive challenge at their table. Contact GearboxUnion@gmail.com to participate."
       }
     ]
   },
@@ -288,27 +300,31 @@
     "id": "costume-contest",
     "title": "Costume Contest",
     "category": "Activities",
-    "summary": "Annual costume competition with junior, teen and adult divisions plus special adult awards.",
+    "summary": "Sci-Fi Valley Con's annual costume competition with junior, teen and adult divisions, plus special adult awards.",
     "content": [
+      {
+        "type": "p",
+        "text": "Show off costumes inspired by fantasy, science fiction, anime, steampunk, horror, movies, television, books and other fandoms. The contest celebrates creativity, craftsmanship and presentation."
+      },
       {
         "type": "schedule",
         "items": [
-          "Registration & optional prejudging: Saturday, Oct. 17 • 2:30–5:00 PM • Panel Room 2",
+          "Registration & optional prejudging: Saturday, Oct. 17 • 2:30-5:00 PM • Panel Room 2",
           "Costume Contest: Saturday, Oct. 17 • 6:00 PM • Panel Room 1"
         ]
       },
       {
-        "type": "p",
-        "text": "Costumes may draw from fantasy, science fiction, anime, steampunk, horror, movies, television, books and other fandoms."
+        "type": "heading",
+        "text": "Prizes & Age Divisions"
       },
       {
         "type": "list",
         "items": [
-          "Trophies: 1st, 2nd and 3rd place in each age division.",
-          "Adult entries are also eligible for Best of Show and Judge's Choice.",
-          "Juniors: ages 0–12.",
-          "Teens: ages 13–17.",
-          "Adults: ages 18 and up."
+          "Juniors: ages 0-12",
+          "Teens: ages 13-17",
+          "Adults: ages 18 and up",
+          "1st, 2nd and 3rd place trophies are awarded in each age division.",
+          "Adult contestants are also eligible for Best of Show and Judge's Choice."
         ]
       },
       {
@@ -317,7 +333,39 @@
       },
       {
         "type": "p",
-        "text": "Entrants should be ready to provide a costume title, the source or genre that inspired it, and information for the judges about construction, materials and the story behind the costume."
+        "text": "Entrants should be ready to provide a costume title, the source or genre that inspired the costume, and details for the judges about construction, materials, craftsmanship and the story behind the piece."
+      }
+    ]
+  },
+  {
+    "id": "quick-sketches",
+    "title": "Charity Quick Sketches",
+    "category": "Charity",
+    "summary": "Watch convention artists create one-of-a-kind sketches live, then bid on the finished artwork for charity.",
+    "content": [
+      {
+        "type": "p",
+        "text": "Charity Quick Sketches brings artists together for fast-paced live drawing sessions. Attendees can shout out ideas and watch original pieces take shape in real time."
+      },
+      {
+        "type": "heading",
+        "text": "Art for a Good Cause"
+      },
+      {
+        "type": "p",
+        "text": "Finished sketches are auctioned immediately using raffle tickets, with proceeds supporting charity. Sci-Fi Valley Con provides the drawing materials so the participating artists can focus on creating."
+      },
+      {
+        "type": "schedule",
+        "items": [
+          "Friday • 6:00-7:00 PM • Event Room",
+          "Saturday • 2:00-3:00 PM • Event Room",
+          "Sunday • 1:30-2:30 PM • Event Room"
+        ]
+      },
+      {
+        "type": "p",
+        "text": "If you cannot find artwork of a favorite character on the exhibitor floor, this is your chance to request something fun and potentially take home a unique piece created right in front of you."
       }
     ]
   },
@@ -325,8 +373,20 @@
     "id": "charity-auction",
     "title": "Charity Auction",
     "category": "Charity",
-    "summary": "Live auction of donated art, collectibles and memorabilia benefiting Extra Life and Children's Miracle Network Hospitals.",
+    "summary": "A live auction of donated art, collectibles and memorabilia benefiting Extra Life and Children's Miracle Network Hospitals.",
     "content": [
+      {
+        "type": "p",
+        "text": "The Sci-Fi Valley Con Charity Auction combines collectible hunting with fundraising. Artists and creators donate artwork, sculptures, memorabilia and other unique items for attendees to bid on live."
+      },
+      {
+        "type": "heading",
+        "text": "Benefiting Extra Life"
+      },
+      {
+        "type": "p",
+        "text": "Auction proceeds support Extra Life and Children's Miracle Network Hospitals, helping turn convention collectibles into direct support for children in need."
+      },
       {
         "type": "schedule",
         "items": [
@@ -335,27 +395,7 @@
       },
       {
         "type": "p",
-        "text": "Artists and creators donate art, sculptures, collectibles and memorabilia for a live auction. Proceeds support Extra Life and Children's Miracle Network Hospitals."
-      }
-    ]
-  },
-  {
-    "id": "quick-sketches",
-    "title": "Charity Quick Sketches",
-    "category": "Charity",
-    "summary": "Artists create fast, one-of-a-kind drawings live, then the pieces are immediately auctioned for charity.",
-    "content": [
-      {
-        "type": "schedule",
-        "items": [
-          "Friday • 6:00–7:00 PM • Event Room",
-          "Saturday • 2:00–3:00 PM • Event Room",
-          "Sunday • 1:30–2:30 PM • Event Room"
-        ]
-      },
-      {
-        "type": "p",
-        "text": "Attendees can call out ideas, watch artists create pieces on the spot and bid using raffle tickets. Sci-Fi Valley Con supplies the art materials."
+        "text": "The auction is open to Sci-Fi Valley Con attendees. Bring your preferred payment method, join the bidding and help raise money for a great cause."
       }
     ]
   },
@@ -363,11 +403,15 @@
     "id": "shuttle",
     "title": "Friday & Saturday Shuttle Service",
     "category": "Practical",
-    "summary": "The current Events page lists a Friday & Saturday shuttle-service section. Route and timetable details can be added here as soon as they are published.",
+    "summary": "Friday and Saturday shuttle service is listed as part of the current Sci-Fi Valley Con event information.",
     "content": [
       {
         "type": "note",
-        "text": "Shuttle details are not yet displayed in the public Events-page text."
+        "text": "The current Events page lists Friday & Saturday Shuttle Service, but the visible page text does not currently publish the route, pickup location or operating hours."
+      },
+      {
+        "type": "p",
+        "text": "Once the public shuttle route and timetable are published, this Event Guide entry can be updated from Program Admin so attendees have the current transportation information inside the app."
       }
     ]
   },
@@ -375,22 +419,32 @@
     "id": "after-party",
     "title": "Saturday Night After Party",
     "category": "Activities",
-    "summary": "Official bowling and karaoke after party at Holiday Bowl.",
+    "summary": "The official Sci-Fi Valley Con Saturday night after party with bowling, karaoke and a special lane rate at Holiday Bowl.",
     "content": [
       {
         "type": "schedule",
         "items": [
-          "Saturday, Oct. 17 • 10:00 PM–2:00 AM • Holiday Bowl, 181 Bowling Lane, Altoona, PA"
+          "Saturday, Oct. 17 • 10:00 PM-2:00 AM",
+          "Holiday Bowl • 181 Bowling Lane, Altoona, PA"
         ]
+      },
+      {
+        "type": "heading",
+        "text": "Bowling & Karaoke"
       },
       {
         "type": "list",
         "items": [
-          "$20 per lane per hour, up to six people per lane.",
-          "Shoe rentals are free.",
-          "Karaoke is available.",
-          "No registration is required."
+          "$20 per lane per hour.",
+          "Up to six people per lane.",
+          "Free shoe rentals.",
+          "Karaoke throughout the after party.",
+          "No registration is necessary."
         ]
+      },
+      {
+        "type": "p",
+        "text": "The after party is a relaxed way to wrap up Saturday, meet other attendees, bowl with friends and enjoy karaoke after a full day at the convention."
       }
     ]
   },
@@ -398,11 +452,11 @@
     "id": "guest-panels",
     "title": "Guest Panels",
     "category": "Activities",
-    "summary": "Celebrity guest panels will appear here when individual panel times are published.",
+    "summary": "Celebrity Q&A panels and reunion discussions are published through the Celebrity Guide and Schedule as times are finalized.",
     "content": [
       {
         "type": "note",
-        "text": "The public Events page currently shows the Guest Panels section heading without individual panel listings."
+        "text": "Use the Celebrity Guide and Schedule tabs for the current guest-panel lineup and approved panel times."
       }
     ]
   },
@@ -410,21 +464,22 @@
     "id": "medieval-combat",
     "title": "Medieval Combat Demos",
     "category": "Activities",
-    "summary": "Dagorhir battle-game demonstrations outside on the lawn, followed by opportunities for attendees to try foam combat.",
+    "summary": "Dagorhir battle-game demonstrations on the lawn with full-contact foam combat, safety instruction and opportunities for attendees to participate.",
     "content": [
       {
         "type": "schedule",
         "items": [
-          "Saturday • 1:00–2:00 PM and 4:00–5:00 PM • Outside on the Lawn"
+          "Saturday, Oct. 17 • 1:00-2:00 PM • Outside on the Lawn",
+          "Saturday, Oct. 17 • 4:00-5:00 PM • Outside on the Lawn"
         ]
       },
       {
         "type": "p",
-        "text": "Members of the Wolves of Asgard and Iron Mountain units demonstrate full-contact foam-weapon combat, rules, techniques, safety and equipment, with support from the Gearbox Union."
+        "text": "Members of the Wolves of Asgard and Iron Mountain units from Johnstown demonstrate the rules, equipment, techniques and safety practices used in Dagorhir, a full-contact fantasy combat sport using padded foam weapons."
       },
       {
         "type": "p",
-        "text": "After the demonstration, attendees can try foam weapons. Waivers are required and minors must be supervised by a parent or guardian."
+        "text": "The Gearbox Union helps energize the crowd, and after the demonstration attendees can try foam weapons themselves. Waivers are required, and minors must have parental supervision."
       }
     ]
   },
@@ -432,20 +487,28 @@
     "id": "retro-gaming",
     "title": "Retro Gaming Arcade Vault",
     "category": "Gaming",
-    "summary": "A playable museum celebrating more than 50 years of game hardware with 75+ consoles and computers.",
+    "summary": "A playable museum celebrating more than 50 years of video game history with 75+ consoles, handhelds and classic computers.",
     "content": [
       {
         "type": "p",
-        "text": "The Retro Gaming Arcade Vault is designed as a hands-on history of home and portable gaming. Systems span the early 1970s through today's hardware."
+        "text": "Step into Sci-Fi Valley Con's Retro Gaming Arcade Vault and play through decades of gaming history. The collection spans the earliest home systems, classic 8-bit and 16-bit consoles, unusual hardware, handhelds and modern systems."
+      },
+      {
+        "type": "heading",
+        "text": "A Gamer's Paradise"
+      },
+      {
+        "type": "p",
+        "text": "The playable museum features more than 75 consoles and systems, giving longtime players a chance to revisit childhood favorites while introducing younger fans to the hardware that shaped modern gaming."
       },
       {
         "type": "systems",
-        "title": "1970s",
+        "title": "1970s Highlights",
         "items": [
           {
             "name": "Magnavox Odyssey",
             "year": "1972",
-            "desc": "The pioneering first-generation home console."
+            "desc": "The pioneering first home video game console."
           },
           {
             "name": "National Semiconductor Adversary",
@@ -455,390 +518,238 @@
           {
             "name": "Atari 2600",
             "year": "1977",
-            "desc": "The cartridge-based console that helped define early home gaming."
+            "desc": "The cartridge-based console that helped popularize home gaming."
           },
           {
             "name": "Magnavox Odyssey²",
             "year": "1978",
-            "desc": "A console-computer hybrid with a built-in keyboard."
+            "desc": "A console and computer hybrid with a built-in keyboard."
           },
           {
             "name": "Mattel Intellivision",
             "year": "1979",
-            "desc": "Known for its distinctive disc controller and advanced-for-the-time sports games."
+            "desc": "An early home system known for advanced graphics and sports titles."
           }
         ]
       },
       {
         "type": "systems",
-        "title": "1980s",
+        "title": "1980s Highlights",
         "items": [
           {
             "name": "ColecoVision",
             "year": "1982",
-            "desc": "A home console remembered for strong arcade conversions."
+            "desc": "Known for impressive arcade-style home ports."
           },
           {
             "name": "Atari 5200",
             "year": "1982",
-            "desc": "Atari's more powerful follow-up to the 2600."
+            "desc": "Atari's more powerful successor to the 2600."
           },
           {
             "name": "Vectrex",
             "year": "1982",
-            "desc": "A unique vector-graphics console with its own CRT display."
+            "desc": "A unique self-contained vector-display console."
           },
           {
             "name": "Apple IIe",
             "year": "1983",
-            "desc": "A landmark home computer used for games, education and programming."
+            "desc": "A landmark home computer for games, education and programming."
           },
           {
-            "name": "Nintendo Famicom",
-            "year": "1983",
-            "desc": "Japan's version of the hardware that became the NES."
-          },
-          {
-            "name": "Commodore SX-64",
-            "year": "1984",
-            "desc": "A portable color computer based on the Commodore 64."
-          },
-          {
-            "name": "Nintendo Entertainment System (NES)",
+            "name": "Nintendo Entertainment System",
             "year": "1985",
-            "desc": "Nintendo's 8-bit home console with Mario, Zelda and a huge library."
+            "desc": "The iconic 8-bit console that helped revive the home video game market."
           },
           {
             "name": "Sega Master System",
             "year": "1985",
-            "desc": "Sega's crisp 8-bit competitor to Nintendo."
+            "desc": "Sega's 8-bit competitor to the NES."
           },
           {
-            "name": "Atari 7800",
-            "year": "1986",
-            "desc": "An Atari console with backward compatibility for many 2600 titles."
-          },
-          {
-            "name": "Twin Famicom",
-            "year": "1986",
-            "desc": "A combined Famicom and Disk System unit."
-          },
-          {
-            "name": "Commodore 64C",
-            "year": "1986",
-            "desc": "A redesigned version of the hugely successful Commodore 64."
-          },
-          {
-            "name": "NEC TurboGrafx-16 / PC Engine",
+            "name": "TurboGrafx-16 / PC Engine",
             "year": "1987",
-            "desc": "An early entrant in the 16-bit era with strong arcade-style games."
+            "desc": "An early entry in the 16-bit era with strong arcade conversions."
           },
           {
             "name": "Sega Genesis",
             "year": "1988",
-            "desc": "Sega's signature 16-bit console and home of Sonic."
+            "desc": "Sega's influential 16-bit system and home of Sonic."
           },
           {
             "name": "Nintendo Game Boy",
             "year": "1989",
-            "desc": "The portable system that became a global phenomenon."
+            "desc": "The hugely successful portable system that helped make handheld gaming mainstream."
           }
         ]
       },
       {
         "type": "systems",
-        "title": "1990s",
+        "title": "1990s Highlights",
         "items": [
           {
             "name": "Sega Game Gear",
             "year": "1990",
-            "desc": "Sega's full-color handheld rival to the Game Boy."
+            "desc": "A full-color handheld competitor to the Game Boy."
           },
           {
             "name": "SNK Neo Geo AES",
             "year": "1990",
-            "desc": "Premium home hardware closely related to SNK arcade systems."
+            "desc": "Premium arcade hardware adapted for the home."
           },
           {
-            "name": "Nintendo Super Famicom",
-            "year": "1990",
-            "desc": "The Japanese version of the Super Nintendo."
-          },
-          {
-            "name": "Super Nintendo (SNES)",
+            "name": "Super Nintendo",
             "year": "1991",
-            "desc": "Nintendo's colorful 16-bit console with an iconic game library."
+            "desc": "Nintendo's classic 16-bit console."
           },
           {
             "name": "Philips CD-i",
             "year": "1991",
-            "desc": "An ambitious CD-based multimedia system."
-          },
-          {
-            "name": "NEC PC Engine Duo-R",
-            "year": "1991",
-            "desc": "A PC Engine with integrated CD-ROM support."
-          },
-          {
-            "name": "Atari Lynx II",
-            "year": "1991",
-            "desc": "A refined version of Atari's color handheld."
-          },
-          {
-            "name": "Goldstar 3DO",
-            "year": "1993",
-            "desc": "An early 32-bit CD-based console."
+            "desc": "An ambitious multimedia CD-based system."
           },
           {
             "name": "Atari Jaguar",
             "year": "1993",
-            "desc": "Atari's unusual high-powered final major home console."
-          },
-          {
-            "name": "Nintendo AV Famicom",
-            "year": "1993",
-            "desc": "A revised Famicom with improved audio/video connections."
-          },
-          {
-            "name": "Sega Pico",
-            "year": "1993",
-            "desc": "An educational storybook-style system aimed at children."
+            "desc": "Atari's unusual late-era home console."
           },
           {
             "name": "Sega Saturn",
             "year": "1994",
-            "desc": "Sega's powerful 2D and 3D CD console."
-          },
-          {
-            "name": "SNK Neo Geo CD",
-            "year": "1994",
-            "desc": "A CD-based alternative to the cartridge Neo Geo."
+            "desc": "A powerful system especially known for arcade-style games."
           },
           {
             "name": "Sony PlayStation",
             "year": "1994",
-            "desc": "Sony's breakout 3D console that reshaped the industry."
+            "desc": "The CD-based console that helped define mainstream 3D gaming."
           },
           {
             "name": "Nintendo Virtual Boy",
             "year": "1995",
-            "desc": "Nintendo's experimental red-and-black stereoscopic tabletop system."
-          },
-          {
-            "name": "Game Boy 'Play It Loud!'",
-            "year": "1995",
-            "desc": "Colorful shell variants of the original Game Boy."
-          },
-          {
-            "name": "Sega Genesis Nomad",
-            "year": "1995",
-            "desc": "A portable Genesis capable of using standard cartridges."
-          },
-          {
-            "name": "Nintendo Game Boy Pocket",
-            "year": "1996",
-            "desc": "A slimmer redesign of Nintendo's original handheld."
+            "desc": "Nintendo's experimental tabletop 3D system."
           },
           {
             "name": "Nintendo 64",
             "year": "1996",
-            "desc": "Nintendo's cartridge-based 3D console with the trident controller."
-          },
-          {
-            "name": "Apple Bandai Pippin",
-            "year": "1996",
-            "desc": "A short-lived Apple/Bandai multimedia console-computer hybrid."
-          },
-          {
-            "name": "Game Boy Light",
-            "year": "1998",
-            "desc": "A Japan-only Game Boy model with a built-in light."
-          },
-          {
-            "name": "Game Boy Color",
-            "year": "1998",
-            "desc": "Color-screen Game Boy hardware with backward compatibility."
+            "desc": "A landmark 3D console known for major Nintendo classics."
           },
           {
             "name": "Sega Dreamcast",
             "year": "1998",
-            "desc": "An inventive online-capable Sega console with a devoted following."
+            "desc": "An innovative console with built-in online features and a beloved library."
           },
           {
-            "name": "iMac G3",
+            "name": "Game Boy Color",
             "year": "1998",
-            "desc": "Apple's colorful all-in-one computer and a late-'90s design icon."
-          },
-          {
-            "name": "Sony PlayStation 2",
-            "year": "2000",
-            "desc": "The best-selling console generation's giant, with DVD playback and an enormous library."
+            "desc": "A color evolution of Nintendo's classic handheld."
           }
         ]
       },
       {
         "type": "systems",
-        "title": "2000s",
+        "title": "2000s to Today",
         "items": [
+          {
+            "name": "PlayStation 2",
+            "year": "2000",
+            "desc": "The best-selling home console with an enormous game library."
+          },
           {
             "name": "Nintendo GameCube",
             "year": "2001",
-            "desc": "Nintendo's compact disc-based console."
+            "desc": "Nintendo's compact sixth-generation home console."
           },
           {
             "name": "Microsoft Xbox",
             "year": "2001",
-            "desc": "Microsoft's first console, built around a hard drive and later Xbox Live."
+            "desc": "Microsoft's first console and the foundation for Xbox Live."
           },
           {
             "name": "Game Boy Advance",
             "year": "2001",
-            "desc": "Nintendo's 32-bit successor to the Game Boy line."
-          },
-          {
-            "name": "Game Boy Advance SP",
-            "year": "2003",
-            "desc": "A clamshell GBA with rechargeable power and an illuminated display."
+            "desc": "Nintendo's 32-bit portable successor to the Game Boy line."
           },
           {
             "name": "Nintendo DS",
             "year": "2004",
-            "desc": "A dual-screen handheld built around touch input."
+            "desc": "A dual-screen handheld built around touch controls."
           },
           {
-            "name": "Sony PSP-1000",
+            "name": "Sony PSP",
             "year": "2004",
-            "desc": "Sony's widescreen portable system with strong multimedia capabilities."
-          },
-          {
-            "name": "Game Boy Micro",
-            "year": "2005",
-            "desc": "A tiny premium redesign of the Game Boy Advance."
+            "desc": "Sony's widescreen multimedia handheld."
           },
           {
             "name": "Xbox 360",
             "year": "2005",
-            "desc": "Microsoft's major HD-era console with extensive online play."
-          },
-          {
-            "name": "Nintendo DS Lite",
-            "year": "2006",
-            "desc": "A slimmer, brighter redesign of the Nintendo DS."
+            "desc": "A major HD-era console with a strong online ecosystem."
           },
           {
             "name": "Nintendo Wii",
             "year": "2006",
-            "desc": "Nintendo's motion-control phenomenon."
+            "desc": "The motion-controlled console that brought gaming to a huge new audience."
           },
           {
-            "name": "Sony PlayStation 3",
+            "name": "PlayStation 3",
             "year": "2006",
-            "desc": "Sony's Blu-ray equipped third PlayStation console."
-          },
-          {
-            "name": "PSP-2000 (Slim & Lite)",
-            "year": "2007",
-            "desc": "A lighter PSP revision with improved performance and TV output."
-          },
-          {
-            "name": "Nintendo DSi",
-            "year": "2008",
-            "desc": "A DS revision adding cameras and downloadable DSiWare."
-          },
-          {
-            "name": "PSP-3000 (Brite)",
-            "year": "2008",
-            "desc": "An updated PSP with a revised screen and built-in microphone."
-          },
-          {
-            "name": "Nintendo DSi XL",
-            "year": "2009",
-            "desc": "A larger-screen version of the DSi."
-          },
-          {
-            "name": "Sony PSP Go",
-            "year": "2009",
-            "desc": "A compact slider-style, download-only PSP."
-          }
-        ]
-      },
-      {
-        "type": "systems",
-        "title": "2010s–2020s",
-        "items": [
-          {
-            "name": "PSP Street",
-            "year": "2011",
-            "desc": "A budget PSP model released primarily in Europe."
+            "desc": "Sony's Blu-ray based seventh-generation console."
           },
           {
             "name": "Nintendo 3DS",
             "year": "2011",
-            "desc": "Nintendo's handheld with glasses-free 3D and DS compatibility."
+            "desc": "Nintendo's glasses-free 3D handheld."
           },
           {
-            "name": "Sony PS Vita",
+            "name": "PlayStation Vita",
             "year": "2011",
-            "desc": "Sony's dual-stick handheld, originally known for its OLED display."
-          },
-          {
-            "name": "Nintendo 3DS XL",
-            "year": "2012",
-            "desc": "A larger version of the 3DS."
+            "desc": "Sony's high-end portable system with dual analog sticks."
           },
           {
             "name": "Nintendo Wii U",
             "year": "2012",
-            "desc": "Nintendo's home console centered on the GamePad second screen."
-          },
-          {
-            "name": "Nintendo 2DS",
-            "year": "2013",
-            "desc": "A slate-style 3DS-family handheld without stereoscopic 3D."
-          },
-          {
-            "name": "Xbox One",
-            "year": "2013",
-            "desc": "Microsoft's third major Xbox generation."
+            "desc": "Nintendo's dual-screen home console built around the GamePad."
           },
           {
             "name": "PlayStation 4",
             "year": "2013",
-            "desc": "Sony's highly successful developer-friendly fourth PlayStation."
+            "desc": "Sony's widely adopted eighth-generation console."
+          },
+          {
+            "name": "Xbox One",
+            "year": "2013",
+            "desc": "Microsoft's eighth-generation home console."
           },
           {
             "name": "Nintendo Switch",
             "year": "2017",
-            "desc": "Nintendo's hybrid home and portable console."
-          },
-          {
-            "name": "Nintendo 2DS XL",
-            "year": "2017",
-            "desc": "A clamshell 3DS-family system without the 3D feature."
+            "desc": "Nintendo's hybrid home and portable system."
           },
           {
             "name": "Xbox Series X",
             "year": "2020",
-            "desc": "Microsoft's current high-performance 4K console."
+            "desc": "Microsoft's modern 4K console with extensive backward compatibility."
           },
           {
             "name": "PlayStation 5",
             "year": "2020",
-            "desc": "Sony's SSD-driven current-generation PlayStation."
+            "desc": "Sony's current-generation console with fast SSD storage and DualSense features."
           }
         ]
       }
     ]
   },
   {
-    "id": "tabletop",
+    "id": "tabletop-gaming",
     "title": "Tabletop Gaming",
     "category": "Gaming",
-    "summary": "All-weekend tabletop play hosted by Snake Eyes Gaming and Sentinels' Keep Gaming Society.",
+    "summary": "All-weekend tabletop gaming hosted by Snake Eyes Gaming and Sentinels' Keep Gaming Society, with card games, miniatures, board games and special events.",
     "content": [
       {
-        "type": "note",
-        "text": "Friday through Sunday • All day • Game Room"
+        "type": "p",
+        "text": "The Game Room offers casual play, demos and organized tabletop events for experienced players and newcomers. Stop in throughout the weekend to learn something new, bring your own game or jump into an event."
+      },
+      {
+        "type": "heading",
+        "text": "Gaming Variety"
       },
       {
         "type": "list",
@@ -856,112 +767,123 @@
         ]
       },
       {
+        "type": "schedule",
+        "items": [
+          "Gaming demos & casual play: Friday through Sunday • All day • Game Room",
+          "Magic: The Gathering Casual Commander: Saturday • 11:00 AM-7:00 PM • Free admission",
+          "HeroClix Battle Royale: Saturday • 12:00-3:00 PM",
+          "HeroClix Battle Royale: Sunday • 1:00-4:00 PM"
+        ]
+      },
+      {
         "type": "heading",
         "text": "Warhammer 40k: Bug Hunt"
       },
       {
         "type": "p",
-        "text": "A weekend-long drop-in, drop-out scenario. Players control a unit, complete objectives and earn points. Play as many times as you like; a special prize goes to the top-scoring player at the end of the weekend. New players are welcome."
+        "text": "A weekend-long, drop-in and drop-out Warhammer 40k event challenges players to control a unit, complete objectives and earn points through repeated missions. Play as often as you like. A special prize goes to the player with the most points at the end of the weekend, and new players are welcome."
       },
       {
         "type": "heading",
-        "text": "Magic: The Gathering – Casual Commander"
-      },
-      {
-        "type": "schedule",
-        "items": [
-          "Saturday • 11:00 AM–7:00 PM • Free admission"
-        ]
+        "text": "Magic: The Gathering - Casual Commander"
       },
       {
         "type": "p",
-        "text": "Four-player Commander pods launch on demand, with promos for winners. Decks can be purchased if needed."
+        "text": "Four-player Commander pods launch on demand Saturday from 11:00 AM to 7:00 PM. Promos are awarded to winners, admission is free and decks are available for purchase if needed."
       },
       {
         "type": "heading",
-        "text": "HeroClix – Battle Royale"
-      },
-      {
-        "type": "schedule",
-        "items": [
-          "Saturday • 12:00–3:00 PM",
-          "Sunday • 1:00–4:00 PM",
-          "Admission: $5 or $15 depending on booster"
-        ]
+        "text": "HeroClix - Battle Royale"
       },
       {
         "type": "p",
-        "text": "Draft a booster and join a four-player group battle with 50-minute rounds. Promos are added to the prize pool."
+        "text": "Draft a booster and join a four-player group battle in a 50-minute round. Pods launch on demand, with promos added to the prize pool. Admission is $5 or $15 depending on the booster selected."
       }
     ]
   },
   {
     "id": "trivia",
     "title": "Trivia Tournament",
-    "category": "Gaming",
-    "summary": "Geek-culture trivia spanning sci-fi, fantasy, comics, movies, TV and games, with trophies and Best Buy gift cards.",
+    "category": "Activities",
+    "summary": "Three days of geek trivia spanning sci-fi, fantasy, comics, movies, television, games and more, with trophies and Best Buy gift cards for top players.",
     "content": [
+      {
+        "type": "p",
+        "text": "Test your fandom knowledge against other attendees in a trivia tournament covering a wide range of geek culture. Come with friends or compete solo."
+      },
       {
         "type": "schedule",
         "items": [
-          "Friday • 3:30–4:30 PM • Event Room",
-          "Saturday • 5:00–6:00 PM • Event Room",
-          "Sunday • 2:30–3:30 PM • Event Room"
+          "Friday • 3:30-4:30 PM • Event Room",
+          "Saturday • 5:00-6:00 PM • Event Room",
+          "Sunday • 2:30-3:30 PM • Event Room"
         ]
       },
       {
         "type": "p",
-        "text": "Play solo or with friends and compete across a wide range of fandom categories."
+        "text": "Questions span science fiction, fantasy, comics, movies, television, games and other fandom topics. Top trivia players can take home trophies and Best Buy gift cards."
       }
     ]
   },
   {
     "id": "workshops",
     "title": "Workshops",
-    "category": "Activities",
-    "summary": "Miniature painting, model building, 3D printing and foam-smithing activities throughout the weekend.",
+    "category": "Workshops",
+    "summary": "Hands-on painting, model-building, 3D-printing and foam-smithing activities throughout the convention.",
     "content": [
       {
+        "type": "p",
+        "text": "Sci-Fi Valley Con workshops give attendees a chance to paint, build, craft and learn hands-on skills with guidance from experienced creators."
+      },
+      {
         "type": "heading",
-        "text": "Paint & Take / Build & Battle by Snake Eyes Gaming"
+        "text": "Paint and Take & Build and Battle"
+      },
+      {
+        "type": "p",
+        "text": "Snake Eyes Gaming hosts Paint and Take and Build and Battle in the Paint and Hobby Room. Paint and Take provides a miniature and the tools needed to paint it. Build and Battle offers Gundam, Pokémon and Warhammer model choices, with supplies and guidance provided. Attendees under 18 must be accompanied by an adult for Build and Battle."
       },
       {
         "type": "schedule",
         "items": [
-          "Friday • 2:00–8:00 PM",
-          "Saturday • 10:00 AM–7:00 PM",
-          "Sunday • 10:00 AM–3:00 PM",
-          "Location: Paint and Hobby Room"
+          "Friday • 2:00-8:00 PM • Paint and Hobby Room",
+          "Saturday • 10:00 AM-7:00 PM • Paint and Hobby Room",
+          "Sunday • 10:00 AM-3:00 PM • Paint and Hobby Room"
         ]
       },
       {
         "type": "p",
-        "text": "Paint & Take provides a miniature, paints and tools with guidance available. Build & Battle offers models such as Gundam, Pokémon and Warhammer kits with supplies and assistance. Anyone under 18 must be accompanied by an adult for Build & Battle. Pricing depends on the chosen miniature or model."
+        "text": "The cost varies based on the miniature or model chosen and includes the item plus use of the provided tools and supplies."
       },
       {
         "type": "heading",
         "text": "Miniature Painting Competition"
       },
       {
+        "type": "p",
+        "text": "Participants receive a mystery miniature and shared painting supplies, then have two hours to complete the model. The artistic style is up to each painter."
+      },
+      {
         "type": "list",
         "items": [
           "$15 entry fee.",
-          "Register on Friday.",
-          "Saturday sessions: 1:00–3:00 PM and 4:00–6:00 PM.",
-          "Youth division: age 15 and under. Adult division: age 16 and up.",
+          "Participants must register Friday.",
+          "Saturday sessions: 1:00-3:00 PM and 4:00-6:00 PM.",
+          "Youth division: age 15 and under.",
+          "Adult division: age 16 and up.",
           "Maximum 20 participants per category.",
-          "Models and supplies are provided; personal models and hobby supplies are not permitted.",
-          "Winners announced Sunday at 2:00 PM in the Paint and Hobby Room.",
-          "1st, 2nd and 3rd place prizes in each category, based on attendance."
+          "Models and hobby supplies are provided. Personal models or hobby supplies may not be used.",
+          "Winners are announced Sunday at 2:00 PM in the Paint and Hobby Room.",
+          "1st, 2nd and 3rd place prizes are awarded in each category, based on attendance."
         ]
       },
       {
         "type": "heading",
-        "text": "3D Printing & Foam Smithing by Snowtiger Designs"
+        "text": "3D Printing & Foam Smithing"
       },
       {
         "type": "p",
-        "text": "Visit Snowtiger Designs at Table D9 for demonstrations and hands-on workshops covering 3D printing and foam-smithing techniques used in cosplay and prop making."
+        "text": "Snowtiger Designs offers live demonstrations and hands-on learning focused on 3D printing and foam-smithing techniques used in cosplay and prop construction. Find them at Table D9 throughout the convention."
       }
     ]
   }
