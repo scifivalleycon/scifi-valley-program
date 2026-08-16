@@ -1,9 +1,11 @@
-Sci-Fi Valley Con Attendee App V4.20 Event Guide Buttons Patch
+Sci-Fi Valley Con Attendee App V4.21 Event Guide Discovery Patch
 
-This replaces the search-only feeling of the Event Guide with a prominent
-EVENTS & ACTIVITIES button grid.
+This version keeps the Event Guide search bar, but moves the complete event/activity
+button list DIRECTLY BELOW the search field.
 
-The Event Guide now has individual buttons for:
+Attendees now see all 11 discoverable activities without needing to know what to
+search for:
+
 - Con-Quest
 - Costume Contest
 - Charity Quick Sketches
@@ -16,22 +18,14 @@ The Event Guide now has individual buttons for:
 - Trivia Tournament
 - Workshops
 
-Tapping any button opens a dedicated popup with the full description, times,
-locations, rules, lists, and other content from data/events.json.
+Tapping a button opens the existing full event-detail popup.
 
-The existing full Event Guide search remains below the buttons for café menus,
-food information, and searching all program content.
+On phones the activity buttons become a single-column vertical list so every item
+is obvious and easy to browse. On wider screens they remain a compact grid.
 
-This patch also includes the V4.19 events.json content and retains the V4.18
-Social Media / Sponsors attendee changes.
+The normal search/filter results remain below the event-button list.
 
-This is a SAFE PATCH. It does NOT include or overwrite:
-- map-layout.json
-- map-settings.json
-- vendors.json
-- guests.json
-- schedule.json
-- settings.json
-- celebrity data
+This remains a SAFE PATCH and does NOT overwrite current map, vendor, guest,
+schedule, settings, or celebrity data.
 
 UNZIP FIRST, then upload the files/folders inside the ZIP.

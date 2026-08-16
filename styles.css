@@ -923,3 +923,60 @@ button,
     grid-template-columns:1fr;
   }
 }
+
+
+/* =========================================================
+   V4.21 — EVENT BUTTONS DIRECTLY BELOW EVENT GUIDE SEARCH
+   ========================================================= */
+
+.event-discovery-block{
+  margin:12px 0 16px;
+  padding:12px;
+  border:2px solid var(--ink);
+  border-radius:10px;
+  background:rgba(255,247,223,.62);
+  box-shadow:3px 4px 0 rgba(58,39,32,.10);
+}
+
+.event-discovery-head{
+  margin-bottom:10px;
+}
+
+.event-discovery-head p{
+  margin:4px 0 0;
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.35;
+  color:var(--ink2);
+}
+
+.event-quick-grid-below-search{
+  margin-top:9px;
+}
+
+.event-search-results-head{
+  margin:16px 0 6px;
+  padding-top:10px;
+  border-top:2px dashed rgba(58,39,32,.28);
+}
+
+/* Keep every activity highly visible even when there is no search query. */
+.event-quick-grid-below-search .event-quick-button{
+  min-height:82px;
+}
+
+/* On phone, use a single clear vertical list so nobody misses an event. */
+@media(max-width:520px){
+  .event-quick-grid.event-quick-grid-below-search{
+    grid-template-columns:1fr;
+  }
+
+  .event-quick-grid-below-search .event-quick-button{
+    min-height:68px;
+    grid-template-columns:36px minmax(0,1fr) 14px;
+  }
+
+  .event-quick-grid-below-search .event-quick-copy strong{
+    font-size:12px;
+  }
+}

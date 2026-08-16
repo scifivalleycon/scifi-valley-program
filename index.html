@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.20">
+  <link rel="stylesheet" href="styles.css?v=4.21">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -259,20 +259,6 @@
         <b>›</b>
       </button>
 
-      <section class="paper-panel featured-events-panel" aria-labelledby="featuredEventsHeading">
-        <div class="section-heading featured-events-heading">
-          <div>
-            <span class="section-kicker">THINGS TO DO</span>
-            <h2 id="featuredEventsHeading">EVENTS & ACTIVITIES</h2>
-          </div>
-          <span class="featured-events-badge">★</span>
-        </div>
-        <p class="featured-events-intro">Tap an event for times, locations, rules and full details.</p>
-        <div id="eventQuickGrid" class="event-quick-grid">
-          <div class="muted-empty">Loading events and activities…</div>
-        </div>
-      </section>
-
       <section class="paper-panel social-media-panel">
         <div class="section-heading social-heading">
           <div>
@@ -293,7 +279,26 @@
             <h2>BROWSE THE FULL EVENT GUIDE</h2>
           </div>
         </div>
-        <label class="search-box"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search food, gaming, contests, workshops..."></label>
+
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="eventSearch" type="search" placeholder="Search food, gaming, contests, workshops...">
+        </label>
+
+        <div class="event-discovery-block">
+          <div class="event-discovery-head">
+            <span class="section-kicker">EVENTS & ACTIVITIES</span>
+            <p>Not sure what to search for? Tap any activity below to see the full details.</p>
+          </div>
+
+          <div id="eventQuickGrid" class="event-quick-grid event-quick-grid-below-search">
+            <div class="muted-empty">Loading events and activities…</div>
+          </div>
+        </div>
+
+        <div class="event-search-results-head">
+          <span class="section-kicker">SEARCH & FILTER ALL PROGRAM INFO</span>
+        </div>
         <div id="eventFilters" class="chip-row"></div>
         <div id="eventList" class="event-list"></div>
       </section>
@@ -438,6 +443,6 @@
     <div id="mapLocationModalContent"></div>
   </dialog>
 
-  <script src="app.js?v=4.20"></script>
+  <script src="app.js?v=4.21"></script>
 </body>
 </html>
