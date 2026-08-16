@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.18",
+          appVersion:"4.20",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -455,6 +455,10 @@ function openGuest(id){
   bindGuestPhotoLightboxes();
 }
 
+document.getElementById("closeEventModal")?.addEventListener("click",closeEventDetails);
+document.getElementById("eventModal")?.addEventListener("click",event=>{
+  if(event.target===event.currentTarget)closeEventDetails();
+});
 document.getElementById("closeGuestModal").addEventListener("click",()=>document.getElementById("guestModal").close());
 document.getElementById("guestModal").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
@@ -1623,6 +1627,101 @@ function renderBlock(b){
   if(b.type==="systems")return `<h4>${b.title}</h4><div class="system-grid">${b.items.map(i=>`<div class="system-row"><strong>${i.name} (${i.year})</strong><small>${i.desc}</small></div>`).join("")}</div>`;
   return "";
 }
+
+const FEATURED_EVENT_IDS=[
+  "con-quest",
+  "costume-contest",
+  "quick-sketches",
+  "charity-auction",
+  "shuttle",
+  "after-party",
+  "medieval-combat",
+  "retro-gaming",
+  "tabletop-gaming",
+  "trivia",
+  "workshops"
+];
+
+const FEATURED_EVENT_META={
+  "con-quest":{icon:"★",short:"CHARITY QUEST",tone:"aqua"},
+  "costume-contest":{icon:"♛",short:"COSPLAY",tone:"coral"},
+  "quick-sketches":{icon:"✎",short:"LIVE ART",tone:"mustard"},
+  "charity-auction":{icon:"◆",short:"CHARITY",tone:"pink"},
+  "shuttle":{icon:"▰",short:"TRANSPORTATION",tone:"aqua"},
+  "after-party":{icon:"●",short:"BOWLING & KARAOKE",tone:"coral"},
+  "medieval-combat":{icon:"⚔",short:"LIVE DEMOS",tone:"mustard"},
+  "retro-gaming":{icon:"✚",short:"75+ SYSTEMS",tone:"pink"},
+  "tabletop-gaming":{icon:"⚄",short:"GAME ROOM",tone:"aqua"},
+  "trivia":{icon:"?",short:"TOURNAMENT",tone:"coral"},
+  "workshops":{icon:"✦",short:"HANDS-ON",tone:"mustard"}
+};
+
+function eventById(id){
+  return (state.events||[]).find(event=>String(event.id)===String(id))||null;
+}
+
+function renderEventQuickLinks(){
+  const host=document.getElementById("eventQuickGrid");
+  if(!host)return;
+
+  const items=FEATURED_EVENT_IDS
+    .map(id=>eventById(id))
+    .filter(Boolean);
+
+  if(!items.length){
+    host.innerHTML='<div class="muted-empty">Event details are being updated.</div>';
+    return;
+  }
+
+  host.innerHTML=items.map(event=>{
+    const meta=FEATURED_EVENT_META[event.id]||{icon:"★",short:event.category||"EVENT",tone:"aqua"};
+    return `<button class="event-quick-button tone-${escapeAppHtml(meta.tone)}"
+      type="button" data-event-open="${escapeAppHtml(event.id)}">
+      <span class="event-quick-icon" aria-hidden="true">${escapeAppHtml(meta.icon)}</span>
+      <span class="event-quick-copy">
+        <small>${escapeAppHtml(meta.short)}</small>
+        <strong>${escapeAppHtml(event.title)}</strong>
+      </span>
+      <span class="event-quick-arrow" aria-hidden="true">›</span>
+    </button>`;
+  }).join("");
+
+  host.querySelectorAll("[data-event-open]").forEach(button=>{
+    button.addEventListener("click",()=>openEventDetails(button.dataset.eventOpen));
+  });
+}
+
+function openEventDetails(eventId){
+  const event=eventById(eventId);
+  const modal=document.getElementById("eventModal");
+  const content=document.getElementById("eventModalContent");
+  if(!event||!modal||!content)return;
+
+  const meta=FEATURED_EVENT_META[event.id]||{icon:"★",short:event.category||"EVENT",tone:"aqua"};
+
+  content.innerHTML=`
+    <div class="event-modal-inner">
+      <div class="event-modal-hero tone-${escapeAppHtml(meta.tone)}">
+        <span class="event-modal-icon">${escapeAppHtml(meta.icon)}</span>
+        <div>
+          <span class="event-modal-category">${escapeAppHtml(event.category||"Event")}</span>
+          <h2>${escapeAppHtml(event.title)}</h2>
+          <p>${escapeAppHtml(event.summary||"")}</p>
+        </div>
+      </div>
+      <div class="event-modal-body event-content">
+        ${(event.content||[]).map(renderBlock).join("")}
+      </div>
+    </div>`;
+
+  modal.showModal();
+}
+
+function closeEventDetails(){
+  const modal=document.getElementById("eventModal");
+  if(modal?.open)modal.close();
+}
+
 function renderEvents(){
   const q=document.getElementById("eventSearch").value.trim().toLowerCase();
   const items=state.events.filter(e=>{
@@ -2035,6 +2134,7 @@ function renderAll(){
   safeRenderSection("schedule category filters",renderScheduleCategoryFilters);
   safeRenderSection("schedule",renderSchedule);
   safeRenderSection("event status",renderStatus);
+  safeRenderSection("featured event buttons",renderEventQuickLinks);
   safeRenderSection("event filters",renderEventFilters);
   safeRenderSection("event guide",renderEvents);
   safeRenderSection("celebrity guide",renderCelebrityGuide);

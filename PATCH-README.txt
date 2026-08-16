@@ -1,9 +1,9 @@
-Sci-Fi Valley Con Attendee App V4.19 Event Guide Content Patch
+Sci-Fi Valley Con Attendee App V4.20 Event Guide Buttons Patch
 
-This patch updates ONLY:
-  data/events.json
+This replaces the search-only feeling of the Event Guide with a prominent
+EVENTS & ACTIVITIES button grid.
 
-It includes the Event Guide content requested from the current public Events page:
+The Event Guide now has individual buttons for:
 - Con-Quest
 - Costume Contest
 - Charity Quick Sketches
@@ -16,12 +16,22 @@ It includes the Event Guide content requested from the current public Events pag
 - Trivia Tournament
 - Workshops
 
-It also preserves the existing café menus and Guest Panels Event Guide entry.
+Tapping any button opens a dedicated popup with the full description, times,
+locations, rules, lists, and other content from data/events.json.
 
-The current public Events page lists Friday & Saturday Shuttle Service but does not
-publish route, pickup location, or operating hours in the visible page text. This
-patch therefore does not invent shuttle details. The entry clearly notes that those
-details should be updated through Program Admin when published.
+The existing full Event Guide search remains below the buttons for café menus,
+food information, and searching all program content.
 
-UNZIP FIRST, then upload the data folder / events.json file to the attendee GitHub repository.
-No app.js, map data, vendors, guests, schedules, settings, or other files are changed.
+This patch also includes the V4.19 events.json content and retains the V4.18
+Social Media / Sponsors attendee changes.
+
+This is a SAFE PATCH. It does NOT include or overwrite:
+- map-layout.json
+- map-settings.json
+- vendors.json
+- guests.json
+- schedule.json
+- settings.json
+- celebrity data
+
+UNZIP FIRST, then upload the files/folders inside the ZIP.

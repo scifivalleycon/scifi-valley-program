@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.18">
+  <link rel="stylesheet" href="styles.css?v=4.20">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -259,6 +259,20 @@
         <b>›</b>
       </button>
 
+      <section class="paper-panel featured-events-panel" aria-labelledby="featuredEventsHeading">
+        <div class="section-heading featured-events-heading">
+          <div>
+            <span class="section-kicker">THINGS TO DO</span>
+            <h2 id="featuredEventsHeading">EVENTS & ACTIVITIES</h2>
+          </div>
+          <span class="featured-events-badge">★</span>
+        </div>
+        <p class="featured-events-intro">Tap an event for times, locations, rules and full details.</p>
+        <div id="eventQuickGrid" class="event-quick-grid">
+          <div class="muted-empty">Loading events and activities…</div>
+        </div>
+      </section>
+
       <section class="paper-panel social-media-panel">
         <div class="section-heading social-heading">
           <div>
@@ -272,9 +286,17 @@
         </div>
       </section>
 
-      <label class="search-box"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search food, gaming, contests, workshops..."></label>
-      <div id="eventFilters" class="chip-row"></div>
-      <div id="eventList" class="event-list"></div>
+      <section class="event-guide-browser">
+        <div class="section-heading event-browser-heading">
+          <div>
+            <span class="section-kicker">MORE PROGRAM INFO</span>
+            <h2>BROWSE THE FULL EVENT GUIDE</h2>
+          </div>
+        </div>
+        <label class="search-box"><span>⌕</span><input id="eventSearch" type="search" placeholder="Search food, gaming, contests, workshops..."></label>
+        <div id="eventFilters" class="chip-row"></div>
+        <div id="eventList" class="event-list"></div>
+      </section>
     </section>
 
     <section id="settings" class="screen">
@@ -380,6 +402,11 @@
     </div>
   </dialog>
 
+  <dialog id="eventModal" class="event-detail-modal">
+    <button id="closeEventModal" class="modal-close event-modal-close" aria-label="Close event details">×</button>
+    <div id="eventModalContent"></div>
+  </dialog>
+
   <dialog id="guestModal" class="guest-modal">
     <button id="closeGuestModal" class="modal-close" aria-label="Close">×</button>
     <div id="guestModalContent"></div>
@@ -411,6 +438,6 @@
     <div id="mapLocationModalContent"></div>
   </dialog>
 
-  <script src="app.js?v=4.18"></script>
+  <script src="app.js?v=4.20"></script>
 </body>
 </html>
