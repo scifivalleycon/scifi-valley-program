@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.27",
+          appVersion:"4.28",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });

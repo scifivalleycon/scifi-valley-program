@@ -1,17 +1,18 @@
-Sci-Fi Valley Con Attendee App V4.27 Home Guest Banner SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.28 Guest Banner Display Fix
 
-Adds the current first celebrity-guest banner from the Sci-Fi Valley Con website
-directly below the app's main retro hero.
+Fixes the celebrity guest banner presentation:
 
-Behavior:
-- Whole banner is tappable and opens the native Celebrity Guests screen.
-- Banner URL is controlled by data/home-banner.json.
-- Admin V2.18 can manually replace the image or automatically detect the current
-  first guest slider banner from https://scifivalleycon.com/.
-- data/home-banner.json is the new source of truth for this banner.
-- Static HTML also uses the supplied banner as a visual fallback before JSON loads.
+- Keeps the ORIGINAL SOURCE IMAGE ASPECT RATIO
+- Removes fixed aspect-ratio sizing that caused browser cropping
+- Removes object-fit:cover cropping
+- Uses width:100% + height:auto so the entire artwork remains visible
+- Removes the dark left-side gradient completely
+- Removes all artwork overlays that cover celebrity faces
+- Moves the Celebrity Guests CTA into a slim strip BELOW the image
+- Entire banner/card still links to the native Guests screen
+- Works the same way on desktop/browser and mobile
 
-This patch does NOT contain or overwrite current map, vendors, guests, schedule,
-settings, events, sponsors, social links or other existing Admin-managed files.
+This patch does not contain or overwrite backend data, maps, vendors, guests,
+schedule, settings, Event Guide data, sponsors or social links.
 
-UNZIP FIRST, then upload all files/folders inside this ZIP.
+UNZIP FIRST, then upload all files inside this ZIP.
