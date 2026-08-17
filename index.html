@@ -7,11 +7,11 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.43">
+  <link rel="stylesheet" href="styles.css?v=4.44">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
-  <aside id="appUtilityDrawer" class="app-utility-drawer" aria-label="Program tools">
+  <aside id="appUtilityDrawer" class="app-utility-drawer" data-font-scale="locked" aria-label="Program tools">
     <div class="app-utility-panel">
       <div class="app-utility-heading">
         <div>
@@ -25,7 +25,7 @@
         <div class="utility-tool-copy">
           <span>READABILITY</span>
           <strong>TEXT SIZE</strong>
-          <small>Adjust text throughout the program. Your choice is remembered on this device.</small>
+          <small>Increase readable program text without stretching decorative logos or tightly fitted display text. Your choice is remembered on this device.</small>
         </div>
         <div class="font-size-controls" role="group" aria-label="Program text size">
           <button id="fontSizeDecrease" type="button" aria-label="Decrease text size">A−</button>
@@ -71,7 +71,7 @@
       <span id="utilityHandleArrow" aria-hidden="true">▼</span>
     </button>
   </aside>
-  <header class="topbar">
+  <header class="topbar" data-font-scale="locked">
     <button class="brand-button" data-go="home" aria-label="Home">
       <img src="assets/icons/app-icon-192.png" alt="">
       <span><b id="topbarEventName">SCI-FI VALLEY CON</b><small id="topbarEventMeta">OCT 16–18, 2026 • ALTOONA, PA</small></span>
@@ -110,21 +110,21 @@
         <div class="burst burst-two">✦</div>
         <p class="kicker">THE OFFICIAL DIGITAL PROGRAM</p>
 
-        <div class="hero-logo" aria-label="Sci-Fi Valley Con">
+        <div class="hero-logo" data-font-scale="locked" aria-label="Sci-Fi Valley Con">
           <span class="hero-script">Sci-Fi</span>
           <span class="hero-valley">Valley</span>
           <span class="hero-con">CON</span>
         </div>
 
-        <div class="hero-rule">
+        <div class="hero-rule" data-font-scale="locked">
           <span></span>
           <strong>THE HOME OF NOSTALGIA</strong>
           <span></span>
         </div>
 
-        <h1 id="heroEventDates">OCTOBER 16–18, 2026</h1>
+        <h1 id="heroEventDates" data-font-scale="locked">OCTOBER 16–18, 2026</h1>
 
-        <section id="eventCountdown" class="event-countdown" aria-label="Countdown to Sci-Fi Valley Con">
+        <section id="eventCountdown" class="event-countdown" data-font-scale="locked" aria-label="Countdown to Sci-Fi Valley Con">
           <span class="event-countdown-kicker">COUNTDOWN TO FRIDAY • 2:00 PM</span>
           <div id="eventCountdownClock" class="flip-countdown-grid">
             <div class="flip-countdown-unit"><span id="countdownMonths" class="flip-card">00</span><small>MONTHS</small></div>
@@ -136,7 +136,7 @@
           <div id="eventCountdownMessage" class="event-countdown-message hidden"></div>
         </section>
 
-        <section class="home-show-hours" aria-label="Sci-Fi Valley Con show hours">
+        <section class="home-show-hours" data-font-scale="locked" aria-label="Sci-Fi Valley Con show hours">
           <div class="home-show-hours-kicker">SHOW DAYS & OPEN HOURS</div>
           <div class="home-show-hours-grid">
             <div class="home-show-hours-day">
@@ -166,7 +166,7 @@
             alt="Sci-Fi Valley Con October 2026 celebrity guest banner"
             fetchpriority="high">
         </span>
-        <span class="home-guest-banner-cta">
+        <span class="home-guest-banner-cta" data-font-scale="locked">
           <span>
             <small>MEET OUR</small>
             <strong>CELEBRITY GUESTS</strong>
@@ -776,7 +776,7 @@
 
   <section id="programPrintView" class="program-print-view" aria-hidden="true"></section>
 
-  <nav class="bottom-nav" aria-label="Main navigation">
+  <nav class="bottom-nav" data-font-scale="locked" aria-label="Main navigation">
     <button class="nav-button active" data-screen="home"><span>⌂</span><small>HOME</small></button>
     <button class="nav-button" data-screen="guests"><span>★</span><small>GUESTS</small></button>
     <button class="nav-button" data-screen="schedule"><span>▣</span><small>SCHEDULE</small></button>
@@ -935,6 +935,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.43"></script>
+  <script src="app.js?v=4.44"></script>
 </body>
 </html>

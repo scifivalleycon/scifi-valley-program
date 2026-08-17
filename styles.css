@@ -3387,3 +3387,56 @@ button,
     padding-right:11px;
   }
 }
+
+
+/* =========================================================
+   V4.44 — ADAPTIVE / COLLISION-SAFE TEXT SCALING
+   ========================================================= */
+
+/* Marked display compositions deliberately retain their designed typography. */
+[data-font-scale="locked"]{
+  --sfvc-display-text-locked:1;
+}
+
+/* Allow enlarged body copy to wrap instead of pushing outside cards. */
+body.sfvc-text-enlarged .screen p,
+body.sfvc-text-enlarged .screen li,
+body.sfvc-text-enlarged .screen small,
+body.sfvc-text-enlarged .screen td,
+body.sfvc-text-enlarged .screen th,
+body.sfvc-text-enlarged .screen label,
+body.sfvc-text-enlarged .screen .meta,
+body.sfvc-text-enlarged .screen .record-sub,
+body.sfvc-text-enlarged .screen .map-directory-copy,
+body.sfvc-text-enlarged .screen .faq-answer,
+body.sfvc-text-enlarged .screen .modal-bio{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+
+/* Grid/flex text columns need to be allowed to shrink as type grows. */
+body.sfvc-text-enlarged .screen [class*="copy"],
+body.sfvc-text-enlarged .screen [class*="content"],
+body.sfvc-text-enlarged .screen [class*="main"],
+body.sfvc-text-enlarged .screen [class*="details"]{
+  min-width:0;
+}
+
+/* At the largest readability setting, let compact multi-column information
+   reflow where necessary rather than overlapping or clipping. */
+@media(max-width:520px){
+  body.sfvc-text-largest .price-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  body.sfvc-text-largest .modal-actions,
+  body.sfvc-text-largest .utility-action-grid{
+    grid-template-columns:1fr;
+  }
+
+  body.sfvc-text-largest .panel-card-head,
+  body.sfvc-text-largest .sheet-heading{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+}

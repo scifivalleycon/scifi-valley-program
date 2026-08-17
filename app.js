@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.43",
+          appVersion:"4.44",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -268,11 +268,61 @@ function elementHasDirectText(element){
   );
 }
 
+const PROGRAM_TEXT_LOCKED_SELECTOR=[
+  '[data-font-scale="locked"]',
+  '.hero-logo',
+  '.hero-rule',
+  '#heroEventDates',
+  '.event-countdown',
+  '.home-show-hours',
+  '.home-guest-banner-cta',
+  '.topbar',
+  '.bottom-nav',
+  '.app-utility-drawer',
+  '.map-svg-host',
+  '.map-vendor-pointer',
+  '.photo-lightbox',
+  '.burst'
+].join(',');
+
+function fontScaleLocked(element){
+  if(!(element instanceof HTMLElement))return true;
+  if(element.closest(PROGRAM_TEXT_LOCKED_SELECTOR))return true;
+
+  const computed=getComputedStyle(element);
+
+  // Absolutely/fixed-positioned lettering is usually part of a composed visual
+  // rather than flowing content. Scaling it independently is what caused the
+  // Sci-Fi Valley Con masthead pieces to collide.
+  if(computed.position==='absolute'||computed.position==='fixed')return true;
+  return false;
+}
+
 function fontScaleEligible(element){
   if(!(element instanceof HTMLElement))return false;
-  if(element.closest("svg"))return false;
+  if(element.closest('svg'))return false;
   if(["SCRIPT","STYLE","NOSCRIPT","TEMPLATE"].includes(element.tagName))return false;
+  if(fontScaleLocked(element))return false;
   return elementHasDirectText(element);
+}
+
+function effectiveProgramTextScale(element,base){
+  if(programTextScale<=1)return programTextScale;
+
+  const computed=getComputedStyle(element);
+  let cap=1.30;
+
+  // Accessibility benefit is greatest on the small copy. Large display text is
+  // already readable and gets a smaller increase so it does not crush adjacent UI.
+  if(base>=28)cap=1.00;
+  else if(base>=22)cap=1.08;
+  else if(base>=16)cap=1.15;
+
+  // Tight one-line controls and compact utility labels receive a conservative cap.
+  if(computed.whiteSpace==='nowrap')cap=Math.min(cap,1.12);
+  if(element.matches('button,input,select,textarea,code,.tag,.badge,.chip'))cap=Math.min(cap,1.18);
+
+  return Math.min(programTextScale,cap);
 }
 
 function scaleTextElement(element){
@@ -293,7 +343,8 @@ function scaleTextElement(element){
   }
 
   const base=Number(element.dataset.sfvcBaseFontPx);
-  element.style.fontSize=`${Math.round(base*programTextScale*100)/100}px`;
+  const scale=effectiveProgramTextScale(element,base);
+  element.style.fontSize=`${Math.round(base*scale*100)/100}px`;
 }
 
 function scaleTextTree(root=document.body){
@@ -322,6 +373,10 @@ function applyProgramTextScale(scale,{persist=true}={}){
     element.style.fontSize="";
     delete element.dataset.sfvcBaseFontPx;
   });
+
+  document.body.dataset.programTextScale=String(programTextScale);
+  document.body.classList.toggle('sfvc-text-enlarged',programTextScale>1);
+  document.body.classList.toggle('sfvc-text-largest',programTextScale>=1.30);
 
   if(programTextScale!==1)scaleTextTree(document.body);
   if(persist)localStorage.setItem(PROGRAM_TEXT_SCALE_KEY,String(programTextScale));
@@ -2330,7 +2385,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.43",
+      appVersion:"4.44",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
