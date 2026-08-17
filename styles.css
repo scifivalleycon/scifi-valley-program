@@ -2089,19 +2089,8 @@ button,
     aspect-ratio:auto;
   }
 
-  .home-guest-banner-cta{
-    align-items:flex-start;
-    flex-direction:column;
-    gap:4px;
-  }
-
   .home-guest-banner-cta strong{
     font-size:11px;
-  }
-
-  .home-guest-banner-cta em{
-    font-size:6.5px;
-    text-align:left;
   }
 }
 
@@ -2958,18 +2947,31 @@ button,
   text-transform:none;
 }
 
-.home-guest-banner-more-info{
-  display:flex;
+.home-guest-banner-cta{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
   align-items:center;
-  justify-content:flex-end;
-  max-width:48%;
+  column-gap:16px;
+}
+
+.home-guest-banner-cta > span{
+  min-width:0;
+}
+
+.home-guest-banner-more-info{
+  display:block;
+  flex:none;
+  margin-left:auto;
+  width:42%;
+  max-width:42%;
   color:var(--ink);
   font-family:Georgia,serif;
-  font-size:13px;
+  font-size:14px;
   font-weight:700;
   line-height:1.05;
   text-align:right;
   text-decoration:none;
+  white-space:normal;
 }
 
 .home-guest-banner:hover .home-guest-banner-more-info,
@@ -2982,9 +2984,16 @@ button,
     font-size:6.2px;
   }
 
+  .home-guest-banner-cta{
+    grid-template-columns:minmax(0,1fr) minmax(122px, 42%);
+    column-gap:12px;
+    align-items:center;
+  }
+
   .home-guest-banner-more-info{
-    max-width:50%;
-    font-size:10.5px;
+    width:auto;
+    max-width:none;
+    font-size:11px;
     line-height:1.08;
   }
 }

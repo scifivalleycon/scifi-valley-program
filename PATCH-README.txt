@@ -1,21 +1,11 @@
-Sci-Fi Valley Con Attendee App V4.40 — Celebrity Banner More Info SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.41 — Guest Banner CTA Right-Side Layout
 
-Updates the celebrity guest banner caption area on the Home screen.
+This patch adjusts the celebrity guest banner caption so the "CLICK HERE FOR MORE INFO!" text stays positioned on the RIGHT-HAND SIDE of the blue caption bar, more like the requested mockup.
 
-The banner still opens the Guests page when clicked/tapped.
+What changed:
+- Keeps the main guest info on the left side
+- Keeps "CLICK HERE FOR MORE INFO!" on the right side
+- Improves mobile layout so it no longer drops beneath the left text
+- Keeps the whole banner clickable and linked to the Guests page
 
-Caption now reads:
-
-MEET OUR
-CELEBRITY GUESTS
-View bios, reunions, photo ops & more
-
-CLICK HERE FOR MORE INFO!
-
-The new call-to-action is larger and easier to notice on mobile while remaining
-below the banner artwork so it does not cover any celebrity faces.
-
-No Admin or Notify Worker update is required.
-No backend-managed JSON files are included.
-
-UNZIP FIRST, then upload all files inside this ZIP to the attendee GitHub repository.
+UNZIP FIRST, then upload the files inside this ZIP to the attendee GitHub repo.
