@@ -2148,3 +2148,47 @@ button,
 .schedule-reminder-label:active{
   transform:translateY(1px);
 }
+
+
+/* =========================================================
+   V4.30 — RECENT EVENT ALERT DISMISS BUTTON
+   ========================================================= */
+
+.recent-alert-card{
+  position:relative;
+  padding-right:38px;
+}
+
+.recent-alert-dismiss{
+  position:absolute;
+  top:8px;
+  right:8px;
+  width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(58,39,32,.55);
+  border-radius:50%;
+  background:rgba(255,247,223,.88);
+  color:var(--ink);
+  font-family:Arial,sans-serif;
+  font-size:17px;
+  font-weight:700;
+  line-height:1;
+  cursor:pointer;
+  z-index:2;
+}
+
+.recent-alert-dismiss:hover{
+  background:rgba(238,117,72,.18);
+}
+
+.recent-alert-dismiss:focus-visible{
+  outline:2px solid var(--coral);
+  outline-offset:2px;
+}
+
+.recent-alert-dismiss:active{
+  transform:translateY(1px);
+}

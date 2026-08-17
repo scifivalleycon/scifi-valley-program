@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.29",
+          appVersion:"4.30",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -1765,8 +1765,34 @@ function renderEvents(){
    Broadcasts sent by staff remain visible on the home screen for 72 hours. */
 const RECENT_ALERT_RETENTION_MS=72*60*60*1000;
 const RECENT_ALERT_REFRESH_MS=5*60*1000;
+const RECENT_ALERT_DISMISSED_KEY="sfvc-recent-alerts-dismissed-v1";
 let recentAlertRefreshTimer=null;
 let recentAlertsInitialized=false;
+
+function loadDismissedRecentAlerts(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(RECENT_ALERT_DISMISSED_KEY)||"{}");
+    const now=Date.now();
+    const cleaned={};
+    for(const [id,ts] of Object.entries(raw||{})){
+      const age=now-Number(ts||0);
+      if(Number.isFinite(age)&&age>=0&&age<RECENT_ALERT_RETENTION_MS)cleaned[String(id)]=Number(ts);
+    }
+    localStorage.setItem(RECENT_ALERT_DISMISSED_KEY,JSON.stringify(cleaned));
+    return cleaned;
+  }catch{
+    return {};
+  }
+}
+
+function dismissRecentAlertLocally(id){
+  const key=String(id||"").trim();
+  if(!key)return;
+  const dismissed=loadDismissedRecentAlerts();
+  dismissed[key]=Date.now();
+  localStorage.setItem(RECENT_ALERT_DISMISSED_KEY,JSON.stringify(dismissed));
+  renderRecentAlerts();
+}
 
 function escapeAppHtml(value=""){
   return String(value).replace(/[&<>"']/g,char=>({
@@ -1815,9 +1841,11 @@ function renderRecentAlerts(){
   if(!panel||!list||!count)return;
 
   const cutoff=Date.now()-RECENT_ALERT_RETENTION_MS;
+  const dismissed=loadDismissedRecentAlerts();
   const alerts=(state.recentAlerts||[])
     .map(item=>({...item,_date:parseBroadcastTimestamp(item.createdAt)}))
     .filter(item=>item._date&&item._date.getTime()>=cutoff)
+    .filter(item=>!dismissed[String(item.id||"")])
     .sort((a,b)=>b._date-a._date);
 
   state.recentAlerts=alerts.map(({_date,...item})=>item);
@@ -1837,6 +1865,10 @@ function renderRecentAlerts(){
     const urgency=String(item.urgency||"normal").toLowerCase();
     const urgencyClass=urgency==="high"?" high-priority":"";
     return `<article class="recent-alert-card${urgencyClass}">
+      <button class="recent-alert-dismiss" type="button"
+        data-dismiss-recent-alert="${escapeAppHtml(item.id)}"
+        aria-label="Dismiss this update on this device"
+        title="Dismiss this update">×</button>
       <div class="recent-alert-meta">
         <span>${urgency==="high"?"⚠ IMPORTANT UPDATE":"🔔 EVENT UPDATE"}</span>
         <time datetime="${escapeAppHtml(item.createdAt)}">${formatAlertAge(item._date)}</time>
@@ -1874,6 +1906,14 @@ async function loadRecentAlerts(){
 function initializeRecentAlerts(){
   if(recentAlertsInitialized)return;
   recentAlertsInitialized=true;
+
+  document.getElementById("recentAlertsList")?.addEventListener("click",event=>{
+    const button=event.target.closest?.("[data-dismiss-recent-alert]");
+    if(!button)return;
+    event.preventDefault();
+    event.stopPropagation();
+    dismissRecentAlertLocally(button.dataset.dismissRecentAlert);
+  });
 
   loadRecentAlerts();
   clearInterval(recentAlertRefreshTimer);
