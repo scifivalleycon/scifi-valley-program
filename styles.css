@@ -2941,3 +2941,50 @@ button,
     font-size:7.2px;
   }
 }
+
+
+/* =========================================================
+   V4.40 — CELEBRITY BANNER "CLICK HERE FOR MORE INFO"
+   ========================================================= */
+
+.home-guest-banner-subcopy{
+  display:block;
+  margin-top:2px;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:7px;
+  font-weight:400;
+  letter-spacing:0;
+  text-transform:none;
+}
+
+.home-guest-banner-more-info{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  max-width:48%;
+  color:var(--ink);
+  font-family:Georgia,serif;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.05;
+  text-align:right;
+  text-decoration:none;
+}
+
+.home-guest-banner:hover .home-guest-banner-more-info,
+.home-guest-banner:focus-visible .home-guest-banner-more-info{
+  text-decoration:underline;
+}
+
+@media(max-width:430px){
+  .home-guest-banner-subcopy{
+    font-size:6.2px;
+  }
+
+  .home-guest-banner-more-info{
+    max-width:50%;
+    font-size:10.5px;
+    line-height:1.08;
+  }
+}
