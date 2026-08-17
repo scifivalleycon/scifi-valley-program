@@ -1,28 +1,21 @@
-Sci-Fi Valley Con Attendee App V4.25 LIVE OFFICIAL T-SHIRT STORE PATCH
+Sci-Fi Valley Con Attendee App V4.26 Venue Banner SAFE PATCH
 
-This replaces the manually maintained product-card catalog with Ecwid's official
-embedded storefront widget for Cryptoteeology store 60212851, defaulting directly
-to Sci-Fi Valley Con category 118538756.
+Adds a compact Blair County Convention Center photo card near the bottom of the
+Home screen, directly below My Con.
 
-Why this is better:
-- The current Cryptoteeology category contains the official live product photos.
-- New Sci-Fi Valley Con shirts appear automatically when the merchant adds them.
-- Price, availability, colors, sizes, gallery photos and product details stay current.
-- Tapping a product opens Ecwid's full product view with larger images.
-- Checkout remains connected to the merchant's official Cryptoteeology store.
-- No copied/scraped product images are stored in the Sci-Fi Valley Con repository.
-- No Ecwid API key or public token is required for the storefront embed.
+Design:
+- Uses the supplied BCCC banner image
+- Keeps the image intentionally shallow so it adds atmosphere without taking over
+  the Home screen
+- Adds a subtle vintage overlay to match the Sci-Fi Valley Con visual style
+- Labels the venue as OUR HOME IN ALTOONA
+- Includes Blair County Convention Center / Altoona, Pennsylvania
+- VIEW FLOOR MAP button opens the attendee app's existing Map screen
+- Image uses loading=lazy
 
-Official category:
-https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756
+Image source:
+https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a7e479c527466f63be69f6_BCCC-Banner.avif
 
-Files changed:
-- index.html
-- styles.css
-- app.js (version marker only)
-- service-worker.js
-- new tshirt-live-store.js
+This patch does NOT contain or overwrite map/vendor/guest/schedule/settings/data JSON.
 
-This is a SAFE PATCH and does not overwrite map/vendor/guest/schedule/settings data.
-
-UNZIP FIRST, then upload all files inside the ZIP.
+UNZIP FIRST, then upload the files inside this ZIP.

@@ -1729,3 +1729,129 @@ button,
     min-height:620px;
   }
 }
+
+
+/* =========================================================
+   V4.26 — BLAIR COUNTY CONVENTION CENTER VENUE BANNER
+   ========================================================= */
+
+.venue-style-card{
+  margin:14px 0 4px;
+  overflow:hidden;
+  border:2px solid var(--ink);
+  border-radius:11px;
+  background:rgba(255,247,223,.84);
+  box-shadow:4px 5px 0 rgba(58,39,32,.13);
+}
+
+.venue-style-image-wrap{
+  position:relative;
+  height:128px;
+  overflow:hidden;
+  background:
+    linear-gradient(135deg, rgba(115,199,203,.28), rgba(238,117,72,.20)),
+    var(--paper2);
+  border-bottom:2px solid var(--ink);
+}
+
+.venue-style-image-wrap img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center 48%;
+  filter:saturate(.88) contrast(.96);
+}
+
+.venue-style-image-wrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(to top, rgba(58,39,32,.48), transparent 48%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,247,223,.035) 0,
+      rgba(255,247,223,.035) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+
+.venue-style-overlay{
+  position:absolute;
+  left:10px;
+  bottom:8px;
+  z-index:2;
+}
+
+.venue-style-overlay span{
+  display:inline-block;
+  padding:4px 7px;
+  border:1px solid rgba(255,247,223,.75);
+  border-radius:999px;
+  background:rgba(58,39,32,.78);
+  color:var(--cream);
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.10em;
+}
+
+.venue-style-copy{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:10px 11px;
+}
+
+.venue-style-copy>div{
+  min-width:0;
+}
+
+.venue-style-copy strong,
+.venue-style-copy small{
+  display:block;
+}
+
+.venue-style-copy strong{
+  margin-top:2px;
+  font-family:var(--display);
+  font-size:11px;
+  line-height:1.05;
+}
+
+.venue-style-copy small{
+  margin-top:3px;
+  font-family:Georgia,serif;
+  font-size:7px;
+  color:var(--ink2);
+}
+
+.venue-style-copy>button{
+  flex:0 0 auto;
+  padding:7px 9px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--aqua);
+  color:var(--ink);
+  font-size:7px;
+  font-weight:900;
+  box-shadow:2px 3px 0 rgba(58,39,32,.12);
+}
+
+@media(max-width:420px){
+  .venue-style-image-wrap{
+    height:105px;
+  }
+
+  .venue-style-copy{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .venue-style-copy>button{
+    width:100%;
+  }
+}
