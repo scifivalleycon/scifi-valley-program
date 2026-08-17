@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.33",
+          appVersion:"4.34",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -372,6 +372,95 @@ function eventDayDates(){
 function eventLocationText(){
   return [state.settings.venue,[state.settings.city,state.settings.state].filter(Boolean).join(", ")].filter(Boolean).join(" • ");
 }
+
+let eventCountdownTimer=null;
+
+function eventStartDateTime(){
+  const start=parseISODate(state.settings.startDate);
+  if(!start)return null;
+  return new Date(start.getFullYear(),start.getMonth(),start.getDate(),14,0,0,0);
+}
+function eventEndDateTime(){
+  const end=parseISODate(state.settings.endDate);
+  if(!end)return null;
+  return new Date(end.getFullYear(),end.getMonth(),end.getDate(),17,0,0,0);
+}
+function addCalendarMonthsClamped(date,months){
+  const copy=new Date(date);
+  const originalDay=copy.getDate();
+  copy.setDate(1);
+  copy.setMonth(copy.getMonth()+months);
+  const lastDay=new Date(copy.getFullYear(),copy.getMonth()+1,0).getDate();
+  copy.setDate(Math.min(originalDay,lastDay));
+  return copy;
+}
+function countdownBreakdown(now,target){
+  let cursor=new Date(now);
+  let months=0;
+  while(months<240){
+    const next=addCalendarMonthsClamped(cursor,1);
+    if(next<=target){cursor=next;months+=1;}
+    else break;
+  }
+
+  let remaining=Math.max(0,target.getTime()-cursor.getTime());
+  const minute=60*1000,hour=60*minute,day=24*hour,week=7*day;
+  const weeks=Math.floor(remaining/week);remaining-=weeks*week;
+  const days=Math.floor(remaining/day);remaining-=days*day;
+  const hours=Math.floor(remaining/hour);remaining-=hours*hour;
+  const minutes=Math.floor(remaining/minute);
+  return {months,weeks,days,hours,minutes};
+}
+function setFlipCountdownValue(id,value){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const next=String(Math.max(0,Number(value)||0)).padStart(2,"0");
+  if(el.textContent===next)return;
+  el.classList.remove("flip-changing");
+  void el.offsetWidth;
+  el.textContent=next;
+  el.classList.add("flip-changing");
+}
+function renderEventCountdown(){
+  const clock=document.getElementById("eventCountdownClock");
+  const message=document.getElementById("eventCountdownMessage");
+  if(!clock||!message)return;
+
+  const start=eventStartDateTime();
+  const end=eventEndDateTime();
+  const now=new Date();
+
+  if(!start){
+    clock.classList.add("hidden");
+    message.classList.remove("hidden");
+    message.textContent="EVENT START TIME WILL APPEAR HERE WHEN EVENT DETAILS ARE PUBLISHED.";
+    return;
+  }
+
+  if(now<start){
+    const parts=countdownBreakdown(now,start);
+    setFlipCountdownValue("countdownMonths",parts.months);
+    setFlipCountdownValue("countdownWeeks",parts.weeks);
+    setFlipCountdownValue("countdownDays",parts.days);
+    setFlipCountdownValue("countdownHours",parts.hours);
+    setFlipCountdownValue("countdownMinutes",parts.minutes);
+    clock.classList.remove("hidden");
+    message.classList.add("hidden");
+    return;
+  }
+
+  clock.classList.add("hidden");
+  message.classList.remove("hidden");
+  message.textContent=end&&now<=end
+    ?"★ SCI-FI VALLEY CON IS UNDERWAY ★"
+    :"THANK YOU FOR JOINING SCI-FI VALLEY CON";
+}
+function initializeEventCountdown(){
+  renderEventCountdown();
+  if(eventCountdownTimer)clearInterval(eventCountdownTimer);
+  eventCountdownTimer=setInterval(renderEventCountdown,30000);
+}
+
 function applyEventSettings(){
   const eventName=(state.settings.eventName||"Sci-Fi Valley Con").toUpperCase();
   const topbarName=document.getElementById("topbarEventName");
@@ -392,6 +481,8 @@ function applyEventSettings(){
 
   const heroLocation=document.getElementById("heroEventLocation");
   if(heroLocation)heroLocation.textContent=eventLocationText();
+
+  renderEventCountdown();
 
   if(state.settings.photoShop){
     document.querySelectorAll("[data-photo-shop]").forEach(a=>a.href=state.settings.photoShop);
@@ -1644,7 +1735,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.33",
+      appVersion:"4.34",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
@@ -2325,32 +2416,74 @@ function renderFloorPlanSvg(){
   });
   applyMapZoom();
 }
-function openMapLocation(code){
+function openMapLocation(code,{nonModal=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
-  if(typeof modal.showModal==='function')modal.showModal();else modal.setAttribute('open','');
+
+  if(modal.open)modal.close();
+  modal.classList.toggle('map-directory-popover',Boolean(nonModal));
+  if(nonModal&&typeof modal.show==='function')modal.show();
+  else if(typeof modal.showModal==='function')modal.showModal();
+  else modal.setAttribute('open','');
 }
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase();
   if(!q)return true;
-  return `${v.name} ${v.categories||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
+  return `${v.name} ${v.description||''} ${v.categories||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
 }
 function renderMapDirectory(){
   const list=document.getElementById('mapDirectoryList'),count=document.getElementById('mapDirectoryCount'),notice=document.getElementById('mapDirectoryNotice');if(!list||!count)return;
   if(!mapDirectoryVisible()){list.innerHTML='';count.textContent='DRAFT';notice?.classList.remove('hidden');if(notice)notice.textContent='Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.';return;}
   notice?.classList.add('hidden');const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));count.textContent=String(rows.length);
-  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search.</div>`;
-  list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(v)selectVendorOnMap(v)}));
+  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.description?` • ${escapeAppHtml(v.description)}`:v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>DETAILS + LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search.</div>`;
+  list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(v)selectVendorOnMap(v,{openInfo:true})}));
+}
+function hideVendorMapPointer(){
+  document.getElementById('mapVendorPointer')?.classList.add('hidden');
+}
+function selectedVendorMapGroups(v){
+  if(!v)return [];
+  return expandLocationCodes(v.location)
+    .map(code=>document.querySelector(`#mapSvgHost .map-location-group[data-location="${CSS.escape(code)}"]`))
+    .filter(Boolean);
+}
+function positionVendorMapPointer(v){
+  const pointer=document.getElementById('mapVendorPointer');
+  const label=document.getElementById('mapVendorPointerLabel');
+  const viewport=document.getElementById('mapViewport');
+  const groups=selectedVendorMapGroups(v);
+  if(!pointer||!viewport||!groups.length){hideVendorMapPointer();return;}
+
+  const viewportRect=viewport.getBoundingClientRect();
+  const rects=groups.map(group=>group.getBoundingClientRect());
+  const left=Math.min(...rects.map(r=>r.left));
+  const right=Math.max(...rects.map(r=>r.right));
+  const top=Math.min(...rects.map(r=>r.top));
+
+  pointer.style.left=`${((left+right)/2)-viewportRect.left+viewport.scrollLeft}px`;
+  pointer.style.top=`${top-viewportRect.top+viewport.scrollTop}px`;
+  if(label)label.textContent=`HERE • ${String(v.location||'').toUpperCase()}`;
+  pointer.classList.remove('hidden');
 }
 function clearMapSelection({scroll=false}={}){
-  state.mapSelectedVendorId='';state.mapSelectedCodes.clear();applyMapSelection();renderMapDirectory();if(scroll)document.getElementById('mapViewport')?.scrollIntoView({behavior:'smooth',block:'start'});
+  state.mapSelectedVendorId='';state.mapSelectedCodes.clear();applyMapSelection();renderMapDirectory();hideVendorMapPointer();if(scroll)document.getElementById('mapViewport')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function selectMapLocation(code){state.mapSelectedVendorId='';state.mapSelectedCodes=new Set([String(code||'').toUpperCase()]);applyMapSelection();renderMapDirectory()}
-function selectVendorOnMap(v){
+function selectMapLocation(code){state.mapSelectedVendorId='';state.mapSelectedCodes=new Set([String(code||'').toUpperCase()]);applyMapSelection();renderMapDirectory();hideVendorMapPointer()}
+function selectVendorOnMap(v,{openInfo=false}={}){
   state.mapSelectedVendorId=v.id;state.mapSelectedCodes=new Set(expandLocationCodes(v.location));applyMapSelection();renderMapDirectory();
-  const first=[...state.mapSelectedCodes][0],target=document.querySelector(`#mapSvgHost .map-location-group[data-location="${CSS.escape(first||'')}"]`);
-  document.getElementById('mapViewport')?.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>target?.scrollIntoView({behavior:'smooth',block:'center',inline:'center'}),250);
+  const groups=selectedVendorMapGroups(v),first=groups[0];
+  document.getElementById('mapViewport')?.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>{
+    first?.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+    setTimeout(()=>{
+      positionVendorMapPointer(v);
+      if(openInfo){
+        const firstCode=[...state.mapSelectedCodes][0];
+        if(firstCode)openMapLocation(firstCode,{nonModal:true});
+      }
+    },280);
+  },180);
 }
 function applyMapSelection(){
   const svg=document.querySelector('#mapSvgHost svg');if(svg){svg.querySelectorAll('.map-table.selected,.service.selected').forEach(el=>el.classList.remove('selected'));state.mapSelectedCodes.forEach(code=>svg.querySelectorAll(`.map-location-group[data-location="${CSS.escape(code)}"] .map-table,.map-location-group[data-location="${CSS.escape(code)}"] .service`).forEach(el=>el.classList.add('selected')))}
@@ -2369,6 +2502,10 @@ function applyMapZoom(){
 
   // Horizontal scrolling is only useful after the visitor intentionally zooms in.
   viewport?.classList.toggle('map-is-zoomed',mapZoom>1.001);
+  if(state.mapSelectedVendorId){
+    const selected=state.vendors.find(v=>v.id===state.mapSelectedVendorId);
+    if(selected)requestAnimationFrame(()=>positionVendorMapPointer(selected));
+  }
 }
 function renderMapScreen(){
   const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
@@ -2376,7 +2513,14 @@ function renderMapScreen(){
 }
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
 document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
-document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
+document.getElementById('mapLocationModal')?.addEventListener('close',e=>e.currentTarget.classList.remove('map-directory-popover'));
+document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+window.addEventListener('resize',()=>{
+  if(!state.mapSelectedVendorId)return;
+  const selected=state.vendors.find(v=>v.id===state.mapSelectedVendorId);
+  if(selected)requestAnimationFrame(()=>positionVendorMapPointer(selected));
+});
 
 
 function socialIconSvg(platform){
@@ -2990,6 +3134,7 @@ document.getElementById("removeAppRegistration")?.addEventListener("click",remov
 
 initializeAppAnalytics();
 initializeRecentAlerts();
+initializeEventCountdown();
 
 loadData().then(()=>{
   startVisibleAppRefresh();

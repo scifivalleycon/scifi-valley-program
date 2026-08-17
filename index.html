@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.33">
+  <link rel="stylesheet" href="styles.css?v=4.34">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -63,6 +63,19 @@
         </div>
 
         <h1 id="heroEventDates">OCTOBER 16–18, 2026</h1>
+
+        <section id="eventCountdown" class="event-countdown" aria-label="Countdown to Sci-Fi Valley Con">
+          <span class="event-countdown-kicker">COUNTDOWN TO FRIDAY • 2:00 PM</span>
+          <div id="eventCountdownClock" class="flip-countdown-grid">
+            <div class="flip-countdown-unit"><span id="countdownMonths" class="flip-card">00</span><small>MONTHS</small></div>
+            <div class="flip-countdown-unit"><span id="countdownWeeks" class="flip-card">00</span><small>WEEKS</small></div>
+            <div class="flip-countdown-unit"><span id="countdownDays" class="flip-card">00</span><small>DAYS</small></div>
+            <div class="flip-countdown-unit"><span id="countdownHours" class="flip-card">00</span><small>HOURS</small></div>
+            <div class="flip-countdown-unit"><span id="countdownMinutes" class="flip-card">00</span><small>MINUTES</small></div>
+          </div>
+          <div id="eventCountdownMessage" class="event-countdown-message hidden"></div>
+        </section>
+
         <p id="heroEventLocation" class="location-copy">Blair County Convention Center • Altoona, Pennsylvania</p>
         <p class="family-line">WHERE FANDOM BECOMES FAMILY</p>
       </section>
@@ -279,6 +292,10 @@
 
         <div id="mapViewport" class="map-viewport">
           <div id="mapSvgHost" class="map-svg-host"><div class="map-loading">Loading vector floor plan…</div></div>
+          <div id="mapVendorPointer" class="map-vendor-pointer hidden" aria-hidden="true">
+            <span id="mapVendorPointerLabel">HERE</span>
+            <i></i>
+          </div>
         </div>
 
         <div class="map-directory-head">
@@ -779,6 +796,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.33"></script>
+  <script src="app.js?v=4.34"></script>
 </body>
 </html>

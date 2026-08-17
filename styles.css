@@ -2401,3 +2401,66 @@ button,
 .registration-form-status.success{color:#275e51}
 .registration-form-status.error{color:var(--coral2)}
 .registration-device-note code{display:block;margin-top:8px;padding:8px;overflow-wrap:anywhere;border:1px dashed rgba(58,39,32,.45);border-radius:6px;background:rgba(58,39,32,.04);font-size:7px}
+
+
+/* V4.34 — RETRO FLIP COUNTDOWN */
+.event-countdown{
+  width:min(100%,620px);margin:8px auto 10px;padding:8px 9px 9px;
+  border:2px solid var(--ink);border-radius:8px;
+  background:linear-gradient(180deg,rgba(25,20,17,.97),rgba(48,38,31,.98));
+  box-shadow:3px 4px 0 rgba(58,39,32,.16)
+}
+.event-countdown-kicker{display:block;margin-bottom:6px;color:var(--mustard);font-size:6px;font-weight:900;letter-spacing:.11em;text-align:center}
+.flip-countdown-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.flip-countdown-unit{min-width:0;text-align:center}
+.flip-countdown-unit small{display:block;margin-top:4px;color:rgba(255,247,223,.78);font-size:5.5px;font-weight:900;letter-spacing:.05em}
+.flip-card{
+  position:relative;display:grid;place-items:center;min-height:38px;overflow:hidden;
+  border:1px solid #0d0b0a;border-radius:5px;
+  background:linear-gradient(to bottom,#262321 0%,#2d2926 49%,#171514 50%,#211e1c 100%);
+  color:#fff7df;font-family:"Courier New",monospace;font-size:19px;font-weight:900;line-height:1;letter-spacing:-1px;
+  text-shadow:0 1px 0 #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(0,0,0,.65),0 2px 0 rgba(0,0,0,.35)
+}
+.flip-card::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid rgba(0,0,0,.85);box-shadow:0 1px 0 rgba(255,255,255,.04)}
+.flip-card::after{content:"";position:absolute;inset:2px;border:1px solid rgba(255,255,255,.025);border-radius:3px;pointer-events:none}
+.flip-card.flip-changing{animation:sfvcFlipTick .28s ease-out}
+@keyframes sfvcFlipTick{0%{transform:perspective(160px) rotateX(-12deg);filter:brightness(1.35)}100%{transform:perspective(160px) rotateX(0);filter:brightness(1)}}
+.event-countdown-message{padding:8px 6px;color:var(--cream);font-family:var(--display);font-size:12px;text-align:center;letter-spacing:.03em}
+@media(max-width:430px){
+  .event-countdown{padding-left:6px;padding-right:6px}
+  .flip-countdown-grid{gap:3px}
+  .flip-card{min-height:34px;font-size:16px}
+  .flip-countdown-unit small{font-size:4.8px}
+}
+
+/* V4.34 — VENDOR DESCRIPTION + PRECISE MAP POINTER */
+.map-vendor-description{margin:12px 0 8px;padding:10px;border:1px solid rgba(58,39,32,.5);border-radius:7px;background:rgba(226,173,52,.14)}
+.map-vendor-description strong{display:block;margin-bottom:4px;color:var(--coral2);font-size:7px;letter-spacing:.07em}
+.map-vendor-description p{margin:0;font-family:Georgia,serif;font-size:9px;line-height:1.45}
+.map-viewport{position:relative}
+.map-vendor-pointer{
+  position:absolute;z-index:16;transform:translate(-50%,-100%);
+  display:flex;flex-direction:column;align-items:center;pointer-events:none;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))
+}
+.map-vendor-pointer span{
+  padding:5px 8px;border:2px solid var(--ink);border-radius:999px;
+  background:var(--coral);color:var(--cream);font-size:7px;font-weight:900;letter-spacing:.04em;white-space:nowrap
+}
+.map-vendor-pointer i{
+  width:0;height:0;margin-top:-1px;border-left:10px solid transparent;border-right:10px solid transparent;border-top:17px solid var(--coral);
+  animation:vendorPointerBounce .8s ease-in-out infinite alternate
+}
+@keyframes vendorPointerBounce{from{transform:translateY(-2px)}to{transform:translateY(5px)}}
+.map-location-modal.map-directory-popover[open]{
+  position:fixed;top:auto;left:50%;right:auto;bottom:10px;margin:0;transform:translateX(-50%);z-index:1000
+}
+.map-location-modal.map-directory-popover #mapLocationModalContent{
+  max-height:min(44vh,390px);overflow:auto;
+  box-shadow:0 -4px 22px rgba(30,22,18,.26),7px 8px 0 rgba(58,39,32,.18)
+}
+.map-directory-card b{font-size:6.5px}
+@media(max-width:700px){
+  .map-location-modal.map-directory-popover[open]{width:calc(100vw - 18px);bottom:8px}
+  .map-location-modal.map-directory-popover #mapLocationModalContent{padding:18px;max-height:42vh}
+}
