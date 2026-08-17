@@ -7,10 +7,70 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.41">
+  <link rel="stylesheet" href="styles.css?v=4.42">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
+  <aside id="appUtilityDrawer" class="app-utility-drawer" aria-label="Program tools">
+    <div class="app-utility-panel">
+      <div class="app-utility-heading">
+        <div>
+          <span class="app-utility-kicker">ACCESSIBILITY & PROGRAM COPY</span>
+          <strong>PROGRAM TOOLS</strong>
+        </div>
+        <button id="closeUtilityDrawer" class="app-utility-close" type="button" aria-label="Close Program Tools">×</button>
+      </div>
+
+      <section class="utility-tool-block">
+        <div class="utility-tool-copy">
+          <span>READABILITY</span>
+          <strong>TEXT SIZE</strong>
+          <small>Adjust text throughout the program. Your choice is remembered on this device.</small>
+        </div>
+        <div class="font-size-controls" role="group" aria-label="Program text size">
+          <button id="fontSizeDecrease" type="button" aria-label="Decrease text size">A−</button>
+          <div id="fontSizeLabel" class="font-size-value" aria-live="polite">100%</div>
+          <button id="fontSizeIncrease" type="button" aria-label="Increase text size">A+</button>
+          <button id="fontSizeReset" class="font-size-reset" type="button">RESET</button>
+        </div>
+      </section>
+
+      <section class="utility-tool-block">
+        <div class="utility-tool-copy">
+          <span>HARD COPY / DIGITAL COPY</span>
+          <strong>PROGRAM PDF & PRINT</strong>
+          <small>Export an easy-to-read text PDF for sharing or saving, or open a printer-friendly copy of the program.</small>
+        </div>
+        <div class="utility-action-grid">
+          <button id="exportProgramPdf" class="utility-action-button pdf" type="button">
+            <b>PDF / SHARE</b>
+            <small>Messages, Mail, Files & more</small>
+          </button>
+          <button id="printProgram" class="utility-action-button print" type="button">
+            <b>PRINT / SAVE PDF</b>
+            <small>Open your device print dialog</small>
+          </button>
+        </div>
+      </section>
+
+      <section class="utility-tool-block refresh-tool-block">
+        <div class="utility-tool-copy">
+          <span>APP MAINTENANCE</span>
+          <strong>REFRESH PROGRAM</strong>
+          <small>Reload the latest schedule, guests, vendors, alerts, map information and app files.</small>
+        </div>
+        <button id="refreshAppNow" class="utility-refresh-button" type="button">↻ REFRESH APP & PAGE</button>
+      </section>
+
+      <p id="utilityToolStatus" class="utility-tool-status" aria-live="polite"></p>
+    </div>
+
+    <button id="appUtilityHandle" class="app-utility-handle" type="button" aria-expanded="false">
+      <span class="utility-handle-grip" aria-hidden="true"></span>
+      <strong>PROGRAM TOOLS</strong>
+      <span id="utilityHandleArrow" aria-hidden="true">▼</span>
+    </button>
+  </aside>
   <header class="topbar">
     <button class="brand-button" data-go="home" aria-label="Home">
       <img src="assets/icons/app-icon-192.png" alt="">
@@ -714,6 +774,8 @@
 
   </main>
 
+  <section id="programPrintView" class="program-print-view" aria-hidden="true"></section>
+
   <nav class="bottom-nav" aria-label="Main navigation">
     <button class="nav-button active" data-screen="home"><span>⌂</span><small>HOME</small></button>
     <button class="nav-button" data-screen="guests"><span>★</span><small>GUESTS</small></button>
@@ -873,6 +935,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.41"></script>
+  <script src="app.js?v=4.42"></script>
 </body>
 </html>

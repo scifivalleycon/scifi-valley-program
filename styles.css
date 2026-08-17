@@ -2997,3 +2997,344 @@ button,
     line-height:1.08;
   }
 }
+
+
+/* =========================================================
+   V4.42 — PULL-DOWN PROGRAM TOOLS
+   ========================================================= */
+
+.app-utility-drawer{
+  --utility-handle-height:29px;
+  position:fixed;
+  z-index:120;
+  top:0;
+  left:50%;
+  width:min(100%,820px);
+  transform:translate(-50%,calc(-100% + var(--utility-handle-height)));
+  transition:transform .24s ease;
+  color:var(--ink);
+  filter:drop-shadow(0 4px 5px rgba(35,22,17,.20));
+}
+
+.app-utility-drawer.open{
+  transform:translate(-50%,0);
+}
+
+.app-utility-panel{
+  max-height:78vh;
+  overflow:auto;
+  padding:calc(12px + env(safe-area-inset-top)) 13px 14px;
+  border:2px solid var(--ink);
+  border-top:0;
+  border-radius:0 0 12px 12px;
+  background:
+    radial-gradient(circle at 92% 10%,rgba(226,173,52,.22),transparent 23%),
+    var(--paper2);
+}
+
+.app-utility-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.app-utility-heading>div{
+  display:grid;
+}
+
+.app-utility-kicker,
+.utility-tool-copy>span{
+  color:var(--coral2);
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+
+.app-utility-heading strong{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:22px;
+  letter-spacing:.03em;
+}
+
+.app-utility-close{
+  width:36px;
+  height:36px;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--coral);
+  color:white;
+  font-size:22px;
+  font-weight:900;
+}
+
+.utility-tool-block{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(250px,.9fr);
+  gap:12px;
+  align-items:center;
+  padding:10px 0;
+  border-top:1px dashed rgba(58,39,32,.32);
+}
+
+.utility-tool-copy{
+  min-width:0;
+}
+
+.utility-tool-copy strong{
+  display:block;
+  margin:2px 0 3px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.utility-tool-copy small{
+  display:block;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.35;
+}
+
+.font-size-controls{
+  display:grid;
+  grid-template-columns:46px minmax(64px,1fr) 46px 58px;
+  gap:5px;
+}
+
+.font-size-controls button,
+.font-size-value{
+  min-height:42px;
+  display:grid;
+  place-items:center;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:rgba(255,247,223,.76);
+  color:var(--ink);
+  font-weight:900;
+}
+
+.font-size-controls button{
+  font-size:14px;
+}
+
+.font-size-controls button:disabled{
+  opacity:.32;
+}
+
+.font-size-value{
+  background:rgba(115,199,203,.22);
+  font-size:10px;
+}
+
+.font-size-controls .font-size-reset{
+  background:rgba(226,173,52,.20);
+  font-size:7px;
+}
+
+.utility-action-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+
+.utility-action-button{
+  min-height:54px;
+  display:grid;
+  align-content:center;
+  gap:2px;
+  padding:8px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  color:var(--ink);
+  text-align:left;
+}
+
+.utility-action-button.pdf{
+  background:rgba(115,199,203,.33);
+}
+
+.utility-action-button.print{
+  background:rgba(226,173,52,.28);
+}
+
+.utility-action-button b{
+  font-size:8px;
+  letter-spacing:.03em;
+}
+
+.utility-action-button small{
+  font-family:Georgia,serif;
+  font-size:7px;
+  line-height:1.25;
+}
+
+.refresh-tool-block{
+  padding-bottom:5px;
+}
+
+.utility-refresh-button{
+  min-height:46px;
+  padding:8px 12px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:var(--coral);
+  color:white;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+
+.utility-tool-status{
+  min-height:14px;
+  margin:7px 0 0;
+  color:var(--ink2);
+  font-size:7px;
+  font-weight:900;
+  text-align:center;
+}
+
+.app-utility-handle{
+  position:relative;
+  width:164px;
+  height:var(--utility-handle-height);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  margin:-1px auto 0;
+  padding:2px 10px 4px;
+  border:2px solid var(--ink);
+  border-top:0;
+  border-radius:0 0 12px 12px;
+  background:var(--ink);
+  color:var(--cream);
+  font-size:6.5px;
+  font-weight:900;
+  letter-spacing:.055em;
+  touch-action:none;
+  cursor:ns-resize;
+}
+
+.utility-handle-grip{
+  width:20px;
+  height:3px;
+  border-radius:999px;
+  background:rgba(255,247,223,.44);
+}
+
+.app-utility-handle>span:last-child{
+  color:var(--mustard);
+  font-size:7px;
+}
+
+@media(max-width:620px){
+  .utility-tool-block{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+
+  .app-utility-panel{
+    max-height:76vh;
+  }
+}
+
+
+/* =========================================================
+   V4.42 — PRINTABLE PROGRAM
+   ========================================================= */
+
+.program-print-view{
+  display:none;
+}
+
+@media print{
+  @page{
+    size:auto;
+    margin:.45in;
+  }
+
+  body{
+    background:white!important;
+    color:#111!important;
+  }
+
+  body>*:not(#programPrintView){
+    display:none!important;
+  }
+
+  #programPrintView{
+    display:block!important;
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    color:#111!important;
+    background:white!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+  }
+
+  .program-print-header{
+    padding-bottom:12pt;
+    border-bottom:2pt solid #222;
+  }
+
+  .program-print-header h1{
+    margin:0 0 4pt!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:22pt!important;
+    line-height:1.05!important;
+  }
+
+  .program-print-header p{
+    margin:0!important;
+    font-size:10pt!important;
+  }
+
+  .program-print-content h2{
+    margin:18pt 0 6pt!important;
+    padding-bottom:3pt;
+    border-bottom:1pt solid #555;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:15pt!important;
+    break-after:avoid;
+  }
+
+  .program-print-content h3{
+    margin:9pt 0 3pt!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:11pt!important;
+    break-after:avoid;
+  }
+
+  .program-print-content .print-day{
+    margin-top:12pt!important;
+    font-size:12pt!important;
+  }
+
+  .program-print-content p{
+    margin:0 0 4pt!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:9.5pt!important;
+    line-height:1.35!important;
+    orphans:3;
+    widows:3;
+  }
+
+  .program-print-content .print-bullet{
+    padding-left:12pt;
+  }
+
+  .program-print-content .print-small{
+    color:#555!important;
+    font-size:8pt!important;
+  }
+
+  .program-print-view footer{
+    margin-top:18pt;
+    padding-top:6pt;
+    border-top:1pt solid #777;
+    color:#555!important;
+    font-size:7.5pt!important;
+  }
+}

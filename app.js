@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.41",
+          appVersion:"4.42",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -246,6 +246,601 @@ function goTo(screenId){
 }
 navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
+
+
+/* =========================================================
+   V4.42 — PROGRAM TOOLS DRAWER / TEXT SIZE / PDF / PRINT
+   ========================================================= */
+
+const PROGRAM_TEXT_SCALE_KEY="sfvc-program-text-scale-v1";
+const PROGRAM_TEXT_SCALES=[0.90,1,1.15,1.30];
+let programTextScale=Number(localStorage.getItem(PROGRAM_TEXT_SCALE_KEY)||1);
+if(!PROGRAM_TEXT_SCALES.includes(programTextScale))programTextScale=1;
+
+let programTextObserver=null;
+let utilityDrawerDragging=false;
+let utilityDrawerDragStartY=0;
+let utilityDrawerMoved=false;
+
+function elementHasDirectText(element){
+  return [...(element?.childNodes||[])].some(node=>
+    node.nodeType===Node.TEXT_NODE && String(node.nodeValue||"").trim()
+  );
+}
+
+function fontScaleEligible(element){
+  if(!(element instanceof HTMLElement))return false;
+  if(element.closest("svg"))return false;
+  if(["SCRIPT","STYLE","NOSCRIPT","TEMPLATE"].includes(element.tagName))return false;
+  return elementHasDirectText(element);
+}
+
+function scaleTextElement(element){
+  if(!fontScaleEligible(element))return;
+
+  if(programTextScale===1){
+    if(element.dataset.sfvcBaseFontPx){
+      element.style.fontSize="";
+      delete element.dataset.sfvcBaseFontPx;
+    }
+    return;
+  }
+
+  if(!element.dataset.sfvcBaseFontPx){
+    const size=parseFloat(getComputedStyle(element).fontSize);
+    if(!Number.isFinite(size)||size<=0)return;
+    element.dataset.sfvcBaseFontPx=String(size);
+  }
+
+  const base=Number(element.dataset.sfvcBaseFontPx);
+  element.style.fontSize=`${Math.round(base*programTextScale*100)/100}px`;
+}
+
+function scaleTextTree(root=document.body){
+  if(root instanceof HTMLElement)scaleTextElement(root);
+  root.querySelectorAll?.("*").forEach(scaleTextElement);
+}
+
+function updateFontSizeControls(){
+  const index=PROGRAM_TEXT_SCALES.indexOf(programTextScale);
+  const label=document.getElementById("fontSizeLabel");
+  if(label)label.textContent=`${Math.round(programTextScale*100)}%`;
+
+  const decrease=document.getElementById("fontSizeDecrease");
+  const increase=document.getElementById("fontSizeIncrease");
+  if(decrease)decrease.disabled=index<=0;
+  if(increase)increase.disabled=index>=PROGRAM_TEXT_SCALES.length-1;
+}
+
+function applyProgramTextScale(scale,{persist=true}={}){
+  const requested=Number(scale);
+  programTextScale=PROGRAM_TEXT_SCALES.includes(requested)?requested:1;
+
+  // Reset existing inline sizes first if changing scale so every element
+  // continues using its original CSS-defined proportions.
+  document.querySelectorAll("[data-sfvc-base-font-px]").forEach(element=>{
+    element.style.fontSize="";
+    delete element.dataset.sfvcBaseFontPx;
+  });
+
+  if(programTextScale!==1)scaleTextTree(document.body);
+  if(persist)localStorage.setItem(PROGRAM_TEXT_SCALE_KEY,String(programTextScale));
+  updateFontSizeControls();
+}
+
+function changeProgramTextScale(direction){
+  const index=PROGRAM_TEXT_SCALES.indexOf(programTextScale);
+  const next=Math.max(0,Math.min(PROGRAM_TEXT_SCALES.length-1,index+direction));
+  applyProgramTextScale(PROGRAM_TEXT_SCALES[next]);
+}
+
+function initializeProgramTextScaling(){
+  applyProgramTextScale(programTextScale,{persist:false});
+
+  programTextObserver?.disconnect();
+  programTextObserver=new MutationObserver(mutations=>{
+    if(programTextScale===1)return;
+    mutations.forEach(mutation=>{
+      mutation.addedNodes.forEach(node=>{
+        if(node instanceof HTMLElement)scaleTextTree(node);
+      });
+    });
+  });
+  programTextObserver.observe(document.body,{childList:true,subtree:true});
+}
+
+function setUtilityDrawerOpen(open){
+  const drawer=document.getElementById("appUtilityDrawer");
+  const handle=document.getElementById("appUtilityHandle");
+  const arrow=document.getElementById("utilityHandleArrow");
+  if(!drawer||!handle)return;
+  drawer.classList.toggle("open",Boolean(open));
+  handle.setAttribute("aria-expanded",open?"true":"false");
+  if(arrow)arrow.textContent=open?"▲":"▼";
+}
+
+function toggleUtilityDrawer(){
+  const drawer=document.getElementById("appUtilityDrawer");
+  setUtilityDrawerOpen(!drawer?.classList.contains("open"));
+}
+
+function utilityDrawerPointerDown(event){
+  utilityDrawerDragging=true;
+  utilityDrawerMoved=false;
+  utilityDrawerDragStartY=event.clientY;
+  event.currentTarget.setPointerCapture?.(event.pointerId);
+}
+
+function utilityDrawerPointerMove(event){
+  if(!utilityDrawerDragging)return;
+  const dy=event.clientY-utilityDrawerDragStartY;
+  if(Math.abs(dy)>8)utilityDrawerMoved=true;
+}
+
+function utilityDrawerPointerUp(event){
+  if(!utilityDrawerDragging)return;
+  const dy=event.clientY-utilityDrawerDragStartY;
+  utilityDrawerDragging=false;
+  event.currentTarget.releasePointerCapture?.(event.pointerId);
+
+  if(dy>35)setUtilityDrawerOpen(true);
+  else if(dy<-35)setUtilityDrawerOpen(false);
+}
+
+
+/* ---------- Printable program content ---------- */
+
+function plainText(value){
+  const temp=document.createElement("div");
+  temp.innerHTML=String(value??"");
+  return String(temp.textContent||temp.innerText||"")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function exportEventContentLines(event){
+  const lines=[];
+  if(event?.summary)lines.push(plainText(event.summary));
+
+  (event?.content||[]).forEach(block=>{
+    if(block?.title)lines.push(plainText(block.title));
+    if(block?.type==="list"||block?.type==="schedule"){
+      (block.items||[]).forEach(item=>lines.push(`- ${plainText(item)}`));
+    }else if(block?.type==="menu"){
+      (block.items||[]).forEach(item=>{
+        lines.push(`${plainText(item.name)}${item.price?` - ${plainText(item.price)}`:""}`);
+        if(item.desc)lines.push(`  ${plainText(item.desc)}`);
+      });
+    }else if(block?.type==="systems"){
+      if(block.title)lines.push(plainText(block.title));
+      (block.items||[]).forEach(item=>{
+        lines.push(`${plainText(item.name)}${item.year?` (${plainText(item.year)})`:""}`);
+        if(item.desc)lines.push(`  ${plainText(item.desc)}`);
+      });
+    }
+  });
+  return lines;
+}
+
+function programExportBlocks(){
+  const blocks=[];
+  const add=(type,text)=>{const value=plainText(text);if(value)blocks.push({type,text:value});};
+  const addLine=text=>add("body",text);
+  const addSection=text=>add("section",text);
+  const addSub=text=>add("subheading",text);
+  const addBullet=text=>add("bullet",text);
+
+  add("title",state.settings.eventName||"Sci-Fi Valley Con");
+  add("subtitle","OFFICIAL DIGITAL EVENT PROGRAM");
+  addLine(formatEventDateRange(false));
+  addLine(eventLocationText());
+  addLine("Friday: 2:00 PM - 9:00 PM | Saturday: 10:00 AM - 8:00 PM | Sunday: 10:00 AM - 5:00 PM");
+  add("small",`Generated ${new Date().toLocaleString()}`);
+
+  const currentAlerts=(state.recentAlerts||[])
+    .map(item=>({...item,_date:parseBroadcastTimestamp(item.createdAt)}))
+    .filter(item=>item._date&&Date.now()-item._date.getTime()<=RECENT_ALERT_RETENTION_MS)
+    .sort((a,b)=>b._date-a._date);
+  if(currentAlerts.length){
+    addSection("LATEST EVENT UPDATES");
+    currentAlerts.forEach(item=>{
+      addSub(item.title||"Event Update");
+      addLine(item.body||"");
+    });
+  }
+
+  const allSchedule=showScheduleItems();
+  const myItems=allSchedule.filter(item=>state.mySchedule.has(item.id));
+  const myGuests=(state.guests||[]).filter(guest=>state.favorites.has(guest.id));
+
+  if(myItems.length||myGuests.length){
+    addSection("MY CON");
+    if(myItems.length){
+      addSub("MY SCHEDULE");
+      ["Friday","Saturday","Sunday"].forEach(day=>{
+        const items=sortedScheduleItems(myItems.filter(item=>item.day===day));
+        if(!items.length)return;
+        add("day",day);
+        items.forEach(item=>addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location}`));
+      });
+    }
+    if(myGuests.length){
+      addSub("MY SAVED GUESTS");
+      myGuests.forEach(guest=>addBullet(`${guest.name}${guest.group?` | ${guest.group}`:""}`));
+    }
+  }
+
+  addSection("SHOW SCHEDULE");
+  ["Friday","Saturday","Sunday"].forEach(day=>{
+    const items=sortedScheduleItems(allSchedule.filter(item=>item.day===day));
+    if(!items.length)return;
+    add("day",day);
+    items.forEach(item=>{
+      addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location} | ${primaryScheduleCategory(item)}`);
+    });
+  });
+
+  if(state.guests?.length){
+    addSection("CELEBRITY GUESTS");
+    state.guests.forEach(guest=>{
+      addSub(`${guest.name}${guest.group?` - ${guest.group}`:""}`);
+      const detail=[guest.character,guest.knownFor].filter(Boolean).map(plainText).join(" | ");
+      if(detail)addLine(detail);
+      if(guest.bio)addLine(plainText(guest.bio));
+    });
+  }
+
+  if(celebrityPublished()&&state.celebrityPricing?.length){
+    addSection("CELEBRITY PRICING");
+    state.celebrityPricing.forEach(price=>{
+      addSub(price.guestName||"Guest");
+      addLine(`Autograph: ${price.autograph||"TBD"} | Selfie: ${price.selfie||"TBD"} | Combo: ${price.combo||"TBD"} | Pro Photo: ${price.proPhoto||"TBD"}`);
+      if(price.notes)addLine(price.notes);
+    });
+  }
+
+  if(state.events?.length){
+    addSection("EVENT GUIDE");
+    state.events.forEach(event=>{
+      addSub(`${event.title}${event.category?` - ${event.category}`:""}`);
+      exportEventContentLines(event).forEach(addLine);
+    });
+  }
+
+  if(mapDirectoryVisible()&&state.vendors?.length){
+    addSection("VENDOR DIRECTORY & FLOOR LOCATIONS");
+    addLine("The interactive floor map remains available inside the app. This printable copy lists vendor locations for quick reference.");
+    [...state.vendors]
+      .sort((a,b)=>String(a.location||"").localeCompare(String(b.location||""),undefined,{numeric:true}))
+      .forEach(vendor=>{
+        addSub(`${vendor.location||"TBD"} - ${vendor.name||"Vendor"}`);
+        if(vendor.description)addLine(`What they sell: ${vendor.description}`);
+        else if(vendor.categories)addLine(`Products / categories: ${vendor.categories}`);
+        if(vendor.conQuest)addLine("Con-Quest participant");
+      });
+  }
+
+  const faqs=(state.faq||[]).filter(item=>item&&item.enabled!==false&&item.question);
+  if(faqs.length){
+    addSection("FREQUENTLY ASKED QUESTIONS");
+    faqs.forEach(item=>{
+      addSub(item.question);
+      addLine(faqAnswerText(item));
+      (item.bullets||[]).forEach(addBullet);
+    });
+  }
+
+  addSection("IMPORTANT");
+  addLine("Schedules, guests, pricing, locations and event information are subject to change. Check the live Sci-Fi Valley Con app for the latest updates.");
+
+  return blocks;
+}
+
+
+/* ---------- Real shareable PDF file, no external library ---------- */
+
+function pdfAscii(value){
+  return String(value??"")
+    .normalize("NFKD")
+    .replace(/[\u2010-\u2015]/g,"-")
+    .replace(/[\u2018\u2019]/g,"'")
+    .replace(/[\u201C\u201D]/g,'"')
+    .replace(/\u2022/g,"-")
+    .replace(/[\u2600-\u27BF]/g,"")
+    .replace(/[^\x20-\x7E]/g,"")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function pdfEscape(value){
+  return pdfAscii(value).replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");
+}
+
+function wrapPdfText(text,size,maxWidth=528){
+  const clean=pdfAscii(text);
+  if(!clean)return [""];
+  const approximateCharWidth=Math.max(3.2,size*0.50);
+  const maxChars=Math.max(18,Math.floor(maxWidth/approximateCharWidth));
+  const words=clean.split(/\s+/);
+  const lines=[];
+  let line="";
+
+  words.forEach(word=>{
+    const candidate=line?`${line} ${word}`:word;
+    if(candidate.length<=maxChars){
+      line=candidate;
+      return;
+    }
+    if(line)lines.push(line);
+    if(word.length<=maxChars){
+      line=word;
+      return;
+    }
+    for(let i=0;i<word.length;i+=maxChars){
+      const part=word.slice(i,i+maxChars);
+      if(part.length===maxChars)lines.push(part);
+      else line=part;
+    }
+  });
+
+  if(line)lines.push(line);
+  return lines.length?lines:[""];
+}
+
+function pdfBlockStyle(type){
+  const styles={
+    title:{size:20,bold:true,before:0,after:8,leading:24},
+    subtitle:{size:10,bold:true,before:0,after:5,leading:13},
+    section:{size:14,bold:true,before:14,after:6,leading:18},
+    day:{size:11,bold:true,before:8,after:3,leading:14},
+    subheading:{size:10,bold:true,before:6,after:2,leading:13},
+    bullet:{size:9,bold:false,before:0,after:2,leading:12,indent:12},
+    small:{size:8,bold:false,before:1,after:4,leading:10},
+    body:{size:9,bold:false,before:0,after:3,leading:12}
+  };
+  return styles[type]||styles.body;
+}
+
+function buildProgramPdfBytes(){
+  const blocks=programExportBlocks();
+  const pages=[];
+  let page=[];
+  let y=748;
+
+  const pushPage=()=>{
+    if(page.length)pages.push(page);
+    page=[];
+    y=748;
+  };
+
+  blocks.forEach(block=>{
+    const style=pdfBlockStyle(block.type);
+    const wrapped=wrapPdfText(block.type==="bullet"?`- ${block.text}`:block.text,style.size,528-(style.indent||0));
+    const height=style.before+(wrapped.length*style.leading)+style.after;
+
+    if(y-height<54 && page.length)pushPage();
+
+    y-=style.before;
+    wrapped.forEach(line=>{
+      page.push({
+        text:line,
+        x:42+(style.indent||0),
+        y,
+        size:style.size,
+        bold:style.bold
+      });
+      y-=style.leading;
+    });
+    y-=style.after;
+  });
+
+  pushPage();
+  if(!pages.length)pages.push([]);
+
+  const pageCount=pages.length;
+  const objects={};
+  objects[1]="<< /Type /Catalog /Pages 2 0 R >>";
+  const pageIds=pages.map((_,index)=>6+(index*2));
+  objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(" ")}] /Count ${pageCount} >>`;
+  objects[3]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>";
+  objects[4]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>";
+
+  pages.forEach((rows,index)=>{
+    const contentId=5+(index*2);
+    const pageId=6+(index*2);
+    const footer=`${pdfAscii(state.settings.eventName||"Sci-Fi Valley Con")} Digital Program | Page ${index+1} of ${pageCount}`;
+
+    const commands=[
+      ...rows.map(row=>`BT /F${row.bold?2:1} ${row.size} Tf 1 0 0 1 ${row.x} ${row.y} Tm (${pdfEscape(row.text)}) Tj ET`),
+      `BT /F1 7 Tf 1 0 0 1 42 28 Tm (${pdfEscape(footer)}) Tj ET`
+    ].join("\n");
+
+    objects[contentId]=`<< /Length ${commands.length} >>\nstream\n${commands}\nendstream`;
+    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;
+  });
+
+  const maxId=Math.max(...Object.keys(objects).map(Number));
+  let pdf="%PDF-1.4\n";
+  const offsets=[0];
+
+  for(let id=1;id<=maxId;id++){
+    offsets[id]=pdf.length;
+    pdf+=`${id} 0 obj\n${objects[id]}\nendobj\n`;
+  }
+
+  const xrefOffset=pdf.length;
+  pdf+=`xref\n0 ${maxId+1}\n`;
+  pdf+="0000000000 65535 f \n";
+  for(let id=1;id<=maxId;id++){
+    pdf+=`${String(offsets[id]).padStart(10,"0")} 00000 n \n`;
+  }
+  pdf+=`trailer\n<< /Size ${maxId+1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+  return new TextEncoder().encode(pdf);
+}
+
+function programPdfFilename(){
+  const name=String(state.settings.eventName||"Sci-Fi Valley Con")
+    .replace(/[^a-z0-9]+/gi,"-")
+    .replace(/^-+|-+$/g,"");
+  return `${name||"SFVC"}-Digital-Program.pdf`;
+}
+
+function downloadBlob(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download=filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+
+async function exportProgramPdfFile(){
+  const status=document.getElementById("utilityToolStatus");
+  const button=document.getElementById("exportProgramPdf");
+  if(button)button.disabled=true;
+  if(status)status.textContent="BUILDING YOUR PDF…";
+
+  try{
+    const bytes=buildProgramPdfBytes();
+    const blob=new Blob([bytes],{type:"application/pdf"});
+    const filename=programPdfFilename();
+    const file=new File([blob],filename,{type:"application/pdf"});
+
+    if(navigator.share&&navigator.canShare?.({files:[file]})){
+      await navigator.share({
+        title:`${state.settings.eventName||"Sci-Fi Valley Con"} Digital Program`,
+        text:"Sci-Fi Valley Con digital event program",
+        files:[file]
+      });
+      if(status)status.textContent="PDF READY. YOUR DEVICE SHARE MENU WAS OPENED.";
+    }else{
+      downloadBlob(blob,filename);
+      if(status)status.textContent="PDF DOWNLOADED. OPEN THE FILE TO SHARE, EMAIL, SAVE OR PRINT IT.";
+    }
+  }catch(err){
+    if(err?.name==="AbortError"){
+      if(status)status.textContent="PDF SHARE CANCELED.";
+    }else{
+      console.error("Program PDF export failed",err);
+      if(status)status.textContent="PDF EXPORT COULD NOT COMPLETE. TRY PRINT / SAVE PDF INSTEAD.";
+    }
+  }finally{
+    if(button)button.disabled=false;
+  }
+}
+
+
+/* ---------- Browser print / Save as PDF ---------- */
+
+function buildProgramPrintView(){
+  const host=document.getElementById("programPrintView");
+  if(!host)return;
+
+  const blocks=programExportBlocks();
+  host.innerHTML=`
+    <header class="program-print-header">
+      <h1>${escapeAppHtml(state.settings.eventName||"Sci-Fi Valley Con")}</h1>
+      <p>${escapeAppHtml(formatEventDateRange(false))} • ${escapeAppHtml(eventLocationText())}</p>
+    </header>
+    <div class="program-print-content">
+      ${blocks.slice(5).map(block=>{
+        if(block.type==="section")return `<h2>${escapeAppHtml(block.text)}</h2>`;
+        if(block.type==="day")return `<h3 class="print-day">${escapeAppHtml(block.text)}</h3>`;
+        if(block.type==="subheading")return `<h3>${escapeAppHtml(block.text)}</h3>`;
+        if(block.type==="bullet")return `<p class="print-bullet">• ${escapeAppHtml(block.text)}</p>`;
+        if(block.type==="small")return `<p class="print-small">${escapeAppHtml(block.text)}</p>`;
+        return `<p>${escapeAppHtml(block.text)}</p>`;
+      }).join("")}
+    </div>
+    <footer>Generated from the Sci-Fi Valley Con Digital Program • ${escapeAppHtml(new Date().toLocaleString())}</footer>`;
+}
+
+function printProgramCopy(){
+  buildProgramPrintView();
+  const status=document.getElementById("utilityToolStatus");
+  if(status)status.textContent="OPENING PRINT DIALOG…";
+  setUtilityDrawerOpen(false);
+
+  setTimeout(()=>{
+    window.print();
+    if(status)status.textContent="USE YOUR PRINT MENU TO PRINT OR SAVE AS PDF.";
+  },120);
+}
+
+
+/* ---------- Full refresh ---------- */
+
+async function refreshProgramFromTools(){
+  const button=document.getElementById("refreshAppNow");
+  const status=document.getElementById("utilityToolStatus");
+  if(button){
+    button.disabled=true;
+    button.textContent="↻ REFRESHING…";
+  }
+  if(status)status.textContent="CHECKING FOR THE LATEST PROGRAM DATA AND APP FILES…";
+
+  try{
+    await refreshAppData("manual-program-tools");
+    const registration=await navigator.serviceWorker?.getRegistration?.();
+    await registration?.update?.().catch(()=>{});
+    if(status)status.textContent="LATEST DATA LOADED. RELOADING THE APP…";
+    setTimeout(()=>window.location.reload(),350);
+  }catch(err){
+    console.error("Manual app refresh failed",err);
+    if(status)status.textContent="REFRESH FAILED. CHECK YOUR CONNECTION AND TRY AGAIN.";
+    if(button){
+      button.disabled=false;
+      button.textContent="↻ REFRESH APP & PAGE";
+    }
+  }
+}
+
+
+/* ---------- Bind Program Tools ---------- */
+
+function initializeProgramTools(){
+  const handle=document.getElementById("appUtilityHandle");
+  const drawer=document.getElementById("appUtilityDrawer");
+
+  handle?.addEventListener("pointerdown",utilityDrawerPointerDown);
+  handle?.addEventListener("pointermove",utilityDrawerPointerMove);
+  handle?.addEventListener("pointerup",utilityDrawerPointerUp);
+  handle?.addEventListener("pointercancel",()=>{utilityDrawerDragging=false});
+
+  handle?.addEventListener("click",()=>{
+    if(utilityDrawerMoved){
+      utilityDrawerMoved=false;
+      return;
+    }
+    toggleUtilityDrawer();
+  });
+
+  document.getElementById("closeUtilityDrawer")?.addEventListener("click",()=>setUtilityDrawerOpen(false));
+  document.getElementById("fontSizeDecrease")?.addEventListener("click",()=>changeProgramTextScale(-1));
+  document.getElementById("fontSizeIncrease")?.addEventListener("click",()=>changeProgramTextScale(1));
+  document.getElementById("fontSizeReset")?.addEventListener("click",()=>applyProgramTextScale(1));
+  document.getElementById("exportProgramPdf")?.addEventListener("click",exportProgramPdfFile);
+  document.getElementById("printProgram")?.addEventListener("click",printProgramCopy);
+  document.getElementById("refreshAppNow")?.addEventListener("click",refreshProgramFromTools);
+
+  // Swipe upward on the open panel to close it.
+  drawer?.addEventListener("pointerdown",event=>{
+    if(event.target.closest("button,input,a"))return;
+    utilityDrawerPointerDown(event);
+  });
+  drawer?.addEventListener("pointermove",utilityDrawerPointerMove);
+  drawer?.addEventListener("pointerup",event=>{
+    if(!utilityDrawerDragging)return;
+    utilityDrawerPointerUp(event);
+  });
+
+  window.addEventListener("beforeprint",buildProgramPrintView);
+  initializeProgramTextScaling();
+  updateFontSizeControls();
+}
 
 async function loadData({silent=false,force=false}={}){
   if(appDataRefreshPromise&&!force)return appDataRefreshPromise;
@@ -1735,7 +2330,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.41",
+      appVersion:"4.42",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
@@ -3169,6 +3764,7 @@ document.getElementById("removeAppRegistration")?.addEventListener("click",remov
 initializeAppAnalytics();
 initializeRecentAlerts();
 initializeEventCountdown();
+initializeProgramTools();
 
 loadData().then(()=>{
   startVisibleAppRefresh();
