@@ -2623,3 +2623,52 @@ button,
     font-size:6.3px;
   }
 }
+
+
+/* =========================================================
+   V4.37 — LARGER / BOLDER HOME SHOW HOURS
+   ========================================================= */
+
+.home-show-hours-kicker{
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.08em;
+  opacity:1;
+}
+
+.home-show-hours-day{
+  padding:7px 6px 8px;
+  border-width:1.5px;
+}
+
+.home-show-hours-day strong{
+  margin-bottom:3px;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.055em;
+}
+
+.home-show-hours-day span{
+  font-size:8.5px;
+  font-weight:700;
+  line-height:1.25;
+}
+
+@media(max-width:430px){
+  .home-show-hours-kicker{
+    font-size:5.8px;
+  }
+
+  .home-show-hours-day{
+    padding:7px 4px 8px;
+  }
+
+  .home-show-hours-day strong{
+    font-size:6.7px;
+  }
+
+  .home-show-hours-day span{
+    font-size:8px;
+    font-weight:700;
+  }
+}
