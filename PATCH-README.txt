@@ -1,52 +1,29 @@
-Sci-Fi Valley Con Attendee App V4.45 — Program Tools + Custom PDF Builder
+Sci-Fi Valley Con Attendee App V4.46 — Ink-Friendly PDF / Print
 
-PROGRAM TOOLS
-Adds direct shortcuts for:
-- Notification Settings
-- Register This App
+This refines the V4.45 Program PDF Builder so physical printing does not waste ink.
 
-PDF BUILDER
-The old one-click all-content export now opens a Program PDF Builder.
+GENERATED PDF
+- Pure white page background
+- No dark masthead fill
+- No cream paper fill
+- No teal section-box fill
+- Dark text
+- Thin orange and teal accent rules
+- Thin dark page outline
+- Searchable/selectable text remains unchanged
+- Full and Custom PDF Builder options remain unchanged
 
-Users choose:
-1. FULL PROGRAM
-   Includes everything, including Event Guide, café/food information, vendors,
-   FAQ, guests, schedule, My Con and recent updates.
+PRINT / SAVE PDF
+- Forces white background
+- Removes colored section fills
+- Uses only thin accent lines and borders
+- Uses print-color-adjust: economy where supported
+- Keeps the readable section hierarchy without large ink-heavy color areas
 
-2. BUILD A CUSTOM PDF
-   Checkboxes let the attendee choose:
-   - Event Details & Hours
-   - Latest Event Updates
-   - My Con
-   - Show Schedule
-   - Celebrity Guests
-   - Celebrity Pricing
-   - Event Guide
-   - Café & Food Info
-   - Vendor Directory
-   - FAQ
+APP INTERFACE
+The actual attendee app keeps its normal retro colors. Only exported/printed program
+copies use the low-ink white design.
 
-The same builder works for PDF/Share and Print/Save PDF.
-
-PDF STYLE
-The generated PDF now uses a printer-friendly version of the app's visual language:
-- Warm cream page background
-- Dark brown masthead and border
-- Orange accent lines
-- Pale teal section headers
-- Stronger typography hierarchy
-- Page numbers and footer
-- Text remains selectable/searchable
-
-CAFÉ / FOOD
-Food-related Event Guide entries are detected separately so attendees can include
-café/menu/concession information without having to include the entire Event Guide.
-
-PDF SHARING
-Supported phones still receive the native share sheet for Messages, Mail, Files,
-Drive, AirDrop and other installed apps. Other browsers download the PDF file.
-
-This is an attendee CODE-ONLY patch.
 No Admin or Notify Worker update is required.
 No backend-managed JSON files are included.
 

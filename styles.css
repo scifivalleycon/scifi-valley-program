@@ -3785,3 +3785,73 @@ body.sfvc-text-enlarged .screen [class*="details"]{
     color:#2f1f19!important;
   }
 }
+
+
+/* =========================================================
+   V4.46 — INK-FRIENDLY PRINT / SAVE PDF
+   ========================================================= */
+
+@media print{
+  html,
+  body,
+  #programPrintView{
+    background:#fff!important;
+    color:#111!important;
+    -webkit-print-color-adjust:economy!important;
+    print-color-adjust:economy!important;
+  }
+
+  .program-print-header{
+    margin-bottom:12pt!important;
+    padding:10pt 12pt 9pt!important;
+    border:1.5pt solid #2f211c!important;
+    border-bottom:2.5pt solid #d85f3e!important;
+    border-radius:0!important;
+    background:#fff!important;
+    color:#111!important;
+    box-shadow:none!important;
+  }
+
+  .program-print-header>span{
+    color:#b34831!important;
+  }
+
+  .program-print-header h1,
+  .program-print-header p{
+    color:#111!important;
+  }
+
+  .program-print-content h2{
+    padding:4pt 0 3pt!important;
+    border:0!important;
+    border-bottom:1pt solid #6aa6a7!important;
+    border-left:0!important;
+    background:#fff!important;
+    color:#111!important;
+    box-shadow:none!important;
+  }
+
+  .program-print-content h2::after{
+    content:"";
+    display:block;
+    width:34pt;
+    margin-top:2pt;
+    border-bottom:2pt solid #d85f3e;
+  }
+
+  .program-print-content h3,
+  .program-print-content p,
+  .program-print-content .print-day{
+    background:#fff!important;
+    color:#111!important;
+  }
+
+  .program-print-content .print-day{
+    border-bottom:1pt solid #d85f3e!important;
+  }
+
+  .program-print-view footer{
+    color:#444!important;
+    background:#fff!important;
+  }
+}

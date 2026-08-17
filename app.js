@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.45",
+          appVersion:"4.46",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -708,8 +708,8 @@ function pdfBlockStyle(type){
 }
 
 function pdfColor(type,pageIndex,row){
-  if(type==="title")return pageIndex===0?[0.99,0.95,0.84]:[0.20,0.12,0.09];
-  if(type==="subtitle")return pageIndex===0?[0.95,0.40,0.22]:[0.72,0.26,0.16];
+  if(type==="title")return [0.20,0.12,0.09];
+  if(type==="subtitle")return [0.72,0.26,0.16];
   if(type==="section")return [0.20,0.12,0.09];
   if(type==="day")return [0.72,0.26,0.16];
   if(type==="subheading")return [0.20,0.12,0.09];
@@ -777,25 +777,26 @@ function buildProgramPdfBytes(selection=fullProgramPdfSelection()){
     const footer=`${pdfAscii(state.settings.eventName||"Sci-Fi Valley Con")} Digital Program | Page ${index+1} of ${pageCount}`;
     const commands=[];
 
-    // Warm paper background and dark outline inspired by the app.
-    commands.push("0.996 0.972 0.886 rg 0 0 612 792 re f");
-    commands.push("0.205 0.125 0.094 RG 1.4 w 24 24 564 744 re S");
+    // Ink-friendly white page. Keep the retro identity with thin rules only.
+    commands.push("1 1 1 rg 0 0 612 792 re f");
+    commands.push("0.205 0.125 0.094 RG 0.9 w 24 24 564 744 re S");
 
     if(index===0){
-      // Retro app-style masthead.
-      commands.push("0.205 0.125 0.094 rg 25 706 562 61 re f");
-      commands.push("0.945 0.402 0.224 rg 25 702 562 4 re f");
+      // White masthead with dark text and a slim orange rule.
+      commands.push("0.945 0.402 0.224 RG 2.2 w 25 702 562 0 l S");
+      commands.push("0.205 0.125 0.094 RG 0.7 w 25 766 562 0 l S");
     }else{
-      commands.push("0.945 0.402 0.224 rg 25 760 562 4 re f");
+      commands.push("0.945 0.402 0.224 RG 1.6 w 25 760 562 0 l S");
     }
 
     rows.forEach(row=>{
       if(row.type==="section"){
-        commands.push(`0.776 0.894 0.866 rg 35 ${row.y-5} 542 18 re f`);
-        commands.push(`0.945 0.402 0.224 rg 35 ${row.y-5} 5 18 re f`);
+        // No filled section bars. Use slim teal/orange rules instead.
+        commands.push(`0.420 0.690 0.690 RG 1.2 w 35 ${row.y-6} 542 0 l S`);
+        commands.push(`0.945 0.402 0.224 RG 2.4 w 35 ${row.y-6} 30 0 l S`);
       }
       if(row.type==="day"){
-        commands.push(`0.945 0.402 0.224 rg 42 ${row.y-3} 42 2 re f`);
+        commands.push(`0.945 0.402 0.224 RG 1.5 w 42 ${row.y-3} 42 0 l S`);
       }
 
       const font=row.type==="body"||row.type==="bullet"||row.type==="small" ? 3 : (row.bold?2:1);
@@ -804,7 +805,7 @@ function buildProgramPdfBytes(selection=fullProgramPdfSelection()){
     });
 
     // Footer treatment.
-    commands.push("0.205 0.125 0.094 RG 0.6 w 38 41 536 0 l S");
+    commands.push("0.205 0.125 0.094 RG 0.45 w 38 41 536 0 l S");
     commands.push("0.340 0.290 0.260 rg");
     commands.push(`BT /F1 7 Tf 1 0 0 1 42 29 Tm (${pdfEscape(footer)}) Tj ET`);
 
@@ -2596,7 +2597,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.45",
+      appVersion:"4.46",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
