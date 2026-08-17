@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.46">
+  <link rel="stylesheet" href="styles.css?v=4.47">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -69,6 +69,21 @@
             <small>Full or custom program</small>
           </button>
         </div>
+      </section>
+
+      <section class="utility-tool-block utility-share-app-block">
+        <div class="utility-tool-copy">
+          <span>INVITE A FRIEND</span>
+          <strong>SHARE THIS WEB APP</strong>
+          <small>Send the Sci-Fi Valley Con digital program to a friend by text, email, Messages, Messenger, AirDrop or another sharing app.</small>
+        </div>
+        <button id="shareWebApp" class="utility-share-app-button" type="button">
+          <span class="utility-share-icon" aria-hidden="true">↗</span>
+          <span>
+            <b>SHARE THIS WEB APP WITH A FRIEND</b>
+            <small>Send app.scifivalleycon.com</small>
+          </span>
+        </button>
       </section>
 
       <section class="utility-tool-block refresh-tool-block">
@@ -792,6 +807,43 @@
 
   </main>
 
+  <dialog id="shareWebAppModal" class="share-web-app-modal" data-font-scale="locked">
+    <div class="share-web-app-card">
+      <button id="closeShareWebAppModal" class="modal-close share-app-close" type="button" aria-label="Close app sharing options">×</button>
+
+      <span class="share-app-kicker">INVITE A FRIEND</span>
+      <h2>SHARE THE <span>SFVC APP</span></h2>
+      <p>Send the Sci-Fi Valley Con digital program to someone so they can check the schedule, guests, vendors, map, alerts and more.</p>
+
+      <div class="share-app-link-preview">
+        <small>WEB APP</small>
+        <strong>app.scifivalleycon.com</strong>
+      </div>
+
+      <div class="share-app-options">
+        <a id="shareAppTextLink" class="share-app-option text" href="#">
+          <span>💬</span>
+          <b>TEXT MESSAGE</b>
+          <small>Open your messaging app</small>
+        </a>
+
+        <a id="shareAppEmailLink" class="share-app-option email" href="#">
+          <span>✉</span>
+          <b>EMAIL</b>
+          <small>Open your email app</small>
+        </a>
+
+        <button id="copyShareAppLink" class="share-app-option copy" type="button">
+          <span>⧉</span>
+          <b>COPY APP LINK</b>
+          <small>Paste it anywhere you want</small>
+        </button>
+      </div>
+
+      <p id="shareWebAppStatus" class="share-web-app-status" aria-live="polite"></p>
+    </div>
+  </dialog>
+
   <dialog id="programPdfBuilderModal" class="program-pdf-builder-modal" data-font-scale="locked">
     <div class="program-pdf-builder-card">
       <button id="closeProgramPdfBuilder" class="modal-close pdf-builder-close" type="button" aria-label="Close PDF Builder">×</button>
@@ -1049,6 +1101,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.46"></script>
+  <script src="app.js?v=4.47"></script>
 </body>
 </html>

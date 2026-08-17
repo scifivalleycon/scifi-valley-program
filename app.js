@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.46",
+          appVersion:"4.47",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -1016,6 +1016,97 @@ function printProgramCopy(){
 }
 
 
+/* ---------- Share this web app ---------- */
+
+function sfvcShareAppUrl(){
+  return "https://app.scifivalleycon.com/";
+}
+
+function sfvcShareAppTitle(){
+  return `${state.settings.eventName||"Sci-Fi Valley Con"} Digital Program`;
+}
+
+function sfvcShareAppText(){
+  return `Check out the Sci-Fi Valley Con digital event program for guests, schedules, vendors, the floor map, event alerts and more:`;
+}
+
+function configureShareAppFallback(){
+  const url=sfvcShareAppUrl();
+  const text=sfvcShareAppText();
+  const fullMessage=`${text} ${url}`;
+
+  const textLink=document.getElementById("shareAppTextLink");
+  const emailLink=document.getElementById("shareAppEmailLink");
+
+  if(textLink){
+    // sms:?&body= is broadly supported on iOS/Android and opens the user's
+    // preferred messaging app without sending anything automatically.
+    textLink.href=`sms:?&body=${encodeURIComponent(fullMessage)}`;
+  }
+
+  if(emailLink){
+    emailLink.href=`mailto:?subject=${encodeURIComponent(sfvcShareAppTitle())}&body=${encodeURIComponent(`${text}\n\n${url}`)}`;
+  }
+}
+
+function openShareWebAppFallback(){
+  configureShareAppFallback();
+  const modal=document.getElementById("shareWebAppModal");
+  const status=document.getElementById("shareWebAppStatus");
+  if(status)status.textContent="";
+  if(typeof modal?.showModal==="function"&&!modal.open)modal.showModal();
+  else modal?.setAttribute("open","");
+}
+
+function closeShareWebAppFallback(){
+  document.getElementById("shareWebAppModal")?.close();
+}
+
+async function copyShareWebAppLink(){
+  const status=document.getElementById("shareWebAppStatus");
+  const url=sfvcShareAppUrl();
+
+  try{
+    await navigator.clipboard.writeText(url);
+    if(status)status.textContent="✓ APP LINK COPIED";
+  }catch{
+    const input=document.createElement("input");
+    input.value=url;
+    input.setAttribute("readonly","");
+    input.style.position="fixed";
+    input.style.opacity="0";
+    document.body.appendChild(input);
+    input.select();
+    const copied=document.execCommand?.("copy");
+    input.remove();
+    if(status)status.textContent=copied?"✓ APP LINK COPIED":`COPY THIS LINK: ${url}`;
+  }
+}
+
+async function shareWebAppWithFriend(){
+  const url=sfvcShareAppUrl();
+  const shareData={
+    title:sfvcShareAppTitle(),
+    text:sfvcShareAppText(),
+    url
+  };
+
+  setUtilityDrawerOpen(false);
+
+  if(navigator.share){
+    try{
+      await navigator.share(shareData);
+      return;
+    }catch(err){
+      // Closing the native share sheet is not an error that needs another popup.
+      if(err?.name==="AbortError")return;
+      console.warn("Native app share unavailable",err);
+    }
+  }
+
+  openShareWebAppFallback();
+}
+
 /* ---------- Full refresh ---------- */
 
 async function refreshProgramFromTools(){
@@ -1070,6 +1161,12 @@ function initializeProgramTools(){
   document.getElementById("exportProgramPdf")?.addEventListener("click",exportProgramPdfFile);
   document.getElementById("printProgram")?.addEventListener("click",printProgramCopy);
   document.getElementById("refreshAppNow")?.addEventListener("click",refreshProgramFromTools);
+  document.getElementById("shareWebApp")?.addEventListener("click",shareWebAppWithFriend);
+  document.getElementById("closeShareWebAppModal")?.addEventListener("click",closeShareWebAppFallback);
+  document.getElementById("shareWebAppModal")?.addEventListener("click",event=>{
+    if(event.target===event.currentTarget)event.currentTarget.close();
+  });
+  document.getElementById("copyShareAppLink")?.addEventListener("click",copyShareWebAppLink);
 
   document.querySelectorAll("[data-utility-go]").forEach(button=>{
     button.addEventListener("click",()=>{
@@ -2597,7 +2694,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.46",
+      appVersion:"4.47",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });

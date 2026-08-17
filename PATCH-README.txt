@@ -1,29 +1,34 @@
-Sci-Fi Valley Con Attendee App V4.46 — Ink-Friendly PDF / Print
+Sci-Fi Valley Con Attendee App V4.47 — Share This Web App
 
-This refines the V4.45 Program PDF Builder so physical printing does not waste ink.
+Adds a new Program Tools option:
 
-GENERATED PDF
-- Pure white page background
-- No dark masthead fill
-- No cream paper fill
-- No teal section-box fill
-- Dark text
-- Thin orange and teal accent rules
-- Thin dark page outline
-- Searchable/selectable text remains unchanged
-- Full and Custom PDF Builder options remain unchanged
+SHARE THIS WEB APP WITH A FRIEND
 
-PRINT / SAVE PDF
-- Forces white background
-- Removes colored section fills
-- Uses only thin accent lines and borders
-- Uses print-color-adjust: economy where supported
-- Keeps the readable section hierarchy without large ink-heavy color areas
+PRIMARY BEHAVIOR
+On devices that support the Web Share API, tapping the button opens the device's
+native share sheet. The attendee can choose any supported installed destination,
+such as:
+- Messages / text
+- Email / Mail
+- Messenger
+- WhatsApp
+- AirDrop
+- social apps
+- other installed share targets
 
-APP INTERFACE
-The actual attendee app keeps its normal retro colors. Only exported/printed program
-copies use the low-ink white design.
+The shared link is always:
+https://app.scifivalleycon.com/
 
+FALLBACK
+If native sharing is unavailable, the app opens a fallback sharing popup with:
+- TEXT MESSAGE
+- EMAIL
+- COPY APP LINK
+
+Nothing is sent automatically. Text and email options only open the user's own
+messaging/mail app with the SFVC app link prefilled.
+
+This is an attendee CODE-ONLY patch.
 No Admin or Notify Worker update is required.
 No backend-managed JSON files are included.
 
