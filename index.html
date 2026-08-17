@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.44">
+  <link rel="stylesheet" href="styles.css?v=4.45">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -35,20 +35,38 @@
         </div>
       </section>
 
+      <section class="utility-tool-block utility-account-tools">
+        <div class="utility-tool-copy">
+          <span>YOUR APP</span>
+          <strong>ACCOUNT & NOTIFICATIONS</strong>
+          <small>Manage event alerts or register this app installation with your contact information.</small>
+        </div>
+        <div class="utility-action-grid">
+          <button class="utility-action-button alerts" type="button" data-utility-go="settings">
+            <b>🔔 NOTIFICATION SETTINGS</b>
+            <small>Alerts, reminders & timing</small>
+          </button>
+          <button class="utility-action-button register" type="button" data-utility-go="registration">
+            <b>▣ REGISTER THIS APP</b>
+            <small id="utilityRegistrationSummary">Add your attendee profile</small>
+          </button>
+        </div>
+      </section>
+
       <section class="utility-tool-block">
         <div class="utility-tool-copy">
           <span>HARD COPY / DIGITAL COPY</span>
           <strong>PROGRAM PDF & PRINT</strong>
-          <small>Export an easy-to-read text PDF for sharing or saving, or open a printer-friendly copy of the program.</small>
+          <small>Choose a full program or build a custom PDF with only the sections you want to keep, share, save, email or print.</small>
         </div>
         <div class="utility-action-grid">
           <button id="exportProgramPdf" class="utility-action-button pdf" type="button">
-            <b>PDF / SHARE</b>
-            <small>Messages, Mail, Files & more</small>
+            <b>BUILD PDF / SHARE</b>
+            <small>Full or custom program</small>
           </button>
           <button id="printProgram" class="utility-action-button print" type="button">
             <b>PRINT / SAVE PDF</b>
-            <small>Open your device print dialog</small>
+            <small>Full or custom program</small>
           </button>
         </div>
       </section>
@@ -774,6 +792,102 @@
 
   </main>
 
+  <dialog id="programPdfBuilderModal" class="program-pdf-builder-modal" data-font-scale="locked">
+    <div class="program-pdf-builder-card">
+      <button id="closeProgramPdfBuilder" class="modal-close pdf-builder-close" type="button" aria-label="Close PDF Builder">×</button>
+
+      <span class="pdf-builder-kicker">HARD COPY / DIGITAL COPY</span>
+      <h2>PROGRAM <span>PDF BUILDER</span></h2>
+      <p id="pdfBuilderIntro" class="pdf-builder-intro">Choose how much of the digital program you want to keep.</p>
+
+      <div id="pdfBuilderModeChoices" class="pdf-builder-mode-choices">
+        <button id="pdfBuilderFullProgram" class="pdf-builder-mode full" type="button">
+          <strong>FULL PROGRAM</strong>
+          <span>Everything in one document</span>
+          <small>Includes schedule, guests, Event Guide, café & food info, vendors, FAQ, updates and more.</small>
+        </button>
+
+        <button id="pdfBuilderCustomProgram" class="pdf-builder-mode custom" type="button">
+          <strong>BUILD A CUSTOM PDF</strong>
+          <span>Choose exactly what you want</span>
+          <small>Great for a shorter personal copy with only the sections you care about.</small>
+        </button>
+      </div>
+
+      <section id="pdfBuilderCustomPanel" class="pdf-builder-custom-panel hidden">
+        <div class="pdf-builder-custom-head">
+          <div>
+            <span class="pdf-builder-kicker">CUSTOM PROGRAM</span>
+            <h3>WHAT SHOULD BE INCLUDED?</h3>
+          </div>
+          <div class="pdf-builder-select-actions">
+            <button id="pdfBuilderSelectAll" type="button">SELECT ALL</button>
+            <button id="pdfBuilderClearAll" type="button">CLEAR</button>
+          </div>
+        </div>
+
+        <div class="pdf-builder-check-grid">
+          <label class="pdf-builder-check featured">
+            <input type="checkbox" value="eventInfo" checked>
+            <span><b>EVENT DETAILS & HOURS</b><small>Dates, venue and show hours</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="updates" checked>
+            <span><b>LATEST EVENT UPDATES</b><small>Recent convention alerts</small></span>
+          </label>
+
+          <label class="pdf-builder-check featured">
+            <input type="checkbox" value="myCon" checked>
+            <span><b>MY CON</b><small>Your saved schedule & guests</small></span>
+          </label>
+
+          <label class="pdf-builder-check featured">
+            <input type="checkbox" value="schedule" checked>
+            <span><b>SHOW SCHEDULE</b><small>Panels, Trivia, activities & times</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="guests" checked>
+            <span><b>CELEBRITY GUESTS</b><small>Guest list, roles & bios</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="pricing">
+            <span><b>CELEBRITY PRICING</b><small>Autographs, selfies & photo ops</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="eventGuide" checked>
+            <span><b>EVENT GUIDE</b><small>Activities, gaming & attractions</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="food" checked>
+            <span><b>CAFÉ & FOOD INFO</b><small>Menus, concessions & food information</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="vendors">
+            <span><b>VENDOR DIRECTORY</b><small>Businesses, descriptions & locations</small></span>
+          </label>
+
+          <label class="pdf-builder-check">
+            <input type="checkbox" value="faq">
+            <span><b>FREQUENTLY ASKED QUESTIONS</b><small>Policies and attendee help</small></span>
+          </label>
+        </div>
+
+        <div class="pdf-builder-footer">
+          <p id="pdfBuilderSelectionCount">7 sections selected</p>
+          <button id="pdfBuilderCreateCustom" class="pdf-builder-create" type="button">CREATE CUSTOM PDF</button>
+        </div>
+      </section>
+
+      <p id="pdfBuilderStatus" class="pdf-builder-status" aria-live="polite"></p>
+    </div>
+  </dialog>
+
   <section id="programPrintView" class="program-print-view" aria-hidden="true"></section>
 
   <nav class="bottom-nav" data-font-scale="locked" aria-label="Main navigation">
@@ -935,6 +1049,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.44"></script>
+  <script src="app.js?v=4.45"></script>
 </body>
 </html>

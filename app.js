@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.44",
+          appVersion:"4.45",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -477,7 +477,28 @@ function exportEventContentLines(event){
   return lines;
 }
 
-function programExportBlocks(){
+const PROGRAM_PDF_SECTION_KEYS=[
+  "eventInfo","updates","myCon","schedule","guests",
+  "pricing","eventGuide","food","vendors","faq"
+];
+
+function fullProgramPdfSelection(){
+  return new Set(PROGRAM_PDF_SECTION_KEYS);
+}
+
+function normalizeProgramPdfSelection(selection){
+  if(selection instanceof Set)return selection;
+  if(Array.isArray(selection))return new Set(selection);
+  return fullProgramPdfSelection();
+}
+
+function isFoodEvent(event){
+  const haystack=`${event?.title||""} ${event?.category||""} ${event?.summary||""}`.toLowerCase();
+  return /café|cafe|food|menu|concession|dining|snack|restaurant|eat|beverage|drink/.test(haystack);
+}
+
+function programExportBlocks(selection=fullProgramPdfSelection()){
+  const selected=normalizeProgramPdfSelection(selection);
   const blocks=[];
   const add=(type,text)=>{const value=plainText(text);if(value)blocks.push({type,text:value});};
   const addLine=text=>add("body",text);
@@ -485,57 +506,72 @@ function programExportBlocks(){
   const addSub=text=>add("subheading",text);
   const addBullet=text=>add("bullet",text);
 
+  // A recognizable cover/header is always included even for a tiny custom PDF.
   add("title",state.settings.eventName||"Sci-Fi Valley Con");
-  add("subtitle","OFFICIAL DIGITAL EVENT PROGRAM");
-  addLine(formatEventDateRange(false));
-  addLine(eventLocationText());
-  addLine("Friday: 2:00 PM - 9:00 PM | Saturday: 10:00 AM - 8:00 PM | Sunday: 10:00 AM - 5:00 PM");
+  add("subtitle","THE OFFICIAL DIGITAL PROGRAM");
+
+  if(selected.has("eventInfo")){
+    addLine(formatEventDateRange(false));
+    addLine(eventLocationText());
+    addLine("Friday: 2:00 PM - 9:00 PM | Saturday: 10:00 AM - 8:00 PM | Sunday: 10:00 AM - 5:00 PM");
+  }
   add("small",`Generated ${new Date().toLocaleString()}`);
 
-  const currentAlerts=(state.recentAlerts||[])
-    .map(item=>({...item,_date:parseBroadcastTimestamp(item.createdAt)}))
-    .filter(item=>item._date&&Date.now()-item._date.getTime()<=RECENT_ALERT_RETENTION_MS)
-    .sort((a,b)=>b._date-a._date);
-  if(currentAlerts.length){
-    addSection("LATEST EVENT UPDATES");
-    currentAlerts.forEach(item=>{
-      addSub(item.title||"Event Update");
-      addLine(item.body||"");
-    });
+  if(selected.has("updates")){
+    const currentAlerts=(state.recentAlerts||[])
+      .map(item=>({...item,_date:parseBroadcastTimestamp(item.createdAt)}))
+      .filter(item=>item._date&&Date.now()-item._date.getTime()<=RECENT_ALERT_RETENTION_MS)
+      .sort((a,b)=>b._date-a._date);
+
+    if(currentAlerts.length){
+      addSection("LATEST EVENT UPDATES");
+      currentAlerts.forEach(item=>{
+        addSub(item.title||"Event Update");
+        addLine(item.body||"");
+      });
+    }
   }
 
   const allSchedule=showScheduleItems();
-  const myItems=allSchedule.filter(item=>state.mySchedule.has(item.id));
-  const myGuests=(state.guests||[]).filter(guest=>state.favorites.has(guest.id));
 
-  if(myItems.length||myGuests.length){
-    addSection("MY CON");
-    if(myItems.length){
-      addSub("MY SCHEDULE");
-      ["Friday","Saturday","Sunday"].forEach(day=>{
-        const items=sortedScheduleItems(myItems.filter(item=>item.day===day));
-        if(!items.length)return;
-        add("day",day);
-        items.forEach(item=>addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location}`));
-      });
-    }
-    if(myGuests.length){
-      addSub("MY SAVED GUESTS");
-      myGuests.forEach(guest=>addBullet(`${guest.name}${guest.group?` | ${guest.group}`:""}`));
+  if(selected.has("myCon")){
+    const myItems=allSchedule.filter(item=>state.mySchedule.has(item.id));
+    const myGuests=(state.guests||[]).filter(guest=>state.favorites.has(guest.id));
+
+    if(myItems.length||myGuests.length){
+      addSection("MY CON");
+      if(myItems.length){
+        addSub("MY SCHEDULE");
+        ["Friday","Saturday","Sunday"].forEach(day=>{
+          const items=sortedScheduleItems(myItems.filter(item=>item.day===day));
+          if(!items.length)return;
+          add("day",day);
+          items.forEach(item=>addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location}`));
+        });
+      }
+      if(myGuests.length){
+        addSub("MY SAVED GUESTS");
+        myGuests.forEach(guest=>addBullet(`${guest.name}${guest.group?` | ${guest.group}`:""}`));
+      }
+    }else{
+      addSection("MY CON");
+      addLine("No personal schedule items or saved celebrity guests have been added on this device yet.");
     }
   }
 
-  addSection("SHOW SCHEDULE");
-  ["Friday","Saturday","Sunday"].forEach(day=>{
-    const items=sortedScheduleItems(allSchedule.filter(item=>item.day===day));
-    if(!items.length)return;
-    add("day",day);
-    items.forEach(item=>{
-      addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location} | ${primaryScheduleCategory(item)}`);
+  if(selected.has("schedule")){
+    addSection("SHOW SCHEDULE");
+    ["Friday","Saturday","Sunday"].forEach(day=>{
+      const items=sortedScheduleItems(allSchedule.filter(item=>item.day===day));
+      if(!items.length)return;
+      add("day",day);
+      items.forEach(item=>{
+        addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location} | ${primaryScheduleCategory(item)}`);
+      });
     });
-  });
+  }
 
-  if(state.guests?.length){
+  if(selected.has("guests")&&state.guests?.length){
     addSection("CELEBRITY GUESTS");
     state.guests.forEach(guest=>{
       addSub(`${guest.name}${guest.group?` - ${guest.group}`:""}`);
@@ -545,7 +581,7 @@ function programExportBlocks(){
     });
   }
 
-  if(celebrityPublished()&&state.celebrityPricing?.length){
+  if(selected.has("pricing")&&celebrityPublished()&&state.celebrityPricing?.length){
     addSection("CELEBRITY PRICING");
     state.celebrityPricing.forEach(price=>{
       addSub(price.guestName||"Guest");
@@ -554,15 +590,29 @@ function programExportBlocks(){
     });
   }
 
-  if(state.events?.length){
-    addSection("EVENT GUIDE");
-    state.events.forEach(event=>{
-      addSub(`${event.title}${event.category?` - ${event.category}`:""}`);
-      exportEventContentLines(event).forEach(addLine);
-    });
+  if(selected.has("eventGuide")&&state.events?.length){
+    const generalEvents=state.events.filter(event=>!isFoodEvent(event));
+    if(generalEvents.length){
+      addSection("EVENT GUIDE");
+      generalEvents.forEach(event=>{
+        addSub(`${event.title}${event.category?` - ${event.category}`:""}`);
+        exportEventContentLines(event).forEach(addLine);
+      });
+    }
   }
 
-  if(mapDirectoryVisible()&&state.vendors?.length){
+  if(selected.has("food")&&state.events?.length){
+    const foodEvents=state.events.filter(isFoodEvent);
+    if(foodEvents.length){
+      addSection("CAFÉ & FOOD INFORMATION");
+      foodEvents.forEach(event=>{
+        addSub(`${event.title}${event.category?` - ${event.category}`:""}`);
+        exportEventContentLines(event).forEach(addLine);
+      });
+    }
+  }
+
+  if(selected.has("vendors")&&mapDirectoryVisible()&&state.vendors?.length){
     addSection("VENDOR DIRECTORY & FLOOR LOCATIONS");
     addLine("The interactive floor map remains available inside the app. This printable copy lists vendor locations for quick reference.");
     [...state.vendors]
@@ -575,14 +625,16 @@ function programExportBlocks(){
       });
   }
 
-  const faqs=(state.faq||[]).filter(item=>item&&item.enabled!==false&&item.question);
-  if(faqs.length){
-    addSection("FREQUENTLY ASKED QUESTIONS");
-    faqs.forEach(item=>{
-      addSub(item.question);
-      addLine(faqAnswerText(item));
-      (item.bullets||[]).forEach(addBullet);
-    });
+  if(selected.has("faq")){
+    const faqs=(state.faq||[]).filter(item=>item&&item.enabled!==false&&item.question);
+    if(faqs.length){
+      addSection("FREQUENTLY ASKED QUESTIONS");
+      faqs.forEach(item=>{
+        addSub(item.question);
+        addLine(faqAnswerText(item));
+        (item.bullets||[]).forEach(addBullet);
+      });
+    }
   }
 
   addSection("IMPORTANT");
@@ -590,7 +642,6 @@ function programExportBlocks(){
 
   return blocks;
 }
-
 
 /* ---------- Real shareable PDF file, no external library ---------- */
 
@@ -644,9 +695,9 @@ function wrapPdfText(text,size,maxWidth=528){
 
 function pdfBlockStyle(type){
   const styles={
-    title:{size:20,bold:true,before:0,after:8,leading:24},
-    subtitle:{size:10,bold:true,before:0,after:5,leading:13},
-    section:{size:14,bold:true,before:14,after:6,leading:18},
+    title:{size:23,bold:true,before:0,after:8,leading:26},
+    subtitle:{size:10,bold:true,before:0,after:8,leading:13},
+    section:{size:13,bold:true,before:14,after:7,leading:17},
     day:{size:11,bold:true,before:8,after:3,leading:14},
     subheading:{size:10,bold:true,before:6,after:2,leading:13},
     bullet:{size:9,bold:false,before:0,after:2,leading:12,indent:12},
@@ -656,8 +707,22 @@ function pdfBlockStyle(type){
   return styles[type]||styles.body;
 }
 
-function buildProgramPdfBytes(){
-  const blocks=programExportBlocks();
+function pdfColor(type,pageIndex,row){
+  if(type==="title")return pageIndex===0?[0.99,0.95,0.84]:[0.20,0.12,0.09];
+  if(type==="subtitle")return pageIndex===0?[0.95,0.40,0.22]:[0.72,0.26,0.16];
+  if(type==="section")return [0.20,0.12,0.09];
+  if(type==="day")return [0.72,0.26,0.16];
+  if(type==="subheading")return [0.20,0.12,0.09];
+  if(type==="small")return [0.34,0.29,0.26];
+  return [0.13,0.10,0.08];
+}
+
+function pdfRgb(color){
+  return `${color.map(value=>Number(value).toFixed(3)).join(" ")} rg`;
+}
+
+function buildProgramPdfBytes(selection=fullProgramPdfSelection()){
+  const blocks=programExportBlocks(selection);
   const pages=[];
   let page=[];
   let y=748;
@@ -670,15 +735,20 @@ function buildProgramPdfBytes(){
 
   blocks.forEach(block=>{
     const style=pdfBlockStyle(block.type);
-    const wrapped=wrapPdfText(block.type==="bullet"?`- ${block.text}`:block.text,style.size,528-(style.indent||0));
+    const wrapped=wrapPdfText(
+      block.type==="bullet"?`- ${block.text}`:block.text,
+      style.size,
+      528-(style.indent||0)
+    );
     const height=style.before+(wrapped.length*style.leading)+style.after;
 
-    if(y-height<54 && page.length)pushPage();
+    if(y-height<58&&page.length)pushPage();
 
     y-=style.before;
     wrapped.forEach(line=>{
       page.push({
         text:line,
+        type:block.type,
         x:42+(style.indent||0),
         y,
         size:style.size,
@@ -695,23 +765,52 @@ function buildProgramPdfBytes(){
   const pageCount=pages.length;
   const objects={};
   objects[1]="<< /Type /Catalog /Pages 2 0 R >>";
-  const pageIds=pages.map((_,index)=>6+(index*2));
+  const pageIds=pages.map((_,index)=>7+(index*2));
   objects[2]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(" ")}] /Count ${pageCount} >>`;
   objects[3]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>";
   objects[4]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>";
+  objects[5]="<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>";
 
   pages.forEach((rows,index)=>{
-    const contentId=5+(index*2);
-    const pageId=6+(index*2);
+    const contentId=6+(index*2);
+    const pageId=7+(index*2);
     const footer=`${pdfAscii(state.settings.eventName||"Sci-Fi Valley Con")} Digital Program | Page ${index+1} of ${pageCount}`;
+    const commands=[];
 
-    const commands=[
-      ...rows.map(row=>`BT /F${row.bold?2:1} ${row.size} Tf 1 0 0 1 ${row.x} ${row.y} Tm (${pdfEscape(row.text)}) Tj ET`),
-      `BT /F1 7 Tf 1 0 0 1 42 28 Tm (${pdfEscape(footer)}) Tj ET`
-    ].join("\n");
+    // Warm paper background and dark outline inspired by the app.
+    commands.push("0.996 0.972 0.886 rg 0 0 612 792 re f");
+    commands.push("0.205 0.125 0.094 RG 1.4 w 24 24 564 744 re S");
 
-    objects[contentId]=`<< /Length ${commands.length} >>\nstream\n${commands}\nendstream`;
-    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`;
+    if(index===0){
+      // Retro app-style masthead.
+      commands.push("0.205 0.125 0.094 rg 25 706 562 61 re f");
+      commands.push("0.945 0.402 0.224 rg 25 702 562 4 re f");
+    }else{
+      commands.push("0.945 0.402 0.224 rg 25 760 562 4 re f");
+    }
+
+    rows.forEach(row=>{
+      if(row.type==="section"){
+        commands.push(`0.776 0.894 0.866 rg 35 ${row.y-5} 542 18 re f`);
+        commands.push(`0.945 0.402 0.224 rg 35 ${row.y-5} 5 18 re f`);
+      }
+      if(row.type==="day"){
+        commands.push(`0.945 0.402 0.224 rg 42 ${row.y-3} 42 2 re f`);
+      }
+
+      const font=row.type==="body"||row.type==="bullet"||row.type==="small" ? 3 : (row.bold?2:1);
+      commands.push(pdfRgb(pdfColor(row.type,index,row)));
+      commands.push(`BT /F${font} ${row.size} Tf 1 0 0 1 ${row.x} ${row.y} Tm (${pdfEscape(row.text)}) Tj ET`);
+    });
+
+    // Footer treatment.
+    commands.push("0.205 0.125 0.094 RG 0.6 w 38 41 536 0 l S");
+    commands.push("0.340 0.290 0.260 rg");
+    commands.push(`BT /F1 7 Tf 1 0 0 1 42 29 Tm (${pdfEscape(footer)}) Tj ET`);
+
+    const stream=commands.join("\n");
+    objects[contentId]=`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`;
+    objects[pageId]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents ${contentId} 0 R >>`;
   });
 
   const maxId=Math.max(...Object.keys(objects).map(Number));
@@ -752,14 +851,76 @@ function downloadBlob(blob,filename){
   setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 
-async function exportProgramPdfFile(){
-  const status=document.getElementById("utilityToolStatus");
-  const button=document.getElementById("exportProgramPdf");
-  if(button)button.disabled=true;
+let pdfBuilderAction="share";
+let activeProgramPdfSelection=fullProgramPdfSelection();
+
+function programPdfBuilderModal(){
+  return document.getElementById("programPdfBuilderModal");
+}
+
+function openProgramPdfBuilder(action="share"){
+  pdfBuilderAction=action==="print"?"print":"share";
+  const modal=programPdfBuilderModal();
+  const custom=document.getElementById("pdfBuilderCustomPanel");
+  const modes=document.getElementById("pdfBuilderModeChoices");
+  const intro=document.getElementById("pdfBuilderIntro");
+  const status=document.getElementById("pdfBuilderStatus");
+
+  custom?.classList.add("hidden");
+  modes?.classList.remove("hidden");
+  if(status)status.textContent="";
+  if(intro)intro.textContent=pdfBuilderAction==="print"
+    ?"Choose a full printed program or build a shorter custom copy."
+    :"Choose a full program or build a custom PDF with only what you want to save or share.";
+
+  updatePdfBuilderSelectionCount();
+
+  setUtilityDrawerOpen(false);
+  if(typeof modal?.showModal==="function"&&!modal.open)modal.showModal();
+  else modal?.setAttribute("open","");
+}
+
+function closeProgramPdfBuilder(){
+  programPdfBuilderModal()?.close();
+}
+
+function pdfBuilderCheckedSelection(){
+  return new Set(
+    [...document.querySelectorAll('#pdfBuilderCustomPanel input[type="checkbox"]:checked')]
+      .map(input=>input.value)
+      .filter(value=>PROGRAM_PDF_SECTION_KEYS.includes(value))
+  );
+}
+
+function setPdfBuilderCheckboxes(checked){
+  document.querySelectorAll('#pdfBuilderCustomPanel input[type="checkbox"]')
+    .forEach(input=>input.checked=Boolean(checked));
+  updatePdfBuilderSelectionCount();
+}
+
+function updatePdfBuilderSelectionCount(){
+  const selection=pdfBuilderCheckedSelection();
+  const count=document.getElementById("pdfBuilderSelectionCount");
+  const create=document.getElementById("pdfBuilderCreateCustom");
+  if(count)count.textContent=`${selection.size} section${selection.size===1?"":"s"} selected`;
+  if(create){
+    create.disabled=selection.size===0;
+    create.textContent=pdfBuilderAction==="print"?"PRINT CUSTOM PROGRAM":"CREATE CUSTOM PDF";
+  }
+}
+
+function showCustomPdfBuilder(){
+  document.getElementById("pdfBuilderModeChoices")?.classList.add("hidden");
+  document.getElementById("pdfBuilderCustomPanel")?.classList.remove("hidden");
+  updatePdfBuilderSelectionCount();
+}
+
+async function shareProgramPdf(selection){
+  const status=document.getElementById("pdfBuilderStatus");
   if(status)status.textContent="BUILDING YOUR PDF…";
 
   try{
-    const bytes=buildProgramPdfBytes();
+    const bytes=buildProgramPdfBytes(selection);
     const blob=new Blob([bytes],{type:"application/pdf"});
     const filename=programPdfFilename();
     const file=new File([blob],filename,{type:"application/pdf"});
@@ -780,28 +941,27 @@ async function exportProgramPdfFile(){
       if(status)status.textContent="PDF SHARE CANCELED.";
     }else{
       console.error("Program PDF export failed",err);
-      if(status)status.textContent="PDF EXPORT COULD NOT COMPLETE. TRY PRINT / SAVE PDF INSTEAD.";
+      if(status)status.textContent="PDF EXPORT COULD NOT COMPLETE. TRY AGAIN OR USE PRINT / SAVE PDF.";
     }
-  }finally{
-    if(button)button.disabled=false;
   }
 }
 
 
 /* ---------- Browser print / Save as PDF ---------- */
 
-function buildProgramPrintView(){
+function buildProgramPrintView(selection=activeProgramPdfSelection){
   const host=document.getElementById("programPrintView");
   if(!host)return;
 
-  const blocks=programExportBlocks();
+  const blocks=programExportBlocks(selection);
   host.innerHTML=`
     <header class="program-print-header">
+      <span>THE OFFICIAL DIGITAL PROGRAM</span>
       <h1>${escapeAppHtml(state.settings.eventName||"Sci-Fi Valley Con")}</h1>
       <p>${escapeAppHtml(formatEventDateRange(false))} • ${escapeAppHtml(eventLocationText())}</p>
     </header>
     <div class="program-print-content">
-      ${blocks.slice(5).map(block=>{
+      ${blocks.slice(2).map(block=>{
         if(block.type==="section")return `<h2>${escapeAppHtml(block.text)}</h2>`;
         if(block.type==="day")return `<h3 class="print-day">${escapeAppHtml(block.text)}</h3>`;
         if(block.type==="subheading")return `<h3>${escapeAppHtml(block.text)}</h3>`;
@@ -813,16 +973,45 @@ function buildProgramPrintView(){
     <footer>Generated from the Sci-Fi Valley Con Digital Program • ${escapeAppHtml(new Date().toLocaleString())}</footer>`;
 }
 
-function printProgramCopy(){
-  buildProgramPrintView();
-  const status=document.getElementById("utilityToolStatus");
-  if(status)status.textContent="OPENING PRINT DIALOG…";
-  setUtilityDrawerOpen(false);
+function printProgramSelection(selection){
+  activeProgramPdfSelection=normalizeProgramPdfSelection(selection);
+  buildProgramPrintView(activeProgramPdfSelection);
+  closeProgramPdfBuilder();
 
   setTimeout(()=>{
     window.print();
+    const status=document.getElementById("utilityToolStatus");
     if(status)status.textContent="USE YOUR PRINT MENU TO PRINT OR SAVE AS PDF.";
   },120);
+}
+
+async function runProgramPdfSelection(selection){
+  const normalized=normalizeProgramPdfSelection(selection);
+  if(pdfBuilderAction==="print"){
+    printProgramSelection(normalized);
+    return;
+  }
+  await shareProgramPdf(normalized);
+}
+
+async function chooseFullProgramPdf(){
+  activeProgramPdfSelection=fullProgramPdfSelection();
+  await runProgramPdfSelection(activeProgramPdfSelection);
+}
+
+async function createCustomProgramPdf(){
+  const selection=pdfBuilderCheckedSelection();
+  if(!selection.size)return;
+  activeProgramPdfSelection=selection;
+  await runProgramPdfSelection(selection);
+}
+
+async function exportProgramPdfFile(){
+  openProgramPdfBuilder("share");
+}
+
+function printProgramCopy(){
+  openProgramPdfBuilder("print");
 }
 
 
@@ -880,6 +1069,26 @@ function initializeProgramTools(){
   document.getElementById("exportProgramPdf")?.addEventListener("click",exportProgramPdfFile);
   document.getElementById("printProgram")?.addEventListener("click",printProgramCopy);
   document.getElementById("refreshAppNow")?.addEventListener("click",refreshProgramFromTools);
+
+  document.querySelectorAll("[data-utility-go]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      setUtilityDrawerOpen(false);
+      goTo(button.dataset.utilityGo);
+    });
+  });
+
+  document.getElementById("closeProgramPdfBuilder")?.addEventListener("click",closeProgramPdfBuilder);
+  document.getElementById("programPdfBuilderModal")?.addEventListener("click",event=>{
+    if(event.target===event.currentTarget)event.currentTarget.close();
+  });
+  document.getElementById("pdfBuilderFullProgram")?.addEventListener("click",chooseFullProgramPdf);
+  document.getElementById("pdfBuilderCustomProgram")?.addEventListener("click",showCustomPdfBuilder);
+  document.getElementById("pdfBuilderSelectAll")?.addEventListener("click",()=>setPdfBuilderCheckboxes(true));
+  document.getElementById("pdfBuilderClearAll")?.addEventListener("click",()=>setPdfBuilderCheckboxes(false));
+  document.getElementById("pdfBuilderCreateCustom")?.addEventListener("click",createCustomProgramPdf);
+  document.querySelectorAll('#pdfBuilderCustomPanel input[type="checkbox"]').forEach(input=>{
+    input.addEventListener("change",updatePdfBuilderSelectionCount);
+  });
 
   // Swipe upward on the open panel to close it.
   drawer?.addEventListener("pointerdown",event=>{
@@ -2358,6 +2567,8 @@ function renderAppRegistration(){
     badge.classList.toggle("registered",registered);
   }
   if(menu)menu.textContent=registered?`Registered to ${profile.name}`:"Add your name, pronouns and contact information";
+  const utilitySummary=document.getElementById("utilityRegistrationSummary");
+  if(utilitySummary)utilitySummary.textContent=registered?`Registered to ${profile.name}`:"Add your attendee profile";
   if(saveButton)saveButton.textContent=registered?"UPDATE REGISTRATION":"REGISTER THIS APP";
   removeButton?.classList.toggle("hidden",!registered);
 
@@ -2385,7 +2596,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.44",
+      appVersion:"4.45",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });

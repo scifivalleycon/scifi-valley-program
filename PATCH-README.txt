@@ -1,27 +1,52 @@
-Sci-Fi Valley Con Attendee App V4.44 — Smart Collision-Safe Text Scaling
+Sci-Fi Valley Con Attendee App V4.45 — Program Tools + Custom PDF Builder
 
-This revises the Program Tools TEXT SIZE feature introduced in V4.42.
+PROGRAM TOOLS
+Adds direct shortcuts for:
+- Notification Settings
+- Register This App
 
-WHY
-The original scaler enlarged every independent text node by the same percentage.
-That worked for body text, but it could break composed display graphics such as the
-Sci-Fi Valley Con hero logo because SCI-FI, VALLEY and CON are individually positioned.
+PDF BUILDER
+The old one-click all-content export now opens a Program PDF Builder.
 
-NEW ADAPTIVE SCALING
-- Small body copy still receives the full readability increase up to 130%.
-- Medium headings receive a moderate increase.
-- Already-large display headings receive little or no extra growth.
-- Absolutely/fixed-positioned decorative text is protected automatically.
-- The Sci-Fi Valley Con hero logo is explicitly locked at its designed proportions.
-- The giant event date, countdown clock, show-hours grid, top header, bottom nav,
-  celebrity-banner CTA, floor-map graphics, and Program Tools controls are protected
-  from independent font scaling because those are tightly composed layouts.
-- Flexible content text is allowed to wrap instead of clipping.
-- At the 130% setting, compact phone layouts receive extra responsive safeguards.
+Users choose:
+1. FULL PROGRAM
+   Includes everything, including Event Guide, café/food information, vendors,
+   FAQ, guests, schedule, My Con and recent updates.
 
-The visitor still sees the same 90%, 100%, 115%, and 130% choices. The preference
-continues to use the same localStorage key, so existing users keep their selected size.
+2. BUILD A CUSTOM PDF
+   Checkboxes let the attendee choose:
+   - Event Details & Hours
+   - Latest Event Updates
+   - My Con
+   - Show Schedule
+   - Celebrity Guests
+   - Celebrity Pricing
+   - Event Guide
+   - Café & Food Info
+   - Vendor Directory
+   - FAQ
 
+The same builder works for PDF/Share and Print/Save PDF.
+
+PDF STYLE
+The generated PDF now uses a printer-friendly version of the app's visual language:
+- Warm cream page background
+- Dark brown masthead and border
+- Orange accent lines
+- Pale teal section headers
+- Stronger typography hierarchy
+- Page numbers and footer
+- Text remains selectable/searchable
+
+CAFÉ / FOOD
+Food-related Event Guide entries are detected separately so attendees can include
+café/menu/concession information without having to include the entire Event Guide.
+
+PDF SHARING
+Supported phones still receive the native share sheet for Messages, Mail, Files,
+Drive, AirDrop and other installed apps. Other browsers download the PDF file.
+
+This is an attendee CODE-ONLY patch.
 No Admin or Notify Worker update is required.
 No backend-managed JSON files are included.
 
