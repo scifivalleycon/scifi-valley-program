@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.26",
+          appVersion:"4.27",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -248,9 +248,9 @@ async function loadData({silent=false,force=false}={}){
       credentials:"same-origin"
     }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
 
-    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,homeBannerData,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
-      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),
+      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -269,8 +269,10 @@ async function loadData({silent=false,force=false}={}){
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.tshirts=Array.isArray(tshirts)?tshirts:[];
+    state.homeBanner=Array.isArray(homeBannerData)&&homeBannerData[0]?homeBannerData[0]:{};
 
     // Render these immediately instead of waiting for the rest of the program.
+    renderHomeGuestBanner();
     renderSocialLinks();
     renderSponsors();
     renderTshirts();
@@ -2189,6 +2191,24 @@ function openTshirtImage(id,imageIndex=0){
   modal.showModal();
 }
 
+
+function renderHomeGuestBanner(){
+  const button=document.getElementById("homeGuestBanner");
+  const image=document.getElementById("homeGuestBannerImage");
+  if(!button||!image)return;
+
+  const cfg=state.homeBanner||{};
+  const enabled=cfg.enabled!==false;
+  button.classList.toggle("hidden",!enabled);
+  if(!enabled)return;
+
+  const src=String(cfg.imageUrl||"").trim();
+  if(src && image.src!==src) image.src=src;
+
+  image.alt=String(cfg.alt||"Sci-Fi Valley Con celebrity guest banner");
+  button.dataset.go=String(cfg.linkTarget||"guests");
+}
+
 function renderTshirts(){
   const host=document.getElementById("tshirtGrid");
   if(!host)return;
@@ -2273,6 +2293,7 @@ function safeRenderSection(name,fn){
 function renderAll(){
   // These two are intentionally first so a failure elsewhere in the app can
   // never leave their original "Loading..." placeholders on screen.
+  safeRenderSection("home guest banner",renderHomeGuestBanner);
   safeRenderSection("social links",renderSocialLinks);
   safeRenderSection("sponsors",renderSponsors);
   safeRenderSection("t-shirts",renderTshirts);

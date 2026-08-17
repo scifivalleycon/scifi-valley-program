@@ -1855,3 +1855,115 @@ button,
     width:100%;
   }
 }
+
+
+/* =========================================================
+   V4.27 — WEBSITE CELEBRITY GUEST BANNER
+   ========================================================= */
+
+.home-guest-banner{
+  width:100%;
+  display:block;
+  margin:11px 0 12px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--cream);
+  text-align:left;
+  cursor:pointer;
+}
+.home-guest-banner-frame{
+  position:relative;
+  display:block;
+  width:100%;
+  aspect-ratio:3.2/1;
+  min-height:112px;
+  max-height:190px;
+  overflow:hidden;
+  border:3px solid var(--ink);
+  border-radius:11px;
+  background:var(--ink);
+  box-shadow:5px 6px 0 rgba(58,39,32,.15);
+}
+.home-guest-banner img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+}
+.home-guest-banner-shade{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(to right, rgba(29,18,14,.86) 0%, rgba(29,18,14,.44) 36%, rgba(29,18,14,.05) 67%),
+    linear-gradient(to top, rgba(29,18,14,.38), transparent 58%);
+  pointer-events:none;
+}
+.home-guest-banner-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,247,223,.2);
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,247,223,.025) 0,
+    rgba(255,247,223,.025) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+.home-guest-banner-label{
+  position:absolute;
+  left:13px;
+  bottom:11px;
+  z-index:2;
+  max-width:47%;
+  text-shadow:0 2px 2px rgba(0,0,0,.45);
+}
+.home-guest-banner-label small,
+.home-guest-banner-label strong,
+.home-guest-banner-label em{
+  display:block;
+}
+.home-guest-banner-label small{
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.13em;
+}
+.home-guest-banner-label strong{
+  margin-top:2px;
+  font-family:var(--display);
+  font-size:16px;
+  line-height:.98;
+}
+.home-guest-banner-label em{
+  margin-top:5px;
+  font-family:Georgia,serif;
+  font-size:7px;
+  line-height:1.25;
+  font-style:normal;
+}
+.home-guest-banner:active .home-guest-banner-frame{
+  transform:translateY(1px);
+  box-shadow:2px 3px 0 rgba(58,39,32,.15);
+}
+
+@media(max-width:440px){
+  .home-guest-banner-frame{
+    aspect-ratio:2.45/1;
+    min-height:128px;
+  }
+  .home-guest-banner-label{
+    max-width:53%;
+    left:10px;
+    bottom:9px;
+  }
+  .home-guest-banner-label strong{
+    font-size:14px;
+  }
+  .home-guest-banner-label em{
+    font-size:6.5px;
+  }
+}

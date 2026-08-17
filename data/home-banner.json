@@ -1,0 +1,13 @@
+[
+  {
+    "id": "home-guest-banner",
+    "enabled": true,
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6a7f8b6c237b4ce3f69d2523_Website Slider Guest Banner 10-2026 (8-9-26).avif",
+    "alt": "Sci-Fi Valley Con October 2026 celebrity guest banner",
+    "linkTarget": "guests",
+    "autoUpdate": true,
+    "sourceUrl": "https://scifivalleycon.com/",
+    "sourceMode": "website-auto",
+    "sourceUpdatedAt": "2026-08-17T01:45:52.403513Z"
+  }
+]
