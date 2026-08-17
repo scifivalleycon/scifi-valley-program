@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.37",
+          appVersion:"4.38",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -1735,7 +1735,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.37",
+      appVersion:"4.38",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
@@ -2418,7 +2418,7 @@ function renderFloorPlanSvg(){
 }
 function openMapLocation(code,{nonModal=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<div class="map-conquest-badge">★ CON-QUEST PARTICIPANT</div>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Learn what Con-Quest is">★ CON-QUEST PARTICIPANT <span>WHAT IS THIS? ›</span></button>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
 
   if(modal.open)modal.close();
@@ -2516,6 +2516,30 @@ document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math
 document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
 document.getElementById('mapLocationModal')?.addEventListener('close',e=>e.currentTarget.classList.remove('map-directory-popover'));
 document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+
+function openConQuestInfo(){
+  const modal=document.getElementById('conQuestInfoModal');
+  if(!modal)return;
+  if(typeof modal.showModal==='function'&&!modal.open)modal.showModal();
+  else modal.setAttribute('open','');
+}
+
+function closeConQuestInfo(){
+  document.getElementById('conQuestInfoModal')?.close();
+}
+
+document.addEventListener('click',event=>{
+  const trigger=event.target.closest?.('[data-open-conquest-info]');
+  if(!trigger)return;
+  event.preventDefault();
+  event.stopPropagation();
+  openConQuestInfo();
+});
+
+document.getElementById('closeConQuestInfoModal')?.addEventListener('click',closeConQuestInfo);
+document.getElementById('conQuestInfoModal')?.addEventListener('click',event=>{
+  if(event.target===event.currentTarget)event.currentTarget.close();
+});
 window.addEventListener('resize',()=>{
   if(!state.mapSelectedVendorId)return;
   const selected=state.vendors.find(v=>v.id===state.mapSelectedVendorId);

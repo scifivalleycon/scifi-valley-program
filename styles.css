@@ -2672,3 +2672,215 @@ button,
     font-weight:700;
   }
 }
+
+
+/* =========================================================
+   V4.38 — CLICKABLE CON-QUEST EXPLAINER
+   ========================================================= */
+
+.map-conquest-badge.conquest-info-trigger{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:10px;
+  padding:9px 10px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--coral);
+  color:var(--cream);
+  font:inherit;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.045em;
+  text-align:left;
+  cursor:pointer;
+  box-shadow:2px 3px 0 rgba(58,39,32,.16);
+}
+
+.map-conquest-badge.conquest-info-trigger span{
+  flex:0 0 auto;
+  font-size:6px;
+  white-space:nowrap;
+  opacity:.9;
+}
+
+.map-conquest-badge.conquest-info-trigger:hover{
+  filter:brightness(1.04);
+}
+
+.map-conquest-badge.conquest-info-trigger:focus-visible{
+  outline:3px solid var(--mustard);
+  outline-offset:2px;
+}
+
+.map-conquest-badge.conquest-info-trigger:active{
+  transform:translateY(1px);
+  box-shadow:1px 2px 0 rgba(58,39,32,.16);
+}
+
+.conquest-info-modal{
+  width:min(94vw,620px);
+  max-width:620px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+}
+
+.conquest-info-modal::backdrop{
+  background:rgba(24,17,14,.62);
+  backdrop-filter:blur(2px);
+}
+
+.conquest-info-card{
+  position:relative;
+  max-height:min(88vh,720px);
+  overflow:auto;
+  padding:20px;
+  border:3px solid var(--ink);
+  border-radius:12px;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(226,173,52,.25),transparent 26%),
+    linear-gradient(145deg,#fff4d7,#f3e2bd);
+  box-shadow:8px 10px 0 rgba(0,0,0,.24);
+}
+
+.conquest-info-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+}
+
+.conquest-info-kicker{
+  display:block;
+  margin-bottom:5px;
+  padding-right:34px;
+  color:var(--coral2);
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.1em;
+}
+
+.conquest-info-card h2{
+  margin:0 0 9px;
+  padding-right:35px;
+  font-family:var(--display);
+  font-size:25px;
+  line-height:.95;
+}
+
+.conquest-info-card h2 span{
+  color:var(--coral2);
+}
+
+.conquest-info-intro{
+  margin:0 0 13px;
+  font-family:Georgia,serif;
+  font-size:10px;
+  line-height:1.48;
+}
+
+.conquest-info-steps{
+  display:grid;
+  gap:7px;
+}
+
+.conquest-info-steps article{
+  display:grid;
+  grid-template-columns:31px minmax(0,1fr);
+  gap:8px;
+  align-items:start;
+  padding:8px;
+  border:1px solid rgba(58,39,32,.25);
+  border-radius:7px;
+  background:rgba(255,255,255,.34);
+}
+
+.conquest-info-steps article>b{
+  width:29px;
+  height:29px;
+  display:grid;
+  place-items:center;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--mustard);
+  font-size:10px;
+}
+
+.conquest-info-steps strong{
+  display:block;
+  margin:1px 0 3px;
+  font-size:7px;
+  letter-spacing:.045em;
+}
+
+.conquest-info-steps p{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:8.5px;
+  line-height:1.42;
+}
+
+.conquest-info-steps em{
+  font-style:normal;
+  font-weight:700;
+}
+
+.conquest-info-start{
+  margin-top:10px;
+  padding:10px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:rgba(115,199,203,.22);
+}
+
+.conquest-info-start strong{
+  display:block;
+  margin-bottom:3px;
+  font-size:7px;
+  letter-spacing:.05em;
+}
+
+.conquest-info-start p,
+.conquest-info-note{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:8.5px;
+  line-height:1.42;
+}
+
+.conquest-info-note{
+  margin-top:9px;
+  color:var(--ink2);
+  font-style:italic;
+}
+
+@media(max-width:430px){
+  .map-conquest-badge.conquest-info-trigger{
+    font-size:6.7px;
+  }
+
+  .map-conquest-badge.conquest-info-trigger span{
+    font-size:5.7px;
+  }
+
+  .conquest-info-card{
+    padding:17px 14px 16px;
+  }
+
+  .conquest-info-card h2{
+    font-size:21px;
+  }
+
+  .conquest-info-intro{
+    font-size:9px;
+  }
+
+  .conquest-info-steps p,
+  .conquest-info-start p,
+  .conquest-info-note{
+    font-size:8px;
+  }
+}
