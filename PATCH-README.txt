@@ -1,31 +1,20 @@
-Sci-Fi Valley Con Attendee App V4.21 Event Guide Discovery Patch
+Sci-Fi Valley Con Attendee App V4.22 Static Event Buttons Fix
 
-This version keeps the Event Guide search bar, but moves the complete event/activity
-button list DIRECTLY BELOW the search field.
+WHY:
+The V4.21 page could remain stuck on "Loading events and activities..." if the
+main attendee JavaScript render pipeline did not reach renderEventQuickLinks.
 
-Attendees now see all 11 discoverable activities without needing to know what to
-search for:
+FIX:
+- All 11 Event Guide activity buttons are now hard-coded into index.html.
+- They appear immediately without waiting for JavaScript or events.json.
+- New standalone event-guide-ui.js handles the detail popups independently.
+- The standalone script fetches data/events.json directly with cache:no-store.
+- It does not depend on app.js, state.events, renderAll(), the map, guests,
+  notifications, sponsors, or any other app module.
+- Existing search/filter functionality remains in the main app.
+- Service-worker cache bumped to V4.22 and includes event-guide-ui.js.
 
-- Con-Quest
-- Costume Contest
-- Charity Quick Sketches
-- Charity Auction
-- Friday & Saturday Shuttle Service
-- Saturday Night After Party
-- Medieval Combat Demos
-- Retro Gaming Arcade Vault
-- Tabletop Gaming
-- Trivia Tournament
-- Workshops
+This is a SAFE PATCH and does not contain current map, vendor, guest, schedule,
+settings, or celebrity JSON files.
 
-Tapping a button opens the existing full event-detail popup.
-
-On phones the activity buttons become a single-column vertical list so every item
-is obvious and easy to browse. On wider screens they remain a compact grid.
-
-The normal search/filter results remain below the event-button list.
-
-This remains a SAFE PATCH and does NOT overwrite current map, vendor, guest,
-schedule, settings, or celebrity data.
-
-UNZIP FIRST, then upload the files/folders inside the ZIP.
+UNZIP FIRST, then upload all files/folders inside this ZIP.

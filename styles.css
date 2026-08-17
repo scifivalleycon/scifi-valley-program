@@ -980,3 +980,13 @@ button,
     font-size:12px;
   }
 }
+
+
+/* V4.22 — static Event Guide discovery buttons */
+.event-quick-grid-below-search{
+  min-height:0;
+}
+.event-quick-grid-below-search .event-quick-button{
+  visibility:visible;
+  opacity:1;
+}
