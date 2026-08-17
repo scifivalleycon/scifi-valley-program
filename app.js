@@ -11,8 +11,8 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
-  guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], faq: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guestFilter: "All", dayFilter: "Friday", eventFilter: "All", faqFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.30",
+          appVersion:"4.31",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -248,9 +248,9 @@ async function loadData({silent=false,force=false}={}){
       credentials:"same-origin"
     }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
 
-    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,homeBannerData,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,homeBannerData,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
-      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/home-banner.json"),
+      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -269,6 +269,7 @@ async function loadData({silent=false,force=false}={}){
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.tshirts=Array.isArray(tshirts)?tshirts:[];
+    state.faq=Array.isArray(faq)?faq:[];
     state.homeBanner=Array.isArray(homeBannerData)&&homeBannerData[0]?homeBannerData[0]:{};
 
     // Render these immediately instead of waiting for the rest of the program.
@@ -459,6 +460,7 @@ function openGuest(id){
   bindGuestPhotoLightboxes();
 }
 
+document.getElementById("faqSearch")?.addEventListener("input",renderFaq);
 document.getElementById("tshirtSearch")?.addEventListener("input",renderTshirts);
 document.getElementById("tshirtSort")?.addEventListener("change",renderTshirts);
 document.getElementById("closeTshirtImageModal")?.addEventListener("click",()=>document.getElementById("tshirtImageModal")?.close());
@@ -2249,6 +2251,83 @@ function renderHomeGuestBanner(){
   button.dataset.go=String(cfg.linkTarget||"guests");
 }
 
+
+function faqAnswerText(item){
+  return String(item?.answer||"")
+    .replaceAll("{EVENT_DATES}",formatEventDateRange(false));
+}
+
+function renderFaqFilters(){
+  const host=document.getElementById("faqFilters");
+  if(!host)return;
+
+  const categories=["All",...new Set((state.faq||[])
+    .filter(item=>item&&item.enabled!==false&&item.category)
+    .map(item=>String(item.category).trim())
+    .filter(Boolean))];
+
+  host.innerHTML=categories.map(category=>`
+    <button type="button"
+      class="chip ${state.faqFilter===category?"active":""}"
+      data-faq-filter="${escapeAppHtml(category)}">
+      ${escapeAppHtml(category.toUpperCase())}
+    </button>`).join("");
+
+  host.querySelectorAll("[data-faq-filter]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      state.faqFilter=button.dataset.faqFilter||"All";
+      renderFaqFilters();
+      renderFaq();
+    });
+  });
+}
+
+function renderFaq(){
+  const host=document.getElementById("faqList");
+  if(!host)return;
+
+  const q=String(document.getElementById("faqSearch")?.value||"").trim().toLowerCase();
+  const items=(state.faq||[])
+    .filter(item=>item&&item.enabled!==false&&item.question)
+    .filter(item=>state.faqFilter==="All"||String(item.category||"")===state.faqFilter)
+    .filter(item=>{
+      if(!q)return true;
+      const haystack=[
+        item.question,
+        item.answer,
+        item.category,
+        ...(Array.isArray(item.bullets)?item.bullets:[])
+      ].join(" ").toLowerCase();
+      return haystack.includes(q);
+    });
+
+  if(!items.length){
+    host.innerHTML='<div class="muted-empty">No FAQ entries match your search.</div>';
+    return;
+  }
+
+  host.innerHTML=items.map((item,index)=>{
+    const answer=faqAnswerText(item);
+    const paragraphs=answer.split(/\n\s*\n/).map(text=>text.trim()).filter(Boolean);
+    const bullets=Array.isArray(item.bullets)?item.bullets.filter(Boolean):[];
+
+    return `<details class="faq-item" ${q&&items.length<=3?"open":""}>
+      <summary>
+        <span class="faq-number">${String(index+1).padStart(2,"0")}</span>
+        <span class="faq-summary-copy">
+          <small>${escapeAppHtml(String(item.category||"General").toUpperCase())}</small>
+          <strong>${escapeAppHtml(item.question)}</strong>
+        </span>
+        <span class="faq-chevron">+</span>
+      </summary>
+      <div class="faq-answer">
+        ${paragraphs.map(text=>`<p>${escapeAppHtml(text)}</p>`).join("")}
+        ${bullets.length?`<ul>${bullets.map(text=>`<li>${escapeAppHtml(text)}</li>`).join("")}</ul>`:""}
+      </div>
+    </details>`;
+  }).join("");
+}
+
 function renderTshirts(){
   const host=document.getElementById("tshirtGrid");
   if(!host)return;
@@ -2337,6 +2416,8 @@ function renderAll(){
   safeRenderSection("social links",renderSocialLinks);
   safeRenderSection("sponsors",renderSponsors);
   safeRenderSection("t-shirts",renderTshirts);
+  safeRenderSection("FAQ filters",renderFaqFilters);
+  safeRenderSection("FAQ",renderFaq);
 
   safeRenderSection("event settings",applyEventSettings);
   safeRenderSection("map",renderMapScreen);

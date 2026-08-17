@@ -1,0 +1,165 @@
+[
+  {
+    "id": "where-is-sfvc",
+    "category": "Venue",
+    "question": "Where is Sci-Fi Valley Con?",
+    "answer": "Sci-Fi Valley Con is held at the Blair County Convention Center at One Convention Drive in Altoona, Pennsylvania. Use the convention website's Hotels & Directions information for additional travel details.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "when-is-sfvc",
+    "category": "General",
+    "question": "When is Sci-Fi Valley Con?",
+    "answer": "The current convention dates are {EVENT_DATES}.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "hours",
+    "category": "General",
+    "question": "What are the hours of operation?",
+    "answer": "The current public FAQ lists these convention hours:",
+    "bullets": [
+      "Friday: 2:00 PM to 9:00 PM",
+      "Saturday: 10:00 AM to 8:00 PM",
+      "Sunday: 10:00 AM to 5:00 PM"
+    ],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "admission",
+    "category": "Tickets",
+    "question": "How does admission work?",
+    "answer": "Everyone age six and older needs a ticket. Children under 13 must be accompanied by an adult, and Sci-Fi Valley Con recommends that minors attend with an adult.\n\nTickets can be purchased online or at the door. Preordered tickets are picked up at the event. One-day and three-day admission options are available.\n\nThree-day pass holders receive advance seating access for celebrity Q&A panels. Tickets are not shipped.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "ticket-refunds",
+    "category": "Tickets",
+    "question": "Are tickets refundable?",
+    "answer": "No. Ticket sales are final and are not refundable.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "three-day-pass",
+    "category": "Tickets",
+    "question": "What are the perks of a 3-day pass?",
+    "answer": "A three-day pass includes admission for all three convention days and advance seating access before general admission for celebrity guest Q&A panels. Because panel seating can be limited, the public FAQ recommends arriving at least 30 minutes before the panel begins.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "vendor-refunds",
+    "category": "Vendors",
+    "question": "Are vendor tables refundable?",
+    "answer": "No. Vendor table sales are final and are not refundable.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "pictures",
+    "category": "Guests",
+    "question": "Can I take pictures?",
+    "answer": "Still photography and video are generally allowed, but celebrity guests may set their own photo rules and attendees should respect any request not to be photographed.\n\nMost guests who offer selfies charge for them at their table, and professional photo ops are available at scheduled times for attendees who want a printed photo with a guest.\n\nBy attending the convention, attendees should also expect that event or press photography may take place.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "autographs",
+    "category": "Guests",
+    "question": "Can I get autographs?",
+    "answer": "Yes. Celebrity guests charge for autographs and sign from their assigned booths during the event. Pricing and autograph availability are published through convention information as they are finalized.\n\nGuests may refuse bootleg merchandise, may limit the number of items they sign, and may set their own rules for photographs.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "weapons-policy",
+    "category": "Policies",
+    "question": "What is the convention's weapons policy?",
+    "answer": "The public FAQ prohibits functional or realistic weapons and other dangerous items. Prop weapons are generally permitted when they are made from lightweight materials and meet the event's safety requirements. Prop firearms must have a brightly colored tip, and prop bows may not be accompanied by functional arrows.\n\nWeapons sold by exhibitors must remain safely sheathed or boxed while displayed or sold. Questions about a specific prop can be sent to info@scifivalleycon.com.",
+    "bullets": [
+      "No functional firearms",
+      "No realistic replica firearms that could be mistaken for real weapons unless properly marked",
+      "No functional projectile weapons such as BB or pellet guns",
+      "No sharpened or live metal blades",
+      "No explosives",
+      "No chemical weapons such as mace or pepper spray",
+      "No excessive-noise items",
+      "No unholstered whips"
+    ],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "wifi",
+    "category": "Venue",
+    "question": "Is there Wi-Fi?",
+    "answer": "Yes. The current public FAQ states that internet service is available at the Blair County Convention Center.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "lost-found",
+    "category": "Venue",
+    "question": "What should I do if I find or lose something?",
+    "answer": "Bring found items to the front admissions table. If you lose something during the event, the admissions area is the best place to check.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "harassment",
+    "category": "Safety",
+    "question": "What if I am harassed?",
+    "answer": "Harassment is not tolerated. Conduct that is illegal outside the convention is also prohibited inside the event. Harassment can result in removal from the convention and possible legal action.\n\nReport harassment concerns to the Sci-Fi Valley Con office as soon as possible so staff can respond.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "security",
+    "category": "Safety",
+    "question": "Will there be security?",
+    "answer": "Yes. The public FAQ states that both armed and unarmed security are present during public convention hours. Bags may be checked for weapons at entry, and prop weapons are subject to inspection.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  },
+  {
+    "id": "generative-ai",
+    "category": "Policies",
+    "question": "Is generative AI art banned?",
+    "answer": "Yes. The public FAQ states that AI-generated artwork may not be displayed or sold at the event. Vendors found selling generative AI artwork can be required to leave.",
+    "bullets": [],
+    "enabled": true,
+    "sourceUrl": "https://scifivalleycon.com/faq",
+    "sourceUpdatedAt": "2026-08-17T02:04:58.561319Z"
+  }
+]

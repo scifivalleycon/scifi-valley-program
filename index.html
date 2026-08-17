@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.30">
+  <link rel="stylesheet" href="styles.css?v=4.31">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -316,6 +316,12 @@
         <b>›</b>
       </button>
 
+      <button class="settings-menu-card faq-menu-card" data-go="faq">
+        <span class="settings-menu-icon faq-menu-icon">?</span>
+        <span><strong>FREQUENTLY ASKED QUESTIONS</strong><small>Tickets, venue, guests, policies, safety & more</small></span>
+        <b>›</b>
+      </button>
+
       <section class="paper-panel social-media-panel">
         <div class="section-heading social-heading">
           <div>
@@ -464,7 +470,30 @@
       </section>
     </section>
 
-    <section id="tshirts" class="screen">
+    <section id="faq" class="screen">
+    <div class="screen-inner faq-screen">
+      <button class="shop-back-button" type="button" data-go="more">‹ BACK TO EVENT GUIDE</button>
+
+      <section class="paper-panel faq-hero">
+        <span class="section-kicker">NEED TO KNOW</span>
+        <h1>FREQUENTLY ASKED <span>QUESTIONS</span></h1>
+        <p>Quick answers about admission, venue information, celebrity guests, convention policies, safety and more.</p>
+      </section>
+
+      <label class="search-box faq-search-box">
+        <span>⌕</span>
+        <input id="faqSearch" type="search" placeholder="Search tickets, photos, weapons, Wi-Fi...">
+      </label>
+
+      <div id="faqFilters" class="chip-row faq-filter-row"></div>
+
+      <div id="faqList" class="faq-list">
+        <div class="muted-empty">Loading frequently asked questions…</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tshirts" class="screen">
     <div class="screen-inner tshirt-live-screen">
       <button class="shop-back-button" type="button" data-go="more">‹ BACK TO EVENT GUIDE</button>
 
@@ -680,6 +709,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.30"></script>
+  <script src="app.js?v=4.31"></script>
 </body>
 </html>

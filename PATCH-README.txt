@@ -1,18 +1,19 @@
-Sci-Fi Valley Con Attendee App V4.30 Recent Alert Dismiss SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.31 FAQ Page SAFE PATCH
 
-Adds an X button to each card in:
-RECENT EVENT ALERTS / LATEST UPDATES
+Adds:
+- FREQUENTLY ASKED QUESTIONS button to the Event Guide / More screen
+- Dedicated native FAQ screen
+- Search
+- Category filters
+- Expandable accordion questions
+- Dynamic {EVENT_DATES} placeholder using current app Event Details
+- data/faq.json as the FAQ content source
 
-Attendee behavior:
-- Tapping X dismisses that update from THIS device/app installation.
-- The dismissal is stored locally so the same alert does not reappear on refresh.
-- Local dismissals automatically expire with the existing 72-hour Recent Alerts window.
-- Other attendees still see the update unless staff removes it globally in Admin.
+The starter FAQ content is based on the current Sci-Fi Valley Con public FAQ page.
 
-Pairs with:
-- Admin V2.19
-- Notify Worker V1.13
+Pairs with Admin V2.20 FAQ CMS.
 
-Staff global removal is separate from the attendee's personal X button.
+This patch does not contain or overwrite map, vendors, guests, schedule, settings,
+events, sponsors, social links or other existing backend-managed JSON files.
 
-UNZIP FIRST, then upload the files inside this ZIP.
+UNZIP FIRST, then upload the files/folders inside this ZIP.
