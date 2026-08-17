@@ -1,23 +1,18 @@
-Sci-Fi Valley Con Attendee App V4.34 — Countdown + Vendor Locator SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.35 — Subtle Countdown SAFE PATCH
 
-HOME
-- Retro flip-clock countdown directly below the event date
-- Counts to the Event Details Friday start date at 2:00 PM
-- Months, weeks, days, hours and minutes
-- Updates every 30 seconds
-- Switches to an underway message once the event begins
+Refines the V4.34 retro flip-clock countdown:
 
-VENDORS
-- Displays vendor Description in the popup as WHAT THEY SELL
-- Searches Description in the map vendor search
-- Clicking a vendor name opens a non-modal detail popup
-- Existing table highlighting remains
-- Adds an animated HERE arrow pointing directly to the mapped table(s)
-- Multi-table vendors get a pointer centered over their table range
+- Removes the heavy dark/brown outer frame
+- Removes the large dark background block
+- Uses only subtle top and bottom divider lines
+- Narrows the countdown area
+- Makes each flip digit substantially smaller
+- Makes labels and the "Countdown to Friday • 2:00 PM" line more understated
+- Keeps the retro split-flap / flip-clock appearance
+- Keeps Months, Weeks, Days, Hours and Minutes
+- Keeps the Friday 2:00 PM countdown logic unchanged
 
-This is code-only. It does not overwrite settings.json, vendors.json, map-layout.json
-or any other Admin-managed backend data.
+No Admin or Notify Worker update is required.
+No backend-managed JSON files are included.
 
-The countdown follows Admin > Event Details. The start time itself is fixed at 2:00 PM.
-
-UNZIP FIRST, then upload all files inside the ZIP.
+UNZIP FIRST, then upload the files inside this ZIP.

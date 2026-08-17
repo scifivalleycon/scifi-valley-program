@@ -2464,3 +2464,84 @@ button,
   .map-location-modal.map-directory-popover[open]{width:calc(100vw - 18px);bottom:8px}
   .map-location-modal.map-directory-popover #mapLocationModalContent{padding:18px;max-height:42vh}
 }
+
+
+/* =========================================================
+   V4.35 — SMALLER / MORE SUBTLE RETRO COUNTDOWN
+   ========================================================= */
+
+.event-countdown{
+  width:min(100%,470px);
+  margin:5px auto 8px;
+  padding:5px 7px 6px;
+
+  /* Remove the heavy framed-box treatment. */
+  border:0;
+  border-top:1px solid rgba(58,39,32,.24);
+  border-bottom:1px solid rgba(58,39,32,.24);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+.event-countdown-kicker{
+  margin-bottom:4px;
+  color:var(--ink2);
+  font-size:5px;
+  letter-spacing:.09em;
+  opacity:.82;
+}
+
+.flip-countdown-grid{
+  width:min(100%,380px);
+  margin:0 auto;
+  gap:4px;
+}
+
+.flip-card{
+  min-height:27px;
+  border:1px solid rgba(13,11,10,.72);
+  border-radius:3px;
+  font-size:14px;
+  letter-spacing:-.5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    inset 0 -1px 0 rgba(0,0,0,.50),
+    0 1px 0 rgba(0,0,0,.15);
+}
+
+.flip-countdown-unit small{
+  margin-top:3px;
+  color:var(--ink2);
+  font-size:4.7px;
+  letter-spacing:.04em;
+}
+
+.event-countdown-message{
+  padding:5px 4px;
+  color:var(--ink);
+  font-size:10px;
+}
+
+@media(max-width:430px){
+  .event-countdown{
+    width:96%;
+    margin-top:4px;
+    padding:5px 2px;
+  }
+
+  .flip-countdown-grid{
+    width:100%;
+    max-width:340px;
+    gap:3px;
+  }
+
+  .flip-card{
+    min-height:25px;
+    font-size:13px;
+  }
+
+  .flip-countdown-unit small{
+    font-size:4.3px;
+  }
+}
