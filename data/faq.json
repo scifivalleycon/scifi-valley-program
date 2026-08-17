@@ -116,7 +116,7 @@
     "id": "wifi",
     "category": "Venue",
     "question": "Is there Wi-Fi?",
-    "answer": "Yes. The current public FAQ states that internet service is available at the Blair County Convention Center.",
+    "answer": "Yes. Internet service is available at the Blair County Convention Center.",
     "bullets": [],
     "enabled": true,
     "sourceUrl": "https://scifivalleycon.com/faq",
