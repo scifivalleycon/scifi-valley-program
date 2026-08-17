@@ -2104,3 +2104,47 @@ button,
     text-align:left;
   }
 }
+
+
+/* =========================================================
+   V4.29 — CLICKABLE MY SCHEDULE REMINDER LABEL
+   ========================================================= */
+
+.schedule-reminder-label{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  width:auto;
+  margin-top:6px;
+  padding:4px 7px;
+  border:1px solid rgba(58,39,32,.55);
+  border-radius:999px;
+  background:rgba(238,117,72,.10);
+  color:var(--coral2);
+  font-size:9px;
+  font-weight:900;
+  line-height:1;
+  cursor:pointer;
+  text-align:left;
+}
+
+.schedule-reminder-label span{
+  padding-left:5px;
+  border-left:1px solid rgba(58,39,32,.28);
+  font-size:6px;
+  letter-spacing:.06em;
+  color:var(--ink2);
+}
+
+.schedule-reminder-label:hover{
+  background:rgba(238,117,72,.18);
+}
+
+.schedule-reminder-label:focus-visible{
+  outline:2px solid var(--coral);
+  outline-offset:2px;
+}
+
+.schedule-reminder-label:active{
+  transform:translateY(1px);
+}

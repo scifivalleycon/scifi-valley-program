@@ -1,18 +1,31 @@
-Sci-Fi Valley Con Attendee App V4.28 Guest Banner Display Fix
+Sci-Fi Valley Con Attendee App V4.29 Clickable Reminder Label SAFE PATCH
 
-Fixes the celebrity guest banner presentation:
+Change:
+When an attendee saves a schedule event and the event displays a reminder label
+such as:
 
-- Keeps the ORIGINAL SOURCE IMAGE ASPECT RATIO
-- Removes fixed aspect-ratio sizing that caused browser cropping
-- Removes object-fit:cover cropping
-- Uses width:100% + height:auto so the entire artwork remains visible
-- Removes the dark left-side gradient completely
-- Removes all artwork overlays that cover celebrity faces
-- Moves the Celebrity Guests CTA into a slim strip BELOW the image
-- Entire banner/card still links to the native Guests screen
-- Works the same way on desktop/browser and mobile
+  🔔 15 minutes before  CHANGE
 
-This patch does not contain or overwrite backend data, maps, vendors, guests,
-schedule, settings, Event Guide data, sponsors or social links.
+the entire label is now clickable.
 
-UNZIP FIRST, then upload all files inside this ZIP.
+Tapping it opens the same Schedule Reminders modal used in Notification Settings,
+where the attendee can immediately choose:
+
+- No reminder
+- 5 minutes before
+- 15 minutes before
+- 30 minutes before
+- 1 hour before
+
+The existing reminder preference still applies to all events in My Schedule and
+continues syncing to the server/device reminder system.
+
+The reminder label is styled as a subtle pill/button so it is more obvious that it
+can be tapped.
+
+No Admin update is required.
+
+This patch does not overwrite map, vendors, guests, schedule, settings, Event Guide
+data, sponsors, social links, or other backend-managed JSON files.
+
+UNZIP FIRST, then upload all files inside the ZIP.

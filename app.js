@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.28",
+          appVersion:"4.29",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -608,7 +608,7 @@ function scheduleCardHtml(e){
       <strong>${e.title.toUpperCase()}</strong>
       <div class="meta">${e.location} • ${e.category}</div>
       <span class="schedule-category-tag">${category}</span>
-      ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<span class="schedule-reminder-label">🔔 ${formatReminder(state.reminderMinutes)}</span>`:""}
+      ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<button type="button" class="schedule-reminder-label" data-open-reminder-settings aria-label="Change reminder time. Current setting: ${escapeAppHtml(formatReminder(state.reminderMinutes))}">🔔 ${formatReminder(state.reminderMinutes)} <span>CHANGE</span></button>`:""}
     </div>
     ${saveButton}
   </article>`;
@@ -2327,7 +2327,21 @@ document.querySelectorAll("[data-celebrity-tab]").forEach(b=>b.addEventListener(
 
 
 document.querySelectorAll("[data-mycon-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-mycon-tab]").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("schedulePreview").classList.toggle("hidden",b.dataset.myconTab!=="schedule");document.getElementById("favoritePreview").classList.toggle("hidden",b.dataset.myconTab!=="guests")}));
-document.getElementById("openReminderSheet").addEventListener("click",()=>{updateReminderUI();document.getElementById("reminderModal").showModal()});
+function openReminderSettings(){
+  updateReminderUI();
+  const modal=document.getElementById("reminderModal");
+  if(modal&&!modal.open)modal.showModal();
+}
+
+document.getElementById("openReminderSheet").addEventListener("click",openReminderSettings);
+
+document.addEventListener("click",event=>{
+  const trigger=event.target.closest?.("[data-open-reminder-settings]");
+  if(!trigger)return;
+  event.preventDefault();
+  event.stopPropagation();
+  openReminderSettings();
+});
 document.getElementById("closeReminderModal").addEventListener("click",()=>document.getElementById("reminderModal").close());
 document.querySelectorAll('input[name="reminder"]').forEach(i=>i.addEventListener("change",()=>{
   state.reminderMinutes=+i.value;
