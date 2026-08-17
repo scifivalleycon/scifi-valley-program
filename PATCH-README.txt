@@ -1,19 +1,23 @@
-Sci-Fi Valley Con Attendee App V4.31 FAQ Page SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.32 Status + Schedule SAFE PATCH
 
-Adds:
-- FREQUENTLY ASKED QUESTIONS button to the Event Guide / More screen
-- Dedicated native FAQ screen
-- Search
-- Category filters
-- Expandable accordion questions
-- Dynamic {EVENT_DATES} placeholder using current app Event Details
-- data/faq.json as the FAQ content source
+Updates:
+1. Fixes Home > EVENT STATUS. The app previously referenced renderStatus without a
+   working renderer. V4.32 now provides smart defaults for:
+   - Before the convention: countdown
+   - During the convention: recently-started and upcoming programming
+   - During the convention with no listed schedule: useful update message
+   - After the convention: thank-you / event complete message
+   - Missing dates: safe Event Information Is Being Updated message
 
-The starter FAQ content is based on the current Sci-Fi Valley Con public FAQ page.
+2. Show Schedule now treats TRIVIA as its own visible category instead of letting
+   Event Room or Gaming absorb it.
 
-Pairs with Admin V2.20 FAQ CMS.
+3. Celebrity panel records from panels.json are shown in Show Schedule as GUEST PANELS
+   and are included in Home Event Status when celebrity information is published.
 
-This patch does not contain or overwrite map, vendors, guests, schedule, settings,
-events, sponsors, social links or other existing backend-managed JSON files.
+This is CODE ONLY. It deliberately does NOT include or overwrite schedule.json,
+panels.json, map data, vendors, guests, settings, or any other backend-managed JSON.
 
-UNZIP FIRST, then upload the files/folders inside this ZIP.
+No Notify Worker update is required.
+
+UNZIP FIRST, then upload all files inside the ZIP.

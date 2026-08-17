@@ -2334,3 +2334,44 @@ button,
     padding-left:12px;
   }
 }
+
+
+/* =========================================================
+   V4.32 — SMART HOME EVENT STATUS
+   ========================================================= */
+
+.event-status-card{
+  position:relative;
+  overflow:hidden;
+}
+.event-status-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:5px;
+  background:var(--aqua);
+}
+.event-status-card.status-live::before{background:var(--coral)}
+.event-status-card.status-next::before{background:var(--mustard)}
+.event-status-card.status-countdown::before{background:var(--aqua)}
+.event-status-card.status-complete::before{background:var(--ink2)}
+.event-status-card.status-neutral::before{background:var(--mustard)}
+.event-status-label{
+  display:block;
+  margin:0 0 4px;
+  color:var(--coral2);
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.10em;
+}
+.event-status-card strong{
+  font-family:var(--display);
+  font-size:12px;
+  line-height:1.04;
+}
+.event-status-card .meta{
+  margin-top:4px;
+  line-height:1.35;
+}

@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.31",
+          appVersion:"4.32",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -489,31 +489,41 @@ function celebrityPublished(){return state.celebrityInfo?.published===true}
 function primaryScheduleCategory(e){
   if(e.filterCategory)return e.filterCategory;
   const category=String(e.category||"").trim();
+  const title=String(e.title||"").trim();
   const location=String(e.location||"").toLowerCase();
 
+  // Keep these important attendee-facing categories explicit instead of
+  // allowing the room name or a generic Gaming category to swallow them.
+  if(/trivia/i.test(title)||/trivia/i.test(category))return "Trivia";
+  if(/celebrity panel|guest panel|q&a panel|reunion.*panel/i.test(`${title} ${category}`))return "Guest Panels";
   if(/artist/i.test(category))return "Artist Panels";
-  if(location.includes("event room"))return "Event Room";
   if(/costume|cosplay/i.test(category))return "Costume & Cosplay";
   if(/workshop|paint/i.test(category))return "Workshops";
   if(/gaming|game/i.test(category))return "Gaming";
   if(/charity/i.test(category))return "Charity";
   if(/after party/i.test(category))return "After Party";
   if(/activity/i.test(category))return "Activities";
+  if(location.includes("event room"))return "Event Room";
   return category||"Other";
 }
 
 function panelScheduleItems(){
   if(!celebrityPublished())return [];
-  return state.panels.map((p,i)=>({
-    id:`panel-${p.id||i}`,
-    day:p.day,
-    time:p.startTime,
-    title:p.title,
-    location:p.location||state.celebrityInfo.panelRoom||"Panel Room",
-    category:"Celebrity Panel",
-    filterCategory:"Celebrity Panels",
-    remindable:true
-  }));
+  return state.panels
+    .filter(p=>p&&p.day&&p.startTime&&p.title)
+    .map((p,i)=>({
+      id:`panel-${p.id||i}`,
+      day:p.day,
+      time:p.startTime,
+      endTime:p.endTime||"",
+      title:p.title,
+      location:p.location||state.celebrityInfo.panelRoom||"Panel Room",
+      category:"Guest Panel",
+      filterCategory:"Guest Panels",
+      participants:p.participants||"",
+      description:p.description||"",
+      remindable:true
+    }));
 }
 
 function photoOpScheduleItems(){
@@ -588,7 +598,7 @@ function sortedScheduleItems(items){
 }
 
 function scheduleCategoriesForDay(day){
-  const preferred=["Celebrity Panels","Photo Ops","Autographs","Artist Panels","Event Room","Gaming","Workshops","Costume & Cosplay","Charity","Activities","After Party","Other"];
+  const preferred=["Guest Panels","Trivia","Photo Ops","Autographs","Artist Panels","Event Room","Gaming","Workshops","Costume & Cosplay","Charity","Activities","After Party","Other"];
   const categories=[...new Set(showScheduleItems().filter(e=>e.day===day).map(primaryScheduleCategory))];
   return categories.sort((a,b)=>{
     const ai=preferred.indexOf(a), bi=preferred.indexOf(b);
@@ -663,6 +673,139 @@ function renderCelebrityPanels(){
   const records=state.panels.filter(p=>p.day===state.celebrityPanelDay);
   document.getElementById("panelList").innerHTML=records.map((p,i)=>{const e=panelScheduleItems().find(x=>x.id===`panel-${p.id||i}`),saved=e&&state.mySchedule.has(e.id);return `<article class="celebrity-panel-card"><div class="panel-card-head"><div><span class="panel-time">${p.startTime}${p.endTime?`–${p.endTime}`:""}</span><h3>${p.title}</h3></div>${e?`<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`:""}</div><div class="meta">${p.location||info.panelRoom||""}${p.participants?` • ${p.participants}`:""}</div>${p.description?`<p>${p.description}</p>`:""}</article>`}).join("")||`<div class="paper-panel muted-empty">No celebrity panels listed for this day.</div>`;
   bindScheduleSaveButtons();
+}
+
+
+function localDateKey(date=new Date()){
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+
+function eventStatusScheduleItems(){
+  // Keep the Home status focused on actual convention programming and guest panels.
+  // Professional photo ops remain available in the full Show Schedule and Celebrity Guide.
+  return [...baseScheduleItems(),...panelScheduleItems()];
+}
+
+function statusCardHtml(label,title,meta="",accent=""){
+  return `<article class="status-card event-status-card ${accent}">
+    <span class="event-status-label">${escapeAppHtml(label)}</span>
+    <strong>${escapeAppHtml(title)}</strong>
+    ${meta?`<div class="meta">${escapeAppHtml(meta)}</div>`:""}
+  </article>`;
+}
+
+function renderStatus(){
+  const heading=document.getElementById("nowHeading");
+  const host=document.getElementById("happeningNow");
+  if(!heading||!host)return;
+
+  const start=parseISODate(state.settings.startDate);
+  const end=parseISODate(state.settings.endDate);
+  const now=new Date();
+
+  if(!start||!end){
+    heading.textContent="EVENT STATUS";
+    host.innerHTML=statusCardHtml(
+      "PROGRAM UPDATE",
+      "EVENT INFORMATION IS BEING UPDATED",
+      "Check the Show Schedule and Event Guide for the latest convention information.",
+      "status-neutral"
+    );
+    return;
+  }
+
+  // Treat the whole event as local calendar days, not UTC timestamps.
+  const todayKey=localDateKey(now);
+  const startKey=localDateKey(start);
+  const endKey=localDateKey(end);
+
+  if(todayKey<startKey){
+    const todayNoon=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12,0,0);
+    const startNoon=new Date(start.getFullYear(),start.getMonth(),start.getDate(),12,0,0);
+    const days=Math.max(1,Math.ceil((startNoon-todayNoon)/(24*60*60*1000)));
+    heading.textContent="COUNTDOWN TO SCI-FI VALLEY CON";
+    host.innerHTML=statusCardHtml(
+      `${days} DAY${days===1?"":"S"} TO GO`,
+      `THE SHOW STARTS ${formatEventDateRange(false)}`,
+      `${eventLocationText()} • Open the Show Schedule to start planning your weekend.`,
+      "status-countdown"
+    );
+    return;
+  }
+
+  if(todayKey>endKey){
+    heading.textContent="THANK YOU FOR JOINING US";
+    host.innerHTML=statusCardHtml(
+      "EVENT COMPLETE",
+      "THIS SCI-FI VALLEY CON HAS WRAPPED",
+      "Thank you for being part of the weekend. Watch the app and Sci-Fi Valley Con channels for future announcements.",
+      "status-complete"
+    );
+    return;
+  }
+
+  const dayDates=eventDayDates();
+  const eventDay=Object.entries(dayDates).find(([,date])=>date===todayKey)?.[0]||"";
+  if(!eventDay){
+    heading.textContent="EVENT STATUS";
+    host.innerHTML=statusCardHtml(
+      "AT THE CON",
+      "SCI-FI VALLEY CON IS UNDERWAY",
+      "Open the Show Schedule for today's latest activities, panels and times.",
+      "status-live"
+    );
+    return;
+  }
+
+  const items=sortedScheduleItems(eventStatusScheduleItems().filter(item=>item.day===eventDay));
+  if(!items.length){
+    heading.textContent=`${eventDay.toUpperCase()} AT THE CON`;
+    host.innerHTML=statusCardHtml(
+      "LIVE PROGRAM",
+      "TODAY'S SCHEDULE IS BEING UPDATED",
+      "Check the Show Schedule and Event Guide for the latest information as it is published.",
+      "status-neutral"
+    );
+    return;
+  }
+
+  const nowMinutes=now.getHours()*60+now.getMinutes();
+  const valid=items.filter(item=>parseScheduleStartMinutes(item.time)<9999);
+  const recentlyStarted=[...valid].reverse().find(item=>{
+    const minutes=parseScheduleStartMinutes(item.time);
+    return minutes<=nowMinutes&&minutes>=nowMinutes-45;
+  });
+  const upcoming=valid.filter(item=>parseScheduleStartMinutes(item.time)>nowMinutes).slice(0,recentlyStarted?2:3);
+
+  if(recentlyStarted||upcoming.length){
+    heading.textContent=recentlyStarted?"HAPPENING NOW & UP NEXT":"UP NEXT";
+    const cards=[];
+    if(recentlyStarted){
+      cards.push(statusCardHtml(
+        "STARTED RECENTLY",
+        recentlyStarted.title,
+        `${recentlyStarted.time} • ${recentlyStarted.location} • ${primaryScheduleCategory(recentlyStarted)}`,
+        "status-live"
+      ));
+    }
+    upcoming.forEach((item,index)=>cards.push(statusCardHtml(
+      index===0?"UP NEXT":"COMING UP",
+      item.title,
+      `${item.time}${item.endTime?`–${item.endTime}`:""} • ${item.location} • ${primaryScheduleCategory(item)}`,
+      index===0?"status-next":""
+    )));
+    host.innerHTML=cards.join("");
+    return;
+  }
+
+  const nextDay=eventDay==="Friday"?"Saturday":eventDay==="Saturday"?"Sunday":"";
+  heading.textContent="TODAY'S PROGRAM";
+  host.innerHTML=statusCardHtml(
+    "SCHEDULE UPDATE",
+    nextDay?`TODAY'S LISTED ACTIVITIES HAVE WRAPPED`:`THE FINAL LISTED ACTIVITIES HAVE WRAPPED`,
+    nextDay?`We'll see you again ${nextDay}. Check the Show Schedule for tomorrow's lineup.`:"Thank you for spending the weekend with Sci-Fi Valley Con.",
+    "status-complete"
+  );
 }
 
 function renderDayFilters(){
