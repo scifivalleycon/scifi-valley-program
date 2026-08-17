@@ -1569,3 +1569,163 @@ button,
 @media(min-width:850px){
   .tshirt-shop-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+
+/* =========================================================
+   V4.25 — LIVE OFFICIAL CRYPTOTEEOLOGY / ECWID T-SHIRT STORE
+   ========================================================= */
+
+.tshirt-live-screen{
+  padding-bottom:32px;
+}
+.tshirt-live-hero{
+  margin-bottom:12px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 90% 18%, rgba(115,199,203,.42), transparent 25%),
+    linear-gradient(135deg, rgba(238,117,72,.23), rgba(255,247,223,.82));
+}
+.tshirt-live-hero h1{
+  margin:3px 0 6px;
+  font-family:var(--display);
+  font-size:34px;
+  line-height:.95;
+}
+.tshirt-live-hero h1 span{
+  color:var(--coral);
+}
+.tshirt-live-hero p{
+  margin:0;
+  max-width:720px;
+  font-family:Georgia,serif;
+  font-size:10px;
+  line-height:1.45;
+}
+.tshirt-live-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:2px dashed rgba(58,39,32,.28);
+}
+.tshirt-live-actions a{
+  padding:8px 10px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:var(--mustard);
+  color:var(--ink);
+  text-decoration:none;
+  font-size:8px;
+  font-weight:900;
+  box-shadow:2px 3px 0 rgba(58,39,32,.13);
+}
+.tshirt-live-actions span{
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.07em;
+}
+.tshirt-live-catalog-panel{
+  padding:13px;
+}
+.tshirt-live-heading{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.tshirt-live-heading h2{
+  margin:2px 0 0;
+  font-family:var(--display);
+  font-size:20px;
+}
+.tshirt-live-badge{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  flex:0 0 38px;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--coral);
+  color:var(--cream);
+  font-family:var(--display);
+  font-size:18px;
+  box-shadow:2px 3px 0 rgba(58,39,32,.14);
+}
+.tshirt-live-help{
+  margin:7px 0 10px;
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.4;
+  color:var(--ink2);
+}
+.tshirt-live-status{
+  margin:8px 0 12px;
+  padding:8px 10px;
+  border:1px solid rgba(58,39,32,.45);
+  border-radius:7px;
+  background:rgba(226,173,52,.15);
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.tshirt-live-status[data-kind="ready"]{
+  background:rgba(115,199,203,.24);
+}
+.tshirt-live-status[data-kind="warning"]{
+  background:rgba(238,117,72,.20);
+}
+.tshirt-live-store{
+  min-height:520px;
+  padding:6px;
+  border:2px solid var(--ink);
+  border-radius:9px;
+  background:#fff;
+  overflow:hidden;
+}
+.tshirt-live-fallback{
+  margin-top:10px;
+  padding:12px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:rgba(238,117,72,.15);
+  text-align:center;
+}
+.tshirt-live-fallback strong,
+.tshirt-live-fallback p,
+.tshirt-live-fallback a{
+  display:block;
+}
+.tshirt-live-fallback p{
+  margin:5px 0 10px;
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.4;
+}
+.tshirt-live-fallback a{
+  padding:9px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--mustard);
+  color:var(--ink);
+  text-decoration:none;
+  font-family:var(--display);
+  font-size:9px;
+}
+.tshirt-shop-bottom-link{
+  margin-top:13px;
+}
+
+/* Let the embedded Ecwid storefront breathe on mobile. */
+@media(max-width:520px){
+  .tshirt-live-catalog-panel{
+    padding:9px;
+  }
+  .tshirt-live-store{
+    padding:2px;
+    min-height:620px;
+  }
+}

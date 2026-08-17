@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.24">
+  <link rel="stylesheet" href="styles.css?v=4.25">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -428,38 +428,56 @@
     </section>
 
     <section id="tshirts" class="screen">
-    <div class="screen-inner tshirt-shop-screen">
+    <div class="screen-inner tshirt-live-screen">
       <button class="shop-back-button" type="button" data-go="more">‹ BACK TO EVENT GUIDE</button>
 
-      <section class="paper-panel tshirt-shop-hero">
+      <section class="paper-panel tshirt-live-hero">
         <span class="section-kicker">THE HOME OF NOSTALGIA</span>
         <h1>OFFICIAL <span>T-SHIRTS</span></h1>
-        <p>Explore Sci-Fi Valley Con shirts from across the years. Tap any shirt image to see it larger, then use Buy Now to order directly from Cryptoteeology.</p>
-        <div class="tshirt-shop-actions">
-          <a href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">SHOP THE FULL STORE ↗</a>
-          <span id="tshirtCatalogCount">LOADING CATALOG…</span>
+        <p>
+          Browse the live Sci-Fi Valley Con shirt catalog directly from Cryptoteeology.
+          Product photos, prices, available options and new shirt releases update from the
+          official store automatically.
+        </p>
+        <div class="tshirt-live-actions">
+          <a href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">
+            OPEN FULL CRYPTOTEEOLOGY STORE ↗
+          </a>
+          <span>LIVE OFFICIAL CATALOG</span>
         </div>
       </section>
 
-      <div class="tshirt-shop-toolbar">
-        <label class="search-box tshirt-search-box">
-          <span>⌕</span>
-          <input id="tshirtSearch" type="search" placeholder="Search shirts by year, color, staff, giveaway...">
-        </label>
-        <select id="tshirtSort" class="tshirt-sort" aria-label="Sort T-shirts">
-          <option value="store">STORE ORDER</option>
-          <option value="newest">NEWEST YEAR</option>
-          <option value="oldest">OLDEST YEAR</option>
-          <option value="price-low">PRICE LOW TO HIGH</option>
-          <option value="price-high">PRICE HIGH TO LOW</option>
-        </select>
-      </div>
+      <section class="paper-panel tshirt-live-catalog-panel">
+        <div class="tshirt-live-heading">
+          <div>
+            <span class="section-kicker">SCI-FI VALLEY CON COLLECTION</span>
+            <h2>SHOP THE SHIRTS</h2>
+          </div>
+          <span class="tshirt-live-badge">T</span>
+        </div>
 
-      <div id="tshirtGrid" class="tshirt-shop-grid">
-        <div class="muted-empty">Loading official T-shirts…</div>
-      </div>
+        <p class="tshirt-live-help">
+          Tap any shirt to open its full product page, see the larger product photos,
+          review colors and sizes, and purchase directly from Cryptoteeology.
+        </p>
 
-      <a class="shop-all-shirts tshirt-shop-bottom-link" href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">
+        <div id="sfvcEcwidStoreStatus" class="tshirt-live-status">
+          LOADING THE OFFICIAL T-SHIRT CATALOG…
+        </div>
+
+        <div id="sfvc-live-tshirt-store" class="tshirt-live-store" aria-live="polite"></div>
+
+        <div id="sfvcEcwidFallback" class="tshirt-live-fallback hidden">
+          <strong>THE LIVE STORE COULD NOT LOAD INSIDE THE APP.</strong>
+          <p>You can still view every Sci-Fi Valley Con shirt, photo and product option on the official Cryptoteeology store.</p>
+          <a href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">
+            OPEN OFFICIAL T-SHIRT STORE ↗
+          </a>
+        </div>
+      </section>
+
+      <a class="shop-all-shirts tshirt-shop-bottom-link"
+         href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">
         SHOP ALL SCI-FI VALLEY CON T-SHIRTS AT CRYPTOTEEOLOGY ↗
       </a>
     </div>
@@ -592,15 +610,6 @@
     </a>
   </dialog>
 
-  <dialog id="tshirtImageModal" class="tshirt-image-modal">
-    <button id="closeTshirtImageModal" class="modal-close tshirt-image-modal-close" aria-label="Close shirt image">×</button>
-    <div class="tshirt-lightbox-body">
-      <img id="tshirtLightboxImage" src="" alt="">
-      <div id="tshirtLightboxThumbs" class="tshirt-lightbox-thumbs"></div>
-      <strong id="tshirtLightboxTitle"></strong>
-    </div>
-  </dialog>
-
   <dialog id="guestModal" class="guest-modal">
     <button id="closeGuestModal" class="modal-close" aria-label="Close">×</button>
     <div id="guestModalContent"></div>
@@ -633,6 +642,7 @@
   </dialog>
 
   <script src="event-guide-ui.js?v=4.22"></script>
-  <script src="app.js?v=4.24"></script>
+  <script src="tshirt-live-store.js?v=4.25"></script>
+  <script src="app.js?v=4.25"></script>
 </body>
 </html>
