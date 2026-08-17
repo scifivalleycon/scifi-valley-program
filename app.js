@@ -124,6 +124,19 @@ function migrateLegacyScheduleIds(schedule){
 }
 
 
+const APP_REGISTRATION_KEY="sfvc-app-registration-v1";
+
+function loadAppRegistration(){
+  try{
+    const value=JSON.parse(localStorage.getItem(APP_REGISTRATION_KEY)||"null");
+    return value&&typeof value==="object"?value:null;
+  }catch{return null;}
+}
+function saveAppRegistrationLocal(profile){
+  if(profile)localStorage.setItem(APP_REGISTRATION_KEY,JSON.stringify(profile));
+  else localStorage.removeItem(APP_REGISTRATION_KEY);
+}
+
 const ANONYMOUS_DEVICE_ID_KEY="sfvc-anonymous-device-id-v1";
 const DEVICE_SYNC_DEBOUNCE_MS=300;
 let deviceSyncTimer=null;
@@ -198,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.32",
+          appVersion:"4.33",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -296,6 +309,7 @@ async function loadData({silent=false,force=false}={}){
     renderAll();
     scheduleServerReminderSync(50);
     scheduleAnonymousDeviceSync(80);
+    setTimeout(()=>syncSavedAppRegistration(),140);
 
     if(!silent){
       initializePushPromptExperience();
@@ -1569,6 +1583,133 @@ function initializeAppAnalytics(){
   window.addEventListener("online",()=>sendAnalyticsHeartbeat("online",{force:true}));
 }
 
+
+function normalizedRegistrationProfileFromForm(){
+  const name=String(document.getElementById("registrationName")?.value||"").trim();
+  const pronouns=String(document.getElementById("registrationPronouns")?.value||"").trim();
+  const email=String(document.getElementById("registrationEmail")?.value||"").trim().toLowerCase();
+  const phone=String(document.getElementById("registrationPhone")?.value||"").trim();
+  if(!name)throw new Error("Please enter your name.");
+  if(!email)throw new Error("Please enter your email address.");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error("Please enter a valid email address.");
+  if(!phone)throw new Error("Please enter your phone number.");
+  return {name,pronouns,email,phone};
+}
+
+function renderAppRegistration(){
+  const profile=loadAppRegistration();
+  const registered=Boolean(profile?.name&&profile?.email&&profile?.phone);
+  const title=document.getElementById("registrationStatusTitle");
+  const copy=document.getElementById("registrationStatusCopy");
+  const badge=document.getElementById("registrationStatusBadge");
+  const menu=document.getElementById("registrationMenuSummary");
+  const saveButton=document.getElementById("saveAppRegistration");
+  const removeButton=document.getElementById("removeAppRegistration");
+  const deviceId=document.getElementById("registrationDeviceId");
+
+  if(deviceId)deviceId.textContent=getAnonymousDeviceId();
+  if(title)title.textContent=registered?"REGISTERED":"NOT REGISTERED";
+  if(copy)copy.textContent=registered
+    ? `Registered to ${profile.name}${profile.pronouns?` • ${profile.pronouns}`:""}. You can update this anytime.`
+    : "Complete the form below to register this app installation.";
+  if(badge){
+    badge.textContent=registered?"✓":"ID";
+    badge.classList.toggle("registered",registered);
+  }
+  if(menu)menu.textContent=registered?`Registered to ${profile.name}`:"Add your name, pronouns and contact information";
+  if(saveButton)saveButton.textContent=registered?"UPDATE REGISTRATION":"REGISTER THIS APP";
+  removeButton?.classList.toggle("hidden",!registered);
+
+  const fields={
+    registrationName:profile?.name||"",
+    registrationPronouns:profile?.pronouns||"",
+    registrationEmail:profile?.email||"",
+    registrationPhone:profile?.phone||""
+  };
+  Object.entries(fields).forEach(([id,value])=>{
+    const input=document.getElementById(id);
+    if(input&&document.activeElement!==input)input.value=value;
+  });
+}
+
+async function sendAppRegistrationToServer(profile){
+  const base=pushApiBase();
+  if(!base)throw new Error("Registration service is not configured.");
+  const response=await fetch(`${base}/v1/profile/register`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      deviceId:getAnonymousDeviceId(),
+      name:profile.name,
+      pronouns:profile.pronouns,
+      email:profile.email,
+      phone:profile.phone,
+      appVersion:"4.33",
+      timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
+    })
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||`Registration service returned ${response.status}.`);
+  return result;
+}
+
+async function syncSavedAppRegistration(){
+  const profile=loadAppRegistration();
+  if(!profile?.name||!profile?.email||!profile?.phone)return;
+  try{await sendAppRegistrationToServer(profile);}
+  catch(err){console.warn("Saved app registration could not sync",err);}
+}
+
+async function submitAppRegistration(event){
+  event?.preventDefault();
+  const status=document.getElementById("registrationFormStatus");
+  const button=document.getElementById("saveAppRegistration");
+  if(button){button.disabled=true;button.textContent="SAVING…";}
+  if(status){status.textContent="Saving your app registration…";status.className="registration-form-status";}
+  try{
+    const profile=normalizedRegistrationProfileFromForm();
+    const result=await sendAppRegistrationToServer(profile);
+    saveAppRegistrationLocal({
+      ...profile,
+      registeredAt:String(result.createdAt||new Date().toISOString()),
+      updatedAt:String(result.updatedAt||new Date().toISOString())
+    });
+    renderAppRegistration();
+    scheduleAnonymousDeviceSync(40);
+    if(status){status.textContent="✓ This app is registered.";status.className="registration-form-status success";}
+  }catch(err){
+    if(status){status.textContent=err.message;status.className="registration-form-status error";}
+  }finally{
+    if(button){button.disabled=false;button.textContent=loadAppRegistration()?"UPDATE REGISTRATION":"REGISTER THIS APP";}
+  }
+}
+
+async function removeAppRegistration(){
+  if(!confirm("Remove your registration from this app installation? Your admission ticket and saved My Schedule items are not affected."))return;
+  const status=document.getElementById("registrationFormStatus");
+  const button=document.getElementById("removeAppRegistration");
+  if(button)button.disabled=true;
+  try{
+    const base=pushApiBase();
+    if(base){
+      const response=await fetch(`${base}/v1/profile/remove`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({deviceId:getAnonymousDeviceId()})
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(result.error||`Registration service returned ${response.status}.`);
+    }
+    saveAppRegistrationLocal(null);
+    renderAppRegistration();
+    if(status){status.textContent="Your app registration was removed.";status.className="registration-form-status success";}
+  }catch(err){
+    if(status){status.textContent=`Could not remove registration: ${err.message}`;status.className="registration-form-status error";}
+  }finally{
+    if(button)button.disabled=false;
+  }
+}
+
 function pushApiBase(){
   return String(state.settings.pushApiUrl||DEFAULT_SETTINGS.pushApiUrl||"").replace(/\/+$/,"");
 }
@@ -2578,6 +2719,7 @@ function renderAll(){
   safeRenderSection("My Con",renderMySchedule);
   safeRenderSection("reminder UI",updateReminderUI);
   safeRenderSection("notification status",updateNotificationStatus);
+  safeRenderSection("app registration",renderAppRegistration);
 }
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
@@ -2842,6 +2984,9 @@ document.addEventListener("dblclick",event=>{
     event.preventDefault();
   }
 },{passive:false});
+
+document.getElementById("appRegistrationForm")?.addEventListener("submit",submitAppRegistration);
+document.getElementById("removeAppRegistration")?.addEventListener("click",removeAppRegistration);
 
 initializeAppAnalytics();
 initializeRecentAlerts();

@@ -2375,3 +2375,29 @@ button,
   margin-top:4px;
   line-height:1.35;
 }
+
+
+/* V4.33 — APP REGISTRATION */
+.registration-menu-card{background:rgba(115,199,203,.18)}
+.registration-menu-icon{background:var(--aqua)!important;color:var(--ink);font-size:7px!important;font-weight:900}
+.registration-status-panel{margin-bottom:12px}
+.registration-status-head{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.registration-status-head h2{margin:2px 0 4px}
+.registration-status-head p{margin:0;font-family:Georgia,serif;font-size:9px;line-height:1.4}
+.registration-status-badge{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--mustard);font-size:9px;font-weight:900;box-shadow:2px 3px 0 rgba(58,39,32,.14)}
+.registration-status-badge.registered{background:var(--aqua);font-size:20px}
+.registration-form{display:grid;gap:10px}
+.registration-field{display:grid;gap:5px}
+.registration-field>span{font-size:7px;font-weight:900;letter-spacing:.06em}
+.registration-field>span b{color:var(--coral2);font-size:5.5px}
+.registration-field>span em{color:var(--ink2);font-size:5.5px;font-style:normal}
+.registration-field input{width:100%;min-height:44px;padding:9px 11px;border:2px solid var(--ink);border-radius:8px;background:rgba(255,247,223,.82);color:var(--ink);font:inherit;font-size:11px}
+.registration-field input:focus{outline:2px solid var(--aqua);outline-offset:2px}
+.registration-privacy-note{margin-top:3px;padding:10px;border:1px solid rgba(58,39,32,.4);border-radius:8px;background:rgba(226,173,52,.12)}
+.registration-privacy-note strong{display:block;margin-bottom:4px;font-size:7px;letter-spacing:.06em}
+.registration-privacy-note p{margin:0;font-family:Georgia,serif;font-size:8px;line-height:1.4}
+.registration-save-button,.registration-remove-button{width:100%}
+.registration-form-status{min-height:16px;margin:0;font-size:8px;font-weight:900;line-height:1.3}
+.registration-form-status.success{color:#275e51}
+.registration-form-status.error{color:var(--coral2)}
+.registration-device-note code{display:block;margin-top:8px;padding:8px;overflow-wrap:anywhere;border:1px dashed rgba(58,39,32,.45);border-radius:6px;background:rgba(58,39,32,.04);font-size:7px}

@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.32">
+  <link rel="stylesheet" href="styles.css?v=4.33">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -309,6 +309,15 @@
         <b>›</b>
       </button>
 
+      <button class="settings-menu-card registration-menu-card" data-go="registration">
+        <span class="settings-menu-icon registration-menu-icon">ID</span>
+        <span>
+          <strong>REGISTER THIS APP</strong>
+          <small id="registrationMenuSummary">Add your name, pronouns and contact information</small>
+        </span>
+        <b>›</b>
+      </button>
+
 
       <button class="settings-menu-card tshirt-menu-card" data-go="tshirts">
         <span class="settings-menu-icon tshirt-menu-icon">T</span>
@@ -549,6 +558,67 @@
     </div>
   </section>
 
+  <section id="registration" class="screen">
+      <div class="page-title poster-title registration-page-title">
+        <p class="kicker">PERSONALIZE YOUR PROGRAM</p>
+        <h1>APP <span>REGISTRATION</span></h1>
+        <p>Register this app installation with your name and contact information.</p>
+      </div>
+
+      <section class="paper-panel registration-status-panel">
+        <div class="registration-status-head">
+          <div>
+            <span class="section-kicker">REGISTRATION STATUS</span>
+            <h2 id="registrationStatusTitle">NOT REGISTERED</h2>
+            <p id="registrationStatusCopy">Complete the form below to register this app installation.</p>
+          </div>
+          <span id="registrationStatusBadge" class="registration-status-badge">ID</span>
+        </div>
+      </section>
+
+      <form id="appRegistrationForm" class="paper-panel registration-form">
+        <div class="section-heading">
+          <div><span class="section-kicker">YOUR PROFILE</span><h2>REGISTRATION DETAILS</h2></div>
+        </div>
+
+        <label class="registration-field">
+          <span>NAME <b>REQUIRED</b></span>
+          <input id="registrationName" name="name" type="text" maxlength="120" autocomplete="name" placeholder="Your name" required>
+        </label>
+
+        <label class="registration-field">
+          <span>PRONOUNS <em>OPTIONAL</em></span>
+          <input id="registrationPronouns" name="pronouns" type="text" maxlength="80" placeholder="she/her, he/him, they/them, etc.">
+        </label>
+
+        <label class="registration-field">
+          <span>EMAIL <b>REQUIRED</b></span>
+          <input id="registrationEmail" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+        </label>
+
+        <label class="registration-field">
+          <span>PHONE <b>REQUIRED</b></span>
+          <input id="registrationPhone" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder="(814) 555-1234" required>
+        </label>
+
+        <div class="registration-privacy-note">
+          <strong>ABOUT APP REGISTRATION</strong>
+          <p>This is optional and separate from your convention admission ticket. Registering the app does not automatically subscribe you to marketing emails, newsletters or text messages. Your registration is tied to this app installation's random Device ID.</p>
+        </div>
+
+        <button id="saveAppRegistration" class="retro-action registration-save-button" type="submit">REGISTER THIS APP</button>
+        <button id="removeAppRegistration" class="retro-action secondary registration-remove-button hidden" type="button">REMOVE MY REGISTRATION</button>
+        <p id="registrationFormStatus" class="registration-form-status" aria-live="polite"></p>
+      </form>
+
+      <section class="paper-panel registration-device-note">
+        <span class="section-kicker">THIS INSTALLATION</span>
+        <h2>APP DEVICE ID</h2>
+        <p>Your profile is connected to this installation. Clearing browser/app data or reinstalling the PWA can create a new Device ID.</p>
+        <code id="registrationDeviceId">Loading Device ID…</code>
+      </section>
+    </section>
+
   <section id="settings" class="screen">
       <div class="page-title poster-title">
         <p class="kicker">PERSONALIZE YOUR PROGRAM</p>
@@ -709,6 +779,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.32"></script>
+  <script src="app.js?v=4.33"></script>
 </body>
 </html>
