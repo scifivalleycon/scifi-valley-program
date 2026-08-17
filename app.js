@@ -211,7 +211,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.38",
+          appVersion:"4.39",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -1735,7 +1735,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.38",
+      appVersion:"4.39",
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
@@ -2418,7 +2418,7 @@ function renderFloorPlanSvg(){
 }
 function openMapLocation(code,{nonModal=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Learn what Con-Quest is">★ CON-QUEST PARTICIPANT <span>WHAT IS THIS? ›</span></button>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
 
   if(modal.open)modal.close();
@@ -2518,10 +2518,20 @@ document.getElementById('mapLocationModal')?.addEventListener('close',e=>e.curre
 document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
 function openConQuestInfo(){
+  const vendorModal=document.getElementById('mapLocationModal');
   const modal=document.getElementById('conQuestInfoModal');
   if(!modal)return;
-  if(typeof modal.showModal==='function'&&!modal.open)modal.showModal();
-  else modal.setAttribute('open','');
+
+  if(vendorModal?.open){
+    vendorModal.close();
+  }
+
+  // A tiny delay lets the browser release focus/inert state from the vendor
+  // dialog before opening the Con-Quest explainer, which is more reliable on mobile.
+  setTimeout(()=>{
+    if(typeof modal.showModal==='function'&&!modal.open)modal.showModal();
+    else if(!modal.open)modal.setAttribute('open','');
+  },40);
 }
 
 function closeConQuestInfo(){

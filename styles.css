@@ -2884,3 +2884,60 @@ button,
     font-size:8px;
   }
 }
+
+
+/* =========================================================
+   V4.39 — EXACT ORANGE CON-QUEST BADGE IS THE INFO BUTTON
+   ========================================================= */
+
+.map-conquest-badge.conquest-info-trigger{
+  width:auto;
+  max-width:100%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:10px;
+  padding:9px 12px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--coral);
+  color:var(--cream);
+  font:inherit;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.045em;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:2px 3px 0 rgba(58,39,32,.16);
+  -webkit-tap-highlight-color:rgba(226,173,52,.30);
+  touch-action:manipulation;
+}
+
+/* V4.38 added a secondary WHAT IS THIS label. V4.39 intentionally removes it
+   so the button looks like the exact orange badge already familiar to visitors. */
+.map-conquest-badge.conquest-info-trigger span{
+  display:none!important;
+}
+
+.map-conquest-badge.conquest-info-trigger:hover{
+  filter:brightness(1.06);
+}
+
+.map-conquest-badge.conquest-info-trigger:focus-visible{
+  outline:3px solid var(--mustard);
+  outline-offset:3px;
+}
+
+.map-conquest-badge.conquest-info-trigger:active{
+  transform:translateY(2px);
+  filter:brightness(.96);
+  box-shadow:0 1px 0 rgba(58,39,32,.18);
+}
+
+@media(max-width:430px){
+  .map-conquest-badge.conquest-info-trigger{
+    min-height:42px;
+    padding:10px 13px;
+    font-size:7.2px;
+  }
+}
