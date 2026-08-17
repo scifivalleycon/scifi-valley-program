@@ -1,16 +1,18 @@
-Sci-Fi Valley Con Attendee App V4.23 Commerce / Newsletter / T-Shirts SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.24 - Dedicated T-Shirt Shop SAFE PATCH
 
-Adds:
-- BUY TICKETS link to https://scifivalleycon.com/tickets
-- BUY TABLES & BOOTHS link to https://scifivalleycon.com/tables
-- Official Sci-Fi Valley Con newsletter signup form in an in-app modal
-- Fallback link to the official hosted newsletter form
-- Official T-Shirts section
-- data/tshirts.json with current shirt product links
-- Shop All link to https://scifivalleycon.com/tshirts
-- T-shirt listings are designed to be managed by Admin V2.16
+Changes:
+- Removes the inline T-shirt catalog from the Event Guide screen
+- Adds an OFFICIAL T-SHIRTS button that opens a dedicated in-app shop screen
+- Dedicated shirt page includes search and sorting
+- Shirt cards show store image, title, price, availability, description and options
+- Tapping a shirt image opens a large image lightbox
+- Multiple gallery images are supported
+- BUY NOW links directly to the corresponding Cryptoteeology product
+- SHOP ALL links to the official Sci-Fi Valley Con Cryptoteeology category
+- Existing data/tshirts.json remains the data source
+- Pairs with Admin V2.17 for optional official Ecwid catalog synchronization
 
-This patch intentionally does NOT include events.json, sponsors.json, social-links.json,
-map data, vendors, guests, schedule, settings, or celebrity JSON files.
+This patch intentionally does NOT contain data/tshirts.json, map files, vendors,
+guests, schedule, settings, Event Guide data, sponsors or social links.
 
-UNZIP FIRST, then upload the files/folders inside this ZIP.
+UNZIP FIRST, then upload the files inside this ZIP.

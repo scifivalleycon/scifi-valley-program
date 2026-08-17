@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.23">
+  <link rel="stylesheet" href="styles.css?v=4.24">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -272,6 +272,13 @@
         <b>›</b>
       </button>
 
+
+      <button class="settings-menu-card tshirt-menu-card" data-go="tshirts">
+        <span class="settings-menu-icon tshirt-menu-icon">T</span>
+        <span><strong>OFFICIAL T-SHIRTS</strong><small>Browse the complete Sci-Fi Valley Con shirt collection</small></span>
+        <b>›</b>
+      </button>
+
       <section class="paper-panel social-media-panel">
         <div class="section-heading social-heading">
           <div>
@@ -299,21 +306,6 @@
           <span><strong>OPEN NEWSLETTER SIGN-UP</strong><small>Complete the official Sci-Fi Valley Con signup form inside the app.</small></span>
           <b>›</b>
         </button>
-      </section>
-
-      <section id="tshirtSection" class="paper-panel tshirt-panel">
-        <div class="section-heading">
-          <div>
-            <span class="section-kicker">THE HOME OF NOSTALGIA</span>
-            <h2>OFFICIAL T-SHIRTS</h2>
-          </div>
-          <span class="tshirt-heading-icon">T</span>
-        </div>
-        <p class="tshirt-intro">Shop official Sci-Fi Valley Con shirts from past conventions and current releases.</p>
-        <div id="tshirtGrid" class="tshirt-grid">
-          <div class="muted-empty">Loading official shirts…</div>
-        </div>
-        <a class="shop-all-shirts" href="https://scifivalleycon.com/tshirts" target="_blank" rel="noopener">SHOP ALL SCI-FI VALLEY CON T-SHIRTS ›</a>
       </section>
 
       <section class="event-guide-browser">
@@ -435,7 +427,45 @@
       </section>
     </section>
 
-    <section id="settings" class="screen">
+    <section id="tshirts" class="screen">
+    <div class="screen-inner tshirt-shop-screen">
+      <button class="shop-back-button" type="button" data-go="more">‹ BACK TO EVENT GUIDE</button>
+
+      <section class="paper-panel tshirt-shop-hero">
+        <span class="section-kicker">THE HOME OF NOSTALGIA</span>
+        <h1>OFFICIAL <span>T-SHIRTS</span></h1>
+        <p>Explore Sci-Fi Valley Con shirts from across the years. Tap any shirt image to see it larger, then use Buy Now to order directly from Cryptoteeology.</p>
+        <div class="tshirt-shop-actions">
+          <a href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">SHOP THE FULL STORE ↗</a>
+          <span id="tshirtCatalogCount">LOADING CATALOG…</span>
+        </div>
+      </section>
+
+      <div class="tshirt-shop-toolbar">
+        <label class="search-box tshirt-search-box">
+          <span>⌕</span>
+          <input id="tshirtSearch" type="search" placeholder="Search shirts by year, color, staff, giveaway...">
+        </label>
+        <select id="tshirtSort" class="tshirt-sort" aria-label="Sort T-shirts">
+          <option value="store">STORE ORDER</option>
+          <option value="newest">NEWEST YEAR</option>
+          <option value="oldest">OLDEST YEAR</option>
+          <option value="price-low">PRICE LOW TO HIGH</option>
+          <option value="price-high">PRICE HIGH TO LOW</option>
+        </select>
+      </div>
+
+      <div id="tshirtGrid" class="tshirt-shop-grid">
+        <div class="muted-empty">Loading official T-shirts…</div>
+      </div>
+
+      <a class="shop-all-shirts tshirt-shop-bottom-link" href="https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756" target="_blank" rel="noopener">
+        SHOP ALL SCI-FI VALLEY CON T-SHIRTS AT CRYPTOTEEOLOGY ↗
+      </a>
+    </div>
+  </section>
+
+  <section id="settings" class="screen">
       <div class="page-title poster-title">
         <p class="kicker">PERSONALIZE YOUR PROGRAM</p>
         <h1>NOTIFICATION <span>SETTINGS</span></h1>
@@ -562,6 +592,15 @@
     </a>
   </dialog>
 
+  <dialog id="tshirtImageModal" class="tshirt-image-modal">
+    <button id="closeTshirtImageModal" class="modal-close tshirt-image-modal-close" aria-label="Close shirt image">×</button>
+    <div class="tshirt-lightbox-body">
+      <img id="tshirtLightboxImage" src="" alt="">
+      <div id="tshirtLightboxThumbs" class="tshirt-lightbox-thumbs"></div>
+      <strong id="tshirtLightboxTitle"></strong>
+    </div>
+  </dialog>
+
   <dialog id="guestModal" class="guest-modal">
     <button id="closeGuestModal" class="modal-close" aria-label="Close">×</button>
     <div id="guestModalContent"></div>
@@ -594,6 +633,6 @@
   </dialog>
 
   <script src="event-guide-ui.js?v=4.22"></script>
-  <script src="app.js?v=4.23"></script>
+  <script src="app.js?v=4.24"></script>
 </body>
 </html>

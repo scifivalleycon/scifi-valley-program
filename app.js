@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.23",
+          appVersion:"4.24",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -456,6 +456,13 @@ function openGuest(id){
   if(typeof modal.showModal==="function") modal.showModal(); else modal.setAttribute("open","");
   bindGuestPhotoLightboxes();
 }
+
+document.getElementById("tshirtSearch")?.addEventListener("input",renderTshirts);
+document.getElementById("tshirtSort")?.addEventListener("change",renderTshirts);
+document.getElementById("closeTshirtImageModal")?.addEventListener("click",()=>document.getElementById("tshirtImageModal")?.close());
+document.getElementById("tshirtImageModal")?.addEventListener("click",event=>{
+  if(event.target===event.currentTarget)event.currentTarget.close();
+});
 
 document.getElementById("openNewsletterSignup")?.addEventListener("click",()=>{
   const modal=document.getElementById("newsletterModal");
@@ -2117,34 +2124,138 @@ function renderSponsors(){
 }
 
 
+function tshirtYear(item){
+  const match=String(item?.title||item?.badge||"").match(/\b(20\d{2}|19\d{2})\b/);
+  return match?Number(match[1]):0;
+}
+
+function tshirtNumericPrice(item){
+  const raw=String(item?.price||"").replace(/[^0-9.]/g,"");
+  const value=Number(raw);
+  return Number.isFinite(value)?value:999999;
+}
+
+function tshirtOptionText(item){
+  const options=Array.isArray(item?.options)?item.options:[];
+  const parts=[];
+  for(const option of options){
+    const name=String(option?.name||"").trim();
+    const choices=Array.isArray(option?.choices)
+      ? option.choices.map(choice=>String(choice?.text||choice?.name||choice||"").trim()).filter(Boolean)
+      : [];
+    if(name&&choices.length)parts.push(`${name}: ${choices.slice(0,12).join(", ")}${choices.length>12?"…":""}`);
+  }
+  return parts.join(" • ");
+}
+
+function tshirtImages(item){
+  const values=[
+    item?.image,
+    ...(Array.isArray(item?.gallery)?item.gallery:[])
+  ].map(String).map(v=>v.trim()).filter(Boolean);
+  return [...new Set(values)];
+}
+
+function openTshirtImage(id,imageIndex=0){
+  const item=(state.tshirts||[]).find(row=>String(row.id)===String(id));
+  if(!item)return;
+  const images=tshirtImages(item);
+  if(!images.length)return;
+
+  const modal=document.getElementById("tshirtImageModal");
+  const image=document.getElementById("tshirtLightboxImage");
+  const title=document.getElementById("tshirtLightboxTitle");
+  const thumbs=document.getElementById("tshirtLightboxThumbs");
+  if(!modal||!image||!title||!thumbs)return;
+
+  const setImage=index=>{
+    const safeIndex=Math.max(0,Math.min(images.length-1,Number(index)||0));
+    image.src=images[safeIndex];
+    image.alt=item.title||"Sci-Fi Valley Con T-shirt";
+    thumbs.querySelectorAll("button").forEach((button,i)=>button.classList.toggle("active",i===safeIndex));
+  };
+
+  title.textContent=item.title||"Official Sci-Fi Valley Con T-shirt";
+  thumbs.innerHTML=images.length>1?images.map((src,index)=>`
+    <button type="button" data-tshirt-thumb="${index}" aria-label="View image ${index+1}">
+      <img src="${escapeAppHtml(src)}" alt="">
+    </button>`).join(""):"";
+
+  thumbs.querySelectorAll("[data-tshirt-thumb]").forEach(button=>{
+    button.addEventListener("click",()=>setImage(button.dataset.tshirtThumb));
+  });
+
+  setImage(imageIndex);
+  modal.showModal();
+}
+
 function renderTshirts(){
   const host=document.getElementById("tshirtGrid");
   if(!host)return;
 
-  const shirts=(state.tshirts||[]).filter(item=>item&&item.title&&item.url&&item.enabled!==false);
+  const q=String(document.getElementById("tshirtSearch")?.value||"").trim().toLowerCase();
+  const sort=String(document.getElementById("tshirtSort")?.value||"store");
+
+  let shirts=(state.tshirts||[]).filter(item=>item&&item.title&&item.enabled!==false);
+  shirts=shirts.filter(item=>!q||JSON.stringify(item).toLowerCase().includes(q));
+
+  if(sort==="newest")shirts.sort((a,b)=>tshirtYear(b)-tshirtYear(a));
+  if(sort==="oldest")shirts.sort((a,b)=>tshirtYear(a)-tshirtYear(b));
+  if(sort==="price-low")shirts.sort((a,b)=>tshirtNumericPrice(a)-tshirtNumericPrice(b));
+  if(sort==="price-high")shirts.sort((a,b)=>tshirtNumericPrice(b)-tshirtNumericPrice(a));
+
+  const count=document.getElementById("tshirtCatalogCount");
+  if(count)count.textContent=`${shirts.length} SHIRT${shirts.length===1?"":"S"} SHOWN`;
+
   if(!shirts.length){
-    host.innerHTML='<div class="muted-empty">Official shirt listings are being updated.</div>';
+    host.innerHTML='<div class="muted-empty">No matching shirts are currently listed.</div>';
     return;
   }
 
   host.innerHTML=shirts.map(item=>{
-    const visual=item.image
-      ? `<img src="${escapeAppHtml(item.image)}" alt="${escapeAppHtml(item.title)}" loading="lazy">`
-      : `<div class="tshirt-placeholder" aria-hidden="true"><span>SFVC</span><b>T-SHIRT</b></div>`;
+    const images=tshirtImages(item);
+    const mainImage=images[0]||"";
+    const options=tshirtOptionText(item);
+    const inStock=item.inStock!==false;
+    const description=String(item.description||"").replace(/\s+/g," ").trim();
 
-    return `<a class="tshirt-card" href="${escapeAppHtml(item.url)}" target="_blank" rel="noopener">
-      <div class="tshirt-card-art">${visual}${item.badge?`<span class="tshirt-badge">${escapeAppHtml(item.badge)}</span>`:""}</div>
-      <div class="tshirt-card-copy">
-        <strong>${escapeAppHtml(item.title)}</strong>
-        ${item.description?`<small>${escapeAppHtml(item.description)}</small>`:""}
-        <div class="tshirt-card-bottom">
-          <b>${escapeAppHtml(item.price||"SHOP NOW")}</b>
-          <span>BUY ›</span>
+    return `<article class="tshirt-shop-card">
+      <button class="tshirt-shop-image-button ${mainImage?"has-image":"no-image"}"
+        type="button" data-tshirt-image="${escapeAppHtml(item.id)}" ${mainImage?"":"disabled"}>
+        ${mainImage
+          ? `<img src="${escapeAppHtml(mainImage)}" alt="${escapeAppHtml(item.title)}" loading="lazy">`
+          : `<div class="tshirt-placeholder"><span>SFVC</span><b>IMAGE PENDING</b></div>`}
+        ${item.badge?`<span class="tshirt-badge">${escapeAppHtml(item.badge)}</span>`:""}
+        ${mainImage?'<span class="tshirt-enlarge-hint">TAP TO ENLARGE</span>':""}
+      </button>
+
+      <div class="tshirt-shop-card-copy">
+        <div class="tshirt-shop-card-title">
+          <span class="tshirt-stock ${inStock?"in":"out"}">${inStock?"AVAILABLE":"OUT OF STOCK"}</span>
+          <h2>${escapeAppHtml(item.title)}</h2>
         </div>
+
+        <div class="tshirt-price-row">
+          <strong>${escapeAppHtml(item.price||"SEE STORE")}</strong>
+          ${item.source==="ecwid"?'<small>LIVE STORE LISTING</small>':""}
+        </div>
+
+        ${description?`<p>${escapeAppHtml(description)}</p>`:""}
+        ${options?`<div class="tshirt-options">${escapeAppHtml(options)}</div>`:""}
+
+        <a class="tshirt-buy-button" href="${escapeAppHtml(item.url||"https://www.cryptoteeology.com/shop/Sci-fi-Valley-Con-Shirts-c118538756")}"
+          target="_blank" rel="noopener">
+          BUY NOW AT CRYPTOTEEOLOGY ↗
+        </a>
       </div>
-    </a>`;
+    </article>`;
   }).join("");
+
+  host.querySelectorAll("[data-tshirt-image]").forEach(button=>{
+    button.addEventListener("click",()=>openTshirtImage(button.dataset.tshirtImage,0));
+  });
 }
+
 
 function safeRenderSection(name,fn){
   try{

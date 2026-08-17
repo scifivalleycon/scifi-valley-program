@@ -1278,3 +1278,294 @@ button,
   .tshirt-grid{grid-template-columns:1fr}
   .newsletter-frame{min-height:520px}
 }
+
+
+/* =========================================================
+   V4.24 - DEDICATED OFFICIAL T-SHIRT SHOP
+   ========================================================= */
+
+.tshirt-menu-card{
+  background:rgba(238,117,72,.28);
+}
+.tshirt-menu-icon{
+  background:var(--coral)!important;
+  color:var(--cream);
+  font-family:var(--display);
+  font-weight:900;
+}
+
+.tshirt-shop-screen{
+  padding-bottom:30px;
+}
+.shop-back-button{
+  margin:0 0 10px;
+  padding:8px 10px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:var(--paper2);
+  color:var(--ink);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.tshirt-shop-hero{
+  margin-bottom:12px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 88% 22%, rgba(115,199,203,.45), transparent 24%),
+    linear-gradient(135deg, rgba(238,117,72,.22), rgba(255,247,223,.72));
+}
+.tshirt-shop-hero h1{
+  margin:3px 0 5px;
+  font-family:var(--display);
+  font-size:33px;
+  line-height:.95;
+}
+.tshirt-shop-hero h1 span{color:var(--coral)}
+.tshirt-shop-hero p{
+  max-width:680px;
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:10px;
+  line-height:1.45;
+}
+.tshirt-shop-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:2px dashed rgba(58,39,32,.28);
+}
+.tshirt-shop-actions a{
+  padding:7px 9px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--mustard);
+  color:var(--ink);
+  text-decoration:none;
+  font-size:8px;
+  font-weight:900;
+}
+.tshirt-shop-actions span{
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+
+.tshirt-shop-toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  margin:12px 0;
+}
+.tshirt-search-box{
+  margin:0;
+}
+.tshirt-sort{
+  min-height:42px;
+  padding:0 10px;
+  border:2px solid var(--ink);
+  border-radius:999px;
+  background:var(--paper2);
+  color:var(--ink);
+  font-size:7px;
+  font-weight:900;
+}
+
+.tshirt-shop-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.tshirt-shop-card{
+  min-width:0;
+  overflow:hidden;
+  border:2px solid var(--ink);
+  border-radius:11px;
+  background:rgba(255,247,223,.83);
+  box-shadow:4px 5px 0 rgba(58,39,32,.13);
+}
+.tshirt-shop-image-button{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  display:grid;
+  place-items:center;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-bottom:2px solid var(--ink);
+  background:
+    radial-gradient(circle at center, rgba(115,199,203,.35), rgba(238,117,72,.12)),
+    var(--paper2);
+}
+.tshirt-shop-image-button.has-image{
+  cursor:zoom-in;
+}
+.tshirt-shop-image-button img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#fff;
+}
+.tshirt-enlarge-hint{
+  position:absolute;
+  left:7px;
+  bottom:7px;
+  padding:4px 6px;
+  border:1px solid var(--ink);
+  border-radius:999px;
+  background:rgba(255,247,223,.92);
+  color:var(--ink);
+  font-size:5.5px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.tshirt-shop-card-copy{
+  padding:10px;
+}
+.tshirt-shop-card-title h2{
+  margin:5px 0 0;
+  font-family:var(--display);
+  font-size:14px;
+  line-height:1.05;
+}
+.tshirt-stock{
+  display:inline-block;
+  padding:3px 6px;
+  border:1px solid var(--ink);
+  border-radius:999px;
+  font-size:5.5px;
+  font-weight:900;
+  letter-spacing:.05em;
+}
+.tshirt-stock.in{background:rgba(115,199,203,.35)}
+.tshirt-stock.out{background:rgba(238,117,72,.25)}
+.tshirt-price-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin:9px 0 7px;
+  padding:7px 0;
+  border-top:1px dashed rgba(58,39,32,.3);
+  border-bottom:1px dashed rgba(58,39,32,.3);
+}
+.tshirt-price-row strong{
+  font-family:var(--display);
+  font-size:15px;
+}
+.tshirt-price-row small{
+  text-align:right;
+  font-size:5.5px;
+  font-weight:900;
+  letter-spacing:.05em;
+}
+.tshirt-shop-card-copy p{
+  margin:0 0 7px;
+  font-family:Georgia,serif;
+  font-size:8px;
+  line-height:1.35;
+}
+.tshirt-options{
+  margin:7px 0;
+  padding:7px;
+  border:1px solid rgba(58,39,32,.4);
+  border-radius:6px;
+  background:rgba(115,199,203,.12);
+  font-size:6.5px;
+  line-height:1.35;
+}
+.tshirt-buy-button{
+  display:block;
+  margin-top:9px;
+  padding:9px 8px;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--coral);
+  color:var(--cream);
+  text-align:center;
+  text-decoration:none;
+  font-family:var(--display);
+  font-size:8px;
+  box-shadow:2px 3px 0 rgba(58,39,32,.13);
+}
+
+.tshirt-image-modal{
+  width:min(94vw,820px);
+  max-height:92vh;
+  padding:12px;
+  border:3px solid var(--ink);
+  border-radius:12px;
+  background:var(--paper);
+  box-shadow:10px 12px 0 rgba(58,39,32,.3);
+}
+.tshirt-image-modal::backdrop{
+  background:rgba(20,12,10,.82);
+  backdrop-filter:blur(4px);
+}
+.tshirt-image-modal-close{
+  position:sticky;
+  float:right;
+  top:4px;
+  z-index:10;
+}
+.tshirt-lightbox-body{
+  display:grid;
+  justify-items:center;
+  gap:10px;
+  padding:22px 5px 5px;
+}
+.tshirt-lightbox-body>img{
+  display:block;
+  max-width:100%;
+  max-height:68vh;
+  object-fit:contain;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:#fff;
+}
+.tshirt-lightbox-body>strong{
+  font-family:var(--display);
+  font-size:15px;
+  text-align:center;
+}
+.tshirt-lightbox-thumbs{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.tshirt-lightbox-thumbs button{
+  width:54px;
+  height:54px;
+  padding:2px;
+  border:2px solid transparent;
+  border-radius:6px;
+  background:#fff;
+}
+.tshirt-lightbox-thumbs button.active{
+  border-color:var(--coral);
+}
+.tshirt-lightbox-thumbs img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.tshirt-shop-bottom-link{
+  margin-top:14px;
+}
+
+@media(max-width:520px){
+  .tshirt-shop-toolbar{grid-template-columns:1fr}
+  .tshirt-sort{width:100%}
+  .tshirt-shop-grid{grid-template-columns:1fr}
+}
+@media(min-width:850px){
+  .tshirt-shop-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
