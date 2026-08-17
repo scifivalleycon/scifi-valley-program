@@ -990,3 +990,291 @@ button,
   visibility:visible;
   opacity:1;
 }
+
+
+/* =========================================================
+   V4.23 - TICKETS, TABLES, NEWSLETTER & OFFICIAL T-SHIRTS
+   ========================================================= */
+
+.purchase-quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:12px 0 14px;
+}
+.purchase-quick-card{
+  min-width:0;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) 12px;
+  gap:8px;
+  align-items:center;
+  padding:10px;
+  color:var(--ink);
+  text-decoration:none;
+  border:2px solid var(--ink);
+  border-radius:10px;
+  box-shadow:3px 4px 0 rgba(58,39,32,.14);
+}
+.purchase-quick-card.tickets{background:rgba(238,117,72,.34)}
+.purchase-quick-card.tables{background:rgba(115,199,203,.42)}
+.purchase-quick-icon{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--cream);
+  font-weight:900;
+}
+.purchase-quick-card small,
+.purchase-quick-card strong,
+.purchase-quick-card em{display:block}
+.purchase-quick-card small{
+  font-size:6px;
+  letter-spacing:.07em;
+  font-weight:900;
+}
+.purchase-quick-card strong{
+  margin-top:2px;
+  font-family:var(--display);
+  font-size:10px;
+  line-height:1.05;
+}
+.purchase-quick-card em{
+  margin-top:3px;
+  font-family:Georgia,serif;
+  font-size:7px;
+  line-height:1.2;
+  font-style:normal;
+  opacity:.75;
+}
+.purchase-quick-card>b{font-size:18px}
+
+.newsletter-panel,
+.tshirt-panel{margin:14px 0}
+.newsletter-badge,
+.tshirt-heading-icon{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--mustard);
+  box-shadow:2px 3px 0 rgba(58,39,32,.15);
+  font-weight:900;
+}
+.tshirt-heading-icon{
+  background:var(--coral);
+  color:var(--cream);
+  font-family:var(--display);
+}
+.newsletter-copy,
+.tshirt-intro{
+  margin:4px 0 10px;
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.4;
+  color:var(--ink2);
+}
+.newsletter-open-button{
+  width:100%;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) 14px;
+  gap:8px;
+  align-items:center;
+  padding:10px;
+  border:2px solid var(--ink);
+  border-radius:9px;
+  background:rgba(115,199,203,.35);
+  color:var(--ink);
+  text-align:left;
+  cursor:pointer;
+}
+.newsletter-open-button>span:first-child{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--cream);
+}
+.newsletter-open-button strong,
+.newsletter-open-button small{display:block}
+.newsletter-open-button strong{
+  font-family:var(--display);
+  font-size:10px;
+}
+.newsletter-open-button small{
+  margin-top:2px;
+  font-size:7px;
+  line-height:1.2;
+}
+
+.newsletter-modal{
+  width:min(94vw,760px);
+  height:min(90vh,820px);
+  max-height:90vh;
+  padding:12px;
+  border:3px solid var(--ink);
+  border-radius:12px;
+  background:var(--paper);
+  color:var(--ink);
+  box-shadow:10px 12px 0 rgba(58,39,32,.28);
+}
+.newsletter-modal::backdrop{
+  background:rgba(30,18,14,.76);
+  backdrop-filter:blur(3px);
+}
+.newsletter-modal-close{
+  position:sticky;
+  top:4px;
+  float:right;
+  z-index:5;
+}
+.newsletter-modal-head{
+  padding:8px 8px 10px;
+}
+.newsletter-modal-head h2{
+  margin:2px 0 4px;
+  font-family:var(--display);
+  font-size:25px;
+}
+.newsletter-modal-head p{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:10px;
+}
+.newsletter-frame{
+  width:100%;
+  height:calc(90vh - 150px);
+  min-height:560px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:#fff;
+}
+.newsletter-fallback-link{
+  display:block;
+  margin:9px 0 2px;
+  color:var(--ink);
+  text-align:center;
+  font-size:8px;
+  font-weight:900;
+}
+
+.tshirt-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.tshirt-card{
+  min-width:0;
+  display:block;
+  overflow:hidden;
+  color:var(--ink);
+  text-decoration:none;
+  border:2px solid var(--ink);
+  border-radius:9px;
+  background:rgba(255,247,223,.80);
+  box-shadow:3px 4px 0 rgba(58,39,32,.12);
+}
+.tshirt-card-art{
+  position:relative;
+  aspect-ratio:4/3;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at center, rgba(115,199,203,.5), rgba(238,117,72,.15)),
+    var(--paper2);
+  border-bottom:2px solid var(--ink);
+}
+.tshirt-card-art img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.tshirt-placeholder{
+  width:76%;
+  aspect-ratio:1.15;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  clip-path:polygon(22% 7%,38% 0,43% 13%,57% 13%,62% 0,78% 7%,100% 25%,88% 40%,77% 31%,77% 100%,23% 100%,23% 31%,12% 40%,0 25%);
+  background:var(--coral);
+  color:var(--cream);
+  text-align:center;
+  transform:rotate(-2deg);
+  filter:drop-shadow(3px 4px 0 rgba(58,39,32,.25));
+}
+.tshirt-placeholder span{
+  font-family:var(--display);
+  font-size:15px;
+}
+.tshirt-placeholder b{
+  font-size:7px;
+  letter-spacing:.08em;
+}
+.tshirt-badge{
+  position:absolute;
+  top:6px;
+  right:6px;
+  padding:3px 6px;
+  border:1px solid var(--ink);
+  border-radius:999px;
+  background:var(--mustard);
+  font-size:6px;
+  font-weight:900;
+}
+.tshirt-card-copy{padding:8px}
+.tshirt-card-copy>strong{
+  display:block;
+  font-family:var(--display);
+  font-size:10px;
+  line-height:1.06;
+}
+.tshirt-card-copy>small{
+  display:block;
+  margin-top:4px;
+  font-family:Georgia,serif;
+  font-size:7px;
+  line-height:1.25;
+}
+.tshirt-card-bottom{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:center;
+  margin-top:8px;
+  padding-top:7px;
+  border-top:1px dashed rgba(58,39,32,.35);
+}
+.tshirt-card-bottom b{
+  font-size:9px;
+}
+.tshirt-card-bottom span{
+  font-size:8px;
+  font-weight:900;
+}
+.shop-all-shirts{
+  display:block;
+  margin-top:10px;
+  padding:9px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:var(--mustard);
+  color:var(--ink);
+  text-decoration:none;
+  text-align:center;
+  font-family:var(--display);
+  font-size:9px;
+  box-shadow:2px 3px 0 rgba(58,39,32,.13);
+}
+
+@media(max-width:420px){
+  .purchase-quick-grid{grid-template-columns:1fr}
+  .tshirt-grid{grid-template-columns:1fr}
+  .newsletter-frame{min-height:520px}
+}

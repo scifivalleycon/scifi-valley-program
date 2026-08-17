@@ -1,0 +1,62 @@
+[
+  {
+    "id": "sfvc-2025-part2-staff",
+    "title": "SFVC 2025 Part 2 Staff/Volunteer/Giveaway Shirts",
+    "price": "$25.00",
+    "url": "https://www.cryptoteeology.com/shop/SFVC-2025-Part-2-Staff-Volunteer-Giveaway-Shirts-p786515546",
+    "image": "",
+    "badge": "2025",
+    "description": "Official Sci-Fi Valley Con Part 2 staff, volunteer and giveaway design.",
+    "enabled": true
+  },
+  {
+    "id": "sfvc-2025-part2-black",
+    "title": "SFVC 2025 Part 2 Black Shirts",
+    "price": "$25.00",
+    "url": "https://www.cryptoteeology.com/shop/SFVC-2025-Part-2-Black-Shirts-p786516779",
+    "image": "",
+    "badge": "2025",
+    "description": "Official Sci-Fi Valley Con Part 2 black shirt.",
+    "enabled": true
+  },
+  {
+    "id": "sfvc-2025-part2-red",
+    "title": "SFVC 2025 Part 2 Red Shirts",
+    "price": "$25.00",
+    "url": "https://www.cryptoteeology.com/shop/SFVC-2025-Part-2-Red-Shirts-p786516778",
+    "image": "",
+    "badge": "2025",
+    "description": "Official Sci-Fi Valley Con Part 2 red shirt.",
+    "enabled": true
+  },
+  {
+    "id": "sfvc-2025-part1-staff",
+    "title": "SFVC 2025 Part 1 Staff/Volunteer/Giveaway Shirts",
+    "price": "$25.00",
+    "url": "https://www.cryptoteeology.com/shop/SFVC-2025-Part-1-Staff-Volunteer-Giveaway-Shirts-p761067082",
+    "image": "",
+    "badge": "2025",
+    "description": "Official Sci-Fi Valley Con Part 1 staff, volunteer and giveaway design.",
+    "enabled": true
+  },
+  {
+    "id": "sfvc-2025-part1-red",
+    "title": "SFVC 2025 Part 1 Red Shirts",
+    "price": "$25.00",
+    "url": "https://www.cryptoteeology.com/shop/SFVC-2025-Part-1-Red-Shirts-p742575587",
+    "image": "",
+    "badge": "2025",
+    "description": "Official Sci-Fi Valley Con Part 1 red shirt.",
+    "enabled": true
+  },
+  {
+    "id": "sfvc-2025-part1-black",
+    "title": "SFVC 2025 Part 1 Black Shirts",
+    "price": "$25.00",
+    "url": "https://www.cryptoteeology.com/shop/SFVC-2025-Part-1-Black-Shirts-p742575574",
+    "image": "",
+    "badge": "2025",
+    "description": "Official Sci-Fi Valley Con Part 1 black shirt.",
+    "enabled": true
+  }
+]

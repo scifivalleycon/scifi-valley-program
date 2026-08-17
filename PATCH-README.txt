@@ -1,20 +1,16 @@
-Sci-Fi Valley Con Attendee App V4.22 Static Event Buttons Fix
+Sci-Fi Valley Con Attendee App V4.23 Commerce / Newsletter / T-Shirts SAFE PATCH
 
-WHY:
-The V4.21 page could remain stuck on "Loading events and activities..." if the
-main attendee JavaScript render pipeline did not reach renderEventQuickLinks.
+Adds:
+- BUY TICKETS link to https://scifivalleycon.com/tickets
+- BUY TABLES & BOOTHS link to https://scifivalleycon.com/tables
+- Official Sci-Fi Valley Con newsletter signup form in an in-app modal
+- Fallback link to the official hosted newsletter form
+- Official T-Shirts section
+- data/tshirts.json with current shirt product links
+- Shop All link to https://scifivalleycon.com/tshirts
+- T-shirt listings are designed to be managed by Admin V2.16
 
-FIX:
-- All 11 Event Guide activity buttons are now hard-coded into index.html.
-- They appear immediately without waiting for JavaScript or events.json.
-- New standalone event-guide-ui.js handles the detail popups independently.
-- The standalone script fetches data/events.json directly with cache:no-store.
-- It does not depend on app.js, state.events, renderAll(), the map, guests,
-  notifications, sponsors, or any other app module.
-- Existing search/filter functionality remains in the main app.
-- Service-worker cache bumped to V4.22 and includes event-guide-ui.js.
+This patch intentionally does NOT include events.json, sponsors.json, social-links.json,
+map data, vendors, guests, schedule, settings, or celebrity JSON files.
 
-This is a SAFE PATCH and does not contain current map, vendor, guest, schedule,
-settings, or celebrity JSON files.
-
-UNZIP FIRST, then upload all files/folders inside this ZIP.
+UNZIP FIRST, then upload the files/folders inside this ZIP.

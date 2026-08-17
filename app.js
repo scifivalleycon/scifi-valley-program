@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -198,7 +198,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.21",
+          appVersion:"4.23",
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -248,9 +248,9 @@ async function loadData({silent=false,force=false}={}){
       credentials:"same-origin"
     }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
 
-    const [guests,schedule,events,vendors,sponsors,socialLinks,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
-      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),
+      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -268,10 +268,12 @@ async function loadData({silent=false,force=false}={}){
     state.vendors=Array.isArray(vendors)?vendors:[];
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
+    state.tshirts=Array.isArray(tshirts)?tshirts:[];
 
     // Render these immediately instead of waiting for the rest of the program.
     renderSocialLinks();
     renderSponsors();
+    renderTshirts();
 
     state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
     state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
@@ -455,6 +457,14 @@ function openGuest(id){
   bindGuestPhotoLightboxes();
 }
 
+document.getElementById("openNewsletterSignup")?.addEventListener("click",()=>{
+  const modal=document.getElementById("newsletterModal");
+  if(modal)modal.showModal();
+});
+document.getElementById("closeNewsletterModal")?.addEventListener("click",()=>document.getElementById("newsletterModal")?.close());
+document.getElementById("newsletterModal")?.addEventListener("click",event=>{
+  if(event.target===event.currentTarget)event.currentTarget.close();
+});
 document.getElementById("closeEventModal")?.addEventListener("click",closeEventDetails);
 document.getElementById("eventModal")?.addEventListener("click",event=>{
   if(event.target===event.currentTarget)closeEventDetails();
@@ -2106,6 +2116,36 @@ function renderSponsors(){
   }).join("");
 }
 
+
+function renderTshirts(){
+  const host=document.getElementById("tshirtGrid");
+  if(!host)return;
+
+  const shirts=(state.tshirts||[]).filter(item=>item&&item.title&&item.url&&item.enabled!==false);
+  if(!shirts.length){
+    host.innerHTML='<div class="muted-empty">Official shirt listings are being updated.</div>';
+    return;
+  }
+
+  host.innerHTML=shirts.map(item=>{
+    const visual=item.image
+      ? `<img src="${escapeAppHtml(item.image)}" alt="${escapeAppHtml(item.title)}" loading="lazy">`
+      : `<div class="tshirt-placeholder" aria-hidden="true"><span>SFVC</span><b>T-SHIRT</b></div>`;
+
+    return `<a class="tshirt-card" href="${escapeAppHtml(item.url)}" target="_blank" rel="noopener">
+      <div class="tshirt-card-art">${visual}${item.badge?`<span class="tshirt-badge">${escapeAppHtml(item.badge)}</span>`:""}</div>
+      <div class="tshirt-card-copy">
+        <strong>${escapeAppHtml(item.title)}</strong>
+        ${item.description?`<small>${escapeAppHtml(item.description)}</small>`:""}
+        <div class="tshirt-card-bottom">
+          <b>${escapeAppHtml(item.price||"SHOP NOW")}</b>
+          <span>BUY ›</span>
+        </div>
+      </div>
+    </a>`;
+  }).join("");
+}
+
 function safeRenderSection(name,fn){
   try{
     const result=fn();
@@ -2124,6 +2164,7 @@ function renderAll(){
   // never leave their original "Loading..." placeholders on screen.
   safeRenderSection("social links",renderSocialLinks);
   safeRenderSection("sponsors",renderSponsors);
+  safeRenderSection("t-shirts",renderTshirts);
 
   safeRenderSection("event settings",applyEventSettings);
   safeRenderSection("map",renderMapScreen);

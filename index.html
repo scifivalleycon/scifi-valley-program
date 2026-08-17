@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.22">
+  <link rel="stylesheet" href="styles.css?v=4.23">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -72,6 +72,19 @@
         <span><small>CELEBRITY PHOTO OPS</small><strong>ORDER YOUR PHOTO OPS</strong><em>Digital download included with photo-op purchase.</em></span>
         <b>›</b>
       </a>
+
+      <section class="purchase-quick-grid" aria-label="Tickets and exhibitor tables">
+        <a class="purchase-quick-card tickets" href="https://scifivalleycon.com/tickets" target="_blank" rel="noopener">
+          <span class="purchase-quick-icon">★</span>
+          <span><small>ADMISSION</small><strong>BUY TICKETS</strong><em>Preorder and save before the convention.</em></span>
+          <b>›</b>
+        </a>
+        <a class="purchase-quick-card tables" href="https://scifivalleycon.com/tables" target="_blank" rel="noopener">
+          <span class="purchase-quick-icon">▤</span>
+          <span><small>EXHIBIT WITH US</small><strong>BUY TABLES & BOOTHS</strong><em>Artist, dealer and outdoor spaces.</em></span>
+          <b>›</b>
+        </a>
+      </section>
 
       <section class="paper-panel">
         <div class="section-heading">
@@ -270,6 +283,37 @@
         <div id="socialLinksGrid" class="social-links-grid">
           <div class="muted-empty social-empty">Loading social media links…</div>
         </div>
+      </section>
+
+      <section id="newsletterSection" class="paper-panel newsletter-panel">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">DON'T MISS AN ANNOUNCEMENT</span>
+            <h2>JOIN THE NEWSLETTER</h2>
+          </div>
+          <span class="newsletter-badge">✉</span>
+        </div>
+        <p class="newsletter-copy">Sign up for Sci-Fi Valley Con email updates, postcard reminders and text alerts.</p>
+        <button id="openNewsletterSignup" class="newsletter-open-button" type="button">
+          <span>✉</span>
+          <span><strong>OPEN NEWSLETTER SIGN-UP</strong><small>Complete the official Sci-Fi Valley Con signup form inside the app.</small></span>
+          <b>›</b>
+        </button>
+      </section>
+
+      <section id="tshirtSection" class="paper-panel tshirt-panel">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">THE HOME OF NOSTALGIA</span>
+            <h2>OFFICIAL T-SHIRTS</h2>
+          </div>
+          <span class="tshirt-heading-icon">T</span>
+        </div>
+        <p class="tshirt-intro">Shop official Sci-Fi Valley Con shirts from past conventions and current releases.</p>
+        <div id="tshirtGrid" class="tshirt-grid">
+          <div class="muted-empty">Loading official shirts…</div>
+        </div>
+        <a class="shop-all-shirts" href="https://scifivalleycon.com/tshirts" target="_blank" rel="noopener">SHOP ALL SCI-FI VALLEY CON T-SHIRTS ›</a>
       </section>
 
       <section class="event-guide-browser">
@@ -499,6 +543,25 @@
     <div id="eventModalContent"></div>
   </dialog>
 
+  <dialog id="newsletterModal" class="newsletter-modal">
+    <button id="closeNewsletterModal" class="modal-close newsletter-modal-close" aria-label="Close newsletter sign-up">×</button>
+    <div class="newsletter-modal-head">
+      <span class="section-kicker">OFFICIAL SCI-FI VALLEY CON</span>
+      <h2>NEWSLETTER SIGN-UP</h2>
+      <p>Email updates, postcard reminders and text alerts.</p>
+    </div>
+    <iframe
+      id="newsletterFrame"
+      class="newsletter-frame"
+      src="https://5ec4689d.sibforms.com/serve/MUIEANpGun3EiDWsTSYqypEOQsDeeoYl-fb5iELHlrMe4bVb-orIHM3RL36YNr947x110YKAFUKoMv7q9f8mplxh_UcUiVl7P_rZSZflhkbmYDNoeUs8_LsK_5txyynv7gFZNovPSP4qdPujlOUreyQbXHodGzIbHsqHuphuHOx_AVtAXWay6uAOn_FAyOaErd4-B0KUwXuE5M1b"
+      title="Sci-Fi Valley Con newsletter sign-up form"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <a class="newsletter-fallback-link" href="https://5ec4689d.sibforms.com/serve/MUIEANpGun3EiDWsTSYqypEOQsDeeoYl-fb5iELHlrMe4bVb-orIHM3RL36YNr947x110YKAFUKoMv7q9f8mplxh_UcUiVl7P_rZSZflhkbmYDNoeUs8_LsK_5txyynv7gFZNovPSP4qdPujlOUreyQbXHodGzIbHsqHuphuHOx_AVtAXWay6uAOn_FAyOaErd4-B0KUwXuE5M1b" target="_blank" rel="noopener">
+      FORM NOT DISPLAYING? OPEN THE OFFICIAL SIGN-UP PAGE ›
+    </a>
+  </dialog>
+
   <dialog id="guestModal" class="guest-modal">
     <button id="closeGuestModal" class="modal-close" aria-label="Close">×</button>
     <div id="guestModalContent"></div>
@@ -531,6 +594,6 @@
   </dialog>
 
   <script src="event-guide-ui.js?v=4.22"></script>
-  <script src="app.js?v=4.22"></script>
+  <script src="app.js?v=4.23"></script>
 </body>
 </html>
