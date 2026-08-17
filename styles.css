@@ -3338,3 +3338,52 @@ button,
     font-size:7.5pt!important;
   }
 }
+
+
+/* =========================================================
+   V4.43 — PROGRAM TOOLS TAB MOVED RIGHT
+   ========================================================= */
+
+.app-utility-handle{
+  width:auto;
+  min-width:158px;
+  max-width:210px;
+  margin:-1px 14px 0 auto;
+  padding:3px 13px 5px;
+  border:2px solid var(--ink);
+  border-top:0;
+  border-radius:0 0 10px 10px;
+  background:var(--coral);
+  color:var(--cream);
+  box-shadow:2px 3px 0 rgba(58,39,32,.16);
+}
+
+.app-utility-handle strong{
+  font-weight:900;
+  letter-spacing:.055em;
+}
+
+.utility-handle-grip{
+  width:18px;
+  height:3px;
+  background:rgba(255,247,223,.62);
+}
+
+.app-utility-handle>span:last-child{
+  color:var(--mustard);
+}
+
+.app-utility-handle:hover,
+.app-utility-handle:focus-visible{
+  filter:brightness(1.04);
+}
+
+@media(max-width:520px){
+  .app-utility-handle{
+    min-width:146px;
+    max-width:185px;
+    margin-right:10px;
+    padding-left:11px;
+    padding-right:11px;
+  }
+}
