@@ -1,16 +1,13 @@
-Sci-Fi Valley Con Attendee App V4.35 — Subtle Countdown SAFE PATCH
+Sci-Fi Valley Con Attendee App V4.36 Home Show Hours SAFE PATCH
 
-Refines the V4.34 retro flip-clock countdown:
+Adds a compact SHOW DAYS & OPEN HOURS row directly below the retro countdown:
 
-- Removes the heavy dark/brown outer frame
-- Removes the large dark background block
-- Uses only subtle top and bottom divider lines
-- Narrows the countdown area
-- Makes each flip digit substantially smaller
-- Makes labels and the "Countdown to Friday • 2:00 PM" line more understated
-- Keeps the retro split-flap / flip-clock appearance
-- Keeps Months, Weeks, Days, Hours and Minutes
-- Keeps the Friday 2:00 PM countdown logic unchanged
+Friday: 2:00 PM - 9:00 PM
+Saturday: 10:00 AM - 8:00 PM
+Sunday: 10:00 AM - 5:00 PM
+
+The styling is intentionally small and subtle so it matches the refined V4.35
+countdown and does not overcrowd the Home screen.
 
 No Admin or Notify Worker update is required.
 No backend-managed JSON files are included.
