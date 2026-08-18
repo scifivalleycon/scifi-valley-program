@@ -17,11 +17,41 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
+const APP_BUILD_VERSION="4.48";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
+const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
+const DEVICE_SAFETY_SYNC_MS=15*60*1000;
+const REGISTRATION_SYNC_SAFETY_MS=6*60*60*1000;
 let appDataRefreshPromise=null;
 let appDataLastRefreshAt=0;
 let appVisibleRefreshTimer=null;
+let appVersionCheckSignature="";
+let appVersionLastCheckedAt=0;
+let deviceSafetySyncTimer=null;
+
+function withJitter(baseMs,spread=0.25){
+  const safe=Math.max(0,Number(baseMs)||0);
+  const variance=Math.max(0,Math.min(0.9,Number(spread)||0));
+  if(!safe||!variance)return safe;
+  const offset=(Math.random()*2-1)*safe*variance;
+  return Math.max(1000,Math.round(safe+offset));
+}
+
+function readTimestampMs(storageKey){
+  const raw=localStorage.getItem(storageKey);
+  if(!raw)return 0;
+  const parsed=Date.parse(raw);
+  return Number.isFinite(parsed)?parsed:0;
+}
+
+function programVersionSignatureFor(info){
+  if(!info||typeof info!=="object")return "";
+  const version=String(info.version||"").trim();
+  const generatedAt=String(info.generatedAt||info.updatedAt||"").trim();
+  if(version&&generatedAt)return `${version}|${generatedAt}`;
+  return version||generatedAt||"";
+}
 
 function loadSavedScheduleSnapshots(){
   try{
@@ -211,7 +241,7 @@ async function syncAnonymousDevice({force=false}={}){
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:deviceSchedulePayload(),
-          appVersion:"4.47",
+          appVersion:APP_BUILD_VERSION,
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
       });
@@ -1204,7 +1234,7 @@ function initializeProgramTools(){
   updateFontSizeControls();
 }
 
-async function loadData({silent=false,force=false}={}){
+async function loadData({silent=false,force=false,versionInfo=null}={}){
   if(appDataRefreshPromise&&!force)return appDataRefreshPromise;
   const now=Date.now();
   if(!force&&appDataLastRefreshAt&&now-appDataLastRefreshAt<APP_REFRESH_MIN_GAP_MS){
@@ -1217,6 +1247,12 @@ async function loadData({silent=false,force=false}={}){
       cache:"no-store",
       credentials:"same-origin"
     }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
+    const safeObjectJson=(url,fallback={})=>fetch(`${url}${url.includes("?")?"&":"?"}${stamp}`,{
+      cache:"no-store",
+      credentials:"same-origin"
+    }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
+
+    const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
     const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,homeBannerData,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
@@ -1263,10 +1299,11 @@ async function loadData({silent=false,force=false}={}){
     });
 
     appDataLastRefreshAt=Date.now();
+    appVersionLastCheckedAt=appDataLastRefreshAt;
+    const signature=programVersionSignatureFor(resolvedVersionInfo);
+    if(signature)appVersionCheckSignature=signature;
+
     renderAll();
-    scheduleServerReminderSync(50);
-    scheduleAnonymousDeviceSync(80);
-    setTimeout(()=>syncSavedAppRegistration(),140);
 
     if(!silent){
       initializePushPromptExperience();
@@ -1277,7 +1314,52 @@ async function loadData({silent=false,force=false}={}){
   return appDataRefreshPromise;
 }
 
-async function refreshAppData(reason="foreground"){
+async function maybeRefreshProgramData(reason="version-check"){
+  try{
+    const elapsed=appDataLastRefreshAt?Date.now()-appDataLastRefreshAt:Infinity;
+    const stamp=`v=${Date.now()}`;
+    const versionInfo=await fetch(`data/version.json?${stamp}`,{
+      cache:"no-store",
+      credentials:"same-origin"
+    }).then(r=>r.ok?r.json():null).catch(()=>null);
+
+    appVersionLastCheckedAt=Date.now();
+    const signature=programVersionSignatureFor(versionInfo);
+
+    if(signature&&!appVersionCheckSignature){
+      appVersionCheckSignature=signature;
+    }
+
+    if(signature&&appVersionCheckSignature&&signature!==appVersionCheckSignature){
+      await loadData({silent:true,force:true,versionInfo});
+      console.info(`SFVC app data refreshed: ${reason} (version changed)`);
+      return true;
+    }
+
+    if(elapsed>=APP_FULL_REFRESH_FALLBACK_MS){
+      await loadData({silent:true,force:true,versionInfo:versionInfo||null});
+      console.info(`SFVC app data refreshed: ${reason} (fallback refresh)`);
+      return true;
+    }
+
+    return false;
+  }catch(err){
+    console.warn(`SFVC app update check failed: ${reason}`,err);
+    if(appDataLastRefreshAt&&Date.now()-appDataLastRefreshAt>=APP_FULL_REFRESH_FALLBACK_MS){
+      try{
+        await loadData({silent:true,force:true});
+        console.info(`SFVC app data refreshed: ${reason} (offline fallback)`);
+        return true;
+      }catch(fallbackErr){
+        console.warn(`SFVC app refresh failed: ${reason}`,fallbackErr);
+      }
+    }
+    renderMySchedule();
+    return false;
+  }
+}
+
+async function refreshAppData(reason="manual"){
   try{
     await loadData({silent:true,force:true});
     console.info(`SFVC app data refreshed: ${reason}`);
@@ -1288,10 +1370,30 @@ async function refreshAppData(reason="foreground"){
 }
 
 function startVisibleAppRefresh(){
-  clearInterval(appVisibleRefreshTimer);
-  appVisibleRefreshTimer=setInterval(()=>{
-    if(document.visibilityState==="visible")refreshAppData("visible-interval");
-  },APP_REFRESH_INTERVAL_MS);
+  clearTimeout(appVisibleRefreshTimer);
+  const loop=async()=>{
+    if(document.visibilityState==="visible")await maybeRefreshProgramData("visible-interval");
+    appVisibleRefreshTimer=setTimeout(loop,withJitter(APP_REFRESH_INTERVAL_MS,0.35));
+  };
+  appVisibleRefreshTimer=setTimeout(loop,withJitter(APP_REFRESH_INTERVAL_MS,0.35));
+}
+
+function startSafetySyncLoops(){
+  clearTimeout(deviceSafetySyncTimer);
+
+  const loop=async()=>{
+    if(document.visibilityState==="visible"){
+      const lastDeviceSync=readTimestampMs("sfvc-device-last-sync");
+      if(!lastDeviceSync||Date.now()-lastDeviceSync>=DEVICE_SAFETY_SYNC_MS){
+        await syncAnonymousDevice().catch(()=>{});
+      }
+      await syncSavedAppRegistration().catch(()=>{});
+    }
+
+    deviceSafetySyncTimer=setTimeout(loop,withJitter(DEVICE_SAFETY_SYNC_MS,0.20));
+  };
+
+  deviceSafetySyncTimer=setTimeout(loop,withJitter(DEVICE_SAFETY_SYNC_MS,0.20));
 }
 
 
@@ -2485,7 +2587,7 @@ async function enablePushFromPrompt(){
    Starts independently of the rest of the app and uses redundant browser-safe
    delivery methods. D1 deduplicates by day + anonymous installation ID. */
 const ANALYTICS_ID_KEY="sfvc-anonymous-analytics-id";
-const ANALYTICS_HEARTBEAT_MS=120000;
+const ANALYTICS_HEARTBEAT_MS=180000;
 const ANALYTICS_RETRY_MS=10000;
 const ANALYTICS_FALLBACK_BASE="https://notify.scifivalleycon.com";
 let analyticsHeartbeatTimer=null;
@@ -2582,14 +2684,11 @@ async function sendAnalyticsHeartbeat(eventType="heartbeat",{force=false}={}){
   if(document.visibilityState==="hidden")return false;
 
   const now=Date.now();
-  if(!force && eventType!=="open" && now-analyticsLastSuccessfulSend<45000)return true;
+  if(!force && eventType!=="open" && now-analyticsLastSuccessfulSend<90000)return true;
 
   const url=buildAnalyticsPingUrl(eventType);
 
-  // Fire a redundant one-way request immediately.
-  sendAnalyticsNoCorsFetch(url);
-
-  // Also load the same endpoint as a real DOM image so we have a success signal.
+  // Use a single primary request so convention-scale traffic does not double up.
   const success=await sendAnalyticsDomBeacon(url);
 
   if(success){
@@ -2598,6 +2697,8 @@ async function sendAnalyticsHeartbeat(eventType="heartbeat",{force=false}={}){
     return true;
   }
 
+  // Fallback one-way request in case the image load is blocked by the browser.
+  sendAnalyticsNoCorsFetch(url);
   console.warn("App activity beacon did not complete. Retrying shortly.");
   scheduleAnalyticsRetry();
   return false;
@@ -2694,7 +2795,7 @@ async function sendAppRegistrationToServer(profile){
       pronouns:profile.pronouns,
       email:profile.email,
       phone:profile.phone,
-      appVersion:"4.47",
+      appVersion:APP_BUILD_VERSION,
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
@@ -2703,11 +2804,27 @@ async function sendAppRegistrationToServer(profile){
   return result;
 }
 
-async function syncSavedAppRegistration(){
+const APP_REGISTRATION_LAST_SYNC_KEY="sfvc-registration-last-sync";
+
+function markAppRegistrationSynced(){
+  localStorage.setItem(APP_REGISTRATION_LAST_SYNC_KEY,new Date().toISOString());
+}
+
+async function syncSavedAppRegistration({force=false}={}){
   const profile=loadAppRegistration();
-  if(!profile?.name||!profile?.email||!profile?.phone)return;
-  try{await sendAppRegistrationToServer(profile);}
-  catch(err){console.warn("Saved app registration could not sync",err);}
+  if(!profile?.name||!profile?.email||!profile?.phone)return false;
+
+  const lastSync=readTimestampMs(APP_REGISTRATION_LAST_SYNC_KEY);
+  if(!force&&lastSync&&Date.now()-lastSync<REGISTRATION_SYNC_SAFETY_MS)return true;
+
+  try{
+    await sendAppRegistrationToServer(profile);
+    markAppRegistrationSynced();
+    return true;
+  }catch(err){
+    console.warn("Saved app registration could not sync",err);
+    return false;
+  }
 }
 
 async function submitAppRegistration(event){
@@ -2724,6 +2841,7 @@ async function submitAppRegistration(event){
       registeredAt:String(result.createdAt||new Date().toISOString()),
       updatedAt:String(result.updatedAt||new Date().toISOString())
     });
+    markAppRegistrationSynced();
     renderAppRegistration();
     scheduleAnonymousDeviceSync(40);
     if(status){status.textContent="✓ This app is registered.";status.className="registration-form-status success";}
@@ -3919,8 +4037,13 @@ document.addEventListener("visibilitychange",()=>{
     updateNotificationStatus().catch(()=>{});
     refreshRemoteReminderStatus().catch(()=>{});
     refreshAnonymousDeviceStatus().catch(()=>{});
-    refreshAppData("foreground").catch(()=>{});
-    scheduleAnonymousDeviceSync(100);
+    maybeRefreshProgramData("foreground").catch(()=>{});
+    syncSavedAppRegistration().catch(()=>{});
+
+    const lastDeviceSync=readTimestampMs("sfvc-device-last-sync");
+    if(!lastDeviceSync||Date.now()-lastDeviceSync>=DEVICE_SAFETY_SYNC_MS){
+      scheduleAnonymousDeviceSync(100);
+    }
   }
 
   if(document.visibilityState==="visible" &&
@@ -3935,11 +4058,12 @@ window.addEventListener("online",()=>{
     updateNotificationStatus();
     syncServerReminders({force:true}).catch(()=>{});
     syncAnonymousDevice({force:true}).catch(()=>{});
+    syncSavedAppRegistration({force:true}).catch(()=>{});
   }).catch(()=>{});
 });
 window.addEventListener("pageshow",()=>{
   ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});
-  refreshAppData("pageshow").catch(()=>{});
+  maybeRefreshProgramData("pageshow").catch(()=>{});
 });
 navigator.serviceWorker?.addEventListener?.("controllerchange",()=>{
   pushHealthLastCheckedAt=0;
@@ -4132,6 +4256,8 @@ initializeProgramTools();
 
 loadData().then(()=>{
   startVisibleAppRefresh();
+  startSafetySyncLoops();
+  syncSavedAppRegistration().catch(()=>{});
 }).catch(err=>{
   console.error(err);
   renderMySchedule();

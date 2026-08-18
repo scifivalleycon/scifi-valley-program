@@ -1,35 +1,25 @@
-Sci-Fi Valley Con Attendee App V4.47 — Share This Web App
+SFVC HIGH TRAFFIC OPTIMIZATION PATCH — V4.48
 
-Adds a new Program Tools option:
+Included files:
+- app.js
+- data/version.json
+- index.html
+- styles.css
+- service-worker.js
 
-SHARE THIS WEB APP WITH A FRIEND
+What changed:
+1. The app no longer reloads every program JSON file every 60 seconds.
+   It now checks data/version.json first and only performs a full reload when the
+   version changes, with a 10-minute fallback refresh for safety.
+2. Background/device sync is now mostly event-driven. A light safety sync runs on
+   a longer interval instead of re-syncing on every data refresh.
+3. App registration sync is no longer sent on every reload. It now syncs when the
+   user changes registration details, plus an occasional safety sync.
+4. Periodic timers now use jitter so 1,000 phones do not all call the backend at
+   the exact same second.
+5. Analytics traffic was reduced by removing the normal redundant second request.
 
-PRIMARY BEHAVIOR
-On devices that support the Web Share API, tapping the button opens the device's
-native share sheet. The attendee can choose any supported installed destination,
-such as:
-- Messages / text
-- Email / Mail
-- Messenger
-- WhatsApp
-- AirDrop
-- social apps
-- other installed share targets
-
-The shared link is always:
-https://app.scifivalleycon.com/
-
-FALLBACK
-If native sharing is unavailable, the app opens a fallback sharing popup with:
-- TEXT MESSAGE
-- EMAIL
-- COPY APP LINK
-
-Nothing is sent automatically. Text and email options only open the user's own
-messaging/mail app with the SFVC app link prefilled.
-
-This is an attendee CODE-ONLY patch.
-No Admin or Notify Worker update is required.
-No backend-managed JSON files are included.
-
-UNZIP FIRST, then upload the files inside this ZIP to the attendee GitHub repository.
+IMPORTANT FOR FUTURE DATA CHANGES:
+Whenever you publish updated attendee-app data, also update data/version.json.
+Change either the version string or generatedAt value. That is what tells the app
+that new program data is available.
