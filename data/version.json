@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.58-program-tools-close-button-scaling-fix",
-  "generatedAt": "2026-08-18T16:32:00Z",
-  "notes": "Locks the Program Tools close X at its intended icon size and keeps it centered when accessibility Text Size is enlarged."
+  "version": "program-v4.59-guest-name-fit-stable-modal-scroll",
+  "generatedAt": "2026-08-18T16:43:00Z",
+  "notes": "Auto-fits celebrity guest names to one line at enlarged text sizes and stabilizes guest-detail modal scrolling on mobile."
 }

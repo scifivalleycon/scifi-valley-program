@@ -4666,3 +4666,78 @@ body.sfvc-text-enlarged .app-utility-close{
   font-size:22px!important;
   line-height:1!important;
 }
+
+/* =========================================================
+   V4.59 — GUEST NAME AUTO-FIT + STABLE GUEST DETAIL SCROLL
+   ========================================================= */
+
+/* Guest names are display headings. Keep the entire name on one line and let
+   the V4.59 fitting controller choose the largest enlarged size that fits the
+   exact available width instead of wrapping or clipping at 200%. */
+.guest-topline>div,
+.modal-hero>div{
+  min-width:0;
+}
+
+.guest-topline>div{
+  flex:1 1 auto;
+}
+
+.guest-card h3,
+#guestModalContent .modal-inner h2{
+  display:block;
+  width:100%;
+  max-width:100%;
+  white-space:nowrap!important;
+  overflow:hidden;
+  text-overflow:clip;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  hyphens:none!important;
+}
+
+/* Keep the native dialog shell stationary. Only the content panel scrolls.
+   Using the stable small viewport height avoids the iPhone browser chrome
+   changing the dialog height while the user swipes through a long biography. */
+.guest-modal{
+  position:fixed;
+  inset:0;
+  margin:auto;
+  max-height:88vh;
+  max-height:88svh;
+  overflow:hidden!important;
+  overscroll-behavior:none;
+}
+
+.guest-modal>.modal-close{
+  position:absolute!important;
+  top:8px!important;
+  right:8px!important;
+  float:none!important;
+  margin:0!important;
+  z-index:12;
+}
+
+#guestModalContent{
+  box-sizing:border-box;
+  width:100%;
+  max-height:88vh;
+  max-height:88svh;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  scrollbar-gutter:stable;
+  padding-top:42px;
+}
+
+#guestModalContent .modal-inner{
+  padding-top:8px;
+  padding-bottom:22px;
+}
+
+body.sfvc-text-xl #guestModalContent{
+  padding-top:46px;
+}
+

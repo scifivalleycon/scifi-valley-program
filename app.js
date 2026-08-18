@@ -478,6 +478,58 @@ function fitProgramPageHeadings(root=document){
   headings.forEach(fitProgramPageHeading);
 }
 
+/* V4.59 — Keep celebrity guest names on one line at enlarged text sizes.
+   Each name gets the largest requested font size that fits its actual card or
+   modal heading width. Short names can remain near the selected percentage,
+   while longer names automatically step down only as much as necessary. */
+function fitGuestNameHeading(heading){
+  if(!(heading instanceof HTMLElement)||programTextScale<=1)return;
+  if(fontScaleLocked(heading))return;
+
+  const base=Number(heading.dataset.sfvcBaseFontPx);
+  if(!Number.isFinite(base)||base<=0)return;
+
+  const maxScale=Number(heading.dataset.fontScaleMax);
+  const effectiveScale=Number.isFinite(maxScale)&&maxScale>0
+    ? Math.min(programTextScale,maxScale)
+    : programTextScale;
+  const target=base*effectiveScale;
+
+  heading.style.fontSize=`${Math.round(target*100)/100}px`;
+  heading.style.whiteSpace="nowrap";
+
+  const available=Math.max(0,heading.clientWidth-2);
+  const name=String(heading.textContent||"").trim();
+  if(!available||!name)return;
+
+  const computed=getComputedStyle(heading);
+  const measure=getProgramHeadingMeasureNode();
+  measure.style.fontFamily=computed.fontFamily;
+  measure.style.fontWeight=computed.fontWeight;
+  measure.style.fontStyle=computed.fontStyle;
+  measure.style.fontStretch=computed.fontStretch;
+  measure.style.letterSpacing=computed.letterSpacing;
+  measure.style.textTransform=computed.textTransform;
+  measure.style.fontSize=`${target}px`;
+  measure.textContent=name;
+
+  const rendered=measure.getBoundingClientRect().width;
+  if(rendered>available){
+    // Never shrink below the normal 100% guest-name size. At enlarged settings
+    // the fitting only trims the extra accessibility enlargement as needed.
+    const fitted=Math.max(base,target*(available/rendered)*0.985);
+    heading.style.fontSize=`${Math.floor(fitted*100)/100}px`;
+  }
+}
+
+function fitGuestNames(root=document){
+  const selector=".guest-card h3,#guestModalContent .modal-inner h2";
+  const headings=[];
+  if(root instanceof Element&&root.matches(selector))headings.push(root);
+  root.querySelectorAll?.(selector).forEach(heading=>headings.push(heading));
+  headings.forEach(fitGuestNameHeading);
+}
+
 function updateFontSizeControls(){
   const index=PROGRAM_TEXT_SCALES.indexOf(programTextScale);
   const label=document.getElementById("fontSizeLabel");
@@ -510,6 +562,7 @@ function applyProgramTextScale(scale,{persist=true}={}){
   if(programTextScale!==1){
     scaleTextTree(document.body);
     fitProgramPageHeadings(document);
+    fitGuestNames(document);
   }
   if(persist)localStorage.setItem(PROGRAM_TEXT_SCALE_KEY,String(programTextScale));
   updateFontSizeControls();
@@ -546,7 +599,10 @@ function initializeProgramTextScaling(){
     window.__sfvcProgramHeadingFitResizeBound=true;
     window.addEventListener("resize",()=>{
       if(programTextScale<=1)return;
-      requestAnimationFrame(()=>fitProgramPageHeadings(document));
+      requestAnimationFrame(()=>{
+        fitProgramPageHeadings(document);
+        fitGuestNames(document);
+      });
     },{passive:true});
   }
 }
@@ -1720,6 +1776,12 @@ function renderGuests(){
     </article>`).join("") || `<div class="paper-panel muted-empty">No guests match that search.</div>`;
   document.querySelectorAll("[data-favorite]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();toggleFavorite(b.dataset.favorite)}));
   document.querySelectorAll("[data-open-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.openGuest)));
+  if(programTextScale>1){
+    requestAnimationFrame(()=>{
+      scaleTextTree(document.getElementById("guestList"));
+      fitGuestNames(document.getElementById("guestList"));
+    });
+  }
   bindGuestPhotoLightboxes();
 }
 
@@ -1756,6 +1818,17 @@ function openGuest(id){
     </div>`;
   const modal=document.getElementById("guestModal");
   if(typeof modal.showModal==="function") modal.showModal(); else modal.setAttribute("open","");
+  modal?.classList.add("guest-modal-active");
+  requestAnimationFrame(()=>{
+    if(programTextScale>1){
+      scaleTextTree(modal);
+      fitGuestNames(modal);
+    }
+    // Always start a newly opened guest profile at the top. The scrollable
+    // content region is isolated from the dialog shell to prevent iOS bounce.
+    const scroller=document.getElementById("guestModalContent");
+    if(scroller)scroller.scrollTop=0;
+  });
   bindGuestPhotoLightboxes();
 }
 
@@ -1779,8 +1852,17 @@ document.getElementById("closeEventModal")?.addEventListener("click",closeEventD
 document.getElementById("eventModal")?.addEventListener("click",event=>{
   if(event.target===event.currentTarget)closeEventDetails();
 });
-document.getElementById("closeGuestModal").addEventListener("click",()=>document.getElementById("guestModal").close());
-document.getElementById("guestModal").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+function closeGuestModal(){
+  const modal=document.getElementById("guestModal");
+  if(!modal)return;
+  modal.classList.remove("guest-modal-active");
+  if(typeof modal.close==="function")modal.close();
+  else modal.removeAttribute("open");
+}
+
+document.getElementById("closeGuestModal").addEventListener("click",closeGuestModal);
+document.getElementById("guestModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeGuestModal()});
+document.getElementById("guestModal").addEventListener("close",e=>e.currentTarget.classList.remove("guest-modal-active"));
 
 
 function celebrityPublished(){return state.celebrityInfo?.published===true}
