@@ -11,13 +11,13 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], faq: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], faq: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", faqFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.48";
+const APP_BUILD_VERSION="4.49";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1254,10 +1254,10 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
-    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,homeBannerData,mapLayoutData,mapSettingsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
       safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/home-banner.json"),
-      safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
+      safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
     ]);
@@ -1286,6 +1286,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
     state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
     state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
+    state.directions=Array.isArray(directionsData)&&directionsData[0]?directionsData[0]:{};
     state.celebrityInfo=Array.isArray(celebrityInfo)&&celebrityInfo[0]?celebrityInfo[0]:{};
     state.celebrityPricing=Array.isArray(celebrityPricing)?celebrityPricing:[];
     state.photoOps=Array.isArray(photoOps)?photoOps:[];
@@ -3384,6 +3385,151 @@ function initializeRecentAlerts(){
 
 
 
+/* Venue and shuttle driving directions — V4.49 */
+const DEFAULT_DIRECTIONS={
+  venueName:"Blair County Convention Center",
+  venueAddress:"1 Convention Center Dr, Altoona, PA 16602",
+  venueNotes:"Parking and convention entrance destination",
+  shuttleEnabled:false,
+  shuttleName:"Shuttle Pickup",
+  shuttleAddress:"",
+  shuttleNotes:"",
+  shuttleHours:""
+};
+let selectedDirectionsDestination="venue";
+let currentDirectionsCoordinates="";
+
+function directionsConfig(){
+  return {...DEFAULT_DIRECTIONS,...(state.directions||{})};
+}
+
+function directionsDestination(type=selectedDirectionsDestination){
+  const cfg=directionsConfig();
+  if(type==="shuttle"&&cfg.shuttleEnabled&&String(cfg.shuttleAddress||"").trim()){
+    return {type:"shuttle",name:cfg.shuttleName||"Shuttle Pickup",address:cfg.shuttleAddress};
+  }
+  return {type:"venue",name:cfg.venueName||DEFAULT_DIRECTIONS.venueName,address:cfg.venueAddress||DEFAULT_DIRECTIONS.venueAddress};
+}
+
+function renderDirections(){
+  const cfg=directionsConfig();
+  const venueName=document.getElementById("directionsVenueName");
+  const venueAddress=document.getElementById("directionsVenueAddress");
+  const shuttleCard=document.getElementById("shuttleDirectionsCard");
+  const unavailable=document.getElementById("shuttleDirectionsUnavailable");
+  const shuttleName=document.getElementById("directionsShuttleName");
+  const shuttleAddress=document.getElementById("directionsShuttleAddress");
+  const shuttleNotes=document.getElementById("directionsShuttleNotes");
+
+  if(venueName)venueName.textContent=cfg.venueName||DEFAULT_DIRECTIONS.venueName;
+  if(venueAddress)venueAddress.textContent=cfg.venueAddress||DEFAULT_DIRECTIONS.venueAddress;
+
+  const shuttleAvailable=Boolean(cfg.shuttleEnabled&&String(cfg.shuttleAddress||"").trim());
+  shuttleCard?.classList.toggle("hidden",!shuttleAvailable);
+  unavailable?.classList.toggle("hidden",shuttleAvailable);
+  if(shuttleName)shuttleName.textContent=cfg.shuttleName||"Shuttle Pickup";
+  if(shuttleAddress)shuttleAddress.textContent=cfg.shuttleAddress||"";
+  if(shuttleNotes){
+    const details=[cfg.shuttleNotes,cfg.shuttleHours].filter(Boolean).join(" • ");
+    shuttleNotes.textContent=details||"Park here and board the event shuttle.";
+  }
+
+  if(!shuttleAvailable&&selectedDirectionsDestination==="shuttle")selectedDirectionsDestination="venue";
+  updateDirectionsSelection();
+}
+
+function updateDirectionsSelection(){
+  document.querySelectorAll("[data-directions-destination]").forEach(card=>{
+    card.classList.toggle("selected",card.dataset.directionsDestination===selectedDirectionsDestination);
+  });
+  document.querySelectorAll("[data-directions-destination-button]").forEach(button=>{
+    const selected=button.dataset.directionsDestinationButton===selectedDirectionsDestination;
+    button.textContent=selected?"✓ SELECTED":"SELECT";
+  });
+  const dest=directionsDestination();
+  const summary=document.getElementById("directionsSelectedSummary");
+  if(summary)summary.textContent=`TO ${String(dest.name||"DESTINATION").toUpperCase()}`;
+}
+
+function selectDirectionsDestination(type){
+  const cfg=directionsConfig();
+  if(type==="shuttle"&&!(cfg.shuttleEnabled&&String(cfg.shuttleAddress||"").trim()))return;
+  selectedDirectionsDestination=type==="shuttle"?"shuttle":"venue";
+  updateDirectionsSelection();
+}
+
+function googleMapsDirectionsUrl(destination,origin=""){
+  const params=new URLSearchParams({api:"1",destination:String(destination||""),travelmode:"driving",dir_action:"navigate"});
+  if(String(origin||"").trim())params.set("origin",String(origin).trim());
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}
+
+function enteredDirectionsOrigin(){
+  const typed=String(document.getElementById("directionsOrigin")?.value||"").trim();
+  return currentDirectionsCoordinates||typed;
+}
+
+function openSelectedDrivingDirections(){
+  const destination=directionsDestination();
+  if(!destination.address)return;
+  const url=googleMapsDirectionsUrl(destination.address,enteredDirectionsOrigin());
+  window.open(url,"_blank","noopener,noreferrer");
+}
+
+function setDirectionsLocationStatus(message="",kind=""){
+  const status=document.getElementById("directionsLocationStatus");
+  if(!status)return;
+  status.textContent=message;
+  status.dataset.kind=kind;
+}
+
+function useCurrentLocationForDirections(){
+  if(!navigator.geolocation){
+    setDirectionsLocationStatus("Current location is not supported on this device. Enter your starting address instead.","error");
+    return;
+  }
+  const button=document.getElementById("directionsUseLocation");
+  if(button){button.disabled=true;button.textContent="⌖ FINDING YOUR LOCATION…";}
+  setDirectionsLocationStatus("Requesting your current location…","");
+  navigator.geolocation.getCurrentPosition(position=>{
+    currentDirectionsCoordinates=`${position.coords.latitude},${position.coords.longitude}`;
+    const input=document.getElementById("directionsOrigin");
+    if(input)input.value="Current device location";
+    setDirectionsLocationStatus("✓ Current location ready for driving directions.","success");
+    if(button){button.disabled=false;button.textContent="⌖ USE MY CURRENT LOCATION";}
+  },error=>{
+    currentDirectionsCoordinates="";
+    const message=error?.code===1
+      ? "Location permission was not granted. Enter your starting address, or leave it blank and Google Maps can ask for your location."
+      : "Your current location could not be determined. Enter your starting address instead.";
+    setDirectionsLocationStatus(message,"error");
+    if(button){button.disabled=false;button.textContent="⌖ USE MY CURRENT LOCATION";}
+  },{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
+}
+
+function clearDirectionsOrigin(){
+  currentDirectionsCoordinates="";
+  const input=document.getElementById("directionsOrigin");
+  if(input)input.value="";
+  setDirectionsLocationStatus("","");
+}
+
+function initializeDirections(){
+  document.querySelectorAll("[data-directions-destination-button]").forEach(button=>{
+    button.addEventListener("click",()=>selectDirectionsDestination(button.dataset.directionsDestinationButton));
+  });
+  document.querySelectorAll("[data-directions-destination]").forEach(card=>{
+    card.addEventListener("click",event=>{
+      if(event.target.closest("button"))return;
+      selectDirectionsDestination(card.dataset.directionsDestination);
+    });
+  });
+  document.getElementById("directionsUseLocation")?.addEventListener("click",useCurrentLocationForDirections);
+  document.getElementById("directionsClearOrigin")?.addEventListener("click",clearDirectionsOrigin);
+  document.getElementById("directionsOrigin")?.addEventListener("input",()=>{currentDirectionsCoordinates="";setDirectionsLocationStatus("","");});
+  document.getElementById("openDrivingDirections")?.addEventListener("click",openSelectedDrivingDirections);
+}
+
 /* Interactive vector floor plan — V4.2 */
 let mapZoom=1;
 let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
@@ -3959,6 +4105,7 @@ function renderAll(){
   safeRenderSection("FAQ",renderFaq);
 
   safeRenderSection("event settings",applyEventSettings);
+  safeRenderSection("directions",renderDirections);
   safeRenderSection("map",renderMapScreen);
   safeRenderSection("guest filters",renderGuestFilters);
   safeRenderSection("guests",renderGuests);
@@ -4253,6 +4400,7 @@ initializeAppAnalytics();
 initializeRecentAlerts();
 initializeEventCountdown();
 initializeProgramTools();
+initializeDirections();
 
 loadData().then(()=>{
   startVisibleAppRefresh();

@@ -1,0 +1,12 @@
+[
+  {
+    "venueName": "Blair County Convention Center",
+    "venueAddress": "1 Convention Center Dr, Altoona, PA 16602",
+    "venueNotes": "Parking and convention entrance destination",
+    "shuttleEnabled": false,
+    "shuttleName": "Shuttle Pickup / Park & Ride",
+    "shuttleAddress": "",
+    "shuttleNotes": "",
+    "shuttleHours": ""
+  }
+]

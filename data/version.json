@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.48-high-traffic-opt",
-  "generatedAt": "2026-08-18T01:11:52Z",
-  "notes": "Bump this file whenever attendee app data changes so lightweight version polling can detect updates without reloading every JSON file."
+  "version": "program-v4.49-directions",
+  "generatedAt": "2026-08-18T01:28:07Z",
+  "source": "v4.49 attendee directions feature"
 }

@@ -4066,3 +4066,51 @@ body.sfvc-text-enlarged .screen [class*="details"]{
     grid-row:1 / span 2;
   }
 }
+
+
+/* =========================================================
+   V4.49 — VENUE & DRIVING DIRECTIONS
+   ========================================================= */
+.home-directions-button{
+  display:inline-grid;
+  grid-template-columns:24px auto;
+  grid-template-rows:auto auto;
+  column-gap:7px;
+  align-items:center;
+  margin:7px auto 0;
+  padding:7px 11px;
+  border:2px solid var(--ink);
+  border-radius:8px;
+  background:var(--coral);
+  color:#fff;
+  box-shadow:2px 3px 0 rgba(58,39,32,.18);
+}
+.home-directions-button>span{grid-row:1/span 2;font-size:18px;font-weight:900}
+.home-directions-button strong{font-size:7px;letter-spacing:.04em;text-align:left}
+.home-directions-button small{font-family:Georgia,serif;font-size:6.5px;text-align:left}
+.directions-menu-icon{background:var(--coral)!important;color:white!important}
+.directions-title h1 span{color:var(--coral2)}
+.directions-start-panel{margin-bottom:12px}
+.directions-compass{display:grid;place-items:center;width:38px;height:38px;border:2px solid var(--ink);border-radius:50%;background:rgba(115,199,203,.28);font-size:18px;font-weight:900}
+.directions-help{margin:0 0 10px;font-family:Georgia,serif;font-size:9px;line-height:1.42;color:var(--ink2)}
+.directions-origin-field{display:block}
+.directions-origin-field>span{display:block;margin-bottom:4px;color:var(--coral2);font-size:6px;font-weight:900;letter-spacing:.08em}
+.directions-origin-field input{width:100%;min-height:45px;padding:10px;border:2px solid var(--ink);border-radius:7px;background:#fffaf0;color:var(--ink);font:700 11px Georgia,serif;box-sizing:border-box}
+.directions-origin-actions{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:7px}
+.directions-origin-actions button{min-height:39px;padding:7px 10px;border:2px solid var(--ink);border-radius:7px;background:rgba(115,199,203,.28);color:var(--ink);font-size:7px;font-weight:900}
+.directions-origin-actions button:last-child{background:rgba(226,173,52,.22)}
+.directions-location-status{min-height:13px;margin:6px 0 0;font-size:7px;font-weight:800;color:var(--ink2)}
+.directions-location-status[data-kind="success"]{color:#276f61}.directions-location-status[data-kind="error"]{color:#a33d29}
+.directions-destination-heading{margin:15px 2px 8px}.directions-destination-heading h2{margin:2px 0 0;font-size:16px}
+.directions-destination-card{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;margin:8px 0;padding:12px;border:2px solid var(--ink);border-radius:9px;background:rgba(255,249,231,.78);box-shadow:3px 4px 0 rgba(58,39,32,.12);cursor:pointer}
+.directions-destination-card.selected{box-shadow:inset 5px 0 0 var(--coral),3px 4px 0 rgba(58,39,32,.12);background:rgba(115,199,203,.16)}
+.directions-destination-card.shuttle.selected{background:rgba(226,173,52,.18)}
+.directions-card-badge{width:46px;height:46px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--coral);color:white;font-size:9px;font-weight:900}
+.directions-destination-card.shuttle .directions-card-badge{background:var(--mustard);color:var(--ink)}
+.directions-card-copy{min-width:0}.directions-card-copy small{display:block;color:var(--coral2);font-size:6px;font-weight:900;letter-spacing:.07em}.directions-card-copy h3{margin:2px 0 3px;font-size:12px}.directions-card-copy p{margin:0 0 3px;font-family:Georgia,serif;font-size:9px;line-height:1.35}.directions-card-copy span{display:block;color:var(--ink2);font-family:Georgia,serif;font-size:7.5px;line-height:1.3}
+.directions-destination-card>button{min-height:35px;padding:6px 8px;border:1.5px solid var(--ink);border-radius:6px;background:#fff9e8;color:var(--ink);font-size:6px;font-weight:900}
+.directions-shuttle-unavailable{display:grid!important;gap:3px;margin:8px 0 12px}.directions-shuttle-unavailable.hidden{display:none!important}.directions-shuttle-unavailable strong{font-size:8px}.directions-shuttle-unavailable span{font-family:Georgia,serif;font-size:8px;line-height:1.35}
+.open-driving-directions{width:100%;display:grid;grid-template-columns:43px minmax(0,1fr) auto;gap:9px;align-items:center;margin:14px 0 7px;padding:11px;border:2px solid var(--ink);border-radius:9px;background:var(--coral);color:white;text-align:left;box-shadow:3px 4px 0 rgba(58,39,32,.16)}
+.open-driving-directions>span:first-child{width:40px;height:40px;display:grid;place-items:center;border:2px solid white;border-radius:50%;font-size:20px;font-weight:900}.open-driving-directions small,.open-driving-directions strong,.open-driving-directions em{display:block}.open-driving-directions small{font-size:6px;letter-spacing:.07em}.open-driving-directions strong{font-size:9px}.open-driving-directions em{margin-top:2px;font-family:Georgia,serif;font-size:7px;font-style:normal}.open-driving-directions>b{font-size:20px}
+.directions-google-note{margin:0 4px 18px;color:var(--ink2);font-family:Georgia,serif;font-size:7px;line-height:1.4;text-align:center}
+@media(max-width:520px){.directions-destination-card{grid-template-columns:42px minmax(0,1fr)}.directions-destination-card>button{grid-column:1/-1;width:100%}.directions-card-badge{width:40px;height:40px}.directions-origin-actions{grid-template-columns:1fr}.open-driving-directions{grid-template-columns:39px minmax(0,1fr) auto}}

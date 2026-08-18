@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.47">
+  <link rel="stylesheet" href="styles.css?v=4.49">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -188,6 +188,7 @@
         </section>
 
         <p id="heroEventLocation" class="location-copy">Blair County Convention Center • Altoona, Pennsylvania</p>
+        <button class="home-directions-button" type="button" data-go="directions"><span>➜</span><strong>GET DRIVING DIRECTIONS</strong><small>Venue & shuttle pickup</small></button>
         <p class="family-line">WHERE FANDOM BECOMES FAMILY</p>
       </section>
 
@@ -419,6 +420,71 @@
       </section>
     </section>
 
+    <section id="directions" class="screen directions-screen">
+      <div class="page-title poster-title directions-title">
+        <p class="kicker">GETTING HERE</p>
+        <h1>DRIVING <span>DIRECTIONS</span></h1>
+        <p>Route directly to the convention or the current shuttle pickup location.</p>
+      </div>
+
+      <section class="paper-panel directions-start-panel">
+        <div class="section-heading">
+          <div><span class="section-kicker">WHERE ARE YOU STARTING?</span><h2>YOUR STARTING LOCATION</h2></div>
+          <span class="directions-compass">⌖</span>
+        </div>
+        <p class="directions-help">Enter an address, use your phone's current location, or leave this blank and Google Maps can use your current device location when available.</p>
+        <label class="directions-origin-field">
+          <span>STARTING ADDRESS</span>
+          <input id="directionsOrigin" type="text" autocomplete="street-address" placeholder="Example: Johnstown, PA or 123 Main St">
+        </label>
+        <div class="directions-origin-actions">
+          <button id="directionsUseLocation" type="button">⌖ USE MY CURRENT LOCATION</button>
+          <button id="directionsClearOrigin" type="button">CLEAR</button>
+        </div>
+        <p id="directionsLocationStatus" class="directions-location-status" aria-live="polite"></p>
+      </section>
+
+      <div class="directions-destination-heading">
+        <span class="section-kicker">CHOOSE YOUR DESTINATION</span>
+        <h2>WHERE ARE YOU GOING?</h2>
+      </div>
+
+      <section id="venueDirectionsCard" class="directions-destination-card venue selected" data-directions-destination="venue">
+        <div class="directions-card-badge">★</div>
+        <div class="directions-card-copy">
+          <small>MAIN EVENT VENUE</small>
+          <h3 id="directionsVenueName">Blair County Convention Center</h3>
+          <p id="directionsVenueAddress">1 Convention Center Dr, Altoona, PA 16602</p>
+          <span>Parking and convention entrance destination</span>
+        </div>
+        <button type="button" data-directions-destination-button="venue">SELECT</button>
+      </section>
+
+      <section id="shuttleDirectionsCard" class="directions-destination-card shuttle hidden" data-directions-destination="shuttle">
+        <div class="directions-card-badge">BUS</div>
+        <div class="directions-card-copy">
+          <small>FREE SHUTTLE / PARK & RIDE</small>
+          <h3 id="directionsShuttleName">Shuttle Pickup</h3>
+          <p id="directionsShuttleAddress"></p>
+          <span id="directionsShuttleNotes"></span>
+        </div>
+        <button type="button" data-directions-destination-button="shuttle">SELECT</button>
+      </section>
+
+      <section id="shuttleDirectionsUnavailable" class="info-note directions-shuttle-unavailable">
+        <strong>SHUTTLE LOCATION NOT PUBLISHED YET</strong>
+        <span>When a Park & Ride shuttle is offered, the current pickup location will appear here automatically.</span>
+      </section>
+
+      <button id="openDrivingDirections" class="open-driving-directions" type="button">
+        <span>➜</span>
+        <span><small>OPEN GOOGLE MAPS</small><strong>START DRIVING DIRECTIONS</strong><em id="directionsSelectedSummary">TO BLAIR COUNTY CONVENTION CENTER</em></span>
+        <b>›</b>
+      </button>
+
+      <p class="directions-google-note">Directions open in Google Maps. No account is required to use the link. Route conditions and travel times are provided by Google Maps.</p>
+    </section>
+
     <section id="more" class="screen">
       <div class="page-title poster-title">
         <p class="kicker">THE WHOLE PROGRAM</p>
@@ -429,6 +495,12 @@
       <button class="settings-menu-card" data-go="celebrity">
         <span class="settings-menu-icon">★</span>
         <span><strong>CELEBRITY GUIDE</strong><small>Prices, photo ops, autographs & panels</small></span>
+        <b>›</b>
+      </button>
+
+      <button class="settings-menu-card directions-menu-card" data-go="directions">
+        <span class="settings-menu-icon directions-menu-icon">➜</span>
+        <span><strong>VENUE & DRIVING DIRECTIONS</strong><small>Convention Center, shuttle pickup & navigation</small></span>
         <b>›</b>
       </button>
 
@@ -1101,6 +1173,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.47"></script>
+  <script src="app.js?v=4.49"></script>
 </body>
 </html>

@@ -1,25 +1,29 @@
-SFVC HIGH TRAFFIC OPTIMIZATION PATCH — V4.48
+Sci-Fi Valley Con Attendee App V4.49 — Venue & Driving Directions
 
-Included files:
-- app.js
-- data/version.json
-- index.html
-- styles.css
-- service-worker.js
+NEW DIRECTIONS PAGE
+- Venue destination: Blair County Convention Center
+  1 Convention Center Dr, Altoona, PA 16602
+- Optional shuttle / Park & Ride destination managed by Program Admin
+- Starting address input
+- USE MY CURRENT LOCATION browser geolocation button
+- If origin is left blank, Google Maps can use the most relevant/device location
+- Driving directions launch with Google Maps universal Maps URLs
+- No Google Maps API key is required
+- Home screen gets a GET DRIVING DIRECTIONS button
+- Event Guide / More gets a VENUE & DRIVING DIRECTIONS shortcut
 
-What changed:
-1. The app no longer reloads every program JSON file every 60 seconds.
-   It now checks data/version.json first and only performs a full reload when the
-   version changes, with a 10-minute fallback refresh for safety.
-2. Background/device sync is now mostly event-driven. A light safety sync runs on
-   a longer interval instead of re-syncing on every data refresh.
-3. App registration sync is no longer sent on every reload. It now syncs when the
-   user changes registration details, plus an occasional safety sync.
-4. Periodic timers now use jitter so 1,000 phones do not all call the backend at
-   the exact same second.
-5. Analytics traffic was reduced by removing the normal redundant second request.
+SHUTTLE
+The public shuttle card remains hidden until Admin publishes a shuttle address.
 
-IMPORTANT FOR FUTURE DATA CHANGES:
-Whenever you publish updated attendee-app data, also update data/version.json.
-Change either the version string or generatedAt value. That is what tells the app
-that new program data is available.
+HIGH TRAFFIC
+Keeps the V4.48 lightweight version-polling architecture. directions.json is included
+in full refreshes and data/version.json is used to signal new Admin content.
+
+NEW DATA FILE
+- data/directions.json
+
+IMPORTANT
+This patch does not contain or replace map-layout.json, vendors.json, guests.json,
+schedule.json, or other existing Admin-managed event content.
+
+UNZIP FIRST, then upload the files inside to the attendee GitHub repository.
