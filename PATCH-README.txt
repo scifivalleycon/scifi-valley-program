@@ -1,24 +1,19 @@
-Sci-Fi Valley Con Attendee App V4.53 — Stacked Venue / Directions Home Block
+Sci-Fi Valley Con Attendee App V4.54 — Attendee Reporter
 
-HOME LAYOUT
-The lower Home hero is now vertically stacked and centered:
+Adds SEE SOMETHING? SAY SOMETHING attendee reporting for:
+- Venue / facility concerns
+- Staff assistance
+- Security / safety concerns
+- Harassment / sexual misconduct / stalking
+- Medical concerns
+- Accessibility concerns
+- Vendor AI-policy violations
+- Other concerns
 
-Blair County Convention Center
-1 Convention Center Dr, Altoona, PA 16602
-GET DRIVING DIRECTIONS
-THE HOME OF NOSTALGIA
+Users may report anonymously or optionally provide name, phone and/or email.
+AI reports can include vendor name, table number, details, and up to 3 private image uploads.
+The form clearly warns that urgent emergencies should be reported to Front Admissions /
+Staff Area immediately and 911 should be used when appropriate.
 
-DETAILS
-- Venue name is large and prominent.
-- Street address is smaller and directly below the venue name.
-- Venue name + street address are one clickable block that opens Directions.
-- Directions button sits directly beneath the address.
-- Orange THE HOME OF NOSTALGIA banner sits on its own row below the Directions button.
-- No more side-by-side Directions button / orange banner layout.
-
-The venue name and address still read from Admin-managed data/directions.json.
-
-No Admin update is required.
-No Admin-managed map, vendor, guest, schedule, event, settings, or other backend data is included.
-
-UNZIP FIRST, then upload the files inside this ZIP to the attendee GitHub repository.
+Requires Notify Worker V1.15 and its R2 report-upload binding for photo evidence.
+Text-only reports still work if photo storage is unavailable.

@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.53">
+  <link rel="stylesheet" href="styles.css?v=4.54">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -51,6 +51,18 @@
             <small id="utilityRegistrationSummary">Add your attendee profile</small>
           </button>
         </div>
+      </section>
+
+      <section class="utility-tool-block utility-report-tool">
+        <div class="utility-tool-copy">
+          <span>SAFETY & ATTENDEE SUPPORT</span>
+          <strong>SEE SOMETHING? SAY SOMETHING.</strong>
+          <small>Report venue problems, safety concerns, harassment, medical concerns, vendor AI-policy violations and other issues to convention staff.</small>
+        </div>
+        <button class="utility-report-button" type="button" data-utility-go="report">
+          <span aria-hidden="true">!</span>
+          <span><b>ATTENDEE REPORTER</b><small>Send a report to convention staff</small></span>
+        </button>
       </section>
 
       <section class="utility-tool-block">
@@ -206,6 +218,16 @@
 
         <p class="family-line home-nostalgia-banner">THE HOME OF NOSTALGIA</p>
       </section>
+
+      <button class="home-reporter-card" type="button" data-go="report">
+        <span class="home-reporter-icon" aria-hidden="true">!</span>
+        <span>
+          <small>ATTENDEE SAFETY & SUPPORT</small>
+          <strong>SEE SOMETHING? SAY SOMETHING.</strong>
+          <em>Report a concern, request staff help, or report a vendor AI-policy violation.</em>
+        </span>
+        <b>›</b>
+      </button>
 
       <button id="homeGuestBanner" class="home-guest-banner" type="button" data-go="guests" aria-label="View celebrity guests">
         <span class="home-guest-banner-frame">
@@ -500,6 +522,125 @@
       <p class="directions-google-note">Directions open in Google Maps. No account is required to use the link. Route conditions and travel times are provided by Google Maps.</p>
     </section>
 
+    <section id="report" class="screen reporter-screen">
+      <div class="page-title poster-title reporter-title">
+        <p class="kicker">ATTENDEE SAFETY & SUPPORT</p>
+        <h1>SEE SOMETHING? <span>SAY SOMETHING.</span></h1>
+        <p>Use the Attendee Reporter to tell Sci-Fi Valley Con staff about problems, concerns, safety issues, harassment, medical concerns, or vendor AI-policy violations.</p>
+      </div>
+
+      <section class="report-emergency-banner">
+        <div class="report-emergency-icon">!</div>
+        <div>
+          <strong>THIS FORM IS NOT EMERGENCY DISPATCH.</strong>
+          <p>If someone is in immediate danger or needs urgent medical help, call 911 when appropriate and alert the <b>Front Admissions / Staff Area</b> immediately. Do not wait for an app response.</p>
+        </div>
+      </section>
+
+      <section class="paper-panel reporter-expectations">
+        <span class="section-kicker">HOW REPORTING WORKS</span>
+        <h2>HELP US KEEP THE EVENT SAFE & WELCOMING</h2>
+        <p>Reports are sent to authorized convention staff. We will do our best to review submissions and respond when possible. During a busy event we may receive many notifications, so we cannot guarantee that every complaint or concern can be investigated or answered.</p>
+        <p>You may report anonymously. Providing a name, phone number, or email address is optional, but contact information can help staff ask follow-up questions.</p>
+      </section>
+
+      <form id="attendeeReportForm" class="attendee-report-form">
+        <section class="paper-panel report-form-section">
+          <div class="section-heading">
+            <div><span class="section-kicker">STEP 1</span><h2>WHAT ARE YOU REPORTING?</h2></div>
+          </div>
+
+          <div class="report-category-grid" role="radiogroup" aria-label="Report category">
+            <label class="report-category-card venue"><input type="radio" name="reportCategory" value="venue" required><span class="report-category-icon">▦</span><span><b>VENUE / FACILITY CONCERN</b><small>Restroom supplies, spills, temperature, accessibility, damaged fixtures, etc.</small></span></label>
+            <label class="report-category-card staff"><input type="radio" name="reportCategory" value="staff"><span class="report-category-icon">★</span><span><b>STAFF ASSISTANCE NEEDED</b><small>You need a convention staff member to help with a non-emergency issue.</small></span></label>
+            <label class="report-category-card security"><input type="radio" name="reportCategory" value="security"><span class="report-category-icon">!</span><span><b>SECURITY / SAFETY CONCERN</b><small>Threats, fights, suspicious behavior, stalking, or another safety concern.</small></span></label>
+            <label class="report-category-card harassment"><input type="radio" name="reportCategory" value="harassment"><span class="report-category-icon">♥</span><span><b>HARASSMENT / SEXUAL MISCONDUCT</b><small>Harassment, unwanted contact, sexual misconduct, intimidation, or stalking.</small></span></label>
+            <label class="report-category-card medical"><input type="radio" name="reportCategory" value="medical"><span class="report-category-icon">+</span><span><b>MEDICAL CONCERN</b><small>Someone appears ill, injured, overheated, faint, or may need medical attention.</small></span></label>
+            <label class="report-category-card ai"><input type="radio" name="reportCategory" value="ai"><span class="report-category-icon">AI</span><span><b>VENDOR AI-POLICY VIOLATION</b><small>Report suspected generative-AI products, artwork, or vendor marketing.</small></span></label>
+            <label class="report-category-card access"><input type="radio" name="reportCategory" value="accessibility"><span class="report-category-icon">A</span><span><b>ACCESSIBILITY CONCERN</b><small>Blocked access, mobility issue, accommodation concern, or another accessibility problem.</small></span></label>
+            <label class="report-category-card other"><input type="radio" name="reportCategory" value="other"><span class="report-category-icon">?</span><span><b>OTHER CONCERN</b><small>Anything else convention staff should know about.</small></span></label>
+          </div>
+          <p id="reportCategoryGuidance" class="report-category-guidance">Select the option that best matches what you need to report.</p>
+        </section>
+
+        <section id="reportAiPolicyPanel" class="paper-panel report-ai-policy hidden">
+          <div class="report-ai-policy-head"><span class="report-ai-badge">AI</span><div><span class="section-kicker">SCI-FI VALLEY CON POLICY</span><h2>STRICT ANTI-AI PRODUCT POLICY</h2></div></div>
+          <p>Vendors and artists are not permitted to sell generative-AI-created artwork or products under Sci-Fi Valley Con's policy. We also strongly discourage the use of generative AI in banners, flyers, business cards, and other vendor marketing materials.</p>
+          <p>If you believe a vendor or artist is selling AI-generated items, tell us the vendor name and table number if known and attach clear photos of the products or display. <b>Please do not confront the vendor yourself.</b></p>
+        </section>
+
+        <section class="paper-panel report-form-section">
+          <div class="section-heading"><div><span class="section-kicker">STEP 2</span><h2>TELL US WHAT HAPPENED</h2></div></div>
+
+          <label class="report-field">
+            <span>WHERE IS THIS HAPPENING?</span>
+            <input id="reportLocation" name="location" type="text" maxlength="240" placeholder="Example: Main Level restroom, Panel Room 1, vendor table G7, lobby...">
+          </label>
+
+          <label class="report-field full">
+            <span>DESCRIBE THE ISSUE <b>*</b></span>
+            <textarea id="reportDescription" name="description" maxlength="4000" required placeholder="Tell staff what you saw, what happened, who may need help, and any details that would help us understand the situation."></textarea>
+            <small><span id="reportDescriptionCount">0</span>/4000 characters</small>
+          </label>
+
+          <label class="report-now-check"><input id="reportHappeningNow" type="checkbox" name="happeningNow"><span><b>THIS IS HAPPENING RIGHT NOW</b><small>Check this if the situation is currently active and may need prompt staff attention.</small></span></label>
+        </section>
+
+        <section id="reportVendorFields" class="paper-panel report-form-section hidden">
+          <div class="section-heading"><div><span class="section-kicker">VENDOR / ARTIST DETAILS</span><h2>HELP US FIND THE TABLE</h2></div></div>
+          <div class="report-field-grid">
+            <label class="report-field"><span>VENDOR / ARTIST NAME</span><input id="reportVendorName" name="vendorName" type="text" maxlength="160" placeholder="Business or artist name, if known"></label>
+            <label class="report-field"><span>TABLE / BOOTH NUMBER</span><input id="reportVendorTable" name="vendorTable" type="text" maxlength="60" placeholder="Example: G7 or X4"></label>
+          </div>
+          <label class="report-field full"><span>WHAT MAKES YOU BELIEVE THIS IS AI?</span><textarea id="reportAiDetails" name="aiDetails" maxlength="2000" placeholder="Describe the artwork/products, signs you noticed, marketing language, or other useful details."></textarea></label>
+        </section>
+
+        <section class="paper-panel report-form-section">
+          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH PHOTOS</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
+          <p class="report-photo-note">You may attach up to 3 images. Photos are especially useful for venue problems and AI-policy reports. <b>Do not photograph a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
+          <input id="reportImages" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif" multiple>
+          <label class="report-file-picker" for="reportImages"><span>＋</span><strong>ADD PHOTO EVIDENCE</strong><small>JPG, PNG, WEBP, GIF, HEIC • max 3 files</small></label>
+          <div id="reportImagePreview" class="report-image-preview"></div>
+        </section>
+
+        <section class="paper-panel report-form-section">
+          <div class="section-heading"><div><span class="section-kicker">STEP 3</span><h2>HOW SHOULD WE RECEIVE THIS?</h2></div></div>
+          <div class="report-identity-options">
+            <label class="report-identity-card"><input type="radio" name="reportIdentity" value="anonymous" checked><span><b>REPORT ANONYMOUSLY</b><small>No name, phone, or email is required. A random app Device ID is used only for technical operation and abuse prevention.</small></span></label>
+            <label class="report-identity-card"><input type="radio" name="reportIdentity" value="identified"><span><b>PROVIDE CONTACT INFORMATION</b><small>Let staff contact you if follow-up is needed.</small></span></label>
+          </div>
+
+          <div id="reportContactFields" class="report-contact-fields hidden">
+            <button id="reportUseRegistration" class="report-use-registration hidden" type="button">USE MY REGISTERED APP PROFILE</button>
+            <div class="report-field-grid">
+              <label class="report-field"><span>NAME</span><input id="reportName" name="reporterName" type="text" maxlength="160" autocomplete="name"></label>
+              <label class="report-field"><span>PHONE</span><input id="reportPhone" name="reporterPhone" type="tel" maxlength="80" autocomplete="tel"></label>
+              <label class="report-field full"><span>EMAIL</span><input id="reportEmail" name="reporterEmail" type="email" maxlength="200" autocomplete="email"></label>
+            </div>
+            <p class="report-privacy-copy">Contact information is sent to authorized convention staff for this report and is not displayed publicly.</p>
+          </div>
+        </section>
+
+        <section class="report-submit-panel">
+          <div>
+            <strong>READY TO SEND?</strong>
+            <p>For serious emergencies, immediate danger, or urgent medical issues, alert the Front Admissions / Staff Area immediately and call 911 when appropriate.</p>
+          </div>
+          <button id="submitAttendeeReport" type="submit"><span>!</span><b>SEND REPORT TO CONVENTION STAFF</b></button>
+          <p id="reportSubmitStatus" class="report-submit-status" aria-live="polite"></p>
+        </section>
+      </form>
+
+      <section id="reportSuccessPanel" class="report-success-panel hidden" aria-live="polite">
+        <span class="report-success-icon">✓</span>
+        <h2>REPORT SENT</h2>
+        <p>Your report was sent to Sci-Fi Valley Con staff. Staff will do their best to review it as soon as possible.</p>
+        <strong id="reportSuccessId">REPORT ID</strong>
+        <p>Keep this ID if you need to reference the submission with staff.</p>
+        <button id="reportAnotherButton" type="button">SUBMIT ANOTHER REPORT</button>
+      </section>
+    </section>
+
     <section id="more" class="screen">
       <div class="page-title poster-title">
         <p class="kicker">THE WHOLE PROGRAM</p>
@@ -516,6 +657,12 @@
       <button class="settings-menu-card directions-menu-card" data-go="directions">
         <span class="settings-menu-icon directions-menu-icon">➜</span>
         <span><strong>VENUE & DRIVING DIRECTIONS</strong><small>Convention Center, shuttle pickup & navigation</small></span>
+        <b>›</b>
+      </button>
+
+      <button class="settings-menu-card reporter-menu-card" data-go="report">
+        <span class="settings-menu-icon reporter-menu-icon">!</span>
+        <span><strong>ATTENDEE REPORTER</strong><small>Safety, venue issues, staff assistance, harassment, medical concerns & AI-policy reports</small></span>
         <b>›</b>
       </button>
 
@@ -1188,6 +1335,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.53"></script>
+  <script src="app.js?v=4.54"></script>
 </body>
 </html>

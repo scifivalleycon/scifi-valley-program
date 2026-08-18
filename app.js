@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.53";
+const APP_BUILD_VERSION="4.54";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2793,6 +2793,7 @@ function renderAppRegistration(){
   if(menu)menu.textContent=registered?`Registered to ${profile.name}`:"Add your name, pronouns and contact information";
   const utilitySummary=document.getElementById("utilityRegistrationSummary");
   if(utilitySummary)utilitySummary.textContent=registered?`Registered to ${profile.name}`:"Add your attendee profile";
+  refreshReporterRegistrationButton?.();
   if(saveButton)saveButton.textContent=registered?"UPDATE REGISTRATION":"REGISTER THIS APP";
   removeButton?.classList.toggle("hidden",!registered);
 
@@ -3552,6 +3553,214 @@ function initializeDirections(){
   document.getElementById("directionsClearOrigin")?.addEventListener("click",clearDirectionsOrigin);
   document.getElementById("directionsOrigin")?.addEventListener("input",()=>{currentDirectionsCoordinates="";setDirectionsLocationStatus("","");});
   document.getElementById("openDrivingDirections")?.addEventListener("click",openSelectedDrivingDirections);
+}
+
+/* =========================================================
+   V4.54 — ATTENDEE REPORTER / SEE SOMETHING, SAY SOMETHING
+   ========================================================= */
+
+const REPORTER_MAX_FILES=3;
+const REPORTER_MAX_FILE_BYTES=5*1024*1024;
+let reporterUploadsEnabled=true;
+
+const REPORT_CATEGORY_INFO={
+  venue:{label:"Venue / Facility Concern",guidance:"Use this for restroom supplies, spills, damaged fixtures, temperature, cleanliness, accessibility, or other venue concerns."},
+  staff:{label:"Staff Assistance Needed",guidance:"Tell us where you are and what type of convention staff assistance you need."},
+  security:{label:"Security / Safety Concern",guidance:"For immediate danger, call 911 when appropriate and alert the Front Admissions / Staff Area. This report also alerts authorized admin users."},
+  harassment:{label:"Harassment / Sexual Misconduct",guidance:"Your safety matters. Move to a safe/public area if possible and alert on-site staff immediately when you need direct assistance."},
+  medical:{label:"Medical Concern",guidance:"Do not wait for an app response when urgent medical help is needed. Call 911 when appropriate and alert the Front Admissions / Staff Area immediately."},
+  ai:{label:"Vendor AI-Policy Violation",guidance:"Tell us which vendor or artist is involved, the table/booth number if known, and attach clear product/display photos when safe to do so."},
+  accessibility:{label:"Accessibility Concern",guidance:"Tell us the location and what access or accommodation problem you encountered."},
+  other:{label:"Other Concern",guidance:"Describe the issue and include the location or people involved when that information is useful."}
+};
+
+function selectedReportCategory(){
+  return document.querySelector('input[name="reportCategory"]:checked')?.value||"";
+}
+
+function updateReporterCategoryUi(){
+  const category=selectedReportCategory();
+  const info=REPORT_CATEGORY_INFO[category];
+  const guidance=document.getElementById("reportCategoryGuidance");
+  if(guidance)guidance.textContent=info?.guidance||"Select the option that best matches what you need to report.";
+
+  const ai=category==="ai";
+  document.getElementById("reportAiPolicyPanel")?.classList.toggle("hidden",!ai);
+  document.getElementById("reportVendorFields")?.classList.toggle("hidden",!ai);
+}
+
+function updateReporterIdentityUi(){
+  const identified=document.querySelector('input[name="reportIdentity"]:checked')?.value==="identified";
+  document.getElementById("reportContactFields")?.classList.toggle("hidden",!identified);
+}
+
+function reporterRegisteredProfile(){
+  try{return loadAppRegistration?.()||null}catch{return null}
+}
+
+function refreshReporterRegistrationButton(){
+  const profile=reporterRegisteredProfile();
+  const button=document.getElementById("reportUseRegistration");
+  if(button)button.classList.toggle("hidden",!(profile?.name||profile?.email||profile?.phone));
+}
+
+function useRegisteredReporterProfile(){
+  const profile=reporterRegisteredProfile();
+  if(!profile)return;
+  const name=document.getElementById("reportName");
+  const phone=document.getElementById("reportPhone");
+  const email=document.getElementById("reportEmail");
+  if(name)name.value=profile.name||"";
+  if(phone)phone.value=profile.phone||"";
+  if(email)email.value=profile.email||"";
+}
+
+function reporterFiles(){
+  return [...(document.getElementById("reportImages")?.files||[])];
+}
+
+function renderReporterFilePreview(){
+  const host=document.getElementById("reportImagePreview");
+  if(!host)return;
+  const files=reporterFiles();
+  host.innerHTML=files.map((file,index)=>`<article class="report-image-chip"><span>${index+1}</span><div><b>${escapeAppHtml(file.name)}</b><small>${Math.max(.1,file.size/1024/1024).toFixed(1)} MB</small></div></article>`).join("");
+}
+
+function validateReporterFiles(){
+  const files=reporterFiles();
+  if(files.length>REPORTER_MAX_FILES)throw new Error(`Please attach no more than ${REPORTER_MAX_FILES} images.`);
+  for(const file of files){
+    if(file.size>REPORTER_MAX_FILE_BYTES)throw new Error(`${file.name} is larger than 5 MB.`);
+    if(!/^image\//i.test(file.type||""))throw new Error(`${file.name} is not a supported image file.`);
+  }
+  if(files.length&&!reporterUploadsEnabled)throw new Error("Photo uploads are temporarily unavailable. You can still submit the report without photos.");
+  return files;
+}
+
+async function loadReporterConfig(){
+  const badge=document.getElementById("reportUploadAvailability");
+  const input=document.getElementById("reportImages");
+  try{
+    const base=pushApiBase();
+    const response=await fetch(`${base}/v1/reports/config`,{cache:"no-store",credentials:"omit"});
+    const result=await response.json().catch(()=>({}));
+    reporterUploadsEnabled=result.uploadsEnabled!==false;
+  }catch{
+    reporterUploadsEnabled=true;
+  }
+  if(badge){
+    badge.textContent=reporterUploadsEnabled?"PHOTO UPLOADS ON":"TEXT REPORTS ONLY";
+    badge.classList.toggle("warning",!reporterUploadsEnabled);
+  }
+  if(input)input.disabled=!reporterUploadsEnabled;
+}
+
+function resetAttendeeReporter(){
+  document.getElementById("attendeeReportForm")?.reset();
+  document.getElementById("attendeeReportForm")?.classList.remove("hidden");
+  document.getElementById("reportSuccessPanel")?.classList.add("hidden");
+  document.getElementById("reportImagePreview").innerHTML="";
+  document.getElementById("reportDescriptionCount").textContent="0";
+  document.getElementById("reportSubmitStatus").textContent="";
+  updateReporterCategoryUi();
+  updateReporterIdentityUi();
+  refreshReporterRegistrationButton();
+}
+
+async function submitAttendeeReport(event){
+  event.preventDefault();
+  const form=event.currentTarget;
+  const button=document.getElementById("submitAttendeeReport");
+  const status=document.getElementById("reportSubmitStatus");
+  const category=selectedReportCategory();
+  if(!category){
+    status.textContent="Choose what type of issue you are reporting.";
+    status.className="report-submit-status error";
+    return;
+  }
+
+  let files=[];
+  try{files=validateReporterFiles()}catch(err){
+    status.textContent=err.message;
+    status.className="report-submit-status error";
+    return;
+  }
+
+  const description=String(document.getElementById("reportDescription")?.value||"").trim();
+  if(!description){
+    status.textContent="Please describe what happened.";
+    status.className="report-submit-status error";
+    return;
+  }
+
+  const identified=document.querySelector('input[name="reportIdentity"]:checked')?.value==="identified";
+  const payload={
+    deviceId:getAnonymousDeviceId(),
+    appVersion:APP_BUILD_VERSION,
+    category,
+    happeningNow:Boolean(document.getElementById("reportHappeningNow")?.checked),
+    location:String(document.getElementById("reportLocation")?.value||"").trim(),
+    description,
+    vendorName:category==="ai"?String(document.getElementById("reportVendorName")?.value||"").trim():"",
+    vendorTable:category==="ai"?String(document.getElementById("reportVendorTable")?.value||"").trim():"",
+    aiDetails:category==="ai"?String(document.getElementById("reportAiDetails")?.value||"").trim():"",
+    reporterMode:identified?"identified":"anonymous",
+    reporterName:identified?String(document.getElementById("reportName")?.value||"").trim():"",
+    reporterPhone:identified?String(document.getElementById("reportPhone")?.value||"").trim():"",
+    reporterEmail:identified?String(document.getElementById("reportEmail")?.value||"").trim():"",
+    timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
+  };
+
+  const data=new FormData();
+  data.append("report",JSON.stringify(payload));
+  files.forEach(file=>data.append("images",file,file.name));
+
+  if(button){button.disabled=true;button.innerHTML='<span>…</span><b>SENDING REPORT…</b>'}
+  status.textContent="Sending your report securely to convention staff…";
+  status.className="report-submit-status";
+
+  try{
+    const base=pushApiBase();
+    const response=await fetch(`${base}/v1/reports`,{method:"POST",body:data,credentials:"omit"});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||`Report service returned ${response.status}.`);
+
+    form.classList.add("hidden");
+    const success=document.getElementById("reportSuccessPanel");
+    success?.classList.remove("hidden");
+    const id=document.getElementById("reportSuccessId");
+    if(id)id.textContent=result.reportId||"REPORT RECEIVED";
+    success?.scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(err){
+    status.textContent=`Could not send report: ${err.message}`;
+    status.className="report-submit-status error";
+  }finally{
+    if(button){button.disabled=false;button.innerHTML='<span>!</span><b>SEND REPORT TO CONVENTION STAFF</b>'}
+  }
+}
+
+function initializeAttendeeReporter(){
+  document.querySelectorAll('input[name="reportCategory"]').forEach(input=>input.addEventListener("change",updateReporterCategoryUi));
+  document.querySelectorAll('input[name="reportIdentity"]').forEach(input=>input.addEventListener("change",updateReporterIdentityUi));
+  document.getElementById("reportUseRegistration")?.addEventListener("click",useRegisteredReporterProfile);
+  document.getElementById("reportImages")?.addEventListener("change",()=>{
+    try{validateReporterFiles();renderReporterFilePreview()}catch(err){
+      const status=document.getElementById("reportSubmitStatus");
+      if(status){status.textContent=err.message;status.className="report-submit-status error"}
+      document.getElementById("reportImages").value="";
+      renderReporterFilePreview();
+    }
+  });
+  document.getElementById("reportDescription")?.addEventListener("input",event=>{
+    const counter=document.getElementById("reportDescriptionCount");
+    if(counter)counter.textContent=String(event.target.value.length);
+  });
+  document.getElementById("attendeeReportForm")?.addEventListener("submit",submitAttendeeReport);
+  document.getElementById("reportAnotherButton")?.addEventListener("click",resetAttendeeReporter);
+  refreshReporterRegistrationButton();
+  updateReporterCategoryUi();
+  updateReporterIdentityUi();
+  loadReporterConfig();
 }
 
 /* Interactive vector floor plan — V4.2 */
@@ -4425,6 +4634,7 @@ initializeRecentAlerts();
 initializeEventCountdown();
 initializeProgramTools();
 initializeDirections();
+initializeAttendeeReporter();
 
 loadData().then(()=>{
   startVisibleAppRefresh();
