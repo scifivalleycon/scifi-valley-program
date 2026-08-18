@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.69-imdb-external-link-restore",
-  "generatedAt": "2026-08-18T19:05:00Z",
-  "notes": "Removes the unreliable embedded IMDb iframe viewer and restores celebrity IMDb buttons to open the official IMDb profile externally while preserving all V4.67 and earlier features."
+  "version": "program-v4.70-in-app-back-button",
+  "generatedAt": "2026-08-18T19:16:00Z",
+  "notes": "Adds a compact upper-right in-app Back button that returns to the previously viewed app screen and restores that screen's prior scroll position."
 }

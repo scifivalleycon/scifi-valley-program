@@ -5536,3 +5536,70 @@ body.sfvc-text-xxl .lost-found-form .report-file-picker>span:first-child{font-si
 }
 
 
+
+
+/* =========================================================
+   V4.70 — COMPACT TOP-BAR BACK BUTTON
+   ========================================================= */
+
+.topbar-actions{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+  margin-left:auto;
+}
+
+.app-back-button{
+  width:36px;
+  height:36px;
+  flex:0 0 36px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:2px solid var(--cream);
+  border-radius:50%;
+  background:var(--mustard);
+  color:var(--ink);
+  font-family:Arial,sans-serif;
+  font-size:23px!important;
+  font-weight:900;
+  line-height:1!important;
+  box-shadow:2px 3px 0 rgba(0,0,0,.20);
+}
+
+.app-back-button:active{
+  transform:translateY(1px);
+  box-shadow:1px 1px 0 rgba(0,0,0,.20);
+}
+
+.app-back-button:focus-visible{
+  outline:3px solid var(--aqua);
+  outline-offset:2px;
+}
+
+.app-back-button[hidden]{
+  display:none!important;
+}
+
+body.sfvc-text-enlarged .app-back-button{
+  align-content:center!important;
+  justify-content:center!important;
+  padding:0!important;
+  font-size:23px!important;
+  line-height:1!important;
+}
+
+@media(max-width:520px){
+  .topbar{
+    column-gap:7px;
+  }
+  .topbar .brand-button{
+    flex:1 1 auto;
+    max-width:none;
+  }
+  .topbar-actions{
+    flex:0 0 auto;
+  }
+}

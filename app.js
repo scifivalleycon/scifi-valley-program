@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.69";
+const APP_BUILD_VERSION="4.70";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -269,24 +269,80 @@ const PHOTO_SHOP = "https://checkout.conventions.leapevent.tech/eh/2026_October_
 const screens = [...document.querySelectorAll(".screen")];
 const navButtons = [...document.querySelectorAll(".nav-button")];
 
-function goTo(screenId){
+/* =========================================================
+   V4.70 — IN-APP BACK BUTTON / SCREEN HISTORY
+   ========================================================= */
+
+const APP_SCREEN_HISTORY_LIMIT=40;
+const appScreenHistory=[];
+
+function activeScreenId(){
+  return document.querySelector(".screen.active")?.id||"home";
+}
+
+function updateAppBackButton(){
+  const button=document.getElementById("appBackButton");
+  if(!button)return;
+  const canGoBack=appScreenHistory.length>0;
+  button.hidden=!canGoBack;
+  button.disabled=!canGoBack;
+  button.setAttribute("aria-disabled",String(!canGoBack));
+}
+
+function goTo(screenId,{recordHistory=true,restoreScrollY=null}={}){
+  if(!screenId||!document.getElementById(screenId))return;
+
+  const currentId=activeScreenId();
+  const changingScreens=currentId!==screenId;
+
+  if(changingScreens&&recordHistory){
+    appScreenHistory.push({
+      screenId:currentId,
+      scrollY:Math.max(0,window.scrollY||0)
+    });
+    if(appScreenHistory.length>APP_SCREEN_HISTORY_LIMIT){
+      appScreenHistory.splice(0,appScreenHistory.length-APP_SCREEN_HISTORY_LIMIT);
+    }
+  }
+
   screens.forEach(s=>s.classList.toggle("active",s.id===screenId));
   navButtons.forEach(b=>b.classList.toggle("active",b.dataset.screen===screenId));
-  window.scrollTo({top:0,behavior:"smooth"});
+
+  if(Number.isFinite(restoreScrollY)){
+    window.scrollTo({top:Math.max(0,restoreScrollY),behavior:"auto"});
+  }else{
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
 
   // Hidden screens have no measurable width. Fit the destination title after
   // it becomes visible so enlarged words use the full available header line.
   requestAnimationFrame(()=>{
     const destination=document.getElementById(screenId);
     fitProgramPageHeadings(destination||document);
+    if(Number.isFinite(restoreScrollY)){
+      window.scrollTo({top:Math.max(0,restoreScrollY),behavior:"auto"});
+    }
   });
   if(screenId==="lost-found"){
     prefillLostFoundContact();
     loadReporterConfig().catch(()=>{});
   }
+  updateAppBackButton();
 }
+
+function goBackInApp(){
+  const previous=appScreenHistory.pop();
+  if(!previous){
+    updateAppBackButton();
+    return;
+  }
+  goTo(previous.screenId,{recordHistory:false,restoreScrollY:previous.scrollY});
+}
+
 navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
+document.getElementById("appBackButton")?.addEventListener("click",goBackInApp);
+updateAppBackButton();
 
 
 /* =========================================================
