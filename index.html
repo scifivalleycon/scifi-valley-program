@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.61">
+  <link rel="stylesheet" href="styles.css?v=4.62">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -125,7 +125,7 @@
   </header>
 
   <aside id="pushOptInBanner" class="push-optin-banner hidden" aria-live="polite">
-    <div class="push-optin-icon" aria-hidden="true">🔔</div>
+    <div class="push-optin-icon" data-font-scale="locked" aria-hidden="true">🔔</div>
     <div class="push-optin-copy">
       <span class="push-optin-kicker">STAY UPDATED</span>
       <strong>ENABLE EVENT ALERTS</strong>
@@ -211,7 +211,7 @@
         </button>
 
         <button class="home-directions-button home-directions-primary" type="button" data-go="directions">
-          <span>➜</span>
+          <span data-font-scale="locked" aria-hidden="true">➜</span>
           <strong>GET DRIVING DIRECTIONS</strong>
           <small>Venue & shuttle pickup</small>
         </button>
@@ -279,7 +279,7 @@
       <section id="recentAlertsPanel" class="paper-panel recent-alerts-panel hidden" aria-labelledby="recentAlertsHeading">
         <div class="section-heading">
           <div class="section-title-group">
-            <span class="alert-feed-bell" aria-hidden="true">🔔</span>
+            <span class="alert-feed-bell" data-font-scale="locked" aria-hidden="true">🔔</span>
             <div>
               <span class="section-kicker">RECENT EVENT ALERTS</span>
               <h2 id="recentAlertsHeading">LATEST UPDATES</h2>
@@ -467,7 +467,7 @@
       <section class="paper-panel directions-start-panel">
         <div class="section-heading">
           <div><span class="section-kicker">WHERE ARE YOU STARTING?</span><h2>YOUR STARTING LOCATION</h2></div>
-          <span class="directions-compass">⌖</span>
+          <span class="directions-compass" data-font-scale="locked" aria-hidden="true">⌖</span>
         </div>
         <p class="directions-help">Enter an address, use your phone's current location, or leave this blank and Google Maps can use your current device location when available.</p>
         <label class="directions-origin-field">
@@ -487,7 +487,7 @@
       </div>
 
       <section id="venueDirectionsCard" class="directions-destination-card venue selected" data-directions-destination="venue">
-        <div class="directions-card-badge">★</div>
+        <div class="directions-card-badge" data-font-scale="locked" aria-hidden="true">★</div>
         <div class="directions-card-copy">
           <small>MAIN EVENT VENUE</small>
           <h3 id="directionsVenueName">Blair County Convention Center</h3>
@@ -498,7 +498,7 @@
       </section>
 
       <section id="shuttleDirectionsCard" class="directions-destination-card shuttle hidden" data-directions-destination="shuttle">
-        <div class="directions-card-badge">BUS</div>
+        <div class="directions-card-badge" data-font-scale="locked" aria-hidden="true">BUS</div>
         <div class="directions-card-copy">
           <small>FREE SHUTTLE / PARK & RIDE</small>
           <h3 id="directionsShuttleName">Shuttle Pickup</h3>
@@ -649,31 +649,31 @@
       </div>
 
       <button class="settings-menu-card" data-go="celebrity">
-        <span class="settings-menu-icon">★</span>
+        <span class="settings-menu-icon" data-font-scale="locked" aria-hidden="true">★</span>
         <span><strong>CELEBRITY GUIDE</strong><small>Prices, photo ops, autographs & panels</small></span>
         <b>›</b>
       </button>
 
       <button class="settings-menu-card directions-menu-card" data-go="directions">
-        <span class="settings-menu-icon directions-menu-icon">➜</span>
+        <span class="settings-menu-icon directions-menu-icon" data-font-scale="locked" aria-hidden="true">➜</span>
         <span><strong>VENUE & DRIVING DIRECTIONS</strong><small>Convention Center, shuttle pickup & navigation</small></span>
         <b>›</b>
       </button>
 
       <button class="settings-menu-card reporter-menu-card" data-go="report">
-        <span class="settings-menu-icon reporter-menu-icon">!</span>
+        <span class="settings-menu-icon reporter-menu-icon" data-font-scale="locked" aria-hidden="true">!</span>
         <span><strong>ATTENDEE REPORTER</strong><small>Safety, venue issues, staff assistance, harassment, medical concerns & AI-policy reports</small></span>
         <b>›</b>
       </button>
 
       <button class="settings-menu-card" data-go="settings">
-        <span class="settings-menu-icon">🔔</span>
+        <span class="settings-menu-icon" data-font-scale="locked" aria-hidden="true">🔔</span>
         <span><strong>NOTIFICATION SETTINGS</strong><small>Schedule reminders & notification permissions</small></span>
         <b>›</b>
       </button>
 
       <button class="settings-menu-card registration-menu-card" data-go="registration">
-        <span class="settings-menu-icon registration-menu-icon">ID</span>
+        <span class="settings-menu-icon registration-menu-icon" data-font-scale="locked" aria-hidden="true">ID</span>
         <span>
           <strong>REGISTER THIS APP</strong>
           <small id="registrationMenuSummary">Add your name, pronouns and contact information</small>
@@ -683,13 +683,13 @@
 
 
       <button class="settings-menu-card tshirt-menu-card" data-go="tshirts">
-        <span class="settings-menu-icon tshirt-menu-icon">T</span>
+        <span class="settings-menu-icon tshirt-menu-icon" data-font-scale="locked" aria-hidden="true">T</span>
         <span><strong>OFFICIAL T-SHIRTS</strong><small>Browse the complete Sci-Fi Valley Con shirt collection</small></span>
         <b>›</b>
       </button>
 
       <button class="settings-menu-card faq-menu-card" data-go="faq">
-        <span class="settings-menu-icon faq-menu-icon">?</span>
+        <span class="settings-menu-icon faq-menu-icon" data-font-scale="locked" aria-hidden="true">?</span>
         <span><strong>FREQUENTLY ASKED QUESTIONS</strong><small>Tickets, venue, guests, policies, safety & more</small></span>
         <b>›</b>
       </button>
@@ -700,7 +700,7 @@
             <span class="section-kicker">STAY CONNECTED</span>
             <h2>FOLLOW SCI-FI VALLEY CON</h2>
           </div>
-          <span class="social-heading-mark">@</span>
+          <span class="social-heading-mark" data-font-scale="locked" aria-hidden="true">@</span>
         </div>
         <div id="socialLinksGrid" class="social-links-grid">
           <div class="muted-empty social-empty">Loading social media links…</div>
@@ -713,11 +713,11 @@
             <span class="section-kicker">DON'T MISS AN ANNOUNCEMENT</span>
             <h2>JOIN THE NEWSLETTER</h2>
           </div>
-          <span class="newsletter-badge">✉</span>
+          <span class="newsletter-badge" data-font-scale="locked" aria-hidden="true">✉</span>
         </div>
         <p class="newsletter-copy">Sign up for Sci-Fi Valley Con email updates, postcard reminders and text alerts.</p>
         <button id="openNewsletterSignup" class="newsletter-open-button" type="button">
-          <span>✉</span>
+          <span data-font-scale="locked" aria-hidden="true">✉</span>
           <span><strong>OPEN NEWSLETTER SIGN-UP</strong><small>Complete the official Sci-Fi Valley Con signup form inside the app.</small></span>
           <b>›</b>
         </button>
@@ -1257,7 +1257,7 @@
   <dialog id="pushPromptModal" class="push-prompt-modal">
     <div class="push-prompt-card">
       <button id="closePushPromptModal" class="push-prompt-close" type="button" data-font-scale="locked" aria-label="Close notification prompt">×</button>
-      <div class="push-prompt-bell" aria-hidden="true">🔔</div>
+      <div class="push-prompt-bell" data-font-scale="locked" aria-hidden="true">🔔</div>
       <span class="push-optin-kicker">DON'T MISS AN UPDATE</span>
       <h2>ENABLE EVENT ALERTS</h2>
       <p id="pushPromptCopy">Get important Sci-Fi Valley Con notifications for schedule changes, room updates, delays, cancellations, and other convention announcements.</p>
@@ -1335,6 +1335,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.61"></script>
+  <script src="app.js?v=4.62"></script>
 </body>
 </html>

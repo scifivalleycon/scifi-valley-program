@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.61-icon-tools-scroll-stability",
-  "generatedAt": "2026-08-18T17:08:00Z",
-  "notes": "Locks fixed-size icon controls at their designed size, caps the Program Tools tab at 175%, and stabilizes enlarged overlay scrolling to reduce iPhone bounce and scroll chaining."
+  "version": "program-v4.62-global-fixed-symbol-alignment",
+  "generatedAt": "2026-08-18T17:22:00Z",
+  "notes": "Audits and locks fixed-size icon, badge, arrow and chevron glyphs so 175-200% accessibility text scaling cannot enlarge or misalign them inside their containers."
 }

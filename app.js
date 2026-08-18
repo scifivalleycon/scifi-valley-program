@@ -307,6 +307,7 @@ function elementHasDirectText(element){
 
 const PROGRAM_TEXT_LOCKED_SELECTOR='[data-font-scale="locked"],.hero-logo';
 const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
+  /* Core icon-only controls */
   '.camera-badge',
   '.quick-icon',
   '.nav-button>span',
@@ -320,15 +321,44 @@ const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
   '.install-card-dismiss',
   '.favorite',
   '.map-tool-button:not(.wide)',
+
+  /* Fixed-size decorative/icon badges. These are visual controls, not reading copy. */
+  '.map-badge',
+  '.map-directory-location',
+  '.guest-placeholder',
+  '.modal-photo-placeholder',
+  '.tshirt-placeholder',
+  '.schedule-check-box',
   '.push-optin-icon',
+  '.push-prompt-bell',
+  '.alert-feed-bell',
+  '.social-heading-mark',
+  '.featured-events-badge',
+  '.newsletter-badge',
+  '.tshirt-heading-icon',
+  '.newsletter-open-button>span:first-child',
+  '.tshirt-live-badge',
+  '.recent-alert-dismiss',
+  '.faq-number',
+  '.faq-chevron',
+  '.registration-status-badge',
+  '.conquest-info-steps article>b',
+  '.directions-compass',
+  '.directions-card-badge',
+  '.open-driving-directions>span:first-child',
+  '.report-ai-badge',
+  '.report-image-chip>span',
+  '#submitAttendeeReport>span',
+
+  /* Existing dedicated icon classes */
   '.utility-share-icon',
   '.event-quick-icon',
   '.purchase-quick-icon',
   '.home-reporter-icon',
+  '.settings-menu-icon',
   '.directions-menu-icon',
   '.faq-menu-icon',
   '.registration-menu-icon',
-  '.settings-menu-icon',
   '.tshirt-menu-icon',
   '.reporter-menu-icon',
   '.report-category-icon',
@@ -336,7 +366,20 @@ const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
   '.report-success-icon',
   '.event-modal-icon',
   '.social-link-icon',
-  '.utility-report-button>span:first-child'
+  '.utility-report-button>span:first-child',
+
+  /* Standalone arrows / chevrons should not grow like readable copy. */
+  '.home-directions-button>span:first-child',
+  '.photo-cta>b',
+  '.purchase-quick-card>b',
+  '.home-reporter-card>b',
+  '.settings-menu-card>b',
+  '.settings-link>b',
+  '.settings-row>b',
+  '.event-quick-arrow',
+  '.social-link-card>b',
+  '.newsletter-open-button>b',
+  '.open-driving-directions>b'
 ].join(',');
 
 function fontScaleLocked(element){

@@ -4897,3 +4897,256 @@ body.sfvc-text-enlarged #guestModalContent{
   overflow-anchor:none;
   scroll-behavior:auto!important;
 }
+
+
+/* =========================================================
+   V4.62 — GLOBAL FIXED-SYMBOL ALIGNMENT / TEXT-SCALE HARDENING
+   ========================================================= */
+
+/*
+  Accessibility text scaling should enlarge readable copy, not the glyph inside
+  a fixed 24–68px icon/badge. V4.62 audits the remaining fixed symbol containers
+  across the app and gives them a stable line box at every text-size setting.
+*/
+.directions-compass,
+.newsletter-badge,
+.social-heading-mark,
+.push-prompt-bell,
+.alert-feed-bell,
+.featured-events-badge,
+.tshirt-heading-icon,
+.newsletter-open-button>span:first-child,
+.tshirt-live-badge,
+.recent-alert-dismiss,
+.faq-number,
+.faq-chevron,
+.registration-status-badge,
+.schedule-check-box,
+.directions-card-badge,
+.open-driving-directions>span:first-child,
+.report-ai-badge,
+.report-image-chip>span,
+.conquest-info-steps article>b,
+.map-badge{
+  box-sizing:border-box;
+  line-height:1!important;
+  text-align:center;
+  align-content:center;
+  justify-content:center;
+}
+
+/* The three symbols reported at 200% keep their original designed size. */
+.directions-compass{
+  width:38px!important;
+  height:38px!important;
+  flex:0 0 38px;
+  padding:0!important;
+  font-size:18px!important;
+}
+
+.newsletter-badge{
+  width:38px!important;
+  height:38px!important;
+  flex:0 0 38px;
+  padding:0!important;
+  font-size:18px!important;
+}
+
+.social-heading-mark{
+  width:34px!important;
+  height:34px!important;
+  flex:0 0 34px;
+  padding:0!important;
+  font-size:18px!important;
+}
+
+/* Other fixed-size symbols found in the same audit. */
+.push-prompt-bell{
+  width:68px!important;
+  height:68px!important;
+  font-size:32px!important;
+}
+.alert-feed-bell,
+.featured-events-badge,
+.tshirt-heading-icon,
+.tshirt-live-badge{
+  width:38px!important;
+  height:38px!important;
+  flex:0 0 38px;
+}
+.alert-feed-bell,
+.featured-events-badge,
+.tshirt-live-badge{
+  font-size:18px!important;
+}
+.tshirt-heading-icon{
+  font-size:16px!important;
+}
+
+.newsletter-open-button>span:first-child{
+  width:34px!important;
+  height:34px!important;
+  padding:0!important;
+  font-size:18px!important;
+}
+
+.recent-alert-dismiss{
+  width:25px!important;
+  height:25px!important;
+  padding:0!important;
+  font-size:17px!important;
+}
+.faq-number{
+  width:32px!important;
+  height:32px!important;
+  flex:0 0 32px;
+}
+.faq-chevron{
+  width:22px!important;
+  height:22px!important;
+  flex:0 0 22px;
+  padding:0!important;
+  font-size:15px!important;
+}
+.registration-status-badge{
+  width:48px!important;
+  height:48px!important;
+  flex:0 0 48px;
+}
+.schedule-check-box{
+  width:17px!important;
+  height:17px!important;
+  flex:0 0 17px;
+  padding:0!important;
+  font-size:11px!important;
+}
+.conquest-info-steps article>b{
+  width:29px!important;
+  height:29px!important;
+  padding:0!important;
+  font-size:10px!important;
+}
+.directions-card-badge{
+  width:46px!important;
+  height:46px!important;
+  flex:0 0 46px;
+  padding:0!important;
+  font-size:9px!important;
+}
+.open-driving-directions>span:first-child{
+  width:40px!important;
+  height:40px!important;
+  flex:0 0 40px;
+  padding:0!important;
+  font-size:20px!important;
+}
+.report-ai-badge{
+  width:42px!important;
+  height:42px!important;
+  flex:0 0 42px;
+  padding:0!important;
+  font-size:12px!important;
+}
+.report-image-chip>span{
+  width:24px!important;
+  height:24px!important;
+  flex:0 0 24px;
+  padding:0!important;
+}
+.map-badge{
+  width:58px!important;
+  height:58px!important;
+  flex:0 0 58px;
+  font-size:8px!important;
+}
+
+/*
+  Icon-only arrows and chevrons are also excluded from the global text multiplier.
+  Keep them on a centered one-line box so surrounding copy can grow independently.
+*/
+.home-directions-button>span:first-child,
+.photo-cta>b,
+.purchase-quick-card>b,
+.home-reporter-card>b,
+.settings-menu-card>b,
+.settings-link>b,
+.settings-row>b,
+.event-quick-arrow,
+.social-link-card>b,
+.newsletter-open-button>b,
+.open-driving-directions>b,
+.settings-menu-icon{
+  line-height:1!important;
+}
+
+/* In 175–200% modes, never let the generic enlarged-button rule change the
+   line box or padding of audited icon-only controls. */
+body.sfvc-text-xxl .directions-compass,
+body.sfvc-text-xxl .newsletter-badge,
+body.sfvc-text-xxl .social-heading-mark,
+body.sfvc-text-xxl .push-prompt-bell,
+body.sfvc-text-xxl .alert-feed-bell,
+body.sfvc-text-xxl .featured-events-badge,
+body.sfvc-text-xxl .tshirt-heading-icon,
+body.sfvc-text-xxl .newsletter-open-button>span:first-child,
+body.sfvc-text-xxl .tshirt-live-badge,
+body.sfvc-text-xxl .recent-alert-dismiss,
+body.sfvc-text-xxl .faq-number,
+body.sfvc-text-xxl .faq-chevron,
+body.sfvc-text-xxl .registration-status-badge,
+body.sfvc-text-xxl .schedule-check-box,
+body.sfvc-text-xxl .directions-card-badge,
+body.sfvc-text-xxl .open-driving-directions>span:first-child,
+body.sfvc-text-xxl .report-ai-badge,
+body.sfvc-text-xxl .report-image-chip>span,
+body.sfvc-text-xxl .conquest-info-steps article>b{
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+
+/* Mobile directions cards shrink their badge in the original responsive rule.
+   Preserve that intended geometry while still preventing text scaling. */
+@media(max-width:520px){
+  .directions-card-badge{
+    width:40px!important;
+    height:40px!important;
+    flex-basis:40px;
+  }
+}
+
+
+/* Additional compact UI audit: these elements inherit from scalable parents
+   unless they receive their own fixed visual size. */
+.settings-menu-icon{
+  line-height:1!important;
+}
+.settings-menu-icon:not(.registration-menu-icon):not(.faq-menu-icon):not(.tshirt-menu-icon){
+  font-size:18px!important;
+}
+.faq-menu-icon{
+  font-size:16px!important;
+}
+.tshirt-menu-icon{
+  font-size:16px!important;
+}
+.newsletter-open-button>b{
+  font-size:18px!important;
+  line-height:1!important;
+}
+.report-image-chip>span{
+  font-size:8px!important;
+}
+
+/* Location chips and visual placeholders have fixed artwork geometry. Their
+   internal text is represented elsewhere in readable copy, so keep these
+   visual-only surfaces from blowing out at 175–200%. */
+.map-directory-location{
+  font-size:9px!important;
+  line-height:1!important;
+}
+.guest-placeholder,
+.modal-photo-placeholder,
+.tshirt-placeholder{
+  line-height:1!important;
+}
