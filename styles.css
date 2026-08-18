@@ -4473,8 +4473,7 @@ body.sfvc-text-max .screen th{
    ========================================================= */
 
 /* The accessibility control now scales interface text everywhere, including
-   Program Tools, navigation, modals, form controls and inline map labels.
-   The composed Sci-Fi Valley Con homepage logo is the only intentional lock. */
+   Program Tools, navigation, modals, form controls and inline map labels. */
 
 body.sfvc-text-enlarged .app-utility-drawer,
 body.sfvc-text-enlarged .topbar,
@@ -4545,3 +4544,35 @@ body.sfvc-text-xxl summary{
   white-space:normal!important;
 }
 
+
+
+/* =========================================================
+   V4.56 — LARGE HEADER WORD-FIT / CLEAN WRAPPING
+   ========================================================= */
+
+/* Page poster titles may wrap only at normal word boundaries. The text-size
+   controller fits an oversized long word to the widest size that will fit. */
+.poster-title h1,
+.page-title h1{
+  width:calc(100% - 44px);
+  max-width:none;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  hyphens:none!important;
+  white-space:normal;
+  text-wrap:wrap;
+}
+
+.poster-title h1 span,
+.page-title h1 span{
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  hyphens:none!important;
+}
+
+@media(max-width:420px){
+  .poster-title h1,
+  .page-title h1{
+    width:calc(100% - 36px);
+  }
+}

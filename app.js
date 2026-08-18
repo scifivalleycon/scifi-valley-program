@@ -273,6 +273,13 @@ function goTo(screenId){
   screens.forEach(s=>s.classList.toggle("active",s.id===screenId));
   navButtons.forEach(b=>b.classList.toggle("active",b.dataset.screen===screenId));
   window.scrollTo({top:0,behavior:"smooth"});
+
+  // Hidden screens have no measurable width. Fit the destination title after
+  // it becomes visible so enlarged words use the full available header line.
+  requestAnimationFrame(()=>{
+    const destination=document.getElementById(screenId);
+    fitProgramPageHeadings(destination||document);
+  });
 }
 navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
@@ -357,6 +364,82 @@ function scaleTextTree(root=document.body){
   targets.forEach(scaleTextElement);
 }
 
+/* V4.56 — Keep large poster/page titles readable.
+   At enlarged text settings, a title may wrap between words, but never through
+   the middle of a word. If the longest word would overflow, reduce only that
+   heading to the largest size that lets the word fit the available title row. */
+let programHeadingMeasureNode=null;
+
+function getProgramHeadingMeasureNode(){
+  if(programHeadingMeasureNode?.isConnected)return programHeadingMeasureNode;
+  programHeadingMeasureNode=document.createElement("span");
+  programHeadingMeasureNode.dataset.fontScale="locked";
+  programHeadingMeasureNode.dataset.sfvcHeadingMeasure="true";
+  Object.assign(programHeadingMeasureNode.style,{
+    position:"fixed",
+    left:"-10000px",
+    top:"-10000px",
+    visibility:"hidden",
+    pointerEvents:"none",
+    whiteSpace:"nowrap",
+    padding:"0",
+    margin:"0",
+    border:"0"
+  });
+  document.body.appendChild(programHeadingMeasureNode);
+  return programHeadingMeasureNode;
+}
+
+function fitProgramPageHeading(heading){
+  if(!(heading instanceof HTMLElement)||programTextScale<=1)return;
+  if(fontScaleLocked(heading))return;
+
+  const base=Number(heading.dataset.sfvcBaseFontPx);
+  if(!Number.isFinite(base)||base<=0)return;
+
+  const target=base*programTextScale;
+  heading.style.fontSize=`${Math.round(target*100)/100}px`;
+
+  // Poster title accent spans use the same heading size. Keeping them inherited
+  // prevents a colored word from staying oversized after the heading is fitted.
+  heading.querySelectorAll("span").forEach(span=>{
+    if(span instanceof HTMLElement)span.style.fontSize="inherit";
+  });
+
+  const available=Math.max(0,heading.clientWidth-2);
+  const words=String(heading.textContent||"").trim().split(/\s+/).filter(Boolean);
+  if(!available||!words.length)return;
+
+  const computed=getComputedStyle(heading);
+  const measure=getProgramHeadingMeasureNode();
+  measure.style.fontFamily=computed.fontFamily;
+  measure.style.fontWeight=computed.fontWeight;
+  measure.style.fontStyle=computed.fontStyle;
+  measure.style.fontStretch=computed.fontStretch;
+  measure.style.letterSpacing=computed.letterSpacing;
+  measure.style.textTransform=computed.textTransform;
+  measure.style.fontSize=`${target}px`;
+
+  let widest=0;
+  words.forEach(word=>{
+    measure.textContent=word;
+    widest=Math.max(widest,measure.getBoundingClientRect().width);
+  });
+
+  if(widest>available){
+    const fitted=Math.max(10,target*(available/widest)*0.985);
+    heading.style.fontSize=`${Math.floor(fitted*100)/100}px`;
+  }
+}
+
+function fitProgramPageHeadings(root=document){
+  const selector=".poster-title h1,.page-title h1";
+  const headings=[];
+  if(root instanceof Element&&root.matches(selector))headings.push(root);
+  root.querySelectorAll?.(selector).forEach(heading=>headings.push(heading));
+  headings.forEach(fitProgramPageHeading);
+}
+
 function updateFontSizeControls(){
   const index=PROGRAM_TEXT_SCALES.indexOf(programTextScale);
   const label=document.getElementById("fontSizeLabel");
@@ -386,7 +469,10 @@ function applyProgramTextScale(scale,{persist=true}={}){
   document.body.classList.toggle('sfvc-text-xxl',programTextScale>=1.75);
   document.body.classList.toggle('sfvc-text-max',programTextScale>=2.00);
 
-  if(programTextScale!==1)scaleTextTree(document.body);
+  if(programTextScale!==1){
+    scaleTextTree(document.body);
+    fitProgramPageHeadings(document);
+  }
   if(persist)localStorage.setItem(PROGRAM_TEXT_SCALE_KEY,String(programTextScale));
   updateFontSizeControls();
 }
@@ -404,7 +490,11 @@ function initializeProgramTextScaling(){
   let rescaleQueued=false;
   programTextObserver=new MutationObserver(mutations=>{
     if(programTextScale===1||rescaleQueued)return;
-    const added=mutations.some(mutation=>mutation.addedNodes.length>0);
+    const added=mutations.some(mutation=>{
+      if(!mutation.addedNodes.length)return false;
+      const target=mutation.target instanceof Element?mutation.target:mutation.target?.parentElement;
+      return !target?.closest?.('[data-sfvc-heading-measure="true"]');
+    });
     if(!added)return;
     rescaleQueued=true;
     requestAnimationFrame(()=>{
@@ -413,6 +503,14 @@ function initializeProgramTextScaling(){
     });
   });
   programTextObserver.observe(document.body,{childList:true,subtree:true});
+
+  if(!window.__sfvcProgramHeadingFitResizeBound){
+    window.__sfvcProgramHeadingFitResizeBound=true;
+    window.addEventListener("resize",()=>{
+      if(programTextScale<=1)return;
+      requestAnimationFrame(()=>fitProgramPageHeadings(document));
+    },{passive:true});
+  }
 }
 
 function setUtilityDrawerOpen(open){
