@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.56">
+  <link rel="stylesheet" href="styles.css?v=4.57">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -119,7 +119,7 @@
   <header class="topbar">
     <button class="brand-button" data-go="home" aria-label="Home">
       <img src="assets/icons/app-icon-192.png" alt="">
-      <span><b id="topbarEventName">SCI-FI VALLEY CON</b><small id="topbarEventMeta">OCT 16–18, 2026 • ALTOONA, PA</small></span>
+      <span><b id="topbarEventName" data-font-scale-max="1.30">SCI-FI VALLEY CON</b><small id="topbarEventMeta">OCT 16–18, 2026 • ALTOONA, PA</small></span>
     </button>
     <button id="installButton" class="install-button" hidden>ADD APP</button>
   </header>
@@ -441,8 +441,8 @@
         </details>
 
         <div id="mapViewport" class="map-viewport">
-          <div id="mapSvgHost" class="map-svg-host"><div class="map-loading">Loading vector floor plan…</div></div>
-          <div id="mapVendorPointer" class="map-vendor-pointer hidden" aria-hidden="true">
+          <div id="mapSvgHost" class="map-svg-host" data-font-scale="locked"><div class="map-loading">Loading vector floor plan…</div></div>
+          <div id="mapVendorPointer" class="map-vendor-pointer hidden" data-font-scale="locked" aria-hidden="true">
             <span id="mapVendorPointerLabel">HERE</span>
             <i></i>
           </div>
@@ -1179,7 +1179,7 @@
   <nav class="bottom-nav" aria-label="Main navigation">
     <button class="nav-button active" data-screen="home"><span>⌂</span><small>HOME</small></button>
     <button class="nav-button" data-screen="guests"><span>★</span><small>GUESTS</small></button>
-    <button class="nav-button" data-screen="schedule"><span>▣</span><small>SCHEDULE</small></button>
+    <button class="nav-button" data-screen="schedule"><span>▣</span><small data-font-scale-max="1.75">SCHEDULE</small></button>
     <button class="nav-button" data-screen="map"><span>⌖</span><small>MAP</small></button>
     <button class="nav-button" data-screen="more"><span>☰</span><small>MORE</small></button>
   </nav>
@@ -1335,6 +1335,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.56"></script>
+  <script src="app.js?v=4.57"></script>
 </body>
 </html>

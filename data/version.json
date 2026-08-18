@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.56-large-header-word-fit",
-  "generatedAt": "2026-08-18T14:37:00Z",
-  "notes": "Improves enlarged page-title wrapping so long header words stay intact and fit at the largest available size."
+  "version": "program-v4.57-safe-scaling-exceptions",
+  "generatedAt": "2026-08-18T14:56:00Z",
+  "notes": "Caps bottom Schedule at 175%, caps top-bar event name at 130%, keeps vector map labels unscaled, and stabilizes icon alignment during text enlargement."
 }

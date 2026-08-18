@@ -306,10 +306,38 @@ function elementHasDirectText(element){
 }
 
 const PROGRAM_TEXT_LOCKED_SELECTOR='[data-font-scale="locked"],.hero-logo';
+const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
+  '.camera-badge',
+  '.quick-icon',
+  '.nav-button>span',
+  '.schedule-save',
+  '.remove-schedule',
+  '.modal-close',
+  '.push-optin-icon',
+  '.utility-share-icon',
+  '.event-quick-icon',
+  '.purchase-quick-icon',
+  '.home-reporter-icon',
+  '.directions-menu-icon',
+  '.faq-menu-icon',
+  '.registration-menu-icon',
+  '.settings-menu-icon',
+  '.tshirt-menu-icon',
+  '.reporter-menu-icon',
+  '.report-category-icon',
+  '.report-emergency-icon',
+  '.report-success-icon',
+  '.event-modal-icon',
+  '.social-link-icon',
+  '.utility-report-button>span:first-child'
+].join(',');
 
 function fontScaleLocked(element){
   if(!(element instanceof Element))return true;
-  return Boolean(element.closest(PROGRAM_TEXT_LOCKED_SELECTOR));
+  return Boolean(
+    element.closest(PROGRAM_TEXT_LOCKED_SELECTOR) ||
+    element.closest(PROGRAM_TEXT_ICON_LOCKED_SELECTOR)
+  );
 }
 
 function fontScaleEligible(element){
@@ -355,7 +383,16 @@ function scaleTextElement(element){
   if(!fontScaleEligible(element))return;
   const base=Number(element.dataset.sfvcBaseFontPx);
   if(!Number.isFinite(base)||base<=0)return;
-  element.style.fontSize=`${Math.round(base*programTextScale*100)/100}px`;
+
+  // Some compact interface labels have lower safe ceilings than the global
+  // accessibility setting. data-font-scale-max lets those labels stop growing
+  // while the rest of the app can continue up to the selected percentage.
+  const maxScale=Number(element.dataset.fontScaleMax);
+  const effectiveScale=Number.isFinite(maxScale)&&maxScale>0
+    ? Math.min(programTextScale,maxScale)
+    : programTextScale;
+
+  element.style.fontSize=`${Math.round(base*effectiveScale*100)/100}px`;
 }
 
 function scaleTextTree(root=document.body){

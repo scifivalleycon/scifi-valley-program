@@ -4576,3 +4576,70 @@ body.sfvc-text-xxl summary{
     width:calc(100% - 36px);
   }
 }
+
+
+/* =========================================================
+   V4.57 — SAFE SCALING EXCEPTIONS / ICON ALIGNMENT
+   ========================================================= */
+
+/* Keep the compact top-bar brand on one visual row. Its text-size ceiling is
+   enforced by data-font-scale-max="1.30" in the scaling engine. */
+#topbarEventName{
+  white-space:nowrap;
+}
+
+/* The SCHEDULE label is the widest bottom-navigation word. Its text-size
+   ceiling is enforced by data-font-scale-max="1.75" so 200% mode cannot clip. */
+.bottom-nav .nav-button[data-screen="schedule"] small{
+  white-space:nowrap!important;
+}
+
+/* Floor-plan room/table labels are layout text, not reading copy. The vector
+   map host is font-scale locked in the markup so room boxes keep their original
+   label geometry at every accessibility setting. */
+.map-svg-host text,
+.map-svg-host tspan,
+.map-vendor-pointer,
+.map-vendor-pointer *{
+  line-height:normal!important;
+}
+
+/* Icon glyphs keep their original font size. Center their line boxes explicitly
+   so larger surrounding button text cannot visually push the symbol downward. */
+body.sfvc-text-enlarged .camera-badge,
+body.sfvc-text-enlarged .event-quick-icon,
+body.sfvc-text-enlarged .purchase-quick-icon,
+body.sfvc-text-enlarged .home-reporter-icon,
+body.sfvc-text-enlarged .push-optin-icon,
+body.sfvc-text-enlarged .report-category-icon,
+body.sfvc-text-enlarged .report-emergency-icon,
+body.sfvc-text-enlarged .report-success-icon,
+body.sfvc-text-enlarged .event-modal-icon,
+body.sfvc-text-enlarged .utility-report-button>span:first-child{
+  align-content:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+
+body.sfvc-text-enlarged .nav-button>span,
+body.sfvc-text-enlarged .quick-icon,
+body.sfvc-text-enlarged .schedule-save,
+body.sfvc-text-enlarged .remove-schedule,
+body.sfvc-text-enlarged .modal-close,
+body.sfvc-text-enlarged .utility-share-icon{
+  line-height:1!important;
+}
+
+/* Keep the brand/control relationship stable on narrow phones even when the
+   rest of the top bar is allowed to reflow for enlarged interface text. */
+@media(max-width:520px){
+  .topbar .brand-button{
+    min-width:0;
+    max-width:calc(100% - 116px);
+  }
+  .topbar .brand-button>span{
+    min-width:0;
+  }
+}
