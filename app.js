@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.68";
+const APP_BUILD_VERSION="4.69";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1926,90 +1926,9 @@ function renderFavorites(){
   c.querySelectorAll("[data-home-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.homeGuest)));
 }
 
-/* =========================================================
-   V4.68 — STACKED IN-APP IMDb VIEWER
-   ========================================================= */
-
-let imdbViewerStatusTimer=null;
-
-function ensureImdbViewer(){
-  let modal=document.getElementById("imdbReaderModal");
-  if(modal)return modal;
-
-  modal=document.createElement("dialog");
-  modal.id="imdbReaderModal";
-  modal.className="imdb-reader-modal";
-  modal.setAttribute("aria-labelledby","imdbReaderTitle");
-  modal.innerHTML=`
-    <div class="imdb-reader-shell">
-      <header class="imdb-reader-header">
-        <div>
-          <span class="imdb-reader-kicker">IN-APP IMDb VIEW</span>
-          <h2 id="imdbReaderTitle">IMDb</h2>
-          <p id="imdbReaderStatus">Loading the live IMDb profile…</p>
-        </div>
-        <button id="closeImdbReader" class="imdb-reader-close" type="button" data-font-scale="locked" aria-label="Close IMDb viewer">×</button>
-      </header>
-      <div class="imdb-reader-frame-wrap">
-        <iframe id="imdbReaderFrame" class="imdb-reader-frame" src="about:blank" title="IMDb profile" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-      </div>
-      <footer class="imdb-reader-footer">
-        <span>Live IMDb page shown inside the app when supported by IMDb and your browser.</span>
-        <a id="imdbReaderSourceLink" href="https://www.imdb.com/" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL IMDb ↗</a>
-      </footer>
-    </div>`;
-  document.body.appendChild(modal);
-
-  modal.querySelector("#closeImdbReader")?.addEventListener("click",event=>{
-    event.preventDefault();
-    event.stopPropagation();
-    closeImdbViewer();
-  });
-  modal.addEventListener("click",event=>{
-    if(event.target===modal)closeImdbViewer();
-  });
-  modal.addEventListener("close",()=>{
-    clearTimeout(imdbViewerStatusTimer);
-    const frame=modal.querySelector("#imdbReaderFrame");
-    if(frame)frame.src="about:blank";
-  });
-  return modal;
-}
-
-function closeImdbViewer(){
-  const modal=document.getElementById("imdbReaderModal");
-  if(modal?.open)modal.close();
-}
-
-function openImdbViewer(url,guestName="IMDb"){
-  if(!url)return;
-  const modal=ensureImdbViewer();
-  if(!modal)return;
-  const title=modal.querySelector("#imdbReaderTitle");
-  const status=modal.querySelector("#imdbReaderStatus");
-  const frame=modal.querySelector("#imdbReaderFrame");
-  const source=modal.querySelector("#imdbReaderSourceLink");
-
-  if(title)title.textContent=String(guestName||"IMDb").toUpperCase();
-  if(status)status.textContent="Loading the live IMDb profile…";
-  if(source)source.href=url;
-  if(frame){
-    frame.title=`IMDb profile for ${guestName||"guest"}`;
-    frame.src=url;
-  }
-  if(!modal.open)modal.showModal();
-
-  clearTimeout(imdbViewerStatusTimer);
-  imdbViewerStatusTimer=setTimeout(()=>{
-    if(status && modal.open){
-      status.textContent="Live IMDb view • if the page does not appear below, use OPEN ORIGINAL IMDb.";
-    }
-  },2600);
-}
-
 function openGuest(id){
   const g=state.guests.find(x=>x.id===id); if(!g)return;
-  const external=g.imdb?`<button class="secondary-action imdb-in-app-action" type="button" data-imdb-url="${escapeAppHtml(g.imdb)}" data-imdb-name="${escapeAppHtml(g.name)}">IMDb PAGE ›</button>`:
+  const external=g.imdb?`<a class="secondary-action" href="${g.imdb}" target="_blank" rel="noopener">IMDb PAGE ↗</a>`:
     g.instagram?`<a class="secondary-action" href="${g.instagram}" target="_blank" rel="noopener">INSTAGRAM ↗</a>`:"";
   const photoAction=g.photoShop?`<a class="full-action" href="${g.photoShop}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${g.photoOp?` • ${g.photoOp}`:""} ↗</a>`:
     `<a class="full-action" href="${state.settings.photoShop||PHOTO_SHOP}" target="_blank" rel="noopener">BROWSE CELEBRITY PHOTO OPS ↗</a>`;
@@ -2023,12 +1942,6 @@ function openGuest(id){
       <div class="modal-actions">${external}<a class="primary-action" href="https://scifivalleycon.com/celebrity-guests" target="_blank" rel="noopener">OFFICIAL GUEST PAGE ↗</a>${photoAction}</div>
     </div>`;
   const modal=document.getElementById("guestModal");
-  modal?.querySelector("[data-imdb-url]")?.addEventListener("click",event=>{
-    event.preventDefault();
-    event.stopPropagation();
-    const button=event.currentTarget;
-    openImdbViewer(button.dataset.imdbUrl,button.dataset.imdbName||g.name);
-  });
   if(typeof modal.showModal==="function") modal.showModal(); else modal.setAttribute("open","");
   modal?.classList.add("guest-modal-active");
   requestAnimationFrame(()=>{

@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.68-stacked-in-app-imdb-viewer",
-  "generatedAt": "2026-08-18T18:52:00Z",
-  "notes": "Changes celebrity IMDb links to open a second in-app popup above the guest profile, loading the live IMDb page when embeddable and retaining an Open Original IMDb fallback."
+  "version": "program-v4.69-imdb-external-link-restore",
+  "generatedAt": "2026-08-18T19:05:00Z",
+  "notes": "Removes the unreliable embedded IMDb iframe viewer and restores celebrity IMDb buttons to open the official IMDb profile externally while preserving all V4.67 and earlier features."
 }
