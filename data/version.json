@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.51-extra-large-accessibility-text",
-  "generatedAt": "2026-08-18T01:35:47Z",
-  "notes": "Adds 150%, 175%, and 200% text-size options with adaptive accessibility reflow."
+  "version": "program-v4.52-venue-address-directions-layout",
+  "generatedAt": "2026-08-18T01:40:50Z",
+  "notes": "Home hero shows admin-managed venue street address as a clickable Directions link with the Directions button directly underneath."
 }

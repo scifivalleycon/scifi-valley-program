@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.51";
+const APP_BUILD_VERSION="4.52";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1440,6 +1440,13 @@ function eventLocationText(){
   return [state.settings.venue,[state.settings.city,state.settings.state].filter(Boolean).join(", ")].filter(Boolean).join(" • ");
 }
 
+function homeVenueLocationText(){
+  const cfg=directionsConfig();
+  const venueName=String(cfg.venueName||state.settings.venue||DEFAULT_DIRECTIONS.venueName).trim();
+  const venueAddress=String(cfg.venueAddress||DEFAULT_DIRECTIONS.venueAddress).trim();
+  return [venueName,venueAddress].filter(Boolean).join(" • ");
+}
+
 let eventCountdownTimer=null;
 
 function eventStartDateTime(){
@@ -1547,7 +1554,10 @@ function applyEventSettings(){
   if(guestDates)guestDates.textContent=fullDates;
 
   const heroLocation=document.getElementById("heroEventLocation");
-  if(heroLocation)heroLocation.textContent=eventLocationText();
+  if(heroLocation){
+    heroLocation.textContent=homeVenueLocationText();
+    heroLocation.setAttribute("aria-label",`Open driving directions to ${homeVenueLocationText()}`);
+  }
 
   renderEventCountdown();
 

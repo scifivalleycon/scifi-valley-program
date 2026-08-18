@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-51";
+const CACHE="sfvc-program-v4-52";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",

@@ -4269,3 +4269,65 @@ body.sfvc-text-max .screen th{
     grid-template-columns:1fr!important;
   }
 }
+
+
+/* =========================================================
+   V4.52 — VENUE ADDRESS + DIRECTIONS HOME LAYOUT
+   ========================================================= */
+
+/* The venue and complete street address act as a clean text-style link. */
+.hero-location-link{
+  appearance:none;
+  -webkit-appearance:none;
+  display:block;
+  width:max-content;
+  max-width:calc(100% - 24px);
+  margin:8px auto 0;
+  padding:3px 5px;
+  border:0;
+  border-radius:4px;
+  background:transparent;
+  color:var(--ink);
+  font:inherit;
+  font-family:Georgia,serif;
+  font-weight:800;
+  line-height:1.35;
+  text-align:center;
+  text-decoration:underline;
+  text-decoration-color:rgba(239,110,67,.62);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+
+.hero-location-link:hover,
+.hero-location-link:focus-visible{
+  color:var(--coral2);
+  background:rgba(239,110,67,.07);
+  outline:2px solid rgba(239,110,67,.28);
+  outline-offset:2px;
+}
+
+/* One consistent Directions button on desktop, tablet and mobile. */
+.home-directions-primary{
+  display:inline-grid!important;
+  margin:7px auto 0!important;
+}
+
+/* Retire the older split desktop/mobile placement from V4.50. */
+.home-directions-desktop,
+.home-directions-mobile{
+  display:none!important;
+}
+
+@media(max-width:620px){
+  .hero-location-link{
+    width:auto;
+    max-width:92%;
+    margin-top:8px;
+  }
+
+  .home-directions-primary{
+    max-width:92%;
+  }
+}
