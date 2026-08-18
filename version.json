@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.60-two-line-guest-name-fit",
-  "generatedAt": "2026-08-18T16:53:00Z",
-  "notes": "At enlarged text sizes, guest names use an unbreakable first-name line and unbreakable remaining-name line, with automatic font fitting to prevent surnames from splitting."
+  "version": "program-v4.61-icon-tools-scroll-stability",
+  "generatedAt": "2026-08-18T17:08:00Z",
+  "notes": "Locks fixed-size icon controls at their designed size, caps the Program Tools tab at 175%, and stabilizes enlarged overlay scrolling to reduce iPhone bounce and scroll chaining."
 }

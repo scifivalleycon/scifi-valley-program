@@ -4759,3 +4759,141 @@ body.sfvc-text-xl #guestModalContent{
   padding-top:46px;
 }
 
+
+
+/* =========================================================
+   V4.61 — FIXED ICON CONTROLS + 175% TOOLS TAB + STABLE OVERLAY SCROLL
+   ========================================================= */
+
+/* Fixed-size symbol buttons are interface controls, not reading copy. They
+   must keep their designed glyph size and line box even at 200% text size. */
+.photo-lightbox-close,
+.sheet-close,
+.push-prompt-close,
+.install-card-dismiss,
+.favorite,
+.map-tool-button:not(.wide){
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  padding:0;
+  line-height:1!important;
+}
+
+.photo-lightbox-close{
+  width:42px!important;
+  height:42px!important;
+  font-size:26px!important;
+}
+
+.sheet-close{
+  width:38px!important;
+  height:38px!important;
+  font-size:23px!important;
+}
+
+.push-prompt-close{
+  width:36px!important;
+  height:36px!important;
+  font-size:24px!important;
+}
+
+.install-card-dismiss{
+  width:27px!important;
+  height:27px!important;
+  font-size:20px!important;
+}
+
+.favorite{
+  width:33px!important;
+  height:33px!important;
+  font-size:17px!important;
+}
+
+.map-tool-button:not(.wide){
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  font-size:18px!important;
+}
+
+body.sfvc-text-enlarged .photo-lightbox-close,
+body.sfvc-text-enlarged .sheet-close,
+body.sfvc-text-enlarged .push-prompt-close,
+body.sfvc-text-enlarged .install-card-dismiss,
+body.sfvc-text-enlarged .favorite,
+body.sfvc-text-enlarged .map-tool-button:not(.wide){
+  padding:0!important;
+  line-height:1!important;
+  align-content:center!important;
+  justify-content:center!important;
+}
+
+/* Program Tools remains readable but stops growing at 175%. The HTML applies
+   the same ceiling to the handle, its label, and arrow so 200% mode cannot
+   widen the closed tab enough to cover the top-bar event name. */
+@media(max-width:520px){
+  .app-utility-handle{
+    max-width:175px;
+  }
+}
+
+/* Keep overlay heights tied to the stable small viewport on iPhone so browser
+   chrome appearing/disappearing during a swipe cannot resize the scroll box. */
+body.sfvc-text-enlarged .app-utility-panel,
+body.sfvc-text-enlarged #guestModalContent,
+body.sfvc-text-enlarged .program-pdf-builder-card,
+body.sfvc-text-enlarged .share-web-app-card,
+body.sfvc-text-enlarged .conquest-info-card,
+body.sfvc-text-enlarged .reminder-sheet,
+body.sfvc-text-enlarged .event-detail-modal,
+body.sfvc-text-enlarged .newsletter-modal,
+body.sfvc-text-enlarged .tshirt-image-modal,
+body.sfvc-text-enlarged .map-location-modal.map-directory-popover #mapLocationModalContent{
+  overscroll-behavior-y:none!important;
+  scroll-behavior:auto!important;
+  overflow-anchor:none;
+  -webkit-overflow-scrolling:auto;
+  touch-action:pan-y;
+}
+
+body.sfvc-text-xl .app-utility-panel,
+body.sfvc-text-xl .program-pdf-builder-card,
+body.sfvc-text-xl .share-web-app-card{
+  max-height:90vh;
+  max-height:90svh;
+}
+
+body.sfvc-text-enlarged .conquest-info-card{
+  max-height:88vh;
+  max-height:88svh;
+}
+
+body.sfvc-text-enlarged .reminder-sheet{
+  max-height:78vh;
+  max-height:78svh;
+}
+
+body.sfvc-text-enlarged .event-detail-modal,
+body.sfvc-text-enlarged .newsletter-modal{
+  max-height:90vh;
+  max-height:90svh;
+}
+
+body.sfvc-text-enlarged .tshirt-image-modal{
+  max-height:92vh;
+  max-height:92svh;
+}
+
+/* Strengthen the V4.59 guest biography scroller. At enlarged sizes, stop
+   edge rubber-banding rather than handing the gesture to the dialog/page. */
+body.sfvc-text-enlarged .guest-modal,
+body.sfvc-text-enlarged #guestModalContent{
+  overscroll-behavior:none!important;
+}
+
+body.sfvc-text-enlarged #guestModalContent{
+  -webkit-overflow-scrolling:auto;
+  overflow-anchor:none;
+  scroll-behavior:auto!important;
+}

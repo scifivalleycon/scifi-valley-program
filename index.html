@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.60">
+  <link rel="stylesheet" href="styles.css?v=4.61">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -110,10 +110,10 @@
       <p id="utilityToolStatus" class="utility-tool-status" aria-live="polite"></p>
     </div>
 
-    <button id="appUtilityHandle" class="app-utility-handle" type="button" aria-expanded="false">
+    <button id="appUtilityHandle" class="app-utility-handle" type="button" data-font-scale-max="1.75" aria-expanded="false">
       <span class="utility-handle-grip" aria-hidden="true"></span>
-      <strong>PROGRAM TOOLS</strong>
-      <span id="utilityHandleArrow" aria-hidden="true">▼</span>
+      <strong data-font-scale-max="1.75">PROGRAM TOOLS</strong>
+      <span id="utilityHandleArrow" data-font-scale-max="1.75" aria-hidden="true">▼</span>
     </button>
   </aside>
   <header class="topbar">
@@ -148,7 +148,7 @@
           <small id="installCardHint">Open it like an app for faster access during the convention.</small>
         </div>
         <button id="installAppCardButton" class="install-card-button">INSTALL</button>
-        <button id="dismissInstallCard" class="install-card-dismiss" aria-label="Dismiss install suggestion">×</button>
+        <button id="dismissInstallCard" class="install-card-dismiss" data-font-scale="locked" aria-label="Dismiss install suggestion">×</button>
       </section>
       <section class="retro-hero">
         <div class="burst burst-one">★</div>
@@ -428,9 +428,9 @@
         <div class="map-toolbar">
           <label class="search-box map-search"><span>⌕</span><input id="mapSearch" type="search" placeholder="Search vendor, artist or table number"></label>
           <div class="map-tools">
-            <button id="mapZoomOut" class="map-tool-button" type="button" aria-label="Zoom out">−</button>
+            <button id="mapZoomOut" class="map-tool-button" type="button" data-font-scale="locked" aria-label="Zoom out">−</button>
             <button id="mapZoomReset" class="map-tool-button wide" type="button">RESET</button>
-            <button id="mapZoomIn" class="map-tool-button" type="button" aria-label="Zoom in">+</button>
+            <button id="mapZoomIn" class="map-tool-button" type="button" data-font-scale="locked" aria-label="Zoom in">+</button>
           </div>
         </div>
 
@@ -1188,7 +1188,7 @@
 
   <dialog id="installHelpModal" class="install-help-modal">
     <div class="install-help-sheet">
-      <button id="closeInstallHelpModal" class="sheet-close install-help-close" aria-label="Close">×</button>
+      <button id="closeInstallHelpModal" class="sheet-close install-help-close" data-font-scale="locked" aria-label="Close">×</button>
       <img src="assets/icons/app-icon-192.png" alt="Sci-Fi Valley Con app icon">
       <span class="section-kicker">ADD TO HOME SCREEN</span>
       <h2>INSTALL SCI-FI VALLEY CON</h2>
@@ -1197,7 +1197,7 @@
   </dialog>
 
   <dialog id="photoLightbox" class="photo-lightbox">
-    <button id="closePhotoLightbox" class="photo-lightbox-close" aria-label="Close image">×</button>
+    <button id="closePhotoLightbox" class="photo-lightbox-close" data-font-scale="locked" aria-label="Close image">×</button>
     <img id="photoLightboxImage" src="" alt="">
     <div id="photoLightboxCaption" class="photo-lightbox-caption"></div>
   </dialog>
@@ -1207,7 +1207,7 @@
       <div class="sheet-handle"></div>
       <div class="sheet-heading">
         <div><span class="section-kicker">SET YOUR</span><h2>SCHEDULE REMINDERS</h2></div>
-        <button id="closeReminderModal" class="sheet-close" aria-label="Close">×</button>
+        <button id="closeReminderModal" class="sheet-close" data-font-scale="locked" aria-label="Close">×</button>
       </div>
       <p>Will apply to events in My Schedule. You can change this anytime.</p>
       <div class="reminder-options">
@@ -1256,7 +1256,7 @@
 
   <dialog id="pushPromptModal" class="push-prompt-modal">
     <div class="push-prompt-card">
-      <button id="closePushPromptModal" class="push-prompt-close" type="button" aria-label="Close notification prompt">×</button>
+      <button id="closePushPromptModal" class="push-prompt-close" type="button" data-font-scale="locked" aria-label="Close notification prompt">×</button>
       <div class="push-prompt-bell" aria-hidden="true">🔔</div>
       <span class="push-optin-kicker">DON'T MISS AN UPDATE</span>
       <h2>ENABLE EVENT ALERTS</h2>
@@ -1335,6 +1335,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.60"></script>
+  <script src="app.js?v=4.61"></script>
 </body>
 </html>

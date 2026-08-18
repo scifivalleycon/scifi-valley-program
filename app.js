@@ -314,6 +314,12 @@ const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
   '.remove-schedule',
   '.modal-close',
   '.app-utility-close',
+  '.photo-lightbox-close',
+  '.sheet-close',
+  '.push-prompt-close',
+  '.install-card-dismiss',
+  '.favorite',
+  '.map-tool-button:not(.wide)',
   '.push-optin-icon',
   '.utility-share-icon',
   '.event-quick-icon',
@@ -1466,16 +1472,9 @@ function initializeProgramTools(){
     input.addEventListener("change",updatePdfBuilderSelectionCount);
   });
 
-  // Swipe upward on the open panel to close it.
-  drawer?.addEventListener("pointerdown",event=>{
-    if(event.target.closest("button,input,a"))return;
-    utilityDrawerPointerDown(event);
-  });
-  drawer?.addEventListener("pointermove",utilityDrawerPointerMove);
-  drawer?.addEventListener("pointerup",event=>{
-    if(!utilityDrawerDragging)return;
-    utilityDrawerPointerUp(event);
-  });
+  // V4.61: Do not turn normal scrolling inside the Program Tools panel into
+  // a drawer drag gesture. The handle itself still supports click/drag open and
+  // close, but content swipes are reserved exclusively for vertical scrolling.
 
   window.addEventListener("beforeprint",buildProgramPrintView);
   initializeProgramTextScaling();
