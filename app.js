@@ -478,16 +478,80 @@ function fitProgramPageHeadings(root=document){
   headings.forEach(fitProgramPageHeading);
 }
 
-/* V4.59 — Keep celebrity guest names on one line at enlarged text sizes.
-   Each name gets the largest requested font size that fits its actual card or
-   modal heading width. Short names can remain near the selected percentage,
-   while longer names automatically step down only as much as necessary. */
+/* V4.60 — Keep enlarged celebrity names to intentional name lines.
+   At accessibility sizes above 100%, use the first name as line one and the
+   remaining name as line two. Each line is unbreakable. The shared font size
+   is then reduced only as much as necessary for the wider line to fit the
+   actual guest-card/modal column. This prevents a surname such as GIUNTOLI
+   from ever becoming GIUNT / OLI. */
+function guestNameLines(name){
+  const parts=String(name||"").trim().split(/\s+/).filter(Boolean);
+  if(parts.length<=1)return parts;
+  return [parts[0],parts.slice(1).join(" ")];
+}
+
+function restoreGuestNameHeading(heading){
+  if(!(heading instanceof HTMLElement))return;
+  const original=String(heading.dataset.sfvcGuestNameOriginal||"").trim();
+  if(!original)return;
+  heading.textContent=original;
+  delete heading.dataset.sfvcGuestNameStructured;
+  delete heading.dataset.sfvcGuestNameOriginal;
+  heading.style.whiteSpace="";
+  heading.style.overflow="";
+  heading.style.textOverflow="";
+  heading.style.wordBreak="";
+  heading.style.overflowWrap="";
+  heading.style.hyphens="";
+}
+
+function structureGuestNameHeading(heading){
+  if(!(heading instanceof HTMLElement))return [];
+  const original=String(
+    heading.dataset.sfvcGuestNameOriginal || heading.textContent || ""
+  ).trim();
+  if(!original)return [];
+
+  heading.dataset.sfvcGuestNameOriginal=original;
+  const lines=guestNameLines(original);
+  const signature=lines.join("\n");
+
+  if(heading.dataset.sfvcGuestNameStructured!==signature){
+    const fragments=lines.map(text=>{
+      const line=document.createElement("span");
+      line.className="guest-name-line";
+      line.dataset.fontScale="locked";
+      line.textContent=text;
+      return line;
+    });
+    heading.replaceChildren(...fragments);
+    heading.dataset.sfvcGuestNameStructured=signature;
+  }
+  return [...heading.querySelectorAll(":scope > .guest-name-line")];
+}
+
 function fitGuestNameHeading(heading){
-  if(!(heading instanceof HTMLElement)||programTextScale<=1)return;
+  if(!(heading instanceof HTMLElement))return;
+
+  // Preserve the original compact single-line presentation at 100%.
+  if(programTextScale<=1){
+    restoreGuestNameHeading(heading);
+    return;
+  }
   if(fontScaleLocked(heading))return;
 
-  const base=Number(heading.dataset.sfvcBaseFontPx);
-  if(!Number.isFinite(base)||base<=0)return;
+  // After a previous enlarged pass, the heading contains locked child spans and
+  // is no longer collected by the generic text scaler. Rebuild its CSS base
+  // directly from the heading when needed.
+  let base=Number(heading.dataset.sfvcBaseFontPx);
+  if(!Number.isFinite(base)||base<=0){
+    base=parseFloat(getComputedStyle(heading).fontSize);
+    if(!Number.isFinite(base)||base<=0)return;
+    heading.dataset.sfvcBaseFontPx=String(base);
+  }
+
+  const lines=structureGuestNameHeading(heading);
+  if(!lines.length)return;
 
   const maxScale=Number(heading.dataset.fontScaleMax);
   const effectiveScale=Number.isFinite(maxScale)&&maxScale>0
@@ -496,11 +560,15 @@ function fitGuestNameHeading(heading){
   const target=base*effectiveScale;
 
   heading.style.fontSize=`${Math.round(target*100)/100}px`;
-  heading.style.whiteSpace="nowrap";
+  heading.style.whiteSpace="normal";
+  heading.style.overflow="visible";
+  heading.style.textOverflow="clip";
+  heading.style.wordBreak="normal";
+  heading.style.overflowWrap="normal";
+  heading.style.hyphens="none";
 
   const available=Math.max(0,heading.clientWidth-2);
-  const name=String(heading.textContent||"").trim();
-  if(!available||!name)return;
+  if(!available)return;
 
   const computed=getComputedStyle(heading);
   const measure=getProgramHeadingMeasureNode();
@@ -511,13 +579,18 @@ function fitGuestNameHeading(heading){
   measure.style.letterSpacing=computed.letterSpacing;
   measure.style.textTransform=computed.textTransform;
   measure.style.fontSize=`${target}px`;
-  measure.textContent=name;
 
-  const rendered=measure.getBoundingClientRect().width;
-  if(rendered>available){
-    // Never shrink below the normal 100% guest-name size. At enlarged settings
-    // the fitting only trims the extra accessibility enlargement as needed.
-    const fitted=Math.max(base,target*(available/rendered)*0.985);
+  let widest=0;
+  lines.forEach(line=>{
+    measure.textContent=line.textContent||"";
+    widest=Math.max(widest,measure.getBoundingClientRect().width);
+  });
+
+  if(widest>available){
+    // Unlike the previous pass, do not force a 100%-size floor. A very long
+    // surname must be allowed to shrink below the normal size if that is what
+    // is required to keep the word intact on its assigned line.
+    const fitted=Math.max(12,target*(available/widest)*0.97);
     heading.style.fontSize=`${Math.floor(fitted*100)/100}px`;
   }
 }
@@ -562,8 +635,10 @@ function applyProgramTextScale(scale,{persist=true}={}){
   if(programTextScale!==1){
     scaleTextTree(document.body);
     fitProgramPageHeadings(document);
-    fitGuestNames(document);
   }
+  // V4.60 also runs this at 100% so any two-line enlarged-name structure is
+  // restored to the original compact guest name when accessibility scaling is reset.
+  fitGuestNames(document);
   if(persist)localStorage.setItem(PROGRAM_TEXT_SCALE_KEY,String(programTextScale));
   updateFontSizeControls();
 }

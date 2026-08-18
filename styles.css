@@ -4688,12 +4688,30 @@ body.sfvc-text-enlarged .app-utility-close{
   display:block;
   width:100%;
   max-width:100%;
-  white-space:nowrap!important;
-  overflow:hidden;
+  white-space:normal!important;
+  overflow:visible;
   text-overflow:clip;
   overflow-wrap:normal!important;
   word-break:normal!important;
   hyphens:none!important;
+}
+
+/* V4.60: first name = line one; remaining name = line two. Individual
+   name lines are never allowed to break internally. JS chooses the largest
+   shared font size that lets the wider line fit its actual column. */
+.guest-name-line{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+  hyphens:none!important;
+  line-height:.95;
+}
+
+.modal-hero>div{
+  min-width:0;
 }
 
 /* Keep the native dialog shell stationary. Only the content panel scrolls.

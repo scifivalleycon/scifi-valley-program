@@ -1,0 +1,5 @@
+{
+  "version": "program-v4.60-two-line-guest-name-fit",
+  "generatedAt": "2026-08-18T16:53:00Z",
+  "notes": "At enlarged text sizes, guest names use an unbreakable first-name line and unbreakable remaining-name line, with automatic font fitting to prevent surnames from splitting."
+}
