@@ -5539,7 +5539,7 @@ body.sfvc-text-xxl .lost-found-form .report-file-picker>span:first-child{font-si
 
 
 /* =========================================================
-   V4.70 — COMPACT TOP-BAR BACK BUTTON
+   V4.71 — COMPACT TOP-LEFT BACK BUTTON
    ========================================================= */
 
 .topbar-actions{
@@ -5555,6 +5555,7 @@ body.sfvc-text-xxl .lost-found-form .report-file-picker>span:first-child{font-si
   width:36px;
   height:36px;
   flex:0 0 36px;
+  order:-1;
   display:grid;
   place-items:center;
   padding:0;
@@ -5597,6 +5598,7 @@ body.sfvc-text-enlarged .app-back-button{
   }
   .topbar .brand-button{
     flex:1 1 auto;
+    min-width:0;
     max-width:none;
   }
   .topbar-actions{

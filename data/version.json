@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.70-in-app-back-button",
-  "generatedAt": "2026-08-18T19:16:00Z",
-  "notes": "Adds a compact upper-right in-app Back button that returns to the previously viewed app screen and restores that screen's prior scroll position."
+  "version": "program-v4.71-top-left-back-button",
+  "generatedAt": "2026-08-18T19:22:00Z",
+  "notes": "Moves the in-app Back button from the upper-right to the upper-left corner of the top bar while preserving screen history and scroll-position restoration."
 }
