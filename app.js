@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.52";
+const APP_BUILD_VERSION="4.53";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1553,10 +1553,17 @@ function applyEventSettings(){
   const guestDates=document.getElementById("guestEventDates");
   if(guestDates)guestDates.textContent=fullDates;
 
-  const heroLocation=document.getElementById("heroEventLocation");
-  if(heroLocation){
-    heroLocation.textContent=homeVenueLocationText();
-    heroLocation.setAttribute("aria-label",`Open driving directions to ${homeVenueLocationText()}`);
+  const heroVenueBlock=document.getElementById("heroVenueBlock");
+  const heroVenueName=document.getElementById("heroVenueName");
+  const heroVenueAddress=document.getElementById("heroVenueAddress");
+  if(heroVenueBlock){
+    const cfg=directionsConfig();
+    const venueName=String(cfg.venueName||state.settings.venue||DEFAULT_DIRECTIONS.venueName).trim();
+    const venueAddress=String(cfg.venueAddress||DEFAULT_DIRECTIONS.venueAddress).trim();
+
+    if(heroVenueName)heroVenueName.textContent=venueName;
+    if(heroVenueAddress)heroVenueAddress.textContent=venueAddress;
+    heroVenueBlock.setAttribute("aria-label",`Open driving directions to ${venueName}, ${venueAddress}`);
   }
 
   renderEventCountdown();

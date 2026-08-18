@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.52-venue-address-directions-layout",
-  "generatedAt": "2026-08-18T01:40:50Z",
-  "notes": "Home hero shows admin-managed venue street address as a clickable Directions link with the Directions button directly underneath."
+  "version": "program-v4.53-stacked-venue-directions-home",
+  "generatedAt": "2026-08-18T01:47:10Z",
+  "notes": "Stacks venue name, street address, directions button, and THE HOME OF NOSTALGIA banner vertically on Home."
 }

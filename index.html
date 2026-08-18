@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.52">
+  <link rel="stylesheet" href="styles.css?v=4.53">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -188,12 +188,15 @@
         </section>
 
         <button
-          id="heroEventLocation"
-          class="location-copy hero-location-link"
+          id="heroVenueBlock"
+          class="hero-venue-block"
           type="button"
           data-go="directions"
           aria-label="Open driving directions to Blair County Convention Center"
-        >Blair County Convention Center • 1 Convention Center Dr, Altoona, PA 16602</button>
+        >
+          <strong id="heroVenueName">Blair County Convention Center</strong>
+          <small id="heroVenueAddress">1 Convention Center Dr, Altoona, PA 16602</small>
+        </button>
 
         <button class="home-directions-button home-directions-primary" type="button" data-go="directions">
           <span>➜</span>
@@ -201,7 +204,7 @@
           <small>Venue & shuttle pickup</small>
         </button>
 
-        <p class="family-line">WHERE FANDOM BECOMES FAMILY</p>
+        <p class="family-line home-nostalgia-banner">THE HOME OF NOSTALGIA</p>
       </section>
 
       <button id="homeGuestBanner" class="home-guest-banner" type="button" data-go="guests" aria-label="View celebrity guests">
@@ -1185,6 +1188,6 @@
 
   <script src="event-guide-ui.js?v=4.22"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.52"></script>
+  <script src="app.js?v=4.53"></script>
 </body>
 </html>
