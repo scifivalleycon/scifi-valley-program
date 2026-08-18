@@ -4114,3 +4114,29 @@ body.sfvc-text-enlarged .screen [class*="details"]{
 .open-driving-directions>span:first-child{width:40px;height:40px;display:grid;place-items:center;border:2px solid white;border-radius:50%;font-size:20px;font-weight:900}.open-driving-directions small,.open-driving-directions strong,.open-driving-directions em{display:block}.open-driving-directions small{font-size:6px;letter-spacing:.07em}.open-driving-directions strong{font-size:9px}.open-driving-directions em{margin-top:2px;font-family:Georgia,serif;font-size:7px;font-style:normal}.open-driving-directions>b{font-size:20px}
 .directions-google-note{margin:0 4px 18px;color:var(--ink2);font-family:Georgia,serif;font-size:7px;line-height:1.4;text-align:center}
 @media(max-width:520px){.directions-destination-card{grid-template-columns:42px minmax(0,1fr)}.directions-destination-card>button{grid-column:1/-1;width:100%}.directions-card-badge{width:40px;height:40px}.directions-origin-actions{grid-template-columns:1fr}.open-driving-directions{grid-template-columns:39px minmax(0,1fr) auto}}
+
+
+/* =========================================================
+   V4.50 — DESKTOP DIRECTIONS BUTTON HERO POSITION
+   ========================================================= */
+
+/* Desktop/tablet: place directions immediately above THE HOME OF NOSTALGIA. */
+.home-directions-desktop{
+  display:inline-grid;
+  margin:2px auto 8px;
+}
+
+/* The original lower placement is retained for phone layouts only. */
+.home-directions-mobile{
+  display:none;
+}
+
+@media(max-width:620px){
+  .home-directions-desktop{
+    display:none;
+  }
+
+  .home-directions-mobile{
+    display:inline-grid;
+  }
+}
