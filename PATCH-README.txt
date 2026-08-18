@@ -1,19 +1,16 @@
-Sci-Fi Valley Con Attendee App V4.54 — Attendee Reporter
+Sci-Fi Valley Con Attendee App V4.55 — Full-App Text Scaling
 
-Adds SEE SOMETHING? SAY SOMETHING attendee reporting for:
-- Venue / facility concerns
-- Staff assistance
-- Security / safety concerns
-- Harassment / sexual misconduct / stalking
-- Medical concerns
-- Accessibility concerns
-- Vendor AI-policy violations
-- Other concerns
+Rolled forward from Program V4.54 Attendee Reporter.
 
-Users may report anonymously or optionally provide name, phone and/or email.
-AI reports can include vendor name, table number, details, and up to 3 private image uploads.
-The form clearly warns that urgent emergencies should be reported to Front Admissions /
-Staff Area immediately and 911 should be used when appropriate.
+Changes:
+- Rewrites the Text Size description in Program Tools in more natural language.
+- Text Size now scales text throughout the app instead of only selected program content.
+- Program Tools drawer text now scales, including headings, descriptions, controls and buttons.
+- Top navigation, bottom navigation, share tools, PDF Builder, form controls and other interface text now scale too.
+- Inline floor-plan/map text labels scale with the selected text percentage.
+- Removes the old conservative heading caps so 115%, 130%, 150%, 175% and 200% apply consistently.
+- Adds large-text reflow rules for Program Tools, quick cards, guest cards, schedule cards, show hours and modal layouts.
+- The hand-built Sci-Fi Valley Con logo on the homepage remains unchanged at every text-size setting.
+- Text-size choice continues to be saved on the device.
 
-Requires Notify Worker V1.15 and its R2 report-upload binding for photo evidence.
-Text-only reports still work if photo storage is unavailable.
+No V4.54 Attendee Reporter functionality was removed.

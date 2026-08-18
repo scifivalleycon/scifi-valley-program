@@ -3393,7 +3393,7 @@ button,
    V4.44 — ADAPTIVE / COLLISION-SAFE TEXT SCALING
    ========================================================= */
 
-/* Marked display compositions deliberately retain their designed typography. */
+/* Only explicitly marked elements retain their designed typography. */
 [data-font-scale="locked"]{
   --sfvc-display-text-locked:1;
 }
@@ -4249,8 +4249,7 @@ body.sfvc-text-max .screen th{
   white-space:normal!important;
 }
 
-/* The controls themselves are intentionally locked from the global scaler, but
-   the percentage readout should remain prominent enough to understand. */
+/* Keep the text-size controls roomy enough as their own labels scale. */
 .font-size-controls{
   grid-template-columns:46px minmax(72px,1fr) 46px 58px;
 }
@@ -4468,3 +4467,81 @@ body.sfvc-text-max .screen th{
 .report-submit-panel{padding:13px;border:3px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--cream)}.report-submit-panel>div strong{font-size:9px}.report-submit-panel>div p{margin:4px 0 10px;font:8px/1.4 Georgia,serif;color:var(--cream)}#submitAttendeeReport{width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;border:2px solid #fff2d5;border-radius:7px;background:var(--coral);color:#fff;font-size:8px;font-weight:900}#submitAttendeeReport>span{font-size:20px}.report-submit-status{margin:8px 0 0!important;font:7px/1.4 Georgia,serif!important;text-align:center}.report-submit-status.error{color:#ffc2b8}.report-success-panel{padding:22px;border:3px solid var(--ink);border-radius:10px;background:#eef8ed;text-align:center}.report-success-icon{width:54px;height:54px;display:grid;place-items:center;margin:0 auto 8px;border:3px solid var(--ink);border-radius:50%;background:#6ca66a;color:#fff;font-size:28px;font-weight:900}.report-success-panel h2{margin:0}.report-success-panel p{font:9px/1.4 Georgia,serif}.report-success-panel>strong{display:inline-block;padding:6px 10px;border:2px solid var(--ink);border-radius:5px;background:#fff;font-size:10px}.report-success-panel button{padding:9px 12px;border:2px solid var(--ink);border-radius:6px;background:var(--teal);color:#fff;font-size:7px;font-weight:900}
 #reportUploadAvailability.warning{background:#f7d6ce;color:#7b271e}
 @media(max-width:620px){.report-category-grid,.report-field-grid,.report-identity-options{grid-template-columns:1fr}.report-emergency-banner{grid-template-columns:40px minmax(0,1fr)}.report-emergency-icon{width:38px;height:38px}.home-reporter-card{grid-template-columns:40px minmax(0,1fr) 14px}.home-reporter-icon{width:38px;height:38px}}
+
+/* =========================================================
+   V4.55 — FULL-APP TEXT SCALING
+   ========================================================= */
+
+/* The accessibility control now scales interface text everywhere, including
+   Program Tools, navigation, modals, form controls and inline map labels.
+   The composed Sci-Fi Valley Con homepage logo is the only intentional lock. */
+
+body.sfvc-text-enlarged .app-utility-drawer,
+body.sfvc-text-enlarged .topbar,
+body.sfvc-text-enlarged .bottom-nav,
+body.sfvc-text-enlarged dialog,
+body.sfvc-text-enlarged .screen{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+
+body.sfvc-text-enlarged button,
+body.sfvc-text-enlarged input,
+body.sfvc-text-enlarged select,
+body.sfvc-text-enlarged textarea{
+  line-height:1.25;
+}
+
+body.sfvc-text-xl .topbar{
+  flex-wrap:wrap;
+  align-items:flex-start;
+}
+
+body.sfvc-text-xl .app-utility-drawer .utility-tool-block,
+body.sfvc-text-xl .app-utility-drawer .utility-action-grid,
+body.sfvc-text-xl .program-pdf-builder-modal .pdf-builder-mode-choices,
+body.sfvc-text-xl .share-web-app-modal .share-app-options,
+body.sfvc-text-xl .home-show-hours-grid,
+body.sfvc-text-xl .quick-grid{
+  grid-template-columns:1fr!important;
+}
+
+body.sfvc-text-xl .app-utility-panel,
+body.sfvc-text-xl .program-pdf-builder-card,
+body.sfvc-text-xl .share-web-app-card{
+  max-height:90vh;
+  overflow:auto;
+}
+
+body.sfvc-text-xl .font-size-controls{
+  grid-template-columns:minmax(50px,.7fr) minmax(76px,1fr) minmax(50px,.7fr) minmax(68px,.85fr);
+}
+
+body.sfvc-text-xl .home-guest-banner-cta{
+  grid-template-columns:1fr!important;
+  gap:8px;
+  text-align:left;
+}
+
+body.sfvc-text-xl .guest-card,
+body.sfvc-text-xl .schedule-card{
+  grid-template-columns:1fr!important;
+}
+
+body.sfvc-text-xxl .photo-cta{
+  grid-template-columns:auto minmax(0,1fr)!important;
+}
+
+body.sfvc-text-xxl .photo-cta>b{
+  grid-column:1/-1;
+  justify-self:end;
+}
+
+body.sfvc-text-xxl .chip,
+body.sfvc-text-xxl .pill,
+body.sfvc-text-xxl .tag,
+body.sfvc-text-xxl button,
+body.sfvc-text-xxl summary{
+  white-space:normal!important;
+}
+

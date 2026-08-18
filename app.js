@@ -298,92 +298,63 @@ function elementHasDirectText(element){
   );
 }
 
-const PROGRAM_TEXT_LOCKED_SELECTOR=[
-  '[data-font-scale="locked"]',
-  '.hero-logo',
-  '.hero-rule',
-  '#heroEventDates',
-  '.event-countdown',
-  '.home-show-hours',
-  '.home-guest-banner-cta',
-  '.topbar',
-  '.bottom-nav',
-  '.app-utility-drawer',
-  '.map-svg-host',
-  '.map-vendor-pointer',
-  '.photo-lightbox',
-  '.burst'
-].join(',');
+const PROGRAM_TEXT_LOCKED_SELECTOR='[data-font-scale="locked"],.hero-logo';
 
 function fontScaleLocked(element){
-  if(!(element instanceof HTMLElement))return true;
-  if(element.closest(PROGRAM_TEXT_LOCKED_SELECTOR))return true;
-
-  const computed=getComputedStyle(element);
-
-  // Absolutely/fixed-positioned lettering is usually part of a composed visual
-  // rather than flowing content. Scaling it independently is what caused the
-  // Sci-Fi Valley Con masthead pieces to collide.
-  if(computed.position==='absolute'||computed.position==='fixed')return true;
-  return false;
+  if(!(element instanceof Element))return true;
+  return Boolean(element.closest(PROGRAM_TEXT_LOCKED_SELECTOR));
 }
 
 function fontScaleEligible(element){
-  if(!(element instanceof HTMLElement))return false;
-  if(element.closest('svg'))return false;
-  if(["SCRIPT","STYLE","NOSCRIPT","TEMPLATE"].includes(element.tagName))return false;
+  if(!(element instanceof Element))return false;
   if(fontScaleLocked(element))return false;
+
+  // Inline SVG floor-plan labels are real program text too. Scale the parent
+  // <text> node so any tspans inside it follow the same selected percentage.
+  if(element instanceof SVGElement){
+    return element.tagName.toLowerCase()==='text';
+  }
+
+  if(!(element instanceof HTMLElement))return false;
+  if(["SCRIPT","STYLE","NOSCRIPT","TEMPLATE"].includes(element.tagName))return false;
+
+  // Form controls can display text without a direct text node (placeholder,
+  // selected option, typed text), so include them explicitly.
+  if(element.matches('input,textarea,select,option,button'))return true;
   return elementHasDirectText(element);
 }
 
-function effectiveProgramTextScale(element,base){
-  if(programTextScale<=1)return programTextScale;
+function collectProgramTextTargets(root=document.body){
+  const targets=[];
+  if(root instanceof Element && fontScaleEligible(root))targets.push(root);
+  root.querySelectorAll?.('*').forEach(element=>{
+    if(fontScaleEligible(element))targets.push(element);
+  });
+  return targets;
+}
 
-  const computed=getComputedStyle(element);
-  let cap=2.00;
-
-  // Small body text can use the full accessibility range.
-  // Medium and large headings grow more conservatively so the visual hierarchy
-  // remains intact and display areas do not become oversized.
-  if(base>=28)cap=1.00;
-  else if(base>=22)cap=1.18;
-  else if(base>=18)cap=1.32;
-  else if(base>=16)cap=1.50;
-  else if(base>=13)cap=1.75;
-
-  // Compact one-line controls can grow substantially, but not so much that a
-  // single button destroys the surrounding layout.
-  if(computed.whiteSpace==='nowrap')cap=Math.min(cap,1.55);
-  if(element.matches('button,input,select,textarea,code,.tag,.badge,.chip'))cap=Math.min(cap,1.65);
-
-  return Math.min(programTextScale,cap);
+function snapshotProgramTextBases(targets){
+  // Capture every original computed size before changing any parent. This
+  // prevents inherited text from accidentally being scaled twice.
+  targets.forEach(element=>{
+    if(element.dataset.sfvcBaseFontPx)return;
+    const size=parseFloat(getComputedStyle(element).fontSize);
+    if(!Number.isFinite(size)||size<=0)return;
+    element.dataset.sfvcBaseFontPx=String(size);
+  });
 }
 
 function scaleTextElement(element){
   if(!fontScaleEligible(element))return;
-
-  if(programTextScale===1){
-    if(element.dataset.sfvcBaseFontPx){
-      element.style.fontSize="";
-      delete element.dataset.sfvcBaseFontPx;
-    }
-    return;
-  }
-
-  if(!element.dataset.sfvcBaseFontPx){
-    const size=parseFloat(getComputedStyle(element).fontSize);
-    if(!Number.isFinite(size)||size<=0)return;
-    element.dataset.sfvcBaseFontPx=String(size);
-  }
-
   const base=Number(element.dataset.sfvcBaseFontPx);
-  const scale=effectiveProgramTextScale(element,base);
-  element.style.fontSize=`${Math.round(base*scale*100)/100}px`;
+  if(!Number.isFinite(base)||base<=0)return;
+  element.style.fontSize=`${Math.round(base*programTextScale*100)/100}px`;
 }
 
 function scaleTextTree(root=document.body){
-  if(root instanceof HTMLElement)scaleTextElement(root);
-  root.querySelectorAll?.("*").forEach(scaleTextElement);
+  const targets=collectProgramTextTargets(root);
+  snapshotProgramTextBases(targets);
+  targets.forEach(scaleTextElement);
 }
 
 function updateFontSizeControls(){
@@ -401,8 +372,8 @@ function applyProgramTextScale(scale,{persist=true}={}){
   const requested=Number(scale);
   programTextScale=PROGRAM_TEXT_SCALES.includes(requested)?requested:1;
 
-  // Reset existing inline sizes first if changing scale so every element
-  // continues using its original CSS-defined proportions.
+  // Restore CSS-defined sizes before taking a fresh snapshot. This keeps the
+  // selected percentage consistent across every part of the interface.
   document.querySelectorAll("[data-sfvc-base-font-px]").forEach(element=>{
     element.style.fontSize="";
     delete element.dataset.sfvcBaseFontPx;
@@ -430,12 +401,15 @@ function initializeProgramTextScaling(){
   applyProgramTextScale(programTextScale,{persist:false});
 
   programTextObserver?.disconnect();
+  let rescaleQueued=false;
   programTextObserver=new MutationObserver(mutations=>{
-    if(programTextScale===1)return;
-    mutations.forEach(mutation=>{
-      mutation.addedNodes.forEach(node=>{
-        if(node instanceof HTMLElement)scaleTextTree(node);
-      });
+    if(programTextScale===1||rescaleQueued)return;
+    const added=mutations.some(mutation=>mutation.addedNodes.length>0);
+    if(!added)return;
+    rescaleQueued=true;
+    requestAnimationFrame(()=>{
+      rescaleQueued=false;
+      applyProgramTextScale(programTextScale,{persist:false});
     });
   });
   programTextObserver.observe(document.body,{childList:true,subtree:true});

@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.54-attendee-reporter",
-  "generatedAt": "2026-08-18T02:09:34Z",
-  "notes": "Adds See Something Say Something Attendee Reporter."
+  "version": "program-v4.55-full-app-text-scaling",
+  "generatedAt": "2026-08-18T14:25:00Z",
+  "notes": "Scales text across the full app, including Program Tools and navigation, while leaving the homepage Sci-Fi Valley Con logo unchanged."
 }
