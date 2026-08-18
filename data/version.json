@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.57-safe-scaling-exceptions",
-  "generatedAt": "2026-08-18T14:56:00Z",
-  "notes": "Caps bottom Schedule at 175%, caps top-bar event name at 130%, keeps vector map labels unscaled, and stabilizes icon alignment during text enlargement."
+  "version": "program-v4.58-program-tools-close-button-scaling-fix",
+  "generatedAt": "2026-08-18T16:32:00Z",
+  "notes": "Locks the Program Tools close X at its intended icon size and keeps it centered when accessibility Text Size is enlarged."
 }

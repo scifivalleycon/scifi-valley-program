@@ -313,6 +313,7 @@ const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
   '.schedule-save',
   '.remove-schedule',
   '.modal-close',
+  '.app-utility-close',
   '.push-optin-icon',
   '.utility-share-icon',
   '.event-quick-icon',

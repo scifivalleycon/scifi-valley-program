@@ -4643,3 +4643,26 @@ body.sfvc-text-enlarged .utility-share-icon{
     min-width:0;
   }
 }
+
+/* =========================================================
+   V4.58 — PROGRAM TOOLS CLOSE BUTTON SCALING LOCK
+   ========================================================= */
+
+/* The Program Tools X is an icon control, not readable copy. Keep its button
+   geometry and glyph size fixed while surrounding accessibility text grows. */
+.app-utility-close{
+  flex:0 0 36px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  font-size:22px!important;
+  line-height:1!important;
+}
+
+body.sfvc-text-enlarged .app-utility-close{
+  align-content:center!important;
+  justify-content:center!important;
+  padding:0!important;
+  font-size:22px!important;
+  line-height:1!important;
+}

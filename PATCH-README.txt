@@ -1,13 +1,13 @@
-Sci-Fi Valley Con Attendee App V4.57 — Safe Scaling Exceptions
+Sci-Fi Valley Con Attendee App V4.58 — Program Tools Close Button Scaling Fix
 
-Rolled forward cumulatively from Program V4.56 Large Header Word Fit.
+Rolled forward cumulatively from Program V4.57 Safe Scaling Exceptions.
 
 Changes:
-- Bottom navigation SCHEDULE label now stops enlarging at 175%, even when the global Text Size setting is 200%, preventing clipping.
-- Interactive floor-plan SVG text and the on-map vendor pointer remain at their original font sizes so room/table label geometry is not distorted by accessibility scaling.
-- Top-bar SCI-FI VALLEY CON event name now stops enlarging at 130%, preventing it from crowding or falling behind Program Tools on mobile.
-- Icon glyphs are excluded from text scaling and their line boxes are explicitly centered so symbols remain visually centered inside circular icon containers as surrounding text grows.
-- Existing V4.56 long-header word-fit behavior remains intact.
-- All other app text continues to follow the selected accessibility percentage up to 200%.
+- Program Tools close X is now explicitly excluded from accessibility font scaling.
+- The close button remains a fixed 36px circular control with a centered 22px X at 100% through 200% Text Size.
+- Added an explicit data-font-scale lock to the Program Tools close button as an extra safeguard.
+- Added CSS protection so the X cannot be enlarged by an inline font-size value.
+- Bumped the stylesheet/app cache-busting query strings and service-worker cache to V4.58 so installed PWAs pull the fix.
+- All V4.57 safe-scaling exceptions and prior app functionality remain intact.
 
-No V4.56 functionality was removed.
+No V4.57 functionality was removed.
