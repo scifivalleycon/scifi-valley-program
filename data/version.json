@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.67-lost-found-inquiry",
-  "generatedAt": "2026-08-18T18:24:00Z",
-  "notes": "Adds a dedicated Lost & Found inquiry screen with name, phone/email contact, item description, last-known location and optional photo, submitted into the staff attendee-report inbox as a Lost & Found category."
+  "version": "program-v4.68-stacked-in-app-imdb-viewer",
+  "generatedAt": "2026-08-18T18:52:00Z",
+  "notes": "Changes celebrity IMDb links to open a second in-app popup above the guest profile, loading the live IMDb page when embeddable and retaining an Open Original IMDb fallback."
 }

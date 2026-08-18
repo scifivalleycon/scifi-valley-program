@@ -1,25 +1,27 @@
-Sci-Fi Valley Con Attendee App V4.67 — Lost & Found Inquiry
+Sci-Fi Valley Con Attendee App V4.68 — Stacked In-App IMDb Viewer
 
-Rolled forward cumulatively from V4.66 Stacked Wikipedia Modal.
+Rolled forward cumulatively from V4.67 Lost & Found Inquiry.
 
-ADDED
-- Dedicated LOST & FOUND button on the Home screen and Event Guide / More menu.
-- Lost & Found form collects attendee name, phone, email, lost-item description, optional last-known location and one optional item photo.
-- Name is required and at least one contact method (phone or email) is required so staff can follow up on a possible match.
-- Existing registered attendee profile is used to prefill contact fields when available.
-- Photo upload uses the existing secure attendee-report upload service and existing 5 MB image limit.
-- Lost & Found submissions are sent as the new `lostfound` report category and receive the normal report/reference ID.
-- Success screen confirms delivery and gives the attendee the inquiry ID.
-
-ACCESSIBILITY
-- New LF badges and upload/submit symbols are locked against global text scaling so they remain centered at 200% text size.
-- The form reuses the existing accessible report field, upload and success layouts.
+ADDED / CHANGED
+- Celebrity guest profiles no longer default straight out to IMDb when the IMDb button is tapped.
+- IMDb now opens in a SECOND popup above the existing guest-detail popup, matching the stacked Wikipedia-reader experience.
+- The guest-detail popup remains open underneath, so closing IMDb returns the attendee directly to that guest.
+- The IMDb popup has its own fixed-size X that is protected from 200% text scaling.
+- The live IMDb name page is loaded inside the popup when IMDb/browser framing allows it.
+- A clearly visible OPEN ORIGINAL IMDb fallback remains in the popup for browsers or IMDb responses that do not permit embedded display.
+- Tapping outside the IMDb popup closes only the IMDb layer.
+- Closing the IMDb viewer clears the iframe so it does not continue using data in the background.
 
 PRESERVED
-- V4.66 stacked Wikipedia popup architecture.
+- V4.67 Lost & Found inquiry and reporting integration.
+- V4.66 stacked Wikipedia popup.
 - V4.65 Event Guide viewport centering.
-- All previous text-scaling, scrolling, reporting, schedule, map, guest, notification and PWA features.
+- All prior 200% text scaling, icon alignment, anti-bounce scrolling, guest-name fitting, reporting, schedule, map, notifications, and PWA features.
 
-IMPORTANT
-- Deploy Notify V1.17 before or at the same time as this attendee patch. The backend must recognize the `lostfound` category before the new form can submit successfully.
-- Deploy Admin V2.27 so Lost & Found inquiries are labeled/filterable in the staff report inbox.
+CACHE
+- App build version and service-worker cache bumped to V4.68.
+- CSS, Event Guide JS, and app JS cache-busting query strings bumped to V4.68.
+
+INSTALL
+Upload the files inside this ZIP over the matching files in the attendee-app repository.
+No Admin App or Notify Worker changes are required for this patch.

@@ -87,7 +87,7 @@ a{color:inherit}
 .menu-table{display:grid;gap:6px;margin:8px 0}.menu-row{padding:8px;border:1px solid rgba(58,39,32,.45);border-radius:5px;background:rgba(255,247,223,.7)}.menu-name{display:flex;justify-content:space-between;gap:8px;font-family:"Trebuchet MS",Arial,sans-serif;font-weight:900}.menu-desc{margin-top:3px;color:var(--ink2);font-size:10px}
 .system-grid{display:grid;gap:6px}.system-row{padding:7px 8px;border-left:4px solid var(--aqua);background:rgba(115,199,203,.11)}.system-row strong{font-family:"Trebuchet MS",Arial,sans-serif}.system-row small{display:block;margin-top:2px;color:var(--ink2)}
 
-.guest-modal{width:min(92vw,620px);max-height:88vh;padding:0;color:var(--ink);background:var(--paper);border:3px solid var(--ink);border-radius:12px;box-shadow:10px 12px 0 rgba(58,39,32,.30)}.guest-modal::backdrop{background:rgba(30,18,14,.72);backdrop-filter:blur(3px)}.modal-close{position:sticky;float:right;top:8px;right:8px;z-index:3;width:38px;height:38px;margin:8px;border:2px solid var(--ink);border-radius:50%;background:var(--coral);color:var(--cream);font-size:25px;line-height:1}.modal-inner{padding:16px}.modal-hero{display:grid;grid-template-columns:125px 1fr;gap:13px;align-items:start}.modal-hero img,.modal-photo-placeholder{width:125px;height:125px;aspect-ratio:1/1;object-fit:cover;border:2px solid var(--ink);border-radius:7px}.modal-photo-placeholder{display:grid;place-items:center;background:var(--coral);color:var(--cream);font-family:Impact,sans-serif;text-align:center}.modal-inner h2{margin:5px 0;font-family:Impact,sans-serif;font-size:28px;line-height:.95}.modal-known{color:var(--ink2);font-family:Georgia,serif;font-size:11px;line-height:1.35}.modal-bio{margin:15px 0;font-family:Georgia,serif;font-size:13px;line-height:1.55}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.modal-actions a{padding:10px;border:2px solid var(--ink);border-radius:6px;text-align:center;text-decoration:none;font-size:10px;font-weight:900}.primary-action{background:var(--aqua)}.secondary-action{background:var(--mustard)}.full-action{grid-column:1/-1;background:var(--coral)!important;color:var(--cream)}
+.guest-modal{width:min(92vw,620px);max-height:88vh;padding:0;color:var(--ink);background:var(--paper);border:3px solid var(--ink);border-radius:12px;box-shadow:10px 12px 0 rgba(58,39,32,.30)}.guest-modal::backdrop{background:rgba(30,18,14,.72);backdrop-filter:blur(3px)}.modal-close{position:sticky;float:right;top:8px;right:8px;z-index:3;width:38px;height:38px;margin:8px;border:2px solid var(--ink);border-radius:50%;background:var(--coral);color:var(--cream);font-size:25px;line-height:1}.modal-inner{padding:16px}.modal-hero{display:grid;grid-template-columns:125px 1fr;gap:13px;align-items:start}.modal-hero img,.modal-photo-placeholder{width:125px;height:125px;aspect-ratio:1/1;object-fit:cover;border:2px solid var(--ink);border-radius:7px}.modal-photo-placeholder{display:grid;place-items:center;background:var(--coral);color:var(--cream);font-family:Impact,sans-serif;text-align:center}.modal-inner h2{margin:5px 0;font-family:Impact,sans-serif;font-size:28px;line-height:.95}.modal-known{color:var(--ink2);font-family:Georgia,serif;font-size:11px;line-height:1.35}.modal-bio{margin:15px 0;font-family:Georgia,serif;font-size:13px;line-height:1.55}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.modal-actions a,.modal-actions button{padding:10px;border:2px solid var(--ink);border-radius:6px;text-align:center;text-decoration:none;font-size:10px;font-weight:900}.modal-actions button{width:100%;font-family:inherit;cursor:pointer}.primary-action{background:var(--aqua)}.secondary-action{background:var(--mustard)}.full-action{grid-column:1/-1;background:var(--coral)!important;color:var(--cream)}
 
 .bottom-nav{position:fixed;right:0;bottom:0;left:0;z-index:50;display:grid;grid-template-columns:repeat(5,1fr);padding:7px max(7px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));color:#d3bea2;background:var(--ink);border-top:4px solid var(--coral);box-shadow:0 -2px 0 var(--mustard)}.nav-button{display:grid;justify-items:center;gap:2px;padding:5px 2px;border:0;background:transparent;color:#c4ae99}.nav-button span{font-family:Georgia,serif;font-size:19px;line-height:1}.nav-button small{font-size:8px;font-weight:900;letter-spacing:.055em}.nav-button.active{color:var(--mustard)}
 
@@ -5533,4 +5533,140 @@ body.sfvc-text-xxl #submitLostFoundInquiry>span{font-size:9px!important;line-hei
 body.sfvc-text-xxl .lost-found-form .report-file-picker>span:first-child{font-size:20px!important;line-height:1!important}
 @media(max-width:620px){
   .lost-found-screen .report-field-grid{grid-template-columns:1fr}
+}
+
+
+/* =========================================================
+   V4.68 — STACKED IN-APP IMDb VIEWER
+   ========================================================= */
+.imdb-reader-modal{
+  position:fixed;
+  inset:0;
+  width:min(94vw,820px);
+  height:min(88vh,820px);
+  height:min(88svh,820px);
+  max-width:820px;
+  max-height:88vh;
+  max-height:88svh;
+  margin:auto;
+  padding:0;
+  overflow:hidden;
+  color:var(--ink);
+  background:var(--paper2);
+  border:3px solid var(--ink);
+  border-radius:13px;
+  box-shadow:12px 14px 0 rgba(30,18,14,.38);
+}
+.imdb-reader-modal::backdrop{
+  background:rgba(25,14,11,.58);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+}
+.imdb-reader-shell{
+  width:100%;
+  height:100%;
+  min-height:0;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  overflow:hidden;
+  background:var(--paper2);
+}
+.imdb-reader-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 42px;
+  gap:10px;
+  align-items:start;
+  padding:13px 13px 11px;
+  border-bottom:2px solid var(--ink);
+  background:rgba(226,173,52,.20);
+}
+.imdb-reader-header>div{min-width:0}
+.imdb-reader-kicker{
+  display:block;
+  color:var(--coral2);
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.imdb-reader-header h2{
+  margin:3px 0 2px;
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:24px;
+  line-height:.96;
+  letter-spacing:.025em;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+.imdb-reader-header p{
+  margin:0;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:8px;
+  line-height:1.3;
+}
+.imdb-reader-close{
+  width:38px!important;
+  height:38px!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:0!important;
+  border:2px solid var(--ink);
+  border-radius:50%;
+  background:var(--coral);
+  color:var(--cream);
+  font-family:Arial,sans-serif!important;
+  font-size:24px!important;
+  line-height:1!important;
+  font-weight:900;
+}
+.imdb-reader-frame-wrap{
+  min-height:0;
+  overflow:hidden;
+  background:#fff;
+}
+.imdb-reader-frame{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:0;
+  border:0;
+  background:#fff;
+}
+.imdb-reader-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+  border-top:2px solid var(--ink);
+  background:rgba(58,39,32,.08);
+}
+.imdb-reader-footer span{
+  max-width:62%;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:6px;
+  line-height:1.3;
+}
+.imdb-reader-footer a{
+  flex:0 0 auto;
+  padding:7px 8px;
+  border:1.5px solid var(--ink);
+  border-radius:6px;
+  background:var(--mustard);
+  color:var(--ink);
+  text-decoration:none;
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.imdb-in-app-action{background:var(--mustard);color:var(--ink)}
+body.sfvc-text-enlarged .imdb-reader-modal,
+body.sfvc-text-max .imdb-reader-modal{overscroll-behavior:none}
+body.sfvc-text-max .imdb-reader-header h2{font-size:min(36px,9vw)!important}
+@media(max-width:520px){
+  .imdb-reader-header{padding:11px 10px 9px}
+  .imdb-reader-footer{align-items:flex-start;flex-direction:column}
+  .imdb-reader-footer span{max-width:none}
+  .imdb-reader-footer a{width:100%;text-align:center}
 }
