@@ -5216,27 +5216,41 @@ body.sfvc-text-xxl .conquest-info-steps article>b{
   overflow-x:hidden;
   overscroll-behavior:none;
 }
-.event-detail-modal.wiki-reader-active{
-  height:90vh;
-  height:90svh;
-  overflow:hidden!important;
-}
-.wiki-reader-panel{
-  position:absolute;
+
+/* V4.66 — Wikipedia opens as a true second popup above Event Guide. */
+.wiki-reader-modal{
+  position:fixed;
   inset:0;
-  z-index:40;
-  display:none;
-  grid-template-rows:auto minmax(0,1fr) auto;
+  width:min(92vw,720px);
+  height:min(86vh,760px);
+  height:min(86svh,760px);
+  max-width:720px;
+  max-height:86vh;
+  max-height:86svh;
+  margin:auto;
+  padding:0;
+  overflow:hidden;
+  color:var(--ink);
+  background:var(--paper2);
+  border:3px solid var(--ink);
+  border-radius:13px;
+  box-shadow:12px 14px 0 rgba(30,18,14,.38);
+}
+.wiki-reader-modal::backdrop{
+  background:rgba(25,14,11,.58);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+}
+.wiki-reader-shell{
+  width:100%;
+  height:100%;
   min-height:0;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
   overflow:hidden;
   background:
     repeating-linear-gradient(0deg,rgba(58,39,32,.018) 0 1px,transparent 1px 4px),
     var(--paper2);
-  color:var(--ink);
-  border-radius:9px;
-}
-.wiki-reader-panel.open{
-  display:grid;
 }
 .wiki-reader-header{
   display:grid;
@@ -5397,6 +5411,15 @@ body.sfvc-text-xxl .conquest-info-steps article>b{
   font-size:6px;
   font-weight:900;
   letter-spacing:.04em;
+}
+
+
+.wiki-reader-modal[open]{
+  display:block;
+}
+body.sfvc-text-enlarged .wiki-reader-modal,
+body.sfvc-text-max .wiki-reader-modal{
+  overscroll-behavior:none;
 }
 
 body.sfvc-text-enlarged .wiki-reader-scroll{

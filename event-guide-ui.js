@@ -205,72 +205,94 @@
   }
 
   function ensureWikiReader(){
-    const modal=document.getElementById("eventModal");
-    if(!modal)return null;
-    let panel=modal.querySelector("#wikiReaderPanel");
-    if(panel)return panel;
+    let modal=document.getElementById("wikiReaderPanel");
+    if(modal)return modal;
 
-    panel=document.createElement("section");
-    panel.id="wikiReaderPanel";
-    panel.className="wiki-reader-panel";
-    panel.setAttribute("role","dialog");
-    panel.setAttribute("aria-modal","true");
-    panel.setAttribute("aria-labelledby","wikiReaderTitle");
-    panel.setAttribute("aria-hidden","true");
-    panel.innerHTML=`
-      <header class="wiki-reader-header">
-        <div>
-          <span class="wiki-reader-kicker">IN-APP WIKIPEDIA READER</span>
-          <h2 id="wikiReaderTitle">WIKIPEDIA</h2>
-          <p id="wikiReaderSubtitle">Console history & information</p>
+    // V4.66: Wikipedia is its own native modal dialog in the top layer.
+    // It sits above the Events & Activities popup instead of replacing it.
+    modal=document.createElement("dialog");
+    modal.id="wikiReaderPanel";
+    modal.className="wiki-reader-modal";
+    modal.setAttribute("aria-labelledby","wikiReaderTitle");
+    modal.innerHTML=`
+      <div class="wiki-reader-shell">
+        <header class="wiki-reader-header">
+          <div>
+            <span class="wiki-reader-kicker">IN-APP WIKIPEDIA READER</span>
+            <h2 id="wikiReaderTitle">WIKIPEDIA</h2>
+            <p id="wikiReaderSubtitle">Console history & information</p>
+          </div>
+          <button id="closeWikiReader" class="wiki-reader-close" type="button" data-font-scale="locked" aria-label="Close Wikipedia reader">×</button>
+        </header>
+        <div id="wikiReaderScroll" class="wiki-reader-scroll" tabindex="0">
+          <div id="wikiReaderStatus" class="wiki-reader-status">Choose a console to load its Wikipedia article.</div>
+          <article id="wikiReaderArticle" class="wiki-reader-article"></article>
         </div>
-        <button id="closeWikiReader" class="wiki-reader-close" type="button" data-font-scale="locked" aria-label="Close Wikipedia reader">×</button>
-      </header>
-      <div id="wikiReaderScroll" class="wiki-reader-scroll" tabindex="0">
-        <div id="wikiReaderStatus" class="wiki-reader-status">Choose a console to load its Wikipedia article.</div>
-        <article id="wikiReaderArticle" class="wiki-reader-article"></article>
-      </div>
-      <footer class="wiki-reader-footer">
-        <span>Content from Wikipedia under its applicable CC BY-SA license.</span>
-        <a id="wikiReaderSourceLink" href="https://en.wikipedia.org" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL PAGE ↗</a>
-      </footer>`;
-    modal.appendChild(panel);
+        <footer class="wiki-reader-footer">
+          <span>Content from Wikipedia under its applicable CC BY-SA license.</span>
+          <a id="wikiReaderSourceLink" href="https://en.wikipedia.org" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL PAGE ↗</a>
+        </footer>
+      </div>`;
+    document.body.appendChild(modal);
 
-    panel.querySelector("#closeWikiReader")?.addEventListener("click",event=>{
+    modal.querySelector("#closeWikiReader")?.addEventListener("click",event=>{
       event.preventDefault();
       event.stopPropagation();
       closeWikiReader();
     });
-    return panel;
+
+    // Tapping the dark area outside the article closes only Wikipedia and
+    // reveals the Event Guide popup exactly where the attendee left it.
+    modal.addEventListener("click",event=>{
+      if(event.target===modal)closeWikiReader();
+    });
+
+    modal.addEventListener("close",()=>{
+      const eventModal=document.getElementById("eventModal");
+      if(eventModal){
+        requestAnimationFrame(()=>{
+          eventModal.scrollTop=wikiReturnScrollTop;
+        });
+      }
+    });
+
+    return modal;
   }
 
   function closeWikiReader(){
-    const modal=document.getElementById("eventModal");
-    const panel=modal?.querySelector("#wikiReaderPanel");
-    if(!modal||!panel)return;
-    panel.classList.remove("open");
-    panel.setAttribute("aria-hidden","true");
-    modal.classList.remove("wiki-reader-active");
-    requestAnimationFrame(()=>{modal.scrollTop=wikiReturnScrollTop;});
+    const modal=document.getElementById("wikiReaderPanel");
+    if(!modal)return;
+    if(modal.open)modal.close();
+  }
+
+  function showWikiReader(modal){
+    if(!modal)return;
+    const eventModal=document.getElementById("eventModal");
+    if(eventModal)wikiReturnScrollTop=eventModal.scrollTop;
+    if(!modal.open)modal.showModal();
+
+    // Always start a newly selected article at the top of its own scroller.
+    const scroll=modal.querySelector("#wikiReaderScroll");
+    if(scroll)scroll.scrollTop=0;
+    requestAnimationFrame(()=>{if(scroll)scroll.scrollTop=0;});
   }
 
   async function openWikiReaderByTitle(title,{label=title,sourceSearch=""}={}){
-    const modal=document.getElementById("eventModal");
-    const panel=ensureWikiReader();
-    if(!modal||!panel)return;
+    const eventModal=document.getElementById("eventModal");
+    const modal=ensureWikiReader();
+    if(!modal)return;
 
-    if(!modal.open)modal.showModal();
-    wikiReturnScrollTop=modal.scrollTop;
-    modal.classList.add("wiki-reader-active");
-    panel.classList.add("open");
-    panel.setAttribute("aria-hidden","false");
+    // The Event Guide should already be open when a console is selected, but
+    // retain a safe fallback if this function is called from another path.
+    if(eventModal && !eventModal.open)showEventModal(eventModal);
+    showWikiReader(modal);
 
-    const titleNode=panel.querySelector("#wikiReaderTitle");
-    const subtitle=panel.querySelector("#wikiReaderSubtitle");
-    const status=panel.querySelector("#wikiReaderStatus");
-    const articleNode=panel.querySelector("#wikiReaderArticle");
-    const scroll=panel.querySelector("#wikiReaderScroll");
-    const sourceLink=panel.querySelector("#wikiReaderSourceLink");
+    const titleNode=modal.querySelector("#wikiReaderTitle");
+    const subtitle=modal.querySelector("#wikiReaderSubtitle");
+    const status=modal.querySelector("#wikiReaderStatus");
+    const articleNode=modal.querySelector("#wikiReaderArticle");
+    const scroll=modal.querySelector("#wikiReaderScroll");
+    const sourceLink=modal.querySelector("#wikiReaderSourceLink");
 
     if(titleNode)titleNode.textContent=String(label||title||"Wikipedia").toUpperCase();
     if(subtitle)subtitle.textContent="Loading Wikipedia…";
@@ -299,27 +321,35 @@
   }
 
   async function openWikiReaderForConsole(consoleName,year){
-    const panel=ensureWikiReader();
+    const modal=ensureWikiReader();
     const searchUrl=`https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(consoleName)}`;
-    if(panel){
-      const source=panel.querySelector("#wikiReaderSourceLink");
+    if(modal){
+      const source=modal.querySelector("#wikiReaderSourceLink");
       if(source)source.href=searchUrl;
     }
+
+    // Open the second popup immediately so the tap always gets visible feedback
+    // while the correct Wikipedia title is resolved in the background.
+    if(modal){
+      showWikiReader(modal);
+      const titleNode=modal.querySelector("#wikiReaderTitle");
+      const subtitle=modal.querySelector("#wikiReaderSubtitle");
+      const status=modal.querySelector("#wikiReaderStatus");
+      const articleNode=modal.querySelector("#wikiReaderArticle");
+      if(titleNode)titleNode.textContent=String(consoleName||"Wikipedia").toUpperCase();
+      if(subtitle)subtitle.textContent="Finding Wikipedia article…";
+      if(status){status.hidden=false;status.textContent="Finding the matching Wikipedia article…";}
+      if(articleNode)articleNode.innerHTML="";
+    }
+
     try{
       const title=await resolveWikipediaTitle(consoleName,year);
       await openWikiReaderByTitle(title,{label:consoleName,sourceSearch:searchUrl});
     }catch(err){
       console.error("Wikipedia title lookup failed:",err);
-      // Keep the whole experience inside the Event Guide and provide a browser
-      // fallback instead of navigating the attendee away from the app.
-      const modal=document.getElementById("eventModal");
       const reader=ensureWikiReader();
-      if(!modal||!reader)return;
-      if(!modal.open)modal.showModal();
-      wikiReturnScrollTop=modal.scrollTop;
-      modal.classList.add("wiki-reader-active");
-      reader.classList.add("open");
-      reader.setAttribute("aria-hidden","false");
+      if(!reader)return;
+      showWikiReader(reader);
       const titleNode=reader.querySelector("#wikiReaderTitle");
       const subtitle=reader.querySelector("#wikiReaderSubtitle");
       const status=reader.querySelector("#wikiReaderStatus");
@@ -480,13 +510,10 @@
   }
 
   function closeModal(){
+    const wikiModal=document.getElementById("wikiReaderPanel");
+    if(wikiModal?.open)wikiModal.close();
     const modal=document.getElementById("eventModal");
-    if(!modal)return;
-    const reader=modal.querySelector("#wikiReaderPanel");
-    reader?.classList.remove("open");
-    reader?.setAttribute("aria-hidden","true");
-    modal.classList.remove("wiki-reader-active");
-    if(modal.open)modal.close();
+    if(modal?.open)modal.close();
   }
 
   // Wikipedia console links stay inside the Event Guide instead of navigating
@@ -528,9 +555,7 @@
     },true);
 
     document.getElementById("eventModal")?.addEventListener("click",event=>{
-      if(event.target!==event.currentTarget)return;
-      if(event.currentTarget.classList.contains("wiki-reader-active"))closeWikiReader();
-      else closeModal();
+      if(event.target===event.currentTarget)closeModal();
     },true);
   });
 })();

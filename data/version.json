@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.65-event-guide-viewport-centering",
-  "generatedAt": "2026-08-18T17:52:00Z",
-  "notes": "Keeps Events & Activities detail dialogs centered in the user's current viewport at any page scroll position and resets each newly opened event to the top of its content."
+  "version": "program-v4.66-stacked-wikipedia-modal",
+  "generatedAt": "2026-08-18T17:57:00Z",
+  "notes": "Moves the Retro Arcade Wikipedia reader into its own native popup above the Events & Activities popup, with a dedicated X, preserved underlying event position, and isolated scrolling."
 }
