@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.66">
+  <link rel="stylesheet" href="styles.css?v=4.67">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -227,6 +227,16 @@
           <em>Report a concern, request staff help, or report a vendor AI-policy violation.</em>
         </span>
         <b>›</b>
+      </button>
+
+      <button class="home-reporter-card home-lost-found-card" type="button" data-go="lost-found">
+        <span class="home-reporter-icon home-lost-found-icon" data-font-scale="locked" aria-hidden="true">LF</span>
+        <span>
+          <small>ATTENDEE SERVICES</small>
+          <strong>LOST &amp; FOUND</strong>
+          <em>Lost something at the convention? Send an inquiry and optional item photo to staff.</em>
+        </span>
+        <b data-font-scale="locked" aria-hidden="true">›</b>
       </button>
 
       <button id="homeGuestBanner" class="home-guest-banner" type="button" data-go="guests" aria-label="View celebrity guests">
@@ -522,6 +532,72 @@
       <p class="directions-google-note">Directions open in Google Maps. No account is required to use the link. Route conditions and travel times are provided by Google Maps.</p>
     </section>
 
+    <section id="lost-found" class="screen lost-found-screen">
+      <div class="page-title poster-title lost-found-title">
+        <p class="kicker">ATTENDEE SERVICES</p>
+        <h1>LOST <span>&amp; FOUND</span></h1>
+        <p>Lost something at Sci-Fi Valley Con? Send convention staff an inquiry with your contact information, a description of the item, and an optional photo if you have one.</p>
+      </div>
+
+      <section class="paper-panel lost-found-intro">
+        <span class="section-kicker">HOW IT WORKS</span>
+        <h2>HELP STAFF IDENTIFY YOUR ITEM</h2>
+        <p>Describe the item as clearly as possible. Include distinctive colors, brands, markings, contents, or where you last remember having it. If staff finds a possible match, they can use the contact information below to follow up.</p>
+        <p><b>Do not include passwords, full credit-card numbers, Social Security numbers, or other highly sensitive information.</b></p>
+      </section>
+
+      <form id="lostFoundForm" class="attendee-report-form lost-found-form">
+        <section class="paper-panel report-form-section">
+          <div class="section-heading"><div><span class="section-kicker">STEP 1</span><h2>YOUR CONTACT INFORMATION</h2></div></div>
+          <div class="report-field-grid">
+            <label class="report-field"><span>NAME <b>*</b></span><input id="lostFoundName" name="name" type="text" maxlength="160" autocomplete="name" required placeholder="Your name"></label>
+            <label class="report-field"><span>PHONE</span><input id="lostFoundPhone" name="phone" type="tel" maxlength="80" autocomplete="tel" placeholder="Best phone number"></label>
+            <label class="report-field full"><span>EMAIL</span><input id="lostFoundEmail" name="email" type="email" maxlength="200" autocomplete="email" placeholder="Best email address"></label>
+          </div>
+          <p class="lost-found-contact-note">Please provide <b>at least one</b> way for staff to contact you: phone or email.</p>
+        </section>
+
+        <section class="paper-panel report-form-section">
+          <div class="section-heading"><div><span class="section-kicker">STEP 2</span><h2>WHAT DID YOU LOSE?</h2></div></div>
+          <label class="report-field full">
+            <span>DESCRIPTION OF LOST ITEM <b>*</b></span>
+            <textarea id="lostFoundDescription" name="description" maxlength="4000" required placeholder="Describe the item, brand, color, size, distinctive marks, contents, case or bag, and anything else that could help staff identify it."></textarea>
+            <small><span id="lostFoundDescriptionCount">0</span>/4000 characters</small>
+          </label>
+          <label class="report-field full">
+            <span>WHERE DID YOU LAST HAVE OR SEE IT?</span>
+            <input id="lostFoundLocation" name="location" type="text" maxlength="240" placeholder="Example: celebrity area, Panel Room 1, café, vendor floor, parking shuttle...">
+          </label>
+        </section>
+
+        <section class="paper-panel report-form-section">
+          <div class="section-heading"><div><span class="section-kicker">OPTIONAL</span><h2>ADD A PHOTO OF THE ITEM</h2></div><span id="lostFoundUploadAvailability" class="pill">CHECKING…</span></div>
+          <p class="report-photo-note">If you already have a photo of the item, attaching it may help staff identify a match. One image can be attached to a Lost &amp; Found inquiry.</p>
+          <input id="lostFoundImage" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif">
+          <label class="report-file-picker" for="lostFoundImage"><span data-font-scale="locked" aria-hidden="true">＋</span><strong>ADD ITEM PHOTO</strong><small>JPG, PNG, WEBP, GIF, HEIC • max 5 MB</small></label>
+          <div id="lostFoundImagePreview" class="report-image-preview"></div>
+        </section>
+
+        <section class="report-submit-panel lost-found-submit-panel">
+          <div>
+            <strong>READY TO SEND?</strong>
+            <p>Your inquiry will be delivered to the same authorized admin inbox used by convention staff for attendee reports.</p>
+          </div>
+          <button id="submitLostFoundInquiry" type="submit"><span data-font-scale="locked" aria-hidden="true">LF</span><b>SEND LOST &amp; FOUND INQUIRY</b></button>
+          <p id="lostFoundSubmitStatus" class="report-submit-status" aria-live="polite"></p>
+        </section>
+      </form>
+
+      <section id="lostFoundSuccessPanel" class="report-success-panel lost-found-success-panel hidden" aria-live="polite">
+        <span class="report-success-icon" data-font-scale="locked" aria-hidden="true">✓</span>
+        <h2>INQUIRY SENT</h2>
+        <p>Your Lost &amp; Found inquiry was sent to Sci-Fi Valley Con staff. If staff identifies a possible match, they can contact you using the phone number or email address you provided.</p>
+        <strong id="lostFoundSuccessId">INQUIRY ID</strong>
+        <p>Keep this ID in case you need to reference the inquiry with staff.</p>
+        <button id="lostFoundAnotherButton" type="button">SUBMIT ANOTHER LOST ITEM</button>
+      </section>
+    </section>
+
     <section id="report" class="screen reporter-screen">
       <div class="page-title poster-title reporter-title">
         <p class="kicker">ATTENDEE SAFETY & SUPPORT</p>
@@ -664,6 +740,12 @@
         <span class="settings-menu-icon reporter-menu-icon" data-font-scale="locked" aria-hidden="true">!</span>
         <span><strong>ATTENDEE REPORTER</strong><small>Safety, venue issues, staff assistance, harassment, medical concerns & AI-policy reports</small></span>
         <b>›</b>
+      </button>
+
+      <button class="settings-menu-card lost-found-menu-card" data-go="lost-found">
+        <span class="settings-menu-icon lost-found-menu-icon" data-font-scale="locked" aria-hidden="true">LF</span>
+        <span><strong>LOST &amp; FOUND</strong><small>Send a lost-item inquiry with contact information and an optional photo</small></span>
+        <b data-font-scale="locked" aria-hidden="true">›</b>
       </button>
 
       <button class="settings-menu-card" data-go="settings">
@@ -1333,8 +1415,8 @@
     </div>
   </dialog>
 
-  <script src="event-guide-ui.js?v=4.66"></script>
+  <script src="event-guide-ui.js?v=4.67"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.66"></script>
+  <script src="app.js?v=4.67"></script>
 </body>
 </html>

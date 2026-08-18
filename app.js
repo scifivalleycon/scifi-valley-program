@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.54";
+const APP_BUILD_VERSION="4.67";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -280,6 +280,10 @@ function goTo(screenId){
     const destination=document.getElementById(screenId);
     fitProgramPageHeadings(destination||document);
   });
+  if(screenId==="lost-found"){
+    prefillLostFoundContact();
+    loadReporterConfig().catch(()=>{});
+  }
 }
 navButtons.forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.screen)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.go)));
@@ -355,6 +359,10 @@ const PROGRAM_TEXT_ICON_LOCKED_SELECTOR=[
   '.event-quick-icon',
   '.purchase-quick-icon',
   '.home-reporter-icon',
+  '.home-lost-found-icon',
+  '.lost-found-menu-icon',
+  '#submitLostFoundInquiry>span',
+  '.lost-found-form .report-file-picker>span:first-child',
   '.settings-menu-icon',
   '.directions-menu-icon',
   '.faq-menu-icon',
@@ -3949,6 +3957,8 @@ function validateReporterFiles(){
 async function loadReporterConfig(){
   const badge=document.getElementById("reportUploadAvailability");
   const input=document.getElementById("reportImages");
+  const lostFoundBadge=document.getElementById("lostFoundUploadAvailability");
+  const lostFoundInput=document.getElementById("lostFoundImage");
   try{
     const base=pushApiBase();
     const response=await fetch(`${base}/v1/reports/config`,{cache:"no-store",credentials:"omit"});
@@ -3962,6 +3972,11 @@ async function loadReporterConfig(){
     badge.classList.toggle("warning",!reporterUploadsEnabled);
   }
   if(input)input.disabled=!reporterUploadsEnabled;
+  if(lostFoundBadge){
+    lostFoundBadge.textContent=reporterUploadsEnabled?"PHOTO UPLOADS ON":"TEXT INQUIRIES ONLY";
+    lostFoundBadge.classList.toggle("warning",!reporterUploadsEnabled);
+  }
+  if(lostFoundInput)lostFoundInput.disabled=!reporterUploadsEnabled;
 }
 
 function resetAttendeeReporter(){
@@ -4070,6 +4085,159 @@ function initializeAttendeeReporter(){
   updateReporterCategoryUi();
   updateReporterIdentityUi();
   loadReporterConfig();
+}
+
+
+/* =========================================================
+   V4.67 — LOST & FOUND INQUIRY
+   ========================================================= */
+
+const LOST_FOUND_MAX_FILE_BYTES=5*1024*1024;
+
+function lostFoundFile(){
+  return document.getElementById("lostFoundImage")?.files?.[0]||null;
+}
+
+function renderLostFoundFilePreview(){
+  const host=document.getElementById("lostFoundImagePreview");
+  if(!host)return;
+  const file=lostFoundFile();
+  host.innerHTML=file?`<article class="report-image-chip"><span data-font-scale="locked">1</span><div><b>${escapeAppHtml(file.name)}</b><small>${Math.max(.1,file.size/1024/1024).toFixed(1)} MB</small></div></article>`:"";
+}
+
+function validateLostFoundFile(){
+  const file=lostFoundFile();
+  if(!file)return null;
+  if(file.size>LOST_FOUND_MAX_FILE_BYTES)throw new Error(`${file.name} is larger than 5 MB.`);
+  if(!/^image\//i.test(file.type||""))throw new Error(`${file.name} is not a supported image file.`);
+  if(!reporterUploadsEnabled)throw new Error("Photo uploads are temporarily unavailable. You can still submit the inquiry without a photo.");
+  return file;
+}
+
+function resetLostFoundInquiry(){
+  document.getElementById("lostFoundForm")?.reset();
+  document.getElementById("lostFoundForm")?.classList.remove("hidden");
+  document.getElementById("lostFoundSuccessPanel")?.classList.add("hidden");
+  const preview=document.getElementById("lostFoundImagePreview");
+  if(preview)preview.innerHTML="";
+  const counter=document.getElementById("lostFoundDescriptionCount");
+  if(counter)counter.textContent="0";
+  const status=document.getElementById("lostFoundSubmitStatus");
+  if(status){status.textContent="";status.className="report-submit-status";}
+}
+
+function prefillLostFoundContact(){
+  const profile=reporterRegisteredProfile();
+  if(!profile)return;
+  const name=document.getElementById("lostFoundName");
+  const phone=document.getElementById("lostFoundPhone");
+  const email=document.getElementById("lostFoundEmail");
+  if(name&&!name.value)name.value=profile.name||"";
+  if(phone&&!phone.value)phone.value=profile.phone||"";
+  if(email&&!email.value)email.value=profile.email||"";
+}
+
+async function submitLostFoundInquiry(event){
+  event.preventDefault();
+  const form=event.currentTarget;
+  const button=document.getElementById("submitLostFoundInquiry");
+  const status=document.getElementById("lostFoundSubmitStatus");
+  const name=String(document.getElementById("lostFoundName")?.value||"").trim();
+  const phone=String(document.getElementById("lostFoundPhone")?.value||"").trim();
+  const email=String(document.getElementById("lostFoundEmail")?.value||"").trim();
+  const description=String(document.getElementById("lostFoundDescription")?.value||"").trim();
+  const location=String(document.getElementById("lostFoundLocation")?.value||"").trim();
+
+  if(!name){
+    status.textContent="Please enter your name.";
+    status.className="report-submit-status error";
+    document.getElementById("lostFoundName")?.focus();
+    return;
+  }
+  if(!phone&&!email){
+    status.textContent="Please provide a phone number or email address so staff can contact you if an item matches.";
+    status.className="report-submit-status error";
+    document.getElementById("lostFoundPhone")?.focus();
+    return;
+  }
+  if(!description){
+    status.textContent="Please describe the item you lost.";
+    status.className="report-submit-status error";
+    document.getElementById("lostFoundDescription")?.focus();
+    return;
+  }
+
+  let file=null;
+  try{file=validateLostFoundFile()}catch(err){
+    status.textContent=err.message;
+    status.className="report-submit-status error";
+    return;
+  }
+
+  const payload={
+    deviceId:getAnonymousDeviceId(),
+    appVersion:APP_BUILD_VERSION,
+    category:"lostfound",
+    happeningNow:false,
+    location,
+    description,
+    vendorName:"",
+    vendorTable:"",
+    aiDetails:"",
+    reporterMode:"identified",
+    reporterName:name,
+    reporterPhone:phone,
+    reporterEmail:email,
+    timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
+  };
+
+  const data=new FormData();
+  data.append("report",JSON.stringify(payload));
+  if(file)data.append("images",file,file.name);
+
+  if(button){button.disabled=true;button.innerHTML='<span data-font-scale="locked">…</span><b>SENDING INQUIRY…</b>';}
+  status.textContent="Sending your Lost & Found inquiry to convention staff…";
+  status.className="report-submit-status";
+
+  try{
+    const base=pushApiBase();
+    const response=await fetch(`${base}/v1/reports`,{method:"POST",body:data,credentials:"omit"});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||`Lost & Found service returned ${response.status}.`);
+
+    form.classList.add("hidden");
+    const success=document.getElementById("lostFoundSuccessPanel");
+    success?.classList.remove("hidden");
+    const id=document.getElementById("lostFoundSuccessId");
+    if(id)id.textContent=result.reportId||"INQUIRY RECEIVED";
+    success?.scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(err){
+    status.textContent=`Could not send inquiry: ${err.message}`;
+    status.className="report-submit-status error";
+  }finally{
+    if(button){button.disabled=false;button.innerHTML='<span data-font-scale="locked">LF</span><b>SEND LOST & FOUND INQUIRY</b>';}
+  }
+}
+
+function initializeLostFoundInquiry(){
+  const form=document.getElementById("lostFoundForm");
+  if(!form)return;
+  prefillLostFoundContact();
+  document.getElementById("lostFoundDescription")?.addEventListener("input",event=>{
+    const counter=document.getElementById("lostFoundDescriptionCount");
+    if(counter)counter.textContent=String(event.target.value.length);
+  });
+  document.getElementById("lostFoundImage")?.addEventListener("change",()=>{
+    try{validateLostFoundFile();renderLostFoundFilePreview();}
+    catch(err){
+      const status=document.getElementById("lostFoundSubmitStatus");
+      if(status){status.textContent=err.message;status.className="report-submit-status error";}
+      document.getElementById("lostFoundImage").value="";
+      renderLostFoundFilePreview();
+    }
+  });
+  form.addEventListener("submit",submitLostFoundInquiry);
+  document.getElementById("lostFoundAnotherButton")?.addEventListener("click",()=>{resetLostFoundInquiry();prefillLostFoundContact();});
 }
 
 /* Interactive vector floor plan — V4.2 */
@@ -4944,6 +5112,7 @@ initializeEventCountdown();
 initializeProgramTools();
 initializeDirections();
 initializeAttendeeReporter();
+initializeLostFoundInquiry();
 
 loadData().then(()=>{
   startVisibleAppRefresh();

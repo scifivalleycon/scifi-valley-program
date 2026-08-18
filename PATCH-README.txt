@@ -1,25 +1,25 @@
-Sci-Fi Valley Con Attendee App V4.66 — Stacked Wikipedia Modal
+Sci-Fi Valley Con Attendee App V4.67 — Lost & Found Inquiry
 
-Rolled forward cumulatively from V4.65 Event Guide Viewport Centering.
+Rolled forward cumulatively from V4.66 Stacked Wikipedia Modal.
 
-FIXED / CHANGED
-- Wikipedia no longer replaces or fills the Events & Activities popup.
-- Tapping READ WIKIPEDIA now opens a SECOND native popup above the existing Event Guide popup.
-- The original Event Guide popup remains open underneath at the exact same scroll position.
-- Wikipedia has its own dedicated orange X close button. Closing it returns the attendee directly to the console list/event details underneath.
-- Tapping the dark area outside the Wikipedia popup also closes only the Wikipedia layer.
-- The Wikipedia popup is centered in the current viewport and uses its own isolated vertical scroller.
-- The popup opens immediately with a loading message while the correct article is resolved, preventing the tap from appearing to do nothing on a slower connection.
-- Related Wikipedia links continue opening inside the same second popup rather than navigating away from the app.
-- The existing OPEN ORIGINAL PAGE fallback remains available.
+ADDED
+- Dedicated LOST & FOUND button on the Home screen and Event Guide / More menu.
+- Lost & Found form collects attendee name, phone, email, lost-item description, optional last-known location and one optional item photo.
+- Name is required and at least one contact method (phone or email) is required so staff can follow up on a possible match.
+- Existing registered attendee profile is used to prefill contact fields when available.
+- Photo upload uses the existing secure attendee-report upload service and existing 5 MB image limit.
+- Lost & Found submissions are sent as the new `lostfound` report category and receive the normal report/reference ID.
+- Success screen confirms delivery and gives the attendee the inquiry ID.
 
-ACCESSIBILITY / MOBILE
-- Wikipedia article text still follows the app's accessibility text scaling.
-- The Wikipedia X remains fixed-size and centered.
-- Overscroll and enlarged-text anti-bounce protections remain active.
-- The Events & Activities viewport-centering fix from V4.65 remains intact.
+ACCESSIBILITY
+- New LF badges and upload/submit symbols are locked against global text scaling so they remain centered at 200% text size.
+- The form reuses the existing accessible report field, upload and success layouts.
 
-CACHE
-- Stylesheet, Event Guide renderer, app query string, and service-worker cache bumped to V4.66.
+PRESERVED
+- V4.66 stacked Wikipedia popup architecture.
+- V4.65 Event Guide viewport centering.
+- All previous text-scaling, scrolling, reporting, schedule, map, guest, notification and PWA features.
 
-Upload the files inside this ZIP over the existing attendee-app repository files.
+IMPORTANT
+- Deploy Notify V1.17 before or at the same time as this attendee patch. The backend must recognize the `lostfound` category before the new form can submit successfully.
+- Deploy Admin V2.27 so Lost & Found inquiries are labeled/filterable in the staff report inbox.

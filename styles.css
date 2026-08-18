@@ -5452,3 +5452,85 @@ body.sfvc-text-max .wiki-reader-header h2{
     text-align:center;
   }
 }
+
+
+/* =========================================================
+   V4.67 — LOST & FOUND INQUIRY
+   ========================================================= */
+.home-lost-found-card{
+  background:linear-gradient(135deg,rgba(226,173,52,.34),rgba(255,247,223,.82));
+}
+.home-lost-found-icon{
+  background:var(--mustard)!important;
+  color:var(--ink)!important;
+  font-family:var(--display)!important;
+  font-size:11px!important;
+  line-height:1!important;
+}
+.lost-found-menu-card{
+  background:rgba(226,173,52,.20);
+}
+.settings-menu-icon.lost-found-menu-icon{
+  background:var(--mustard)!important;
+  color:var(--ink)!important;
+  font-family:var(--display)!important;
+  font-size:9px!important;
+  line-height:1!important;
+}
+.lost-found-title{
+  background:
+    radial-gradient(circle at 88% 20%,rgba(226,173,52,.32),transparent 25%),
+    linear-gradient(135deg,rgba(115,199,203,.15),rgba(255,247,223,.86));
+}
+.lost-found-intro h2{
+  margin:4px 0 7px;
+  font-family:var(--display);
+  font-size:20px;
+  line-height:1.03;
+}
+.lost-found-intro p{
+  margin:6px 0;
+  font-family:Georgia,serif;
+  font-size:9px;
+  line-height:1.45;
+}
+.lost-found-contact-note{
+  margin:8px 0 0;
+  padding:8px 9px;
+  border-left:4px solid var(--mustard);
+  background:rgba(226,173,52,.13);
+  font:8px/1.4 Georgia,serif;
+  color:var(--ink2);
+}
+.lost-found-submit-panel{
+  border-color:var(--ink);
+  background:linear-gradient(135deg,rgba(226,173,52,.22),rgba(115,199,203,.16));
+}
+#submitLostFoundInquiry>span{
+  width:34px!important;
+  height:34px!important;
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 34px!important;
+  border:2px solid var(--ink)!important;
+  border-radius:50%!important;
+  background:var(--mustard)!important;
+  color:var(--ink)!important;
+  font-family:var(--display)!important;
+  font-size:9px!important;
+  line-height:1!important;
+}
+.lost-found-success-panel{
+  background:linear-gradient(135deg,rgba(226,173,52,.20),rgba(115,199,203,.16)),var(--paper2);
+}
+.lost-found-form .report-file-picker>span:first-child{
+  font-size:20px!important;
+  line-height:1!important;
+}
+body.sfvc-text-xxl .home-lost-found-icon{font-size:11px!important;line-height:1!important}
+body.sfvc-text-xxl .settings-menu-icon.lost-found-menu-icon{font-size:9px!important;line-height:1!important}
+body.sfvc-text-xxl #submitLostFoundInquiry>span{font-size:9px!important;line-height:1!important}
+body.sfvc-text-xxl .lost-found-form .report-file-picker>span:first-child{font-size:20px!important;line-height:1!important}
+@media(max-width:620px){
+  .lost-found-screen .report-field-grid{grid-template-columns:1fr}
+}
