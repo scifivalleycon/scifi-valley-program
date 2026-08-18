@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.59-guest-name-fit-stable-modal-scroll",
-  "generatedAt": "2026-08-18T16:43:00Z",
-  "notes": "Auto-fits celebrity guest names to one line at enlarged text sizes and stabilizes guest-detail modal scrolling on mobile."
+  "version": "program-v4.63-retro-arcade-year-layout",
+  "generatedAt": "2026-08-18T17:32:00Z",
+  "notes": "Formats Retro Video Game Arcade console years on their own line beneath each console name."
 }

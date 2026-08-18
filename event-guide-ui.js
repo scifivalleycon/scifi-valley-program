@@ -69,7 +69,10 @@
         ${block.title?`<h3>${esc(block.title)}</h3>`:""}
         <div class="system-grid">${(block.items||[]).map(item=>`
           <article class="system-card">
-            <div><strong>${esc(item.name)}</strong>${item.year?`<span>${esc(item.year)}</span>`:""}</div>
+            <div class="system-card-heading">
+              <strong style="display:block;line-height:1.08">${esc(item.name)}</strong>
+              ${item.year?`<span class="system-card-year" style="display:block;margin-top:3px;font-size:.76em;line-height:1.1;font-weight:700;letter-spacing:.08em;color:var(--ink2)">${esc(item.year)}</span>`:""}
+            </div>
             ${item.desc?`<p>${esc(item.desc)}</p>`:""}
           </article>`).join("")}</div>
       </section>`;

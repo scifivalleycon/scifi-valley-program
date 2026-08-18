@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-62";
+const CACHE="sfvc-program-v4-63";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -52,8 +52,6 @@ self.addEventListener("push",event=>{
   let data={};
   try{data=event.data?event.data.json():{}}catch{data={body:event.data?.text?.()||""}}
 
-  // Declarative Web Push places visible fields inside `notification`.
-  // Legacy payloads use the top level. Support both.
   const proposed=(data&&typeof data.notification==="object")?data.notification:data;
   const title=proposed.title||data.title||"Sci-Fi Valley Con";
   const body=proposed.body||data.body||"Convention update";

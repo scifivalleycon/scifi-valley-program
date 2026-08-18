@@ -1,26 +1,21 @@
-Sci-Fi Valley Con Attendee App V4.62 — Global Fixed-Symbol Alignment
+Sci-Fi Valley Con Attendee App V4.63 — Retro Arcade Year Layout
 
-Rolled forward cumulatively from V4.61 Icon / Program Tools / Overlay Scroll Stability.
+Rolled forward cumulatively from V4.62 Global Fixed-Symbol Alignment.
 
 FIXED
-- Corrects the 200% text-size misalignment shown on the Directions starting-location compass icon.
-- Corrects the 200% text-size misalignment shown on the Newsletter envelope badge.
-- Corrects the 200% text-size misalignment shown on the Follow Sci-Fi Valley Con @ badge.
-- Audits the rest of the attendee app for the same failure mode: fixed-size icon/badge containers whose glyphs were still being treated as readable copy by the global text scaler.
-- Locks additional fixed UI symbols including menu icons, alert bells, featured-event badges, newsletter button icon, T-shirt badges, FAQ numbers/chevrons, registration badge, schedule check mark, directions destination badges, report badges, map badge, Con-Quest step numbers, and standalone navigation chevrons/arrows.
-- Also protects fixed visual placeholders and compact map location chips from inherited 175-200% parent font growth that could distort their artwork/geometry.
-- Adds hard geometry/line-height overrides for the fixed symbol containers so the generic 175-200% button/text rules cannot shift their glyphs off-center.
-- Preserves the intended smaller mobile destination badge size.
+- Retro Video Game Arcade system entries no longer place the release year directly against the console name.
+- Every console name now occupies its own line.
+- The release year appears on a separate line directly beneath the console name.
+- The description remains below the year with the existing Event Guide formatting.
+- The layout remains readable at enlarged accessibility text sizes.
 
 PRESERVED
-- V4.61 175% Program Tools tab cap and overlay-scroll stabilization.
-- V4.60 two-line unbreakable guest-name fitting.
-- V4.59 guest-detail isolated scroll architecture.
-- V4.58 Program Tools close-button lock.
-- V4.57 Schedule 175% cap, map text lock, top-bar 130% cap, page-title fitting, and earlier icon alignment.
-- Attendee reporting and all existing attendee app features.
+- V4.62 global fixed-icon alignment protections.
+- V4.61 overlay-scroll stabilization and Program Tools 175% cap.
+- V4.60 two-line guest-name fitting.
+- All reporting, schedule, map, guest, Event Guide, notification, and PWA functionality.
 
 CACHE
-- Stylesheet/app query strings and service-worker cache bumped to V4.62.
+- Service-worker cache bumped to V4.63 so the updated Event Guide renderer is refreshed.
 
 Upload the files inside this ZIP over the existing attendee-app repository files.
