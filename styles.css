@@ -4140,3 +4140,132 @@ body.sfvc-text-enlarged .screen [class*="details"]{
     display:inline-grid;
   }
 }
+
+
+/* =========================================================
+   V4.51 — EXTRA-LARGE ACCESSIBILITY TEXT (150–200%)
+   ========================================================= */
+
+/* At 150%+, prioritize readable vertical flow over dense multi-column layouts. */
+body.sfvc-text-xl .screen .card-grid,
+body.sfvc-text-xl .screen .event-grid,
+body.sfvc-text-xl .screen .info-grid,
+body.sfvc-text-xl .screen .guest-grid,
+body.sfvc-text-xl .screen .schedule-grid,
+body.sfvc-text-xl .screen .vendor-grid,
+body.sfvc-text-xl .screen .faq-grid,
+body.sfvc-text-xl .screen .photo-grid,
+body.sfvc-text-xl .screen .price-grid{
+  grid-template-columns:1fr!important;
+}
+
+body.sfvc-text-xl .screen .button-row,
+body.sfvc-text-xl .screen .action-row,
+body.sfvc-text-xl .screen .card-actions,
+body.sfvc-text-xl .screen .modal-actions,
+body.sfvc-text-xl .screen .filter-row,
+body.sfvc-text-xl .screen .chip-row{
+  flex-wrap:wrap!important;
+}
+
+body.sfvc-text-xl .screen button,
+body.sfvc-text-xl .screen .button,
+body.sfvc-text-xl .screen a.button,
+body.sfvc-text-xl .screen input,
+body.sfvc-text-xl .screen select,
+body.sfvc-text-xl .screen textarea{
+  min-height:44px;
+}
+
+body.sfvc-text-xl .screen .record,
+body.sfvc-text-xl .screen .schedule-card,
+body.sfvc-text-xl .screen .event-card,
+body.sfvc-text-xl .screen .guest-card,
+body.sfvc-text-xl .screen .vendor-card,
+body.sfvc-text-xl .screen .faq-item{
+  min-width:0!important;
+}
+
+body.sfvc-text-xl .screen .record-title,
+body.sfvc-text-xl .screen .record-sub,
+body.sfvc-text-xl .screen .meta,
+body.sfvc-text-xl .screen .schedule-time,
+body.sfvc-text-xl .screen .schedule-location,
+body.sfvc-text-xl .screen .vendor-description,
+body.sfvc-text-xl .screen .faq-answer{
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+/* 175%+: remove additional horizontal compression. */
+body.sfvc-text-xxl .screen .two-column,
+body.sfvc-text-xxl .screen .three-column,
+body.sfvc-text-xxl .screen [class*="two-col"],
+body.sfvc-text-xxl .screen [class*="three-col"]{
+  display:block!important;
+}
+
+body.sfvc-text-xxl .screen .tag,
+body.sfvc-text-xxl .screen .badge,
+body.sfvc-text-xxl .screen .chip{
+  white-space:normal!important;
+  line-height:1.25!important;
+}
+
+body.sfvc-text-xxl .screen .modal-card,
+body.sfvc-text-xxl .screen .sheet,
+body.sfvc-text-xxl .screen .panel-card{
+  max-width:min(96vw,760px)!important;
+}
+
+/* 200%: maximum accessibility mode. Reduce decorative density and give
+   content as much vertical room as possible. */
+body.sfvc-text-max .screen{
+  line-height:1.45;
+}
+
+body.sfvc-text-max .screen .eyebrow,
+body.sfvc-text-max .screen .kicker,
+body.sfvc-text-max .screen .tiny-label{
+  letter-spacing:.03em!important;
+}
+
+body.sfvc-text-max .screen .compact,
+body.sfvc-text-max .screen .dense{
+  padding-top:10px!important;
+  padding-bottom:10px!important;
+}
+
+body.sfvc-text-max .screen table{
+  display:block;
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+body.sfvc-text-max .screen td,
+body.sfvc-text-max .screen th{
+  white-space:normal!important;
+}
+
+/* The controls themselves are intentionally locked from the global scaler, but
+   the percentage readout should remain prominent enough to understand. */
+.font-size-controls{
+  grid-template-columns:46px minmax(72px,1fr) 46px 58px;
+}
+
+.font-size-value{
+  font-size:11px;
+}
+
+@media(max-width:620px){
+  body.sfvc-text-xl .screen .utility-action-grid,
+  body.sfvc-text-xl .screen .share-app-options{
+    grid-template-columns:1fr!important;
+  }
+
+  body.sfvc-text-xl .screen .directions-destination-grid{
+    grid-template-columns:1fr!important;
+  }
+}

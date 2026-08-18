@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.50-directions-desktop-position",
-  "generatedAt": "2026-08-18T01:34:39Z",
-  "source": "v4.50 desktop directions button layout"
+  "version": "program-v4.51-extra-large-accessibility-text",
+  "generatedAt": "2026-08-18T01:35:47Z",
+  "notes": "Adds 150%, 175%, and 200% text-size options with adaptive accessibility reflow."
 }

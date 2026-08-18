@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.50";
+const APP_BUILD_VERSION="4.51";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -283,7 +283,7 @@ document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=
    ========================================================= */
 
 const PROGRAM_TEXT_SCALE_KEY="sfvc-program-text-scale-v1";
-const PROGRAM_TEXT_SCALES=[0.90,1,1.15,1.30];
+const PROGRAM_TEXT_SCALES=[0.90,1,1.15,1.30,1.50,1.75,2.00];
 let programTextScale=Number(localStorage.getItem(PROGRAM_TEXT_SCALE_KEY)||1);
 if(!PROGRAM_TEXT_SCALES.includes(programTextScale))programTextScale=1;
 
@@ -340,17 +340,21 @@ function effectiveProgramTextScale(element,base){
   if(programTextScale<=1)return programTextScale;
 
   const computed=getComputedStyle(element);
-  let cap=1.30;
+  let cap=2.00;
 
-  // Accessibility benefit is greatest on the small copy. Large display text is
-  // already readable and gets a smaller increase so it does not crush adjacent UI.
+  // Small body text can use the full accessibility range.
+  // Medium and large headings grow more conservatively so the visual hierarchy
+  // remains intact and display areas do not become oversized.
   if(base>=28)cap=1.00;
-  else if(base>=22)cap=1.08;
-  else if(base>=16)cap=1.15;
+  else if(base>=22)cap=1.18;
+  else if(base>=18)cap=1.32;
+  else if(base>=16)cap=1.50;
+  else if(base>=13)cap=1.75;
 
-  // Tight one-line controls and compact utility labels receive a conservative cap.
-  if(computed.whiteSpace==='nowrap')cap=Math.min(cap,1.12);
-  if(element.matches('button,input,select,textarea,code,.tag,.badge,.chip'))cap=Math.min(cap,1.18);
+  // Compact one-line controls can grow substantially, but not so much that a
+  // single button destroys the surrounding layout.
+  if(computed.whiteSpace==='nowrap')cap=Math.min(cap,1.55);
+  if(element.matches('button,input,select,textarea,code,.tag,.badge,.chip'))cap=Math.min(cap,1.65);
 
   return Math.min(programTextScale,cap);
 }
@@ -407,6 +411,9 @@ function applyProgramTextScale(scale,{persist=true}={}){
   document.body.dataset.programTextScale=String(programTextScale);
   document.body.classList.toggle('sfvc-text-enlarged',programTextScale>1);
   document.body.classList.toggle('sfvc-text-largest',programTextScale>=1.30);
+  document.body.classList.toggle('sfvc-text-xl',programTextScale>=1.50);
+  document.body.classList.toggle('sfvc-text-xxl',programTextScale>=1.75);
+  document.body.classList.toggle('sfvc-text-max',programTextScale>=2.00);
 
   if(programTextScale!==1)scaleTextTree(document.body);
   if(persist)localStorage.setItem(PROGRAM_TEXT_SCALE_KEY,String(programTextScale));
