@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.62-global-fixed-symbol-alignment",
-  "generatedAt": "2026-08-18T17:22:00Z",
-  "notes": "Audits and locks fixed-size icon, badge, arrow and chevron glyphs so 175-200% accessibility text scaling cannot enlarge or misalign them inside their containers."
+  "version": "program-v4.64-retro-arcade-in-app-wikipedia-reader",
+  "generatedAt": "2026-08-18T17:40:00Z",
+  "notes": "Adds an in-app Wikipedia reader to every Retro Video Game Arcade console entry, with live Wikipedia article loading, internal article navigation, accessibility-safe scrolling, and external-source fallback."
 }
