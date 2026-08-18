@@ -418,6 +418,22 @@
     return meta[id]||{icon:"★",tone:"aqua",category};
   }
 
+  function showEventModal(modal){
+    if(!modal)return;
+    if(!modal.open)modal.showModal();
+
+    // A reused <dialog> can retain its previous internal scroll position.
+    // Reset it after opening so the event always starts at its heading while
+    // the dialog itself remains centered in the current viewport.
+    modal.scrollTop=0;
+    const content=modal.querySelector("#eventModalContent");
+    if(content)content.scrollTop=0;
+    requestAnimationFrame(()=>{
+      modal.scrollTop=0;
+      if(content)content.scrollTop=0;
+    });
+  }
+
   async function openEvent(eventId){
     await loadEvents();
 
@@ -439,7 +455,7 @@
             </div>
           </div>
         </div>`;
-      modal.showModal();
+      showEventModal(modal);
       return;
     }
 
@@ -460,7 +476,7 @@
         </div>
       </div>`;
 
-    modal.showModal();
+    showEventModal(modal);
   }
 
   function closeModal(){

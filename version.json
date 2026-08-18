@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.64-retro-arcade-in-app-wikipedia-reader",
-  "generatedAt": "2026-08-18T17:40:00Z",
-  "notes": "Adds an in-app Wikipedia reader to every Retro Video Game Arcade console entry, with live Wikipedia article loading, internal article navigation, accessibility-safe scrolling, and external-source fallback."
+  "version": "program-v4.65-event-guide-viewport-centering",
+  "generatedAt": "2026-08-18T17:52:00Z",
+  "notes": "Keeps Events & Activities detail dialogs centered in the user's current viewport at any page scroll position and resets each newly opened event to the top of its content."
 }

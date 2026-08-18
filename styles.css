@@ -5200,8 +5200,21 @@ body.sfvc-text-xxl .conquest-info-steps article>b{
   box-shadow:1px 1px 0 rgba(58,39,32,.12);
 }
 
+/* V4.65 — Event Guide dialogs must remain in the viewport top layer.
+   V4.64 used position:relative here to anchor the Wikipedia reader, but that
+   unintentionally defeated native <dialog> viewport positioning on iOS when
+   the underlying Event Guide page was already scrolled. A fixed positioned
+   dialog still establishes the containing block needed by the absolute wiki
+   reader while keeping the entire popup centered in the user's current view. */
 .event-detail-modal{
-  position:relative;
+  position:fixed;
+  inset:0;
+  margin:auto;
+  max-height:90vh;
+  max-height:90svh;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:none;
 }
 .event-detail-modal.wiki-reader-active{
   height:90vh;
