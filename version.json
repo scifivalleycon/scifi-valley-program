@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.71-top-left-back-button",
-  "generatedAt": "2026-08-18T19:22:00Z",
-  "notes": "Moves the in-app Back button from the upper-right to the upper-left corner of the top bar while preserving screen history and scroll-position restoration."
+  "version": "program-v4.72-topbar-name-115-percent-cap",
+  "generatedAt": "2026-08-18T19:28:00Z",
+  "notes": "Caps the top-bar SCI-FI VALLEY CON brand text at 115% so the left-side Back button and Program Tools tab keep clear separation at larger accessibility text settings."
 }

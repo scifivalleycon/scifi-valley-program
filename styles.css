@@ -4583,7 +4583,7 @@ body.sfvc-text-xxl summary{
    ========================================================= */
 
 /* Keep the compact top-bar brand on one visual row. Its text-size ceiling is
-   enforced by data-font-scale-max="1.30" in the scaling engine. */
+   enforced by data-font-scale-max="1.15" in the scaling engine. */
 #topbarEventName{
   white-space:nowrap;
 }
