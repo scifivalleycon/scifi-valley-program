@@ -1,19 +1,14 @@
-Sci-Fi Valley Con Attendee App V4.54 — Attendee Reporter
+Sci-Fi Valley Con Program Admin V2.26 — Attendee Reports
 
-Adds SEE SOMETHING? SAY SOMETHING attendee reporting for:
-- Venue / facility concerns
-- Staff assistance
-- Security / safety concerns
-- Harassment / sexual misconduct / stalking
-- Medical concerns
-- Accessibility concerns
-- Vendor AI-policy violations
-- Other concerns
+Adds an Attendee Reports inbox with:
+- New/high-priority/24h/AI-report counters
+- Search, status filtering, category filtering
+- Full report detail including anonymous or optional contact information
+- Private image evidence viewer
+- Status workflow: New, Reviewing, Actioned, Closed, Dismissed
+- Internal staff notes and basic view/update audit information
+- Browser push alerts for new attendee reports
 
-Users may report anonymously or optionally provide name, phone and/or email.
-AI reports can include vendor name, table number, details, and up to 3 private image uploads.
-The form clearly warns that urgent emergencies should be reported to Front Admissions /
-Staff Area immediately and 911 should be used when appropriate.
-
-Requires Notify Worker V1.15 and its R2 report-upload binding for photo evidence.
-Text-only reports still work if photo storage is unavailable.
+Each authorized Admin device must click ENABLE REPORT ALERTS once.
+The Admin app remains protected by Cloudflare Access and the existing STAFF_EMAILS allowlist.
+Requires Notify Worker V1.15.
