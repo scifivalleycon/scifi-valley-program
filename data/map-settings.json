@@ -95,20 +95,9 @@
     ],
     "homeLayout": {
       "version": 1,
-      "updatedAt": "2026-08-19T15:42:52.044Z",
+      "updatedAt": "2026-08-19T15:46:43.413Z",
       "updatedBy": "Program Admin App Layout Designer",
       "items": [
-        {
-          "id": "attendee-reporter",
-          "type": "builtin",
-          "visible": true,
-          "kicker": "ATTENDEE SAFETY & SUPPORT",
-          "title": "SEE SOMETHING? SAY SOMETHING.",
-          "description": "Report a concern, request staff help, or report a vendor AI-policy violation.",
-          "icon": "!",
-          "style": "coral",
-          "order": 10
-        },
         {
           "id": "guest-banner",
           "type": "builtin",
@@ -118,6 +107,17 @@
           "description": "Guest banner, bios, reunions, photo ops and more.",
           "icon": "★",
           "style": "paper",
+          "order": 10
+        },
+        {
+          "id": "attendee-reporter",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SAFETY & SUPPORT",
+          "title": "SEE SOMETHING? SAY SOMETHING.",
+          "description": "Report a concern, request staff help, or report a vendor AI-policy violation.",
+          "icon": "!",
+          "style": "coral",
           "order": 20
         },
         {
