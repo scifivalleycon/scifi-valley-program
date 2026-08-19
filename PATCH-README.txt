@@ -1,31 +1,31 @@
-Sci-Fi Valley Con Attendee App V4.80 - Cosplay Clinic Native Content Cleanup
+Sci-Fi Valley Con Attendee App V4.81 - Admin-Managed Homepage Layout
 
-Rolled forward cumulatively from V4.79 Cosplay Clinic / Table D8.
+Rolled forward cumulatively from V4.80.
 
-CHANGED
-- Removes the embedded/copied Cosplay Clinic poster image from the dedicated Cosplay Clinic screen.
-- Keeps the Cosplay Clinic information as real selectable, accessible in-app text.
-- Keeps the Home-screen Cosplay Clinic card and Event Guide entry.
-- Keeps the Table D8 location badge and OPEN FLOOR MAP action.
-- Keeps the existing retro styling and enlarged-text accessibility behavior.
-- Removes the old Cosplay Clinic poster from the service-worker offline precache list so it is no longer required by the app.
+ADDED
+- Reads homepage layout from homeLayout inside data/map-settings.json
+- Admin-controlled ordering of homepage clickable objects
+- Admin-controlled show/hide state for built-in objects
+- Supports custom homepage cards created in the App Layout Designer
+- Custom cards can link to an app page, Event Guide item, or external HTTPS website
+- Layout refreshes when the app becomes visible and checks again every 60 seconds
+
+PROTECTED / NOT MOVABLE
+- Add App system prompt
+- Retro event hero
+- Top Sci-Fi Valley Con header and back button
+- Program Tools drawer/tab
+- Sponsor strip
+- Bottom navigation
 
 PRESERVED
-- V4.79 Cosplay Clinic functionality and Table D8 navigation.
-- V4.78 Program Tools header no-overlap protection.
-- V4.77 custom retro Back button.
-- Attendee Reporter / See Something Say Something.
-- Lost & Found.
-- My Con, notifications, reminders, registration, interactive map, guests, schedules, Event Guide, directions, hotels, T-shirts, FAQ, PDF/print tools, and all prior attendee-app functionality.
-
-CACHE
-- PWA service-worker cache bumped to V4.80.
-- Front-end cache-busting references bumped to V4.80.
-- Old assets/cosplay-clinic.png may remain in the repository harmlessly, but it is no longer referenced or required by this build.
+- V4.80 native Cosplay Clinic content
+- Reporting, Lost & Found, map, notifications, accessibility, My Con, guests, schedule, Event Guide, and all prior features
 
 INSTALL
-Upload the files inside this ZIP over the matching files in the ATTENDEE repository only:
-scifivalleycon/scifi-valley-program
+Upload the files inside this folder over the matching files in scifivalleycon/scifi-valley-program.
+New files: home-layout.js and home-layout.css.
+No data/map-settings.json replacement is included, so your current map settings and floor-map configuration are not overwritten.
 
-Do NOT upload this ZIP to scifi-valley-admin or scifi-valley-notify.
-No Admin App or Notify Worker update is required.
+PAIRING
+Install the Admin App Layout Designer add-on from the other folder in this package.

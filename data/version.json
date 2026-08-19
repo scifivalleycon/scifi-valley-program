@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.80-cosplay-clinic-native-content",
-  "generatedAt": "2026-08-19T01:44:00Z",
-  "notes": "Removes the embedded Cosplay Clinic poster from the app screen and keeps the information as native, accessible app content with the Table D8 floor-map action."
+  "version": "program-v4.81-admin-managed-homepage-layout",
+  "generatedAt": "2026-08-19T13:27:00Z",
+  "notes": "Adds Admin-managed attendee homepage object ordering, visibility, and custom clickable cards using homeLayout stored inside map-settings.json."
 }

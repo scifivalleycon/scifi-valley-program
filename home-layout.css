@@ -1,0 +1,12 @@
+/* V4.81 - Admin-managed homepage layout */
+.sfvc-layout-hidden{display:none!important}
+.sfvc-layout-custom-card{width:100%;text-decoration:none}
+.sfvc-layout-custom-card.sfvc-layout-style-aqua{background:linear-gradient(90deg,rgba(121,198,198,.28),rgba(255,247,223,.96))}
+.sfvc-layout-custom-card.sfvc-layout-style-mustard{background:linear-gradient(90deg,rgba(224,172,61,.26),rgba(255,247,223,.96))}
+.sfvc-layout-custom-card.sfvc-layout-style-paper{background:linear-gradient(90deg,rgba(255,247,223,.98),rgba(244,228,199,.94))}
+.sfvc-layout-custom-card.sfvc-layout-style-coral{background:linear-gradient(90deg,rgba(211,83,61,.16),rgba(255,247,223,.96))}
+.sfvc-layout-custom-card .sfvc-layout-custom-icon{background:var(--ink);color:var(--cream);font-size:11px;letter-spacing:.02em}
+.sfvc-layout-custom-card.sfvc-layout-style-aqua .sfvc-layout-custom-icon{background:var(--aqua);color:var(--ink)}
+.sfvc-layout-custom-card.sfvc-layout-style-mustard .sfvc-layout-custom-icon{background:var(--mustard);color:var(--ink)}
+.sfvc-layout-custom-card.sfvc-layout-style-paper .sfvc-layout-custom-icon{background:var(--paper2);color:var(--ink)}
+body.sfvc-text-xxl .sfvc-layout-custom-icon{font-size:9px!important;line-height:1!important}
