@@ -95,7 +95,7 @@
     ],
     "homeLayout": {
       "version": 1,
-      "updatedAt": "2026-08-19T15:46:43.413Z",
+      "updatedAt": "2026-08-19T15:47:37.607Z",
       "updatedBy": "Program Admin App Layout Designer",
       "items": [
         {
@@ -110,39 +110,6 @@
           "order": 10
         },
         {
-          "id": "attendee-reporter",
-          "type": "builtin",
-          "visible": true,
-          "kicker": "ATTENDEE SAFETY & SUPPORT",
-          "title": "SEE SOMETHING? SAY SOMETHING.",
-          "description": "Report a concern, request staff help, or report a vendor AI-policy violation.",
-          "icon": "!",
-          "style": "coral",
-          "order": 20
-        },
-        {
-          "id": "lost-found",
-          "type": "builtin",
-          "visible": true,
-          "kicker": "ATTENDEE SERVICES",
-          "title": "LOST & FOUND",
-          "description": "Lost-item inquiry and optional item photo.",
-          "icon": "LF",
-          "style": "aqua",
-          "order": 30
-        },
-        {
-          "id": "cosplay-clinic",
-          "type": "builtin",
-          "visible": true,
-          "kicker": "ATTENDEE SERVICES • TABLE D8",
-          "title": "COSPLAY CLINIC",
-          "description": "Quick costume repairs and emergency cosplay fixes.",
-          "icon": "CC",
-          "style": "coral",
-          "order": 40
-        },
-        {
           "id": "photo-ops",
           "type": "builtin",
           "visible": true,
@@ -151,7 +118,7 @@
           "description": "Professional celebrity photo-op ordering.",
           "icon": "★",
           "style": "coral",
-          "order": 50
+          "order": 20
         },
         {
           "id": "purchase-actions",
@@ -162,7 +129,7 @@
           "description": "Purchase admission or exhibitor space.",
           "icon": "$",
           "style": "mustard",
-          "order": 60
+          "order": 30
         },
         {
           "id": "event-status",
@@ -173,7 +140,7 @@
           "description": "Current event status and what is happening now.",
           "icon": "●",
           "style": "aqua",
-          "order": 70
+          "order": 40
         },
         {
           "id": "recent-alerts",
@@ -184,18 +151,7 @@
           "description": "Recent convention-wide notifications and changes.",
           "icon": "N",
           "style": "coral",
-          "order": 80
-        },
-        {
-          "id": "quick-links",
-          "type": "builtin",
-          "visible": true,
-          "kicker": "QUICK LINKS",
-          "title": "GUESTS / SCHEDULE / MAP / EVENT GUIDE",
-          "description": "Four primary attendee navigation cards.",
-          "icon": "☰",
-          "style": "paper",
-          "order": 90
+          "order": 50
         },
         {
           "id": "my-con",
@@ -206,6 +162,50 @@
           "description": "Saved schedule, saved guests and reminder settings.",
           "icon": "M",
           "style": "aqua",
+          "order": 60
+        },
+        {
+          "id": "quick-links",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "QUICK LINKS",
+          "title": "GUESTS / SCHEDULE / MAP / EVENT GUIDE",
+          "description": "Four primary attendee navigation cards.",
+          "icon": "☰",
+          "style": "paper",
+          "order": 70
+        },
+        {
+          "id": "attendee-reporter",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SAFETY & SUPPORT",
+          "title": "SEE SOMETHING? SAY SOMETHING.",
+          "description": "Report a concern, request staff help, or report a vendor AI-policy violation.",
+          "icon": "!",
+          "style": "coral",
+          "order": 80
+        },
+        {
+          "id": "lost-found",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SERVICES",
+          "title": "LOST & FOUND",
+          "description": "Lost-item inquiry and optional item photo.",
+          "icon": "LF",
+          "style": "aqua",
+          "order": 90
+        },
+        {
+          "id": "cosplay-clinic",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SERVICES • TABLE D8",
+          "title": "COSPLAY CLINIC",
+          "description": "Quick costume repairs and emergency cosplay fixes.",
+          "icon": "CC",
+          "style": "coral",
           "order": 100
         },
         {
