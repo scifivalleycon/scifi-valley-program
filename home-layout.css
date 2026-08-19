@@ -1,12 +1,44 @@
-/* V4.81 - Admin-managed homepage layout */
+/* V4.83 - Admin-managed homepage layout + per-object colors */
 .sfvc-layout-hidden{display:none!important}
 .sfvc-layout-custom-card{width:100%;text-decoration:none}
 .sfvc-layout-custom-card.sfvc-layout-style-aqua{background:linear-gradient(90deg,rgba(121,198,198,.28),rgba(255,247,223,.96))}
 .sfvc-layout-custom-card.sfvc-layout-style-mustard{background:linear-gradient(90deg,rgba(224,172,61,.26),rgba(255,247,223,.96))}
+.sfvc-layout-custom-card.sfvc-layout-style-pink{background:linear-gradient(90deg,rgba(211,106,155,.24),rgba(255,247,223,.96))}
 .sfvc-layout-custom-card.sfvc-layout-style-paper{background:linear-gradient(90deg,rgba(255,247,223,.98),rgba(244,228,199,.94))}
 .sfvc-layout-custom-card.sfvc-layout-style-coral{background:linear-gradient(90deg,rgba(211,83,61,.16),rgba(255,247,223,.96))}
 .sfvc-layout-custom-card .sfvc-layout-custom-icon{background:var(--ink);color:var(--cream);font-size:11px;letter-spacing:.02em}
 .sfvc-layout-custom-card.sfvc-layout-style-aqua .sfvc-layout-custom-icon{background:var(--aqua);color:var(--ink)}
 .sfvc-layout-custom-card.sfvc-layout-style-mustard .sfvc-layout-custom-icon{background:var(--mustard);color:var(--ink)}
+.sfvc-layout-custom-card.sfvc-layout-style-pink .sfvc-layout-custom-icon{background:#d36a9b;color:white}
 .sfvc-layout-custom-card.sfvc-layout-style-paper .sfvc-layout-custom-icon{background:var(--paper2);color:var(--ink)}
 body.sfvc-text-xxl .sfvc-layout-custom-icon{font-size:9px!important;line-height:1!important}
+
+/* Custom colors saved by App Layout Designer */
+.sfvc-layout-colorized{
+  background:var(--sfvc-layout-bg)!important;
+  background-image:none!important;
+  color:var(--sfvc-layout-text)!important;
+  border-color:var(--sfvc-layout-border)!important
+}
+.sfvc-layout-colorized strong,
+.sfvc-layout-colorized small,
+.sfvc-layout-colorized em,
+.sfvc-layout-colorized b,
+.sfvc-layout-colorized h2,
+.sfvc-layout-colorized p,
+.sfvc-layout-colorized .section-kicker,
+.sfvc-layout-colorized .home-guest-banner-more-info,
+.sfvc-layout-colorized .home-guest-banner-subcopy{color:var(--sfvc-layout-text)!important}
+.sfvc-layout-colorized .home-reporter-icon,
+.sfvc-layout-colorized .camera-badge,
+.sfvc-layout-colorized .purchase-quick-icon,
+.sfvc-layout-colorized .quick-icon,
+.sfvc-layout-colorized .pill,
+.sfvc-layout-colorized .live-dot,
+.sfvc-layout-colorized .alert-feed-bell{
+  background:var(--sfvc-layout-accent)!important;
+  color:var(--sfvc-layout-text)!important;
+  border-color:var(--sfvc-layout-border)!important
+}
+.home-guest-banner-cta.sfvc-layout-colorized,
+.venue-style-copy.sfvc-layout-colorized{background:var(--sfvc-layout-bg)!important;color:var(--sfvc-layout-text)!important}

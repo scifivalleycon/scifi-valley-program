@@ -1,6 +1,5 @@
 {
-  "version": "admin-1787156496914",
-  "generatedAt": "2026-08-19T16:21:36.914Z",
-  "source": "mapSettings",
-  "updatedBy": "info@scifivalleycon.com"
+  "version": "program-v4.83-app-layout-custom-button-colors",
+  "generatedAt": "2026-08-19T16:24:00Z",
+  "notes": "Adds Admin-controlled background, text, accent/icon, and border colors to Home and Event Guide layout objects while preserving V4.82 Event Guide ordering and visibility controls."
 }

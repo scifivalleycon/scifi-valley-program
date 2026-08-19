@@ -1,4 +1,4 @@
-/* Sci-Fi Valley Con Attendee App V4.82
+/* Sci-Fi Valley Con Attendee App V4.83
    Admin-controlled Event Guide button layout. */
 .sfvc-event-layout-hidden{display:none!important}
 .sfvc-event-guide-main-layout-zone{display:contents}
@@ -8,3 +8,22 @@
 .sfvc-event-layout-custom-main.sfvc-event-layout-style-mustard .sfvc-event-layout-custom-icon{background:#efc448;color:#251e1a}
 .sfvc-event-layout-custom-main.sfvc-event-layout-style-pink .sfvc-event-layout-custom-icon{background:#d36a9b}
 .sfvc-event-layout-custom-main.sfvc-event-layout-style-paper .sfvc-event-layout-custom-icon{background:#f3e9d6;color:#251e1a}
+
+
+/* V4.83 - Custom Event Guide button colors */
+.sfvc-event-colorized{
+  background:var(--sfvc-layout-bg)!important;
+  background-image:none!important;
+  color:var(--sfvc-layout-text)!important;
+  border-color:var(--sfvc-layout-border)!important
+}
+.sfvc-event-colorized strong,
+.sfvc-event-colorized small,
+.sfvc-event-colorized b,
+.sfvc-event-colorized .event-quick-arrow{color:var(--sfvc-layout-text)!important}
+.sfvc-event-colorized .settings-menu-icon,
+.sfvc-event-colorized .event-quick-icon{
+  background:var(--sfvc-layout-accent)!important;
+  color:var(--sfvc-layout-text)!important;
+  border-color:var(--sfvc-layout-border)!important
+}

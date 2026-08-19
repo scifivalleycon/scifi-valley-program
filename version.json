@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.82-event-guide-layout-designer",
-  "generatedAt": "2026-08-19T16:20:00Z",
-  "notes": "Expands the Admin-controlled App Layout Designer from the Home screen to the Event Guide main buttons and Events & Activities buttons."
+  "version": "program-v4.83-app-layout-custom-button-colors",
+  "generatedAt": "2026-08-19T16:24:00Z",
+  "notes": "Adds Admin-controlled background, text, accent/icon, and border colors to Home and Event Guide layout objects while preserving V4.82 Event Guide ordering and visibility controls."
 }

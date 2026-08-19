@@ -34,6 +34,12 @@ let lastSignature="";
 function guide(){return document.getElementById("more")}
 function safeText(value){return String(value??"")}
 
+function validColor(value){return /^#[0-9A-F]{6}$/i.test(String(value||""))}
+function colorData(item){const c=item?.colors||{};return ["background","text","accent","border"].every(key=>validColor(c[key]))?c:null}
+function clearColors(element){if(!element)return;element.classList.remove("sfvc-event-colorized");["--sfvc-layout-bg","--sfvc-layout-text","--sfvc-layout-accent","--sfvc-layout-border"].forEach(name=>element.style.removeProperty(name))}
+function applyColors(element,item){clearColors(element);const c=colorData(item);if(!element||!c)return;element.classList.add("sfvc-event-colorized");element.style.setProperty("--sfvc-layout-bg",c.background);element.style.setProperty("--sfvc-layout-text",c.text);element.style.setProperty("--sfvc-layout-accent",c.accent);element.style.setProperty("--sfvc-layout-border",c.border)}
+
+
 function normalize(saved,defaults,zone){
   const raw=Array.isArray(saved)?saved:[];
   const byId=new Map(raw.map(item=>[String(item?.id||""),item]));
@@ -136,6 +142,7 @@ function mainCustomElement(item){
 
   button.append(icon,copy,arrow);
   button.addEventListener("click",()=>openCustom(item));
+  applyColors(button,item);
   return button;
 }
 
@@ -172,6 +179,7 @@ function activityCustomElement(item){
 
   button.append(icon,copy,arrow);
   button.addEventListener("click",()=>openCustom(item));
+  applyColors(button,item);
   return button;
 }
 
@@ -202,6 +210,7 @@ function applyMain(items){
     if(element){
       element.classList.remove("sfvc-event-layout-hidden");
       element.dataset.sfvcEventGuideLayoutId=base.id;
+      clearColors(element);
     }
   }
 
@@ -210,6 +219,7 @@ function applyMain(items){
       const element=builtinMainElement(item.id);
       if(!element)continue;
       element.classList.toggle("sfvc-event-layout-hidden",item.visible===false);
+      applyColors(element,item);
       zone.appendChild(element);
     }else if(item.type==="custom"&&item.visible!==false){
       zone.appendChild(mainCustomElement(item));
@@ -228,6 +238,7 @@ function applyActivities(items){
     if(element){
       element.classList.remove("sfvc-event-layout-hidden");
       element.dataset.sfvcEventGuideLayoutId=base.id;
+      clearColors(element);
     }
   }
 
@@ -236,6 +247,7 @@ function applyActivities(items){
       const element=builtinActivityElement(item.id);
       if(!element)continue;
       element.classList.toggle("sfvc-event-layout-hidden",item.visible===false);
+      applyColors(element,item);
       grid.appendChild(element);
     }else if(item.type==="custom"&&item.visible!==false){
       grid.appendChild(activityCustomElement(item));
