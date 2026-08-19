@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.74">
+  <link rel="stylesheet" href="styles.css?v=4.75">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -175,9 +175,7 @@
         <section id="eventCountdown" class="event-countdown" aria-label="Countdown to Sci-Fi Valley Con">
           <span class="event-countdown-kicker">COUNTDOWN TO FRIDAY • 2:00 PM</span>
           <div id="eventCountdownClock" class="flip-countdown-grid">
-            <div class="flip-countdown-unit"><span id="countdownMonths" class="flip-card">00</span><small>MONTHS</small></div>
-            <div class="flip-countdown-unit"><span id="countdownWeeks" class="flip-card">00</span><small>WEEKS</small></div>
-            <div class="flip-countdown-unit"><span id="countdownDays" class="flip-card">00</span><small>DAYS</small></div>
+            <div class="flip-countdown-unit"><span id="countdownDays" class="flip-card">000</span><small>DAYS</small></div>
             <div class="flip-countdown-unit"><span id="countdownHours" class="flip-card">00</span><small>HOURS</small></div>
             <div class="flip-countdown-unit"><span id="countdownMinutes" class="flip-card">00</span><small>MINUTES</small></div>
             <div class="flip-countdown-unit"><span id="countdownSeconds" class="flip-card">00</span><small>SECONDS</small></div>
@@ -590,7 +588,7 @@
         <section class="paper-panel report-form-section">
           <div class="section-heading"><div><span class="section-kicker">OPTIONAL</span><h2>ADD A PHOTO OF THE ITEM</h2></div><span id="lostFoundUploadAvailability" class="pill">CHECKING…</span></div>
           <p class="report-photo-note">If you already have a photo of the item, attaching it may help staff identify a match. One image can be attached to a Lost &amp; Found inquiry.</p>
-          <input id="lostFoundImage" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif">
+          <input id="lostFoundImage" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,video/mp4,video/quicktime,video/webm">
           <label class="report-file-picker" for="lostFoundImage"><span data-font-scale="locked" aria-hidden="true">＋</span><strong>ADD ITEM PHOTO</strong><small>JPG, PNG, WEBP, GIF, HEIC • max 5 MB</small></label>
           <div id="lostFoundImagePreview" class="report-image-preview"></div>
         </section>
@@ -689,8 +687,8 @@
         </section>
 
         <section class="paper-panel report-form-section">
-          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH PHOTO OR VIDEO</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
-          <p class="report-photo-note">You may attach up to 3 evidence files total, including up to one short video. Photos are limited to 5 MB each and video is limited to 20 MB. Evidence is especially useful for safety, harassment, venue, and AI-policy reports. <b>Do not record a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
+          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH PHOTOS</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
+          <p class="report-photo-note">You may attach up to 3 images. Photos are especially useful for venue problems and AI-policy reports. <b>Do not photograph a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
           <input id="reportImages" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,video/mp4,video/quicktime,video/webm" multiple>
           <label class="report-file-picker" for="reportImages"><span>＋</span><strong>ADD PHOTO / VIDEO EVIDENCE</strong><small>Photos max 5 MB • one video max 20 MB • max 3 evidence files total</small></label>
           <div id="reportImagePreview" class="report-image-preview"></div>
@@ -1462,8 +1460,8 @@
     </div>
   </dialog>
 
-  <script src="event-guide-ui.js?v=4.74"></script>
+  <script src="event-guide-ui.js?v=4.75"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.74"></script>
+  <script src="app.js?v=4.75"></script>
 </body>
 </html>

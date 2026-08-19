@@ -2400,7 +2400,7 @@ button,
   box-shadow:3px 4px 0 rgba(58,39,32,.16)
 }
 .event-countdown-kicker{display:block;margin-bottom:6px;color:var(--mustard);font-size:6px;font-weight:900;letter-spacing:.11em;text-align:center}
-.flip-countdown-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+.flip-countdown-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
 .flip-countdown-unit{min-width:0;text-align:center}
 .flip-countdown-unit small{display:block;margin-top:4px;color:rgba(255,247,223,.78);font-size:5.5px;font-weight:900;letter-spacing:.05em}
 .flip-card{
@@ -5638,10 +5638,18 @@ body.sfvc-text-enlarged .app-back-button{
 .hotel-list{display:grid;gap:13px}.hotel-card{overflow:hidden;border:3px solid var(--ink);border-radius:10px;background:var(--paper);box-shadow:4px 5px 0 rgba(58,39,32,.18)}.hotel-card>img{display:block;width:100%;height:180px;object-fit:cover;border-bottom:3px solid var(--ink)}.hotel-card-copy{padding:14px}.hotel-card h2{margin:4px 0 7px;font-size:18px}.hotel-rate{display:block;color:var(--coral2);font-size:11px}.hotel-distance{font-weight:900}.hotel-card-copy p{font-family:Georgia,serif;font-size:9px;line-height:1.45}.hotel-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.hotel-actions a{padding:10px;border:2px solid var(--ink);border-radius:6px;background:var(--aqua);font-size:8px;font-weight:900;text-align:center;text-decoration:none}.hotel-actions a:last-child{background:var(--mustard)}.hotel-card-copy>small,.hotel-rate-note{display:block;margin-top:8px;font-family:Georgia,serif;font-size:7.5px;line-height:1.4;color:var(--ink2)}
 .notification-center-menu-icon{background:var(--coral)!important;color:white}.notification-center-list{display:grid;gap:8px}.notification-center-item{padding:10px;border:2px solid var(--ink);border-left:7px solid var(--aqua);border-radius:7px;background:var(--paper2)}.notification-center-item.reminder{border-left-color:var(--mustard)}.notification-center-item small,.notification-center-item strong{display:block}.notification-center-item small{color:var(--coral2);font-size:6.5px;font-weight:900;letter-spacing:.06em}.notification-center-item strong{margin:3px 0;font-size:10px}.notification-center-item p,.notification-center-item li,.notification-center-help{font-family:Georgia,serif;font-size:8.5px;line-height:1.4}.notification-center-item ul{margin:5px 0 0;padding-left:18px}.notification-center-help{margin-top:0}
 .directions-destination-card.bowling .directions-card-badge{background:var(--coral)}.directions-destination-card.movie .directions-card-badge{background:var(--pink)}
-@media(max-width:520px){.flip-countdown-grid{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:8px}.hotel-card>img{height:145px}.hotel-actions{grid-template-columns:1fr}.map-zone-day article{grid-template-columns:62px 1fr}}
+@media(max-width:520px){.flip-countdown-grid{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:8px}.hotel-card>img{height:145px}.hotel-actions{grid-template-columns:1fr}.map-zone-day article{grid-template-columns:62px 1fr}}
 
 
 /* V4.74 — nearby-hotel galleries from the public hotel page */
 .hotel-gallery{display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;padding:0 0 7px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .hotel-gallery img{flex:0 0 min(82%,360px);width:min(82%,360px);height:170px;object-fit:cover;border:2px solid var(--ink);border-radius:7px;scroll-snap-align:start;background:#eee}
 @media(max-width:520px){.hotel-gallery img{flex-basis:88%;width:88%;height:155px}}
+
+
+/* =========================================================
+   V4.75 — COUNTDOWN USES TOTAL DAYS
+   ========================================================= */
+.flip-countdown-grid{grid-template-columns:repeat(4,minmax(0,1fr));width:min(100%,320px)}
+#countdownDays{letter-spacing:-.7px}
+@media(max-width:430px){.flip-countdown-grid{grid-template-columns:repeat(4,minmax(0,1fr));max-width:320px}}

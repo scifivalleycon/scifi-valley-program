@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.74";
+const APP_BUILD_VERSION="4.75";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1818,32 +1818,17 @@ function eventEndDateTime(){
   if(!end)return null;
   return new Date(end.getFullYear(),end.getMonth(),end.getDate(),17,0,0,0);
 }
-function addCalendarMonthsClamped(date,months){
-  const copy=new Date(date);
-  const originalDay=copy.getDate();
-  copy.setDate(1);
-  copy.setMonth(copy.getMonth()+months);
-  const lastDay=new Date(copy.getFullYear(),copy.getMonth()+1,0).getDate();
-  copy.setDate(Math.min(originalDay,lastDay));
-  return copy;
-}
 function countdownBreakdown(now,target){
-  let cursor=new Date(now);
-  let months=0;
-  while(months<240){
-    const next=addCalendarMonthsClamped(cursor,1);
-    if(next<=target){cursor=next;months+=1;}
-    else break;
-  }
-
-  let remaining=Math.max(0,target.getTime()-cursor.getTime());
-  const minute=60*1000,hour=60*minute,day=24*hour,week=7*day;
-  const weeks=Math.floor(remaining/week);remaining-=weeks*week;
+  // V4.75: show the entire remaining span as DAYS instead of splitting it
+  // into months and weeks. This keeps the countdown immediately readable
+  // while HOURS, MINUTES and SECONDS continue ticking normally.
+  let remaining=Math.max(0,target.getTime()-now.getTime());
+  const minute=60*1000,hour=60*minute,day=24*hour;
   const days=Math.floor(remaining/day);remaining-=days*day;
   const hours=Math.floor(remaining/hour);remaining-=hours*hour;
   const minutes=Math.floor(remaining/minute);remaining-=minutes*minute;
   const seconds=Math.floor(remaining/1000);
-  return {months,weeks,days,hours,minutes,seconds};
+  return {days,hours,minutes,seconds};
 }
 function setFlipCountdownValue(id,value){
   const el=document.getElementById(id);
@@ -1873,8 +1858,6 @@ function renderEventCountdown(){
 
   if(now<start){
     const parts=countdownBreakdown(now,start);
-    setFlipCountdownValue("countdownMonths",parts.months);
-    setFlipCountdownValue("countdownWeeks",parts.weeks);
     setFlipCountdownValue("countdownDays",parts.days);
     setFlipCountdownValue("countdownHours",parts.hours);
     setFlipCountdownValue("countdownMinutes",parts.minutes);
