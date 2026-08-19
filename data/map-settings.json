@@ -20,7 +20,7 @@
       {
         "id": "mainHall",
         "label": "Exhibit Hall - Main",
-        "color": "#e9e6dc"
+        "color": "#e7dfb4"
       },
       {
         "id": "panel2",
@@ -55,7 +55,7 @@
       {
         "id": "lowerHall",
         "label": "Exhibit Hall - Lower",
-        "color": "#eee9dc"
+        "color": "#d6e5ef"
       },
       {
         "id": "photo",
@@ -80,7 +80,7 @@
       {
         "id": "patio",
         "label": "Patio Vendors",
-        "color": "#f3efe2"
+        "color": "#e5d6ee"
       },
       {
         "id": "tattoo",

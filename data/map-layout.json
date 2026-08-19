@@ -218,7 +218,7 @@
         "y": 289,
         "width": 478.39080810546875,
         "height": 288.56097412109375,
-        "fill": "#ebe8dd",
+        "fill": "#e7dfb4",
         "className": "hall-floor",
         "rx": 0,
         "editable": false
@@ -566,7 +566,7 @@
         "y": 1114.9,
         "width": 542.5372924804688,
         "height": 361.1220703125,
-        "fill": "#ebe8dd",
+        "fill": "#d6e5ef",
         "className": "hall-floor",
         "rx": 0,
         "editable": false
@@ -621,7 +621,7 @@
         "id": "patio-box",
         "type": "path",
         "d": "M757.7 1087.5 L953.5 1089.6 L964.5 1658.3 L837.9 1661.7 L761.1 1509.1 Z",
-        "fill": "#f3efe2",
+        "fill": "#e5d6ee",
         "className": "zone",
         "editable": false,
         "translateX": 99.5,

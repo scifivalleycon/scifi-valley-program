@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.72">
+  <link rel="stylesheet" href="styles.css?v=4.74">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -180,6 +180,7 @@
             <div class="flip-countdown-unit"><span id="countdownDays" class="flip-card">00</span><small>DAYS</small></div>
             <div class="flip-countdown-unit"><span id="countdownHours" class="flip-card">00</span><small>HOURS</small></div>
             <div class="flip-countdown-unit"><span id="countdownMinutes" class="flip-card">00</span><small>MINUTES</small></div>
+            <div class="flip-countdown-unit"><span id="countdownSeconds" class="flip-card">00</span><small>SECONDS</small></div>
           </div>
           <div id="eventCountdownMessage" class="event-countdown-message hidden"></div>
         </section>
@@ -307,7 +308,7 @@
       <section class="quick-grid">
         <button class="quick-card coral-card" data-go="guests"><span class="quick-icon">★</span><strong>CELEBRITY GUESTS</strong><small>Photos, bios, IMDb & photo ops</small></button>
         <button class="quick-card aqua-card" data-go="schedule"><span class="quick-icon">▣</span><strong>SHOW SCHEDULE</strong><small>Everything happening by day</small></button>
-        <button class="quick-card mustard-card" data-go="map"><span class="quick-icon">⌖</span><strong>FLOOR MAP</strong><small>Map and booth locations</small></button>
+        <button class="quick-card mustard-card" data-go="map"><span class="quick-icon">⌖</span><strong>FLOOR MAP</strong><small>Tap rooms, map and booth locations</small></button>
         <button class="quick-card pink-card" data-go="more"><span class="quick-icon">☰</span><strong>EVENT GUIDE</strong><small>Food, gaming, contests & more</small></button>
       </section>
 
@@ -453,6 +454,7 @@
           <p id="mapConQuestNote" class="map-legend-note"></p>
         </details>
 
+        <p class="map-tap-hint">TAP A COLORED ROOM FOR ITS WEEKEND SCHEDULE • TAP A TABLE OR BOOTH FOR VENDOR DETAILS</p>
         <div id="mapViewport" class="map-viewport">
           <div id="mapSvgHost" class="map-svg-host" data-font-scale="locked"><div class="map-loading">Loading vector floor plan…</div></div>
           <div id="mapVendorPointer" class="map-vendor-pointer hidden" data-font-scale="locked" aria-hidden="true">
@@ -524,6 +526,18 @@
       <section id="shuttleDirectionsUnavailable" class="info-note directions-shuttle-unavailable">
         <strong>SHUTTLE LOCATION NOT PUBLISHED YET</strong>
         <span>When a Park & Ride shuttle is offered, the current pickup location will appear here automatically.</span>
+      </section>
+
+      <section id="bowlingDirectionsCard" class="directions-destination-card bowling hidden" data-directions-destination="bowling">
+        <div class="directions-card-badge" data-font-scale="locked" aria-hidden="true">BOWL</div>
+        <div class="directions-card-copy"><small>AFTER PARTY / BOWLING</small><h3 id="directionsBowlingName">Holiday Bowl Altoona</h3><p id="directionsBowlingAddress"></p><span id="directionsBowlingNotes"></span></div>
+        <button type="button" data-directions-destination-button="bowling">SELECT</button>
+      </section>
+
+      <section id="movieDirectionsCard" class="directions-destination-card movie hidden" data-directions-destination="movie">
+        <div class="directions-card-badge" data-font-scale="locked" aria-hidden="true">AMC</div>
+        <div class="directions-card-copy"><small>MOVIE NIGHT / SCREENING</small><h3 id="directionsMovieName">AMC Altoona 12</h3><p id="directionsMovieAddress"></p><span id="directionsMovieNotes"></span></div>
+        <button type="button" data-directions-destination-button="movie">SELECT</button>
       </section>
 
       <button id="openDrivingDirections" class="open-driving-directions" type="button">
@@ -675,10 +689,10 @@
         </section>
 
         <section class="paper-panel report-form-section">
-          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH PHOTOS</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
-          <p class="report-photo-note">You may attach up to 3 images. Photos are especially useful for venue problems and AI-policy reports. <b>Do not photograph a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
-          <input id="reportImages" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif" multiple>
-          <label class="report-file-picker" for="reportImages"><span>＋</span><strong>ADD PHOTO EVIDENCE</strong><small>JPG, PNG, WEBP, GIF, HEIC • max 3 files</small></label>
+          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH PHOTO OR VIDEO</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
+          <p class="report-photo-note">You may attach up to 3 evidence files total, including up to one short video. Photos are limited to 5 MB each and video is limited to 20 MB. Evidence is especially useful for safety, harassment, venue, and AI-policy reports. <b>Do not record a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
+          <input id="reportImages" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,video/mp4,video/quicktime,video/webm" multiple>
+          <label class="report-file-picker" for="reportImages"><span>＋</span><strong>ADD PHOTO / VIDEO EVIDENCE</strong><small>Photos max 5 MB • one video max 20 MB • max 3 evidence files total</small></label>
           <div id="reportImagePreview" class="report-image-preview"></div>
         </section>
 
@@ -735,7 +749,13 @@
 
       <button class="settings-menu-card directions-menu-card" data-go="directions">
         <span class="settings-menu-icon directions-menu-icon" data-font-scale="locked" aria-hidden="true">➜</span>
-        <span><strong>VENUE & DRIVING DIRECTIONS</strong><small>Convention Center, shuttle pickup & navigation</small></span>
+        <span><strong>VENUE & DRIVING DIRECTIONS</strong><small>Convention Center, shuttle, bowling, movie screening & navigation</small></span>
+        <b>›</b>
+      </button>
+
+      <button class="settings-menu-card hotel-menu-card" data-go="hotels">
+        <span class="settings-menu-icon hotel-menu-icon" data-font-scale="locked" aria-hidden="true">H</span>
+        <span><strong>NEARBY HOTELS</strong><small>Convention hotel rates, distance, phone & booking links</small></span>
         <b>›</b>
       </button>
 
@@ -754,6 +774,12 @@
       <button class="settings-menu-card" data-go="settings">
         <span class="settings-menu-icon" data-font-scale="locked" aria-hidden="true">🔔</span>
         <span><strong>NOTIFICATION SETTINGS</strong><small>Schedule reminders & notification permissions</small></span>
+        <b>›</b>
+      </button>
+
+      <button class="settings-menu-card notification-center-menu-card" data-go="notifications">
+        <span class="settings-menu-icon notification-center-menu-icon" data-font-scale="locked" aria-hidden="true">N</span>
+        <span><strong>NOTIFICATIONS</strong><small>Recent event alerts and grouped My Con reminders</small></span>
         <b>›</b>
       </button>
 
@@ -1006,11 +1032,29 @@
     </div>
   </section>
 
+  <section id="hotels" class="screen hotels-screen">
+    <div class="screen-inner">
+      <button class="shop-back-button" type="button" data-go="more">‹ BACK TO EVENT GUIDE</button>
+      <div class="page-title poster-title"><p class="kicker">STAY NEAR THE CON</p><h1>NEARBY <span>HOTELS</span></h1><p>Current Sci-Fi Valley Con hotel options, convention rates, distance and reservation information.</p></div>
+      <div id="hotelList" class="hotel-list"><div class="paper-panel muted-empty">Loading hotel information…</div></div>
+      <p class="hotel-rate-note">Rates, availability and booking terms are controlled by each hotel and can change. Use the current booking link or call the hotel to confirm.</p>
+    </div>
+  </section>
+
+  <section id="notifications" class="screen notification-center-screen">
+    <div class="screen-inner">
+      <button class="shop-back-button" type="button" data-go="more">‹ BACK TO EVENT GUIDE</button>
+      <div class="page-title poster-title"><p class="kicker">YOUR ALERT CENTER</p><h1>NOTIFICATIONS</h1><p>Recent convention-wide updates and the My Con events that can generate schedule reminders.</p></div>
+      <section class="paper-panel"><div class="section-heading"><div><span class="section-kicker">CONVENTION UPDATES</span><h2>RECENT ALERTS</h2></div></div><div id="notificationCenterAlerts" class="notification-center-list"></div></section>
+      <section class="paper-panel"><div class="section-heading"><div><span class="section-kicker">MY CON</span><h2>GROUPED REMINDERS</h2></div></div><p class="notification-center-help">Events starting at the same time are grouped together so your phone receives one reminder instead of several simultaneous alerts.</p><div id="notificationCenterReminders" class="notification-center-list"></div></section>
+    </div>
+  </section>
+
   <section id="registration" class="screen">
       <div class="page-title poster-title registration-page-title">
         <p class="kicker">PERSONALIZE YOUR PROGRAM</p>
         <h1>APP <span>REGISTRATION</span></h1>
-        <p>Register this app installation with your name and contact information.</p>
+        <p>Register once to link My Con to your attendee profile. If you reinstall the app or receive a new Device ID, registering again with the same name, email and phone can restore your saved schedule and reminder preference.</p>
       </div>
 
       <section class="paper-panel registration-status-panel">
@@ -1051,7 +1095,7 @@
 
         <div class="registration-privacy-note">
           <strong>ABOUT APP REGISTRATION</strong>
-          <p>This is optional and separate from your convention admission ticket. Registering the app does not automatically subscribe you to marketing emails, newsletters or text messages. Your registration is tied to this app installation's random Device ID.</p>
+          <p>This is optional and separate from your convention admission ticket. Registration does not subscribe you to marketing. Your name, email and phone link this Device ID to your attendee profile so a future installation can reconnect to the same My Con schedule and reminder preference when you register with the same information.</p>
         </div>
 
         <button id="saveAppRegistration" class="retro-action registration-save-button" type="submit">REGISTER THIS APP</button>
@@ -1062,7 +1106,7 @@
       <section class="paper-panel registration-device-note">
         <span class="section-kicker">THIS INSTALLATION</span>
         <h2>APP DEVICE ID</h2>
-        <p>Your profile is connected to this installation. Clearing browser/app data or reinstalling the PWA can create a new Device ID.</p>
+        <p>This installation has its own Device ID. If reinstalling creates a new ID, register again with the same name, email and phone to reconnect the new installation to your saved My Con profile.</p>
         <code id="registrationDeviceId">Loading Device ID…</code>
       </section>
     </section>
@@ -1418,8 +1462,8 @@
     </div>
   </dialog>
 
-  <script src="event-guide-ui.js?v=4.72"></script>
+  <script src="event-guide-ui.js?v=4.74"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.72"></script>
+  <script src="app.js?v=4.74"></script>
 </body>
 </html>

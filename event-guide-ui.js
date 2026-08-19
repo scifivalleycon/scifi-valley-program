@@ -545,6 +545,11 @@
     openEvent(button.dataset.eventOpen);
   },true);
 
+  // Public app hook used by the interactive floor-map room popups.
+  // Keeps Event Guide/Wikipedia behavior inside this module while allowing a
+  // room to open its related detail page without navigating away.
+  window.SFVCEventGuide={open:openEvent,close:closeModal};
+
   document.addEventListener("DOMContentLoaded",()=>{
     loadEvents();
 

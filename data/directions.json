@@ -7,6 +7,16 @@
     "shuttleName": "Shuttle Pickup / Park & Ride",
     "shuttleAddress": "",
     "shuttleNotes": "",
-    "shuttleHours": ""
+    "shuttleHours": "",
+    "bowlingEnabled": true,
+    "bowlingName": "Holiday Bowl Altoona",
+    "bowlingAddress": "181 Bowling Lane, Altoona, PA 16601",
+    "bowlingNotes": "Official after-party / bowling destination when scheduled.",
+    "bowlingHours": "",
+    "movieEnabled": false,
+    "movieName": "AMC Altoona 12",
+    "movieAddress": "234 Convention Center Drive, Duncansville, PA 16635",
+    "movieNotes": "Enable this destination when a Movie Night with the Stars or other screening is scheduled.",
+    "movieHours": ""
   }
 ]

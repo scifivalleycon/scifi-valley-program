@@ -11,13 +11,13 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], faq: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], faq: [], hotels: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", faqFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.72";
+const APP_BUILD_VERSION="4.74";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -493,6 +493,15 @@ function snapshotProgramTextBases(targets){
   });
 }
 
+function programEffectiveTextScale(selected=programTextScale){
+  const value=Number(selected);
+  // V4.74: the old 100% baseline tested too small. The normal 100% setting now
+  // renders readable copy at 112% of the old CSS baseline, while the scale
+  // progressively compresses so the existing 200% accessibility ceiling remains 200%.
+  if(value<=0.90)return 1;
+  return Math.min(2,1.12+Math.max(0,value-1)*0.88);
+}
+
 function scaleTextElement(element){
   if(!fontScaleEligible(element))return;
   const base=Number(element.dataset.sfvcBaseFontPx);
@@ -502,9 +511,10 @@ function scaleTextElement(element){
   // accessibility setting. data-font-scale-max lets those labels stop growing
   // while the rest of the app can continue up to the selected percentage.
   const maxScale=Number(element.dataset.fontScaleMax);
+  const requestedScale=programEffectiveTextScale();
   const effectiveScale=Number.isFinite(maxScale)&&maxScale>0
-    ? Math.min(programTextScale,maxScale)
-    : programTextScale;
+    ? Math.min(requestedScale,maxScale)
+    : requestedScale;
 
   element.style.fontSize=`${Math.round(base*effectiveScale*100)/100}px`;
 }
@@ -542,13 +552,13 @@ function getProgramHeadingMeasureNode(){
 }
 
 function fitProgramPageHeading(heading){
-  if(!(heading instanceof HTMLElement)||programTextScale<=1)return;
+  if(!(heading instanceof HTMLElement)||programEffectiveTextScale()<=1)return;
   if(fontScaleLocked(heading))return;
 
   const base=Number(heading.dataset.sfvcBaseFontPx);
   if(!Number.isFinite(base)||base<=0)return;
 
-  const target=base*programTextScale;
+  const target=base*programEffectiveTextScale();
   heading.style.fontSize=`${Math.round(target*100)/100}px`;
 
   // Poster title accent spans use the same heading size. Keeping them inherited
@@ -667,9 +677,10 @@ function fitGuestNameHeading(heading){
   if(!lines.length)return;
 
   const maxScale=Number(heading.dataset.fontScaleMax);
+  const requestedScale=programEffectiveTextScale();
   const effectiveScale=Number.isFinite(maxScale)&&maxScale>0
-    ? Math.min(programTextScale,maxScale)
-    : programTextScale;
+    ? Math.min(requestedScale,maxScale)
+    : requestedScale;
   const target=base*effectiveScale;
 
   heading.style.fontSize=`${Math.round(target*100)/100}px`;
@@ -745,10 +756,10 @@ function applyProgramTextScale(scale,{persist=true}={}){
   document.body.classList.toggle('sfvc-text-xxl',programTextScale>=1.75);
   document.body.classList.toggle('sfvc-text-max',programTextScale>=2.00);
 
-  if(programTextScale!==1){
-    scaleTextTree(document.body);
-    fitProgramPageHeadings(document);
-  }
+  // V4.74 applies the readable baseline even when the selector says 100%.
+  // data-font-scale-max ceilings (including the 115% top-bar name) still win.
+  scaleTextTree(document.body);
+  if(programEffectiveTextScale()>1)fitProgramPageHeadings(document);
   // V4.60 also runs this at 100% so any two-line enlarged-name structure is
   // restored to the original compact guest name when accessibility scaling is reset.
   fitGuestNames(document);
@@ -768,7 +779,7 @@ function initializeProgramTextScaling(){
   programTextObserver?.disconnect();
   let rescaleQueued=false;
   programTextObserver=new MutationObserver(mutations=>{
-    if(programTextScale===1||rescaleQueued)return;
+    if(rescaleQueued)return;
     const added=mutations.some(mutation=>{
       if(!mutation.addedNodes.length)return false;
       const target=mutation.target instanceof Element?mutation.target:mutation.target?.parentElement;
@@ -786,7 +797,7 @@ function initializeProgramTextScaling(){
   if(!window.__sfvcProgramHeadingFitResizeBound){
     window.__sfvcProgramHeadingFitResizeBound=true;
     window.addEventListener("resize",()=>{
-      if(programTextScale<=1)return;
+      if(programEffectiveTextScale()<=1)return;
       requestAnimationFrame(()=>{
         fitProgramPageHeadings(document);
         fitGuestNames(document);
@@ -1608,9 +1619,9 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
-    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
-      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/home-banner.json"),
+      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -1630,6 +1641,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.tshirts=Array.isArray(tshirts)?tshirts:[];
     state.faq=Array.isArray(faq)?faq:[];
+    state.hotels=Array.isArray(hotels)?hotels:[];
     state.homeBanner=Array.isArray(homeBannerData)&&homeBannerData[0]?homeBannerData[0]:{};
 
     // Render these immediately instead of waiting for the rest of the program.
@@ -1829,8 +1841,9 @@ function countdownBreakdown(now,target){
   const weeks=Math.floor(remaining/week);remaining-=weeks*week;
   const days=Math.floor(remaining/day);remaining-=days*day;
   const hours=Math.floor(remaining/hour);remaining-=hours*hour;
-  const minutes=Math.floor(remaining/minute);
-  return {months,weeks,days,hours,minutes};
+  const minutes=Math.floor(remaining/minute);remaining-=minutes*minute;
+  const seconds=Math.floor(remaining/1000);
+  return {months,weeks,days,hours,minutes,seconds};
 }
 function setFlipCountdownValue(id,value){
   const el=document.getElementById(id);
@@ -1865,6 +1878,7 @@ function renderEventCountdown(){
     setFlipCountdownValue("countdownDays",parts.days);
     setFlipCountdownValue("countdownHours",parts.hours);
     setFlipCountdownValue("countdownMinutes",parts.minutes);
+    setFlipCountdownValue("countdownSeconds",parts.seconds);
     clock.classList.remove("hidden");
     message.classList.add("hidden");
     return;
@@ -1879,7 +1893,7 @@ function renderEventCountdown(){
 function initializeEventCountdown(){
   renderEventCountdown();
   if(eventCountdownTimer)clearInterval(eventCountdownTimer);
-  eventCountdownTimer=setInterval(renderEventCountdown,30000);
+  eventCountdownTimer=setInterval(renderEventCountdown,1000);
 }
 
 function applyEventSettings(){
@@ -1986,8 +2000,13 @@ function openGuest(id){
   const g=state.guests.find(x=>x.id===id); if(!g)return;
   const external=g.imdb?`<a class="secondary-action" href="${g.imdb}" target="_blank" rel="noopener">IMDb PAGE ↗</a>`:
     g.instagram?`<a class="secondary-action" href="${g.instagram}" target="_blank" rel="noopener">INSTAGRAM ↗</a>`:"";
-  const photoAction=g.photoShop?`<a class="full-action" href="${g.photoShop}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${g.photoOp?` • ${g.photoOp}`:""} ↗</a>`:
-    `<a class="full-action" href="${state.settings.photoShop||PHOTO_SHOP}" target="_blank" rel="noopener">BROWSE CELEBRITY PHOTO OPS ↗</a>`;
+  // V4.73: the event-level Photo Op Store URL from Admin is authoritative.
+  // Guest records may still contain legacy photoShop values from older builds,
+  // but those must not pin a celebrity to a previous event's checkout page.
+  const livePhotoShop=String(state.settings.photoShop||PHOTO_SHOP||"").trim();
+  const photoAction=livePhotoShop
+    ?`<a class="full-action" href="${escapeAppHtml(livePhotoShop)}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${g.photoOp?` • ${g.photoOp}`:""} ↗</a>`
+    :`<span class="full-action photo-shop-unavailable" aria-disabled="true">PHOTO OP STORE LINK COMING SOON</span>`;
   document.getElementById("guestModalContent").innerHTML=`
     <div class="modal-inner">
       <div class="modal-hero">
@@ -2522,7 +2541,7 @@ function buildServerReminderPayload(){
         eventId:e.id,
         title:`${e.title} starts soon`,
         body:`${e.time} • ${e.location}`,
-        url:"/",
+        url:"/?screen=notifications",
         tag:`sfvc-reminder-${String(e.id).replace(/[^A-Za-z0-9_-]/g,"-").slice(0,20)}`,
         urgency:"high",
         notifyAt,
@@ -2587,41 +2606,59 @@ function updateReminderDeliveryStatus(message="",kind=""){
   }
 }
 
+function foregroundReminderGroups(){
+  const groups=new Map();
+  reminderScheduleItems()
+    .filter(e=>state.mySchedule.has(e.id)&&e.remindable!==false)
+    .forEach(e=>{
+      const time=eventDateTime(e);if(!time)return;
+      const key=String(time.getTime());
+      if(!groups.has(key))groups.set(key,[]);
+      groups.get(key).push(e);
+    });
+  return [...groups.values()];
+}
+
 function scheduleAllReminders(){
   // Foreground fallback. The push Worker is the reliable background delivery path.
+  // Events sharing one start time use one timer/notification instead of stacking.
   for(const t of state.reminderTimers.values())clearTimeout(t);
   state.reminderTimers.clear();
 
   if(state.reminderMinutes){
     const now=Date.now();
-    reminderScheduleItems()
-      .filter(e=>state.mySchedule.has(e.id)&&e.remindable!==false)
-      .forEach(e=>{
-        const t=eventDateTime(e);
-        if(!t)return;
-        const delay=t.getTime()-state.reminderMinutes*60000-now;
-        if(delay>0&&delay<=2147483647){
-          state.reminderTimers.set(e.id,setTimeout(()=>showScheduleNotification(e),delay));
-        }
-      });
+    foregroundReminderGroups().forEach(group=>{
+      const t=eventDateTime(group[0]);if(!t)return;
+      const delay=t.getTime()-state.reminderMinutes*60000-now;
+      if(delay>0&&delay<=2147483647){
+        const key=`time-${t.getTime()}`;
+        state.reminderTimers.set(key,setTimeout(()=>showScheduleNotification(group),delay));
+      }
+    });
   }
 
   updateReminderDeliveryStatus();
   scheduleServerReminderSync();
 }
 
-async function showScheduleNotification(e){
+async function showScheduleNotification(eventOrGroup){
   if(!("Notification"in window)||Notification.permission!=="granted")return;
+  const group=Array.isArray(eventOrGroup)?eventOrGroup:[eventOrGroup];
+  const first=group[0];if(!first)return;
+  const multiple=group.length>1;
+  const title=multiple?`${group.length} saved events start soon`:`${first.title} starts soon`;
+  const body=multiple
+    ? `${first.time} • ${group.map(e=>e.title).slice(0,3).join(" + ")}${group.length>3?` + ${group.length-3} more`:""}`
+    : `${first.time} • ${first.location}`;
   const reg=await navigator.serviceWorker?.ready;
-  if(reg)reg.showNotification(`${e.title} starts soon`,{
-    body:`${e.time} • ${e.location}`,
+  if(reg)reg.showNotification(title,{
+    body,
     icon:"assets/icons/app-icon-192.png",
     badge:"assets/icons/app-icon-192.png",
-    tag:`sfvc-local-${e.id}`,
-    data:{url:"./"}
+    tag:`sfvc-local-time-${eventDateTime(first)?.getTime()||Date.now()}`,
+    data:{url:"./?screen=notifications"}
   });
 }
-
 
 
 async function refreshAnonymousDeviceStatus(){
@@ -3203,6 +3240,36 @@ async function sendAppRegistrationToServer(profile){
   return result;
 }
 
+function applyRecoveredRegistrationState(result){
+  if(!result||typeof result!=="object")return 0;
+  const restored=Array.isArray(result.restoredSchedule)?result.restoredSchedule:[];
+  let changed=0;
+  restored.forEach(item=>{
+    const id=String(item?.eventId||item?.id||"").trim();
+    if(!id)return;
+    if(!state.mySchedule.has(id)){state.mySchedule.add(id);changed++;}
+    savedScheduleSnapshots[id]={
+      id,day:String(item.day||""),time:String(item.time||item.timeText||""),title:String(item.title||""),
+      location:String(item.location||""),category:String(item.category||""),filterCategory:String(item.category||""),
+      remindable:item.remindable!==false,savedAt:String(item.savedAt||new Date().toISOString())
+    };
+  });
+  if(restored.length){
+    localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+    saveScheduleSnapshots();
+  }
+  const reminder=Number(result.reminderMinutes);
+  if(Number.isFinite(reminder)&&reminder>=0){
+    state.reminderMinutes=reminder;
+    localStorage.setItem("sfvc-reminder-minutes",String(reminder));
+  }
+  if(restored.length){
+    renderMySchedule();
+    renderNotificationCenter();
+  }
+  return restored.length;
+}
+
 const APP_REGISTRATION_LAST_SYNC_KEY="sfvc-registration-last-sync";
 
 function markAppRegistrationSynced(){
@@ -3217,7 +3284,8 @@ async function syncSavedAppRegistration({force=false}={}){
   if(!force&&lastSync&&Date.now()-lastSync<REGISTRATION_SYNC_SAFETY_MS)return true;
 
   try{
-    await sendAppRegistrationToServer(profile);
+    const result=await sendAppRegistrationToServer(profile);
+    applyRecoveredRegistrationState(result);
     markAppRegistrationSynced();
     return true;
   }catch(err){
@@ -3235,6 +3303,7 @@ async function submitAppRegistration(event){
   try{
     const profile=normalizedRegistrationProfileFromForm();
     const result=await sendAppRegistrationToServer(profile);
+    const recoveredCount=applyRecoveredRegistrationState(result);
     saveAppRegistrationLocal({
       ...profile,
       registeredAt:String(result.createdAt||new Date().toISOString()),
@@ -3243,7 +3312,9 @@ async function submitAppRegistration(event){
     markAppRegistrationSynced();
     renderAppRegistration();
     scheduleAnonymousDeviceSync(40);
-    if(status){status.textContent="✓ This app is registered.";status.className="registration-form-status success";}
+    if(status){status.textContent=recoveredCount
+      ? `✓ Registered. Restored ${recoveredCount} saved My Con item${recoveredCount===1?"":"s"} from your linked account.`
+      : "✓ This app is registered and linked for future My Con recovery.";status.className="registration-form-status success";}
   }catch(err){
     if(status){status.textContent=err.message;status.className="registration-form-status error";}
   }finally{
@@ -3749,11 +3820,24 @@ async function loadRecentAlerts(){
     const result=await response.json();
     state.recentAlerts=Array.isArray(result.broadcasts)?result.broadcasts:[];
     renderRecentAlerts();
+    renderNotificationCenter();
   }catch(err){
     console.warn("Recent event alerts unavailable",err);
     // Do not remove alerts already loaded during this session if a refresh fails.
     renderRecentAlerts();
   }
+}
+
+function savedScheduleNotificationGroups(){
+  const items=reminderScheduleItems().filter(item=>state.mySchedule.has(item.id));
+  const groups=new Map();
+  items.forEach(item=>{const at=eventDateTime(item)?.getTime()||0;const key=at?String(at):`${item.day}|${item.time}`;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(item)});
+  return [...groups.values()].sort((a,b)=>(eventDateTime(a[0])?.getTime()||0)-(eventDateTime(b[0])?.getTime()||0));
+}
+function renderNotificationCenter(){
+  const alerts=document.getElementById("notificationCenterAlerts"),reminders=document.getElementById("notificationCenterReminders");
+  if(alerts){const rows=(state.recentAlerts||[]).slice(0,20);alerts.innerHTML=rows.map(a=>`<article class="notification-center-item"><small>EVENT UPDATE</small><strong>${escapeAppHtml(a.title||"Sci-Fi Valley Con")}</strong><p>${escapeAppHtml(a.body||"")}</p></article>`).join("")||'<div class="muted-empty">No recent event alerts.</div>';}
+  if(reminders){const groups=savedScheduleNotificationGroups();reminders.innerHTML=groups.map(group=>`<article class="notification-center-item reminder"><small>${escapeAppHtml(group[0].day||"")} • ${escapeAppHtml(group[0].time||"")}</small><strong>${group.length>1?`${group.length} EVENTS AT THIS TIME`:escapeAppHtml(group[0].title)}</strong>${group.length>1?`<ul>${group.map(x=>`<li>${escapeAppHtml(x.title)}${x.location?` • ${escapeAppHtml(x.location)}`:""}</li>`).join("")}</ul>`:`<p>${escapeAppHtml(group[0].location||"")}</p>`}</article>`).join("")||'<div class="muted-empty">No My Con reminders saved.</div>';}
 }
 
 function initializeRecentAlerts(){
@@ -3783,16 +3867,29 @@ function initializeRecentAlerts(){
 
 
 
+/* V4.74 — ADMIN-MANAGED NEARBY HOTELS */
+function hotelImages(hotel){
+  const values=[...(Array.isArray(hotel?.images)?hotel.images:[]),hotel?.imageUrl]
+    .map(value=>String(value||"").trim()).filter(Boolean);
+  return [...new Set(values)];
+}
+function renderHotels(){
+  const list=document.getElementById("hotelList");if(!list)return;
+  const rows=(state.hotels||[]).filter(h=>h.enabled!==false);
+  list.innerHTML=rows.map(h=>{
+    const images=hotelImages(h);
+    const gallery=images.length?`<div class="hotel-gallery" aria-label="${escapeAppHtml(h.name)} photos">${images.map((src,index)=>`<img src="${escapeAppHtml(src)}" alt="${escapeAppHtml(h.name)}${index?` photo ${index+1}`:""}" loading="lazy">`).join("")}</div>`:"";
+    return `<article class="hotel-card">${gallery}<div class="hotel-card-copy"><span class="section-kicker">OFFICIAL HOTEL OPTION</span><h2>${escapeAppHtml(h.name)}</h2>${h.rate?`<strong class="hotel-rate">${escapeAppHtml(h.rate)}</strong>`:""}${h.distance?`<p class="hotel-distance">⌖ ${escapeAppHtml(h.distance)}</p>`:""}${h.description?`<p>${escapeAppHtml(h.description)}</p>`:""}<div class="hotel-actions">${h.phone?`<a href="tel:${escapeAppHtml(String(h.phone).replace(/[^0-9+]/g,''))}">CALL ${escapeAppHtml(h.phone)}</a>`:""}${h.bookingUrl?`<a href="${escapeAppHtml(h.bookingUrl)}" target="_blank" rel="noopener noreferrer">BOOK ROOM ↗</a>`:""}</div>${h.notes?`<small>${escapeAppHtml(h.notes)}</small>`:""}</div></article>`;
+  }).join("")||'<div class="paper-panel muted-empty">Hotel information has not been published yet.</div>';
+}
+
+
 /* Venue and shuttle driving directions — V4.49 */
 const DEFAULT_DIRECTIONS={
-  venueName:"Blair County Convention Center",
-  venueAddress:"1 Convention Center Dr, Altoona, PA 16602",
-  venueNotes:"Parking and convention entrance destination",
-  shuttleEnabled:false,
-  shuttleName:"Shuttle Pickup",
-  shuttleAddress:"",
-  shuttleNotes:"",
-  shuttleHours:""
+  venueName:"Blair County Convention Center",venueAddress:"1 Convention Center Dr, Altoona, PA 16602",venueNotes:"Parking and convention entrance destination",
+  shuttleEnabled:false,shuttleName:"Shuttle Pickup",shuttleAddress:"",shuttleNotes:"",shuttleHours:"",
+  bowlingEnabled:true,bowlingName:"Holiday Bowl Altoona",bowlingAddress:"181 Bowling Lane, Altoona, PA 16601",bowlingNotes:"Official after-party / bowling destination when scheduled.",bowlingHours:"",
+  movieEnabled:false,movieName:"AMC Altoona 12",movieAddress:"234 Convention Center Drive, Duncansville, PA 16635",movieNotes:"Movie Night / screening destination when scheduled.",movieHours:""
 };
 let selectedDirectionsDestination="venue";
 let currentDirectionsCoordinates="";
@@ -3803,9 +3900,12 @@ function directionsConfig(){
 
 function directionsDestination(type=selectedDirectionsDestination){
   const cfg=directionsConfig();
-  if(type==="shuttle"&&cfg.shuttleEnabled&&String(cfg.shuttleAddress||"").trim()){
-    return {type:"shuttle",name:cfg.shuttleName||"Shuttle Pickup",address:cfg.shuttleAddress};
-  }
+  const dynamic={
+    shuttle:[cfg.shuttleEnabled,cfg.shuttleName||"Shuttle Pickup",cfg.shuttleAddress],
+    bowling:[cfg.bowlingEnabled,cfg.bowlingName||"Holiday Bowl Altoona",cfg.bowlingAddress],
+    movie:[cfg.movieEnabled,cfg.movieName||"AMC Altoona 12",cfg.movieAddress]
+  };
+  if(dynamic[type]?.[0]&&String(dynamic[type][2]||"").trim())return {type,name:dynamic[type][1],address:dynamic[type][2]};
   return {type:"venue",name:cfg.venueName||DEFAULT_DIRECTIONS.venueName,address:cfg.venueAddress||DEFAULT_DIRECTIONS.venueAddress};
 }
 
@@ -3832,6 +3932,19 @@ function renderDirections(){
     shuttleNotes.textContent=details||"Park here and board the event shuttle.";
   }
 
+  const extras=[
+    ["bowling","bowlingDirectionsCard","directionsBowlingName","directionsBowlingAddress","directionsBowlingNotes","bowlingEnabled","bowlingName","bowlingAddress","bowlingNotes","bowlingHours"],
+    ["movie","movieDirectionsCard","directionsMovieName","directionsMovieAddress","directionsMovieNotes","movieEnabled","movieName","movieAddress","movieNotes","movieHours"]
+  ];
+  extras.forEach(([type,cardId,nameId,addressId,notesId,enabledKey,nameKey,addressKey,notesKey,hoursKey])=>{
+    const available=Boolean(cfg[enabledKey]&&String(cfg[addressKey]||"").trim());
+    document.getElementById(cardId)?.classList.toggle("hidden",!available);
+    const nameEl=document.getElementById(nameId),addressEl=document.getElementById(addressId),notesEl=document.getElementById(notesId);
+    if(nameEl)nameEl.textContent=cfg[nameKey]||type;
+    if(addressEl)addressEl.textContent=cfg[addressKey]||"";
+    if(notesEl)notesEl.textContent=[cfg[notesKey],cfg[hoursKey]].filter(Boolean).join(" • ");
+    if(!available&&selectedDirectionsDestination===type)selectedDirectionsDestination="venue";
+  });
   if(!shuttleAvailable&&selectedDirectionsDestination==="shuttle")selectedDirectionsDestination="venue";
   updateDirectionsSelection();
 }
@@ -3851,8 +3964,8 @@ function updateDirectionsSelection(){
 
 function selectDirectionsDestination(type){
   const cfg=directionsConfig();
-  if(type==="shuttle"&&!(cfg.shuttleEnabled&&String(cfg.shuttleAddress||"").trim()))return;
-  selectedDirectionsDestination=type==="shuttle"?"shuttle":"venue";
+  const allowed={venue:true,shuttle:Boolean(cfg.shuttleEnabled&&String(cfg.shuttleAddress||"").trim()),bowling:Boolean(cfg.bowlingEnabled&&String(cfg.bowlingAddress||"").trim()),movie:Boolean(cfg.movieEnabled&&String(cfg.movieAddress||"").trim())};
+  selectedDirectionsDestination=allowed[type]?type:"venue";
   updateDirectionsSelection();
 }
 
@@ -3933,7 +4046,9 @@ function initializeDirections(){
    ========================================================= */
 
 const REPORTER_MAX_FILES=3;
-const REPORTER_MAX_FILE_BYTES=5*1024*1024;
+const REPORTER_MAX_IMAGE_BYTES=5*1024*1024;
+const REPORTER_MAX_VIDEO_BYTES=20*1024*1024;
+const REPORTER_MAX_VIDEOS=1;
 let reporterUploadsEnabled=true;
 
 const REPORT_CATEGORY_INFO={
@@ -3996,17 +4111,24 @@ function renderReporterFilePreview(){
   const host=document.getElementById("reportImagePreview");
   if(!host)return;
   const files=reporterFiles();
-  host.innerHTML=files.map((file,index)=>`<article class="report-image-chip"><span>${index+1}</span><div><b>${escapeAppHtml(file.name)}</b><small>${Math.max(.1,file.size/1024/1024).toFixed(1)} MB</small></div></article>`).join("");
+  host.innerHTML=files.map((file,index)=>`<article class="report-image-chip"><span>${/^video\//i.test(file.type||"")?"VID":index+1}</span><div><b>${escapeAppHtml(file.name)}</b><small>${/^video\//i.test(file.type||"")?"VIDEO • ":"PHOTO • "}${Math.max(.1,file.size/1024/1024).toFixed(1)} MB</small></div></article>`).join("");
 }
 
 function validateReporterFiles(){
   const files=reporterFiles();
-  if(files.length>REPORTER_MAX_FILES)throw new Error(`Please attach no more than ${REPORTER_MAX_FILES} images.`);
+  if(files.length>REPORTER_MAX_FILES)throw new Error(`Please attach no more than ${REPORTER_MAX_FILES} evidence files.`);
+  const videos=files.filter(file=>/^video\//i.test(file.type||""));
+  if(videos.length>REPORTER_MAX_VIDEOS)throw new Error("Please attach no more than one video per report.");
   for(const file of files){
-    if(file.size>REPORTER_MAX_FILE_BYTES)throw new Error(`${file.name} is larger than 5 MB.`);
-    if(!/^image\//i.test(file.type||""))throw new Error(`${file.name} is not a supported image file.`);
+    const type=String(file.type||"").toLowerCase();
+    if(/^image\//.test(type)){
+      if(file.size>REPORTER_MAX_IMAGE_BYTES)throw new Error(`${file.name} is larger than 5 MB.`);
+    }else if(/^video\//.test(type)){
+      if(file.size>REPORTER_MAX_VIDEO_BYTES)throw new Error(`${file.name} is larger than the 20 MB video limit.`);
+      if(!["video/mp4","video/quicktime","video/webm"].includes(type))throw new Error(`${file.name} is not a supported video type. Use MP4, MOV, or WebM.`);
+    }else throw new Error(`${file.name} is not a supported photo or video file.`);
   }
-  if(files.length&&!reporterUploadsEnabled)throw new Error("Photo uploads are temporarily unavailable. You can still submit the report without photos.");
+  if(files.length&&!reporterUploadsEnabled)throw new Error("Evidence uploads are temporarily unavailable. You can still submit the report without attachments.");
   return files;
 }
 
@@ -4024,7 +4146,7 @@ async function loadReporterConfig(){
     reporterUploadsEnabled=true;
   }
   if(badge){
-    badge.textContent=reporterUploadsEnabled?"PHOTO UPLOADS ON":"TEXT REPORTS ONLY";
+    badge.textContent=reporterUploadsEnabled?"PHOTO + VIDEO UPLOADS ON":"TEXT REPORTS ONLY";
     badge.classList.toggle("warning",!reporterUploadsEnabled);
   }
   if(input)input.disabled=!reporterUploadsEnabled;
@@ -4297,7 +4419,7 @@ function initializeLostFoundInquiry(){
 }
 
 /* Interactive vector floor plan — V4.2 */
-let mapZoom=1;
+let mapZoom=1.15;
 let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
 
 function expandLocationCodes(value){
@@ -4340,22 +4462,66 @@ function mapElementTransform(item){
   if(sx!==1||sy!==1)parts.push(`translate(${ox} ${oy}) scale(${sx} ${sy}) translate(${-ox} ${-oy})`);
   return parts.length?` transform="${parts.join(' ')}"`:'';
 }
+const MAP_ZONE_DEFS={
+  "panel-room-1-box":{key:"panel1",title:"Panel Room 1",locations:["panel room 1"],sources:["panels","schedule"]},
+  "panel-room-2-box":{key:"panel2",title:"Panel Room 2",locations:["panel room 2"],sources:["panels","schedule"]},
+  "event-room-box":{key:"event",title:"Event Room",locations:["event room"],sources:["schedule"]},
+  "paint-room-box":{key:"paint",title:"Paint & Hobby Room",locations:["paint and hobby room","paint & hobby room"],sources:["schedule"]},
+  "mini-cafe-box":{key:"miniCafe",title:"The Mini Café",locations:[],eventIds:["mini-cafe"]},
+  "cafe-box":{key:"cafe",title:"The Café",locations:[],eventIds:["regular-cafe"]},
+  "photo-box":{key:"photo",title:"Photo Op Area",locations:["photo op area"],sources:["photoOps"]},
+  "lawn-box":{key:"lawn",title:"The Lawn",locations:["outside lawn","the lawn"],sources:["schedule"],eventIds:["medieval-combat"]},
+  "gaming-room-box":{key:"gaming",title:"Gaming Room",locations:["game room","gaming room"],sources:["schedule"],eventIds:["tabletop-gaming"]},
+  "retro-box":{key:"retro",title:"Retro Gaming Arcade Vault",locations:[],eventIds:["retro-gaming"]}
+};
+const MAP_ZONE_BY_ID=new Map(Object.entries(MAP_ZONE_DEFS).map(([id,def])=>[id,def]));
+
+function mapZoneScheduleItems(def){
+  const names=new Set((def.locations||[]).map(x=>String(x).toLowerCase()));
+  const rows=[];
+  const add=(item,location)=>{
+    if(!item)return;
+    rows.push({id:item.id||`${item.day}-${item.time||item.startTime}-${item.title}`,day:item.day||"",time:item.time||item.startTime||"",endTime:item.endTime||"",title:item.title||"",location:location||item.location||def.title});
+  };
+  if(def.sources?.includes("schedule"))state.schedule.filter(x=>names.has(String(x.location||"").toLowerCase())).forEach(x=>add(x));
+  if(def.sources?.includes("panels"))state.panels.filter(x=>names.has(String(x.location||"").toLowerCase())).forEach(x=>add(x));
+  if(def.sources?.includes("photoOps"))state.photoOps.forEach(x=>add(x,state.celebrityInfo?.photoOpLocation||"Photo Op Area"));
+  const dayOrder={Friday:1,Saturday:2,Sunday:3};
+  const timeValue=t=>{const m=String(t||"").match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return 99999;let h=Number(m[1])%12;if(m[3].toUpperCase()==="PM")h+=12;return h*60+Number(m[2]);};
+  return rows.sort((a,b)=>(dayOrder[a.day]||9)-(dayOrder[b.day]||9)||timeValue(a.time)-timeValue(b.time));
+}
+function openMapZone(def){
+  const modal=document.getElementById("mapLocationModal"),content=document.getElementById("mapLocationModalContent");
+  if(!modal||!content||!def)return;
+  const rows=mapZoneScheduleItems(def);
+  const days=["Friday","Saturday","Sunday"];
+  const scheduleHtml=days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
+  const related=(def.eventIds||[]).map(id=>state.events.find(e=>e.id===id)).filter(Boolean);
+  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${scheduleHtml||'<p class="muted-empty">No timed events are currently published for this room.</p>'}${related.length?`<div class="map-zone-related"><strong>MORE INFO</strong>${related.map(e=>`<button type="button" data-map-event-id="${escapeAppHtml(e.id)}">${escapeAppHtml(e.title)} ›</button>`).join("")}</div>`:""}`;
+  content.querySelectorAll("[data-map-event-id]").forEach(button=>button.addEventListener("click",()=>{modal.close();setTimeout(()=>window.SFVCEventGuide?.open?.(button.dataset.mapEventId),35)}));
+  if(modal.open)modal.close();
+  if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");
+}
+
 function buildMapSvg(){
   const layout=mapLayout(),canvas=layout.canvas||{},w=Number(canvas.width||1200),h=Number(canvas.height||1780),out=[];
   out.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="floorPlanTitle floorPlanDesc">`);
   out.push(`<title id="floorPlanTitle">Sci-Fi Valley Con interactive convention center floor plan</title><desc id="floorPlanDesc">Interactive venue map with rooms, exhibit halls, celebrity areas, patio vendors and table locations.</desc>`);
   out.push(`<style>
     .outline{fill:#fffdf4;stroke:#352720;stroke-width:5;stroke-linejoin:round}.zone{stroke:#352720;stroke-width:4}
-    .zone-label,.level-label,.tiny{fill:#291f1a;text-anchor:middle}.zone-label{font-family:Georgia,serif;font-weight:800}.level-label{font-family:Arial,sans-serif;font-weight:900;letter-spacing:2px}
-    .hall-floor{fill:#ebe8dd;stroke:#352720;stroke-width:4}.stairs{fill:#fffdf4;stroke:#352720;stroke-width:3}.tiny{font-family:Arial,sans-serif;font-size:12px;font-weight:800}
+    .zone-label,.level-label,.tiny{fill:#291f1a;text-anchor:middle;pointer-events:none}.zone-label{font-family:Georgia,serif;font-weight:800}.level-label{font-family:Arial,sans-serif;font-weight:900;letter-spacing:2px}
+    .hall-floor{stroke:#352720;stroke-width:4}.stairs{fill:#fffdf4;stroke:#352720;stroke-width:3}.tiny{font-family:Arial,sans-serif;font-size:12px;font-weight:800}
     .map-location-group{cursor:pointer}.map-table{fill:#fffdf6;stroke:#40322b;stroke-width:2}.map-table.conquest{fill:#e65338}.map-table.selected,.service.selected{stroke:#167985;stroke-width:7;filter:drop-shadow(0 0 5px rgba(22,121,133,.7))}
     .service{fill:#f2bd3f;stroke:#352720;stroke-width:3}.map-table-label{font-family:Arial,sans-serif;font-weight:900;fill:#201916;text-anchor:middle;dominant-baseline:middle;pointer-events:none;paint-order:stroke;stroke:#fffdf4;stroke-width:1.8px;stroke-linejoin:round}
   </style>`);
   (layout.elements||[]).forEach(item=>{
     if(item.hidden)return;
-    const cls=item.className?` class="${svgEscape(item.className)}"`:'';const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';const transform=mapElementTransform(item);
-    if(item.type==="rect")out.push(`<rect id="${svgEscape(item.id)}"${cls} x="${Number(item.x)||0}" y="${Number(item.y)||0}" width="${Number(item.width)||0}" height="${Number(item.height)||0}" rx="${Number(item.rx||0)}"${fill}${transform}/>`);
-    else if(item.type==="path")out.push(`<path id="${svgEscape(item.id)}"${cls} d="${svgEscape(item.d||'')}"${fill}${transform}/>`);
+    const zoneDef=MAP_ZONE_BY_ID.get(item.id);
+    const classNames=[item.className||"",zoneDef?"map-zone-interactive":""].filter(Boolean).join(" ");
+    const cls=classNames?` class="${svgEscape(classNames)}"`:'';const fill=item.fill?` fill="${svgEscape(item.fill)}"`:'';const transform=mapElementTransform(item);
+    const zoneAttrs=zoneDef?` data-map-zone="${svgEscape(zoneDef.key)}" tabindex="0" role="button" aria-label="Open ${svgEscape(zoneDef.title)} schedule"`:"";
+    if(item.type==="rect")out.push(`<rect id="${svgEscape(item.id)}"${cls}${zoneAttrs} x="${Number(item.x)||0}" y="${Number(item.y)||0}" width="${Number(item.width)||0}" height="${Number(item.height)||0}" rx="${Number(item.rx||0)}"${fill}${transform}/>`);
+    else if(item.type==="path")out.push(`<path id="${svgEscape(item.id)}"${cls}${zoneAttrs} d="${svgEscape(item.d||'')}"${fill}${transform}/>`);
     else if(item.type==="text"){
       const lines=svgTextLines(item.text),x=Number(item.x)||0,y=Number(item.y)||0,anchor=item.anchor||'middle',fontSize=Number(item.fontSize||22),lineHeight=Number(item.lineHeight||1.15),fillText=item.fill||'#291f1a',weight=item.fontWeight||'800',style=item.fontStyle||'normal',family=item.fontFamily||'Georgia, serif';
       out.push(`<text id="${svgEscape(item.id)}"${cls} x="${x}" y="${y}" text-anchor="${svgEscape(anchor)}" font-size="${fontSize}" font-weight="${svgEscape(weight)}" font-style="${svgEscape(style)}" font-family="${svgEscape(family)}" fill="${svgEscape(fillText)}">`);
@@ -4377,7 +4543,7 @@ function buildMapSvg(){
     }
     out.push(`<text class="map-table-label" x="${cx+(Number(loc.labelDx)||0)}" y="${cy+(Number(loc.labelDy)||0)}" font-size="${fs}"${counterRotate}>${svgEscape(code)}</text></g>`);
   });
-  out.push(`<text class="tiny" x="600" y="1756">VECTOR FLOOR PLAN • TAP A TABLE OR BOOTH FOR DETAILS</text></svg>`);return out.join('');
+  out.push(`<text class="tiny" x="600" y="1756">VECTOR FLOOR PLAN • TAP A COLORED ROOM OR TABLE FOR DETAILS</text></svg>`);return out.join('');
 }
 function applyMapVendorData(){
   const svg=document.querySelector('#mapSvgHost svg');if(!svg)return;
@@ -4399,15 +4565,20 @@ function renderFloorPlanSvg(){
   host.innerHTML=buildMapSvg();
   applyMapVendorData();
   bindMapLocations();
+  host.querySelectorAll('[data-map-zone]').forEach(el=>{
+    const activate=event=>{event.preventDefault();event.stopPropagation();const def=[...MAP_ZONE_BY_ID.values()].find(x=>x.key===el.dataset.mapZone);openMapZone(def)};
+    el.addEventListener('click',activate);
+    el.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){activate(event)}});
+  });
   const svg=host.querySelector('svg');
   svg?.addEventListener('click',event=>{
-    if(!event.target.closest('.map-location-group'))clearMapSelection();
+    if(!event.target.closest('.map-location-group,[data-map-zone]'))clearMapSelection();
   });
   applyMapZoom();
 }
 function openMapLocation(code,{nonModal=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
 
   if(modal.open)modal.close();
@@ -4419,7 +4590,7 @@ function openMapLocation(code,{nonModal=false}={}){
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase();
   if(!q)return true;
-  return `${v.name} ${v.description||''} ${v.categories||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
+  return `${v.name} ${v.description||''} ${v.categories||''} ${v.website||''} ${v.location||''} ${v.area||''}`.toLowerCase().includes(q);
 }
 function renderMapDirectory(){
   const list=document.getElementById('mapDirectoryList'),count=document.getElementById('mapDirectoryCount'),notice=document.getElementById('mapDirectoryNotice');if(!list||!count)return;
@@ -4501,7 +4672,7 @@ function renderMapScreen(){
   if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();
 }
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
-document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1;applyMapZoom()});
+document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1.15;applyMapZoom()});
 document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
 document.getElementById('mapLocationModal')?.addEventListener('close',e=>e.currentTarget.classList.remove('map-directory-popover'));
 document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
@@ -4861,6 +5032,8 @@ function safeRenderSection(name,fn){
 }
 
 function renderAll(){
+  renderHotels();
+  renderNotificationCenter();
   // These two are intentionally first so a failure elsewhere in the app can
   // never leave their original "Loading..." placeholders on screen.
   safeRenderSection("home guest banner",renderHomeGuestBanner);
@@ -5174,6 +5347,8 @@ loadData().then(()=>{
   startVisibleAppRefresh();
   startSafetySyncLoops();
   syncSavedAppRegistration().catch(()=>{});
+  const startupScreen=new URLSearchParams(location.search).get("screen");
+  if(startupScreen==="notifications")setTimeout(()=>goTo("notifications",{recordHistory:false}),0);
 }).catch(err=>{
   console.error(err);
   renderMySchedule();

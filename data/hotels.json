@@ -1,0 +1,110 @@
+[
+  {
+    "id": "country-inn-suites",
+    "enabled": true,
+    "name": "Country Inn & Suites by Radisson",
+    "rate": "$139 per night + tax",
+    "distance": "Attached directly to the Blair County Convention Center",
+    "description": "Attached directly to the Blair County Convention Center. Call and mention Sci-Fi Valley Con for the current convention rate.",
+    "phone": "814-312-1800",
+    "bookingUrl": "https://www.choicehotels.com/reservations/groups/qy60y4?checkInDate=2026-06-11&checkOutDate=2026-06-14&ratePlanCode=BPDZYN",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a95e7e834220987b26929c_Courtyard-by-Marriott_Exterior.avif",
+    "notes": "",
+    "images": [
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a95e7e834220987b26929c_Courtyard-by-Marriott_Exterior.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a95e7ee073615f4ae0bfb0_Courtyard-by-Marriott_Room.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a95e7dbdaf2924530eba5a_Courtyard-by-Marriott_Bistro.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a95e7d4efbf40a0e387f53_Courtyard-by-Marriott_Lounge.avif"
+    ]
+  },
+  {
+    "id": "comfort-inn-suites",
+    "enabled": true,
+    "name": "Comfort Inn & Suites Altoona",
+    "rate": "$137 per night + tax",
+    "distance": "About 10 miles from the convention center",
+    "description": "Sci-Fi Valley Con attendee rate. Book online or call and mention Sci-Fi Valley Con.",
+    "phone": "814-942-2600",
+    "bookingUrl": "https://www.choicehotels.com/reservations/groups/RK25L4",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dca36c7868794ef99043cc_1.avif",
+    "notes": "",
+    "images": [
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dca36c7868794ef99043cc_1.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dca36b10ea33fedd986f04_2.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dca36c8e6e09e9b2bf19a9_3.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dca36c930b82790d7d613c_4.avif"
+    ]
+  },
+  {
+    "id": "fairfield-inn-suites",
+    "enabled": true,
+    "name": "Fairfield Inn & Suites Altoona",
+    "rate": "$199 per night + tax",
+    "distance": "About 3 miles / under 10 minutes",
+    "description": "Sci-Fi Valley Con attendee rate. Call and mention Sci-Fi Valley Con or use the booking link.",
+    "phone": "814-946-0422",
+    "bookingUrl": "https://www.marriott.com/event-reservations/reservation-link.mi?_branch_match_id=1563721205308611926&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXTywo0MtNLCrKzC8p0UvOz9UvSi0uy0wtN7IHytiCODmZedlqmSm2huYWpobmpqaW5oYGZmrZqZW27kEBanVFqWmpQO156fFJRfnlxalFts4ZRfm5qQCAgWjOYQAAAA%3D%3D&app=resvlink&id=1785175597106&key=GRP",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a964dabdaf2948af0ed95f_Fairfield-Inn-%26-Suites_Exterior.avif",
+    "notes": "",
+    "images": [
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a964dabdaf2948af0ed95f_Fairfield-Inn-%26-Suites_Exterior.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a964dad645e7ef419a51f4_Fairfield-Inn-%26-Suites_Room.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a964dbda4f9f8a31a7fb82_Fairfield-Inn-%26-Suites_Breakfast.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/61a964dae56d3d3a3e3b0706_Fairfield-Inn-%26-Suites_Patio.avif"
+    ]
+  },
+  {
+    "id": "super-8",
+    "enabled": true,
+    "name": "Super 8 by Wyndham Altoona",
+    "rate": "$94 per night + tax",
+    "distance": "About 2.7 miles / under 8 minutes",
+    "description": "Book online or call using group code SCIFIOCT2026 for the current Sci-Fi Valley Con rate.",
+    "phone": "814-942-5350",
+    "bookingUrl": "https://www.wyndhamhotels.com/super-8/altoona-pennsylvania/super-8-altoona/overview?checkInDate=10%2F16%2F2026&checkOutDate=10%2F18%2F2026&groupCode=SCIFIOCT2026",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6886512c192044cdab1f57c5_490998400_3176528312515617_949778097234061416_n.avif",
+    "notes": "Group code: SCIFIOCT2026",
+    "images": [
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6886512c192044cdab1f57c5_490998400_3176528312515617_949778097234061416_n.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6886514d5bb87aa37c27d9eb_03773_guest_room_10.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6886516c80f97c11de6713fc_03773_complimentary_breakfast_2.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6886519f1a74281ef0a76322_03773_guest_room_13.avif"
+    ]
+  },
+  {
+    "id": "microtel",
+    "enabled": true,
+    "name": "Microtel Inn & Suites by Wyndham Altoona",
+    "rate": "$115 per night + tax",
+    "distance": "About 4.8 miles / under 10 minutes",
+    "description": "Call the front desk and mention Sci-Fi Valley Con to receive the current discounted rate.",
+    "phone": "814-946-1400",
+    "bookingUrl": "",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66326ad564709e1d5db6a5de_1.avif",
+    "notes": "",
+    "images": [
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66326ad564709e1d5db6a5de_1.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66326ad5e0843168e3fdc62b_2.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66326ad5037c0a7333e05433_3.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66326ad5b9fa04eab9c17417_4.avif"
+    ]
+  },
+  {
+    "id": "altoona-grand",
+    "enabled": true,
+    "name": "Altoona Grand Hotel",
+    "rate": "$139 per night + tax",
+    "distance": "About 1.3 miles / 5 minutes",
+    "description": "Call and mention Sci-Fi Valley Con to receive the current convention rate.",
+    "phone": "814-946-1631",
+    "bookingUrl": "",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dc9ee9e38da854fe295180_1.avif",
+    "notes": "",
+    "images": [
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dc9ee9e38da854fe295180_1.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dca54bf5bef418813ac291_2.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dc9ee902429c73b87feb2f_3.avif",
+      "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/66dc9ee906db0a58c1998008_4.avif"
+    ]
+  }
+]

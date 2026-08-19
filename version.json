@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.72-topbar-name-115-percent-cap",
-  "generatedAt": "2026-08-18T19:28:00Z",
-  "notes": "Caps the top-bar SCI-FI VALLEY CON brand text at 115% so the left-side Back button and Program Tools tab keep clear separation at larger accessibility text settings."
+  "version": "program-v4.74-tester-review-accessibility-account-media-map-hotels",
+  "generatedAt": "2026-08-19T00:15:00Z",
+  "notes": "Tester-review release: seconds countdown, photo/video reports, recoverable registered My Con accounts, vendor websites, clickable room schedules, expanded FAQ/safety policies, notification center, larger readable default text, distinct map hall colors, nearby hotels, and admin-managed after-party directions."
 }
