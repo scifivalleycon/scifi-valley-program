@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.75";
+const APP_BUILD_VERSION="4.76";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -4450,8 +4450,8 @@ const MAP_ZONE_DEFS={
   "panel-room-2-box":{key:"panel2",title:"Panel Room 2",locations:["panel room 2"],sources:["panels","schedule"]},
   "event-room-box":{key:"event",title:"Event Room",locations:["event room"],sources:["schedule"]},
   "paint-room-box":{key:"paint",title:"Paint & Hobby Room",locations:["paint and hobby room","paint & hobby room"],sources:["schedule"]},
-  "mini-cafe-box":{key:"miniCafe",title:"The Mini Café",locations:[],eventIds:["mini-cafe"]},
-  "cafe-box":{key:"cafe",title:"The Café",locations:[],eventIds:["regular-cafe"]},
+  "mini-cafe-box":{key:"miniCafe",title:"The Mini Café",locations:[],eventIds:["mini-cafe"],menuOnly:true},
+  "cafe-box":{key:"cafe",title:"The Café",locations:[],eventIds:["regular-cafe"],menuOnly:true},
   "photo-box":{key:"photo",title:"Photo Op Area",locations:["photo op area"],sources:["photoOps"]},
   "lawn-box":{key:"lawn",title:"The Lawn",locations:["outside lawn","the lawn"],sources:["schedule"],eventIds:["medieval-combat"]},
   "gaming-room-box":{key:"gaming",title:"Gaming Room",locations:["game room","gaming room"],sources:["schedule"],eventIds:["tabletop-gaming"]},
@@ -4480,7 +4480,11 @@ function openMapZone(def){
   const days=["Friday","Saturday","Sunday"];
   const scheduleHtml=days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
   const related=(def.eventIds||[]).map(id=>state.events.find(e=>e.id===id)).filter(Boolean);
-  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${scheduleHtml||'<p class="muted-empty">No timed events are currently published for this room.</p>'}${related.length?`<div class="map-zone-related"><strong>MORE INFO</strong>${related.map(e=>`<button type="button" data-map-event-id="${escapeAppHtml(e.id)}">${escapeAppHtml(e.title)} ›</button>`).join("")}</div>`:""}`;
+  const emptyScheduleHtml=def.menuOnly?"":'<p class="muted-empty">No timed events are currently published for this room.</p>';
+  const relatedHtml=related.length
+    ? `<div class="map-zone-related ${def.menuOnly?"map-zone-related-menu-only":""}">${def.menuOnly?"":"<strong>MORE INFO</strong>"}${related.map(e=>`<button type="button" data-map-event-id="${escapeAppHtml(e.id)}">${escapeAppHtml(e.title)} ›</button>`).join("")}</div>`
+    : "";
+  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${scheduleHtml||emptyScheduleHtml}${relatedHtml}`;
   content.querySelectorAll("[data-map-event-id]").forEach(button=>button.addEventListener("click",()=>{modal.close();setTimeout(()=>window.SFVCEventGuide?.open?.(button.dataset.mapEventId),35)}));
   if(modal.open)modal.close();
   if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");

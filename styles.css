@@ -5653,3 +5653,14 @@ body.sfvc-text-enlarged .app-back-button{
 .flip-countdown-grid{grid-template-columns:repeat(4,minmax(0,1fr));width:min(100%,320px)}
 #countdownDays{letter-spacing:-.7px}
 @media(max-width:430px){.flip-countdown-grid{grid-template-columns:repeat(4,minmax(0,1fr));max-width:320px}}
+
+
+/* =========================================================
+   V4.76 — CAFE MAP POPUPS
+   ========================================================= */
+.map-zone-related.map-zone-related-menu-only{
+  margin-top:18px;
+}
+.map-zone-related.map-zone-related-menu-only button{
+  margin-top:0;
+}
