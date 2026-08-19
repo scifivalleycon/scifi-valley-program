@@ -92,6 +92,134 @@
         "label": "Con-Quest Participant",
         "color": "#e65338"
       }
-    ]
+    ],
+    "homeLayout": {
+      "version": 1,
+      "updatedAt": "2026-08-19T15:42:52.044Z",
+      "updatedBy": "Program Admin App Layout Designer",
+      "items": [
+        {
+          "id": "attendee-reporter",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SAFETY & SUPPORT",
+          "title": "SEE SOMETHING? SAY SOMETHING.",
+          "description": "Report a concern, request staff help, or report a vendor AI-policy violation.",
+          "icon": "!",
+          "style": "coral",
+          "order": 10
+        },
+        {
+          "id": "guest-banner",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "MEET OUR",
+          "title": "CELEBRITY GUESTS",
+          "description": "Guest banner, bios, reunions, photo ops and more.",
+          "icon": "★",
+          "style": "paper",
+          "order": 20
+        },
+        {
+          "id": "lost-found",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SERVICES",
+          "title": "LOST & FOUND",
+          "description": "Lost-item inquiry and optional item photo.",
+          "icon": "LF",
+          "style": "aqua",
+          "order": 30
+        },
+        {
+          "id": "cosplay-clinic",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ATTENDEE SERVICES • TABLE D8",
+          "title": "COSPLAY CLINIC",
+          "description": "Quick costume repairs and emergency cosplay fixes.",
+          "icon": "CC",
+          "style": "coral",
+          "order": 40
+        },
+        {
+          "id": "photo-ops",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "CELEBRITY PHOTO OPS",
+          "title": "ORDER YOUR PHOTO OPS",
+          "description": "Professional celebrity photo-op ordering.",
+          "icon": "★",
+          "style": "coral",
+          "order": 50
+        },
+        {
+          "id": "purchase-actions",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "ADMISSION & EXHIBITORS",
+          "title": "TICKETS / TABLES & BOOTHS",
+          "description": "Purchase admission or exhibitor space.",
+          "icon": "$",
+          "style": "mustard",
+          "order": 60
+        },
+        {
+          "id": "event-status",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "AT THE CON",
+          "title": "EVENT STATUS",
+          "description": "Current event status and what is happening now.",
+          "icon": "●",
+          "style": "aqua",
+          "order": 70
+        },
+        {
+          "id": "recent-alerts",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "RECENT EVENT ALERTS",
+          "title": "LATEST UPDATES",
+          "description": "Recent convention-wide notifications and changes.",
+          "icon": "N",
+          "style": "coral",
+          "order": 80
+        },
+        {
+          "id": "quick-links",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "QUICK LINKS",
+          "title": "GUESTS / SCHEDULE / MAP / EVENT GUIDE",
+          "description": "Four primary attendee navigation cards.",
+          "icon": "☰",
+          "style": "paper",
+          "order": 90
+        },
+        {
+          "id": "my-con",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "BUILD YOUR WEEKEND",
+          "title": "MY CON",
+          "description": "Saved schedule, saved guests and reminder settings.",
+          "icon": "M",
+          "style": "aqua",
+          "order": 100
+        },
+        {
+          "id": "venue-card",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "SCI-FI VALLEY CON VENUE",
+          "title": "BLAIR COUNTY CONVENTION CENTER",
+          "description": "Venue image and floor-map shortcut.",
+          "icon": "⌖",
+          "style": "mustard",
+          "order": 110
+        }
+      ]
+    }
   }
 ]
