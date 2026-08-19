@@ -5675,3 +5675,144 @@ body.sfvc-text-enlarged .app-back-button{
    ========================================================= */
 /* Replaces the prior mustard circular text-arrow control with the supplied
    teal/orange/cream retro arrow asset. Navigation/history behavior is unchanged. */
+
+
+/* =========================================================
+   V4.78 — TOPBAR / PROGRAM TOOLS NO-OVERLAP SAFETY ZONE
+   ========================================================= */
+/* The pull-down Program Tools tab is a fixed overlay above the top bar. On
+   phones, reserve a dedicated right-side lane for it so the event name can
+   never paint underneath the tab. Compact the decorative back arrow and brand
+   proportionally instead of allowing SCI-FI VALLEY CON to be covered. */
+@media(max-width:520px){
+  .app-utility-handle{
+    width:142px;
+    min-width:142px;
+    max-width:142px;
+    margin-right:3px;
+    padding-left:7px;
+    padding-right:7px;
+    gap:4px;
+  }
+  .utility-handle-grip{
+    width:14px;
+    flex:0 0 14px;
+  }
+  .app-utility-handle strong,
+  .app-utility-handle>span:last-child{
+    white-space:nowrap;
+  }
+
+  .topbar{
+    /* 142px tools tab + 3px edge + 6px breathing room. */
+    padding-left:8px;
+    padding-right:151px;
+    column-gap:5px;
+  }
+  .app-back-button{
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+  }
+  .app-back-button img{
+    width:36px;
+    height:36px;
+  }
+  .topbar .brand-button{
+    flex:1 1 auto;
+    min-width:0;
+    max-width:100%;
+    gap:6px;
+    overflow:hidden;
+  }
+  .topbar .brand-button>img{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+  }
+  .topbar .brand-button>span{
+    min-width:0;
+    max-width:100%;
+    overflow:hidden;
+  }
+  #topbarEventName{
+    display:block;
+    max-width:100%;
+    font-size:clamp(10.5px,3.25vw,13px);
+    letter-spacing:.035em;
+    white-space:nowrap;
+  }
+  #topbarEventMeta{
+    display:block;
+    max-width:100%;
+    font-size:clamp(5.5px,1.7vw,7px);
+    letter-spacing:.055em;
+    white-space:nowrap;
+  }
+}
+
+@media(max-width:380px){
+  .app-utility-handle{
+    width:132px;
+    min-width:132px;
+    max-width:132px;
+    margin-right:2px;
+    padding-left:6px;
+    padding-right:6px;
+  }
+  .topbar{
+    /* Keep the protected lane matched to the narrower tools tab. */
+    padding-left:6px;
+    padding-right:140px;
+    column-gap:4px;
+  }
+  .app-back-button{
+    width:32px;
+    height:32px;
+    flex-basis:32px;
+  }
+  .app-back-button img{
+    width:32px;
+    height:32px;
+  }
+  .topbar .brand-button{
+    gap:5px;
+  }
+  .topbar .brand-button>img{
+    width:38px;
+    height:38px;
+    flex-basis:38px;
+  }
+}
+
+@media(max-width:340px){
+  .app-utility-handle{
+    width:122px;
+    min-width:122px;
+    max-width:122px;
+    gap:3px;
+    padding-left:5px;
+    padding-right:5px;
+  }
+  .utility-handle-grip{
+    width:11px;
+    flex-basis:11px;
+  }
+  .topbar{
+    padding-right:130px;
+  }
+  .app-back-button{
+    width:28px;
+    height:28px;
+    flex-basis:28px;
+  }
+  .app-back-button img{
+    width:28px;
+    height:28px;
+  }
+  .topbar .brand-button>img{
+    width:34px;
+    height:34px;
+    flex-basis:34px;
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.77-user-provided-retro-back-button",
-  "generatedAt": "2026-08-19T01:24:00Z",
-  "notes": "Replaces the circular text-arrow Back control with the user-provided teal/orange/cream retro arrow artwork while preserving V4.76 behavior."
+  "version": "program-v4.78-program-tools-header-clearance",
+  "generatedAt": "2026-08-19T01:33:00Z",
+  "notes": "Prevents the Program Tools pull-down tab from overlapping the Sci-Fi Valley Con top-bar title on phones by reserving a protected tab lane and compacting the back arrow/header at narrow widths."
 }

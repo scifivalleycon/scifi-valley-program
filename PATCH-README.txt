@@ -1,29 +1,28 @@
-Sci-Fi Valley Con Attendee App V4.77 — User-Provided Retro Back Button
+Sci-Fi Valley Con Attendee App V4.78 — Program Tools Header Clearance
 
-Rolled forward cumulatively from V4.76 Café Map Menu-Only Popups.
+Rolled forward cumulatively from V4.77 User-Provided Retro Back Button.
 
 CHANGED
-- Replaces the small mustard/yellow circular Back button in the top-left app header.
-- Uses the exact teal/orange/cream retro arrow artwork supplied by the user.
-- Keeps the Back control in the same top-left position immediately before the Sci-Fi Valley Con app logo.
-- Keeps the button fixed-size and excluded from accessibility text scaling.
-- Keeps the existing in-app screen-history and previous scroll-position restoration behavior unchanged.
-
-NEW ASSET
-- assets/icons/back-button.png
+- Prevents the PROGRAM TOOLS pull-down tab from ever painting over the SCI-FI VALLEY CON header title on phones.
+- Reserves a protected right-side lane in the top bar for the Program Tools tab.
+- Makes the supplied retro back arrow slightly smaller on mobile so the brand has more usable width.
+- Slightly compacts the app logo/title/meta typography only at narrow phone widths.
+- Narrows the Program Tools closed tab and moves it closer to the right edge.
+- Adds additional compact rules for very narrow phones.
+- Keeps SCI-FI VALLEY CON on one line and preserves the existing 115% accessibility scaling ceiling.
 
 PRESERVED
-- V4.76 Café and Mini Café map popup cleanup.
-- V4.75 Days / Hours / Minutes / Seconds countdown.
-- V4.74 interactive room areas, map schedules, hotel page, vendor websites, registration recovery, grouped reminders, video reporting and accessibility improvements.
-- All prior attendee app functionality, content and styling.
+- Exact user-provided teal/orange/cream retro back-button artwork from V4.77.
+- Existing in-app Back navigation and scroll-position restoration.
+- V4.76 Cafe map popup cleanup.
+- V4.75 countdown.
+- V4.74 tester-feedback/accessibility/map/hotel updates.
+- All prior attendee app functionality, content, data and styling.
 
 CACHE
-- App build version and service-worker cache bumped to V4.77.
-- The new back-button artwork is included in the service-worker precache.
-- CSS, Event Guide JS and app JS cache-busting query strings bumped to V4.77.
+- App build version and service-worker cache bumped to V4.78.
+- CSS, Event Guide JS, app JS and back-button cache-busting query strings bumped to V4.78.
 
 INSTALL
 Upload the files inside this ZIP over the matching files in the attendee-app repository.
-The new assets/icons/back-button.png file must also be uploaded.
 No Admin App or Notify Worker update is required.
