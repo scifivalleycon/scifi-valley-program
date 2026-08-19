@@ -1,5 +1,6 @@
 {
-  "version": "program-v4.81-admin-managed-homepage-layout",
-  "generatedAt": "2026-08-19T13:27:00Z",
-  "notes": "Adds Admin-managed attendee homepage object ordering, visibility, and custom clickable cards using homeLayout stored inside map-settings.json."
+  "version": "admin-1787154073906",
+  "generatedAt": "2026-08-19T15:41:13.906Z",
+  "source": "homeBanner",
+  "updatedBy": "info@scifivalleycon.com"
 }
