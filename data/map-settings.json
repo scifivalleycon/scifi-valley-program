@@ -94,8 +94,8 @@
       }
     ],
     "homeLayout": {
-      "version": 1,
-      "updatedAt": "2026-08-19T15:47:37.607Z",
+      "version": 2,
+      "updatedAt": "2026-08-19T16:21:35.947Z",
       "updatedBy": "Program Admin App Layout Designer",
       "items": [
         {
@@ -216,6 +216,257 @@
           "title": "BLAIR COUNTY CONVENTION CENTER",
           "description": "Venue image and floor-map shortcut.",
           "icon": "⌖",
+          "style": "mustard",
+          "order": 110
+        }
+      ]
+    },
+    "eventGuideLayout": {
+      "version": 1,
+      "updatedAt": "2026-08-19T16:21:35.947Z",
+      "updatedBy": "Program Admin App Layout Designer",
+      "mainItems": [
+        {
+          "id": "celebrity-guide",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "CELEBRITY GUIDE",
+          "description": "Prices, photo ops, autographs & panels",
+          "icon": "★",
+          "style": "coral",
+          "order": 10
+        },
+        {
+          "id": "directions",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "VENUE & DRIVING DIRECTIONS",
+          "description": "Convention Center, shuttle, bowling, movie screening & navigation",
+          "icon": "➜",
+          "style": "aqua",
+          "order": 20
+        },
+        {
+          "id": "hotels",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "NEARBY HOTELS",
+          "description": "Convention hotel rates, distance, phone & booking links",
+          "icon": "H",
+          "style": "mustard",
+          "order": 30
+        },
+        {
+          "id": "attendee-reporter",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "ATTENDEE REPORTER",
+          "description": "Safety, venue issues, staff assistance and reports",
+          "icon": "!",
+          "style": "coral",
+          "order": 40
+        },
+        {
+          "id": "cosplay-clinic",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "COSPLAY CLINIC",
+          "description": "Quick costume repairs and emergency cosplay fixes at Table D8",
+          "icon": "CC",
+          "style": "coral",
+          "order": 50
+        },
+        {
+          "id": "registration",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "REGISTER THIS APP",
+          "description": "Add your name, pronouns and contact information",
+          "icon": "ID",
+          "style": "coral",
+          "order": 60
+        },
+        {
+          "id": "lost-found",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "LOST & FOUND",
+          "description": "Send a lost-item inquiry with contact information and optional photo",
+          "icon": "LF",
+          "style": "aqua",
+          "order": 70
+        },
+        {
+          "id": "tshirts",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "OFFICIAL T-SHIRTS",
+          "description": "Browse the complete Sci-Fi Valley Con shirt collection",
+          "icon": "T",
+          "style": "mustard",
+          "order": 80
+        },
+        {
+          "id": "notifications",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "NOTIFICATIONS",
+          "description": "Recent event alerts and grouped My Con reminders",
+          "icon": "N",
+          "style": "aqua",
+          "order": 90
+        },
+        {
+          "id": "notification-settings",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "NOTIFICATION SETTINGS",
+          "description": "Schedule reminders & notification permissions",
+          "icon": "🔔",
+          "style": "mustard",
+          "order": 100
+        },
+        {
+          "id": "faq",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "EVENT GUIDE",
+          "title": "FREQUENTLY ASKED QUESTIONS",
+          "description": "Tickets, venue, guests, policies, safety & more",
+          "icon": "?",
+          "style": "paper",
+          "order": 110
+        }
+      ],
+      "activityItems": [
+        {
+          "id": "con-quest",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "CHARITY QUEST",
+          "title": "Con-Quest",
+          "description": "Event Guide activity button",
+          "icon": "★",
+          "style": "aqua",
+          "order": 10
+        },
+        {
+          "id": "costume-contest",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "COSPLAY",
+          "title": "Costume Contest",
+          "description": "Event Guide activity button",
+          "icon": "♛",
+          "style": "coral",
+          "order": 20
+        },
+        {
+          "id": "quick-sketches",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "LIVE ART",
+          "title": "Charity Quick Sketches",
+          "description": "Event Guide activity button",
+          "icon": "✎",
+          "style": "mustard",
+          "order": 30
+        },
+        {
+          "id": "charity-auction",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "CHARITY",
+          "title": "Charity Auction",
+          "description": "Event Guide activity button",
+          "icon": "◆",
+          "style": "pink",
+          "order": 40
+        },
+        {
+          "id": "shuttle",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "TRANSPORTATION",
+          "title": "Shuttle Service",
+          "description": "Event Guide activity button",
+          "icon": "▰",
+          "style": "aqua",
+          "order": 50
+        },
+        {
+          "id": "after-party",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "BOWLING & KARAOKE",
+          "title": "Saturday Night After Party",
+          "description": "Event Guide activity button",
+          "icon": "●",
+          "style": "coral",
+          "order": 60
+        },
+        {
+          "id": "medieval-combat",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "LIVE DEMOS",
+          "title": "Medieval Combat Demos",
+          "description": "Event Guide activity button",
+          "icon": "⚔",
+          "style": "mustard",
+          "order": 70
+        },
+        {
+          "id": "retro-gaming",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "75+ SYSTEMS",
+          "title": "Retro Gaming Arcade Vault",
+          "description": "Event Guide activity button",
+          "icon": "✚",
+          "style": "pink",
+          "order": 80
+        },
+        {
+          "id": "tabletop-gaming",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "GAME ROOM",
+          "title": "Tabletop Gaming",
+          "description": "Event Guide activity button",
+          "icon": "⚄",
+          "style": "aqua",
+          "order": 90
+        },
+        {
+          "id": "trivia",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "TOURNAMENT",
+          "title": "Trivia Tournament",
+          "description": "Event Guide activity button",
+          "icon": "?",
+          "style": "coral",
+          "order": 100
+        },
+        {
+          "id": "workshops",
+          "type": "builtin",
+          "visible": true,
+          "kicker": "HANDS-ON",
+          "title": "Workshops",
+          "description": "Event Guide activity button",
+          "icon": "✦",
           "style": "mustard",
           "order": 110
         }
