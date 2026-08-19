@@ -1,9 +1,9 @@
-const CACHE="sfvc-program-v4-76";
+const CACHE="sfvc-program-v4-77";
 const LOCAL=[
   "./","./index.html","./styles.css","./app.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/hotels.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
   "./assets/floor-plan.svg","./assets/icons/app-icon-192.png","./assets/icons/app-icon-512.png",
-  "./assets/icons/app-icon-maskable-512.png","./assets/icons/apple-touch-icon.png"
+  "./assets/icons/app-icon-maskable-512.png","./assets/icons/apple-touch-icon.png","./assets/icons/back-button.png"
 ];
 
 self.addEventListener("install",event=>{

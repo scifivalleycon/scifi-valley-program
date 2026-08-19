@@ -5552,27 +5552,33 @@ body.sfvc-text-xxl .lost-found-form .report-file-picker>span:first-child{font-si
 }
 
 .app-back-button{
-  width:36px;
-  height:36px;
-  flex:0 0 36px;
+  width:44px;
+  height:44px;
+  flex:0 0 44px;
   order:-1;
   display:grid;
   place-items:center;
   padding:0;
-  border:2px solid var(--cream);
-  border-radius:50%;
-  background:var(--mustard);
-  color:var(--ink);
-  font-family:Arial,sans-serif;
-  font-size:23px!important;
-  font-weight:900;
-  line-height:1!important;
-  box-shadow:2px 3px 0 rgba(0,0,0,.20);
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:inherit;
+  box-shadow:none;
+  overflow:visible;
+}
+
+.app-back-button img{
+  display:block;
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
 }
 
 .app-back-button:active{
-  transform:translateY(1px);
-  box-shadow:1px 1px 0 rgba(0,0,0,.20);
+  transform:translateY(1px) scale(.97);
+  box-shadow:none;
 }
 
 .app-back-button:focus-visible{
@@ -5588,8 +5594,6 @@ body.sfvc-text-enlarged .app-back-button{
   align-content:center!important;
   justify-content:center!important;
   padding:0!important;
-  font-size:23px!important;
-  line-height:1!important;
 }
 
 @media(max-width:520px){
@@ -5664,3 +5668,10 @@ body.sfvc-text-enlarged .app-back-button{
 .map-zone-related.map-zone-related-menu-only button{
   margin-top:0;
 }
+
+
+/* =========================================================
+   V4.77 — USER-PROVIDED RETRO BACK BUTTON ARTWORK
+   ========================================================= */
+/* Replaces the prior mustard circular text-arrow control with the supplied
+   teal/orange/cream retro arrow asset. Navigation/history behavior is unchanged. */

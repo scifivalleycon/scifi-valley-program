@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.76-cafe-map-menu-only",
-  "generatedAt": "2026-08-19T00:52:00Z",
-  "notes": "Removes the unnecessary no-timed-events message from The Caf\u00e9 and Mini Caf\u00e9 map popups so each popup goes directly to its caf\u00e9 menu button."
+  "version": "program-v4.77-user-provided-retro-back-button",
+  "generatedAt": "2026-08-19T01:24:00Z",
+  "notes": "Replaces the circular text-arrow Back control with the user-provided teal/orange/cream retro arrow artwork while preserving V4.76 behavior."
 }
