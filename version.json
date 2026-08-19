@@ -1,5 +1,5 @@
 {
-  "version": "program-v4.78-program-tools-header-clearance",
-  "generatedAt": "2026-08-19T01:33:00Z",
-  "notes": "Prevents the Program Tools pull-down tab from overlapping the Sci-Fi Valley Con top-bar title on phones by reserving a protected tab lane and compacting the back arrow/header at narrow widths."
+  "version": "program-v4.79-cosplay-clinic-table-d8",
+  "generatedAt": "2026-08-19T01:35:00Z",
+  "notes": "Adds Cosplay Clinic attendee-service information and poster for Table D8."
 }
