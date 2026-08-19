@@ -1,0 +1,10 @@
+/* Sci-Fi Valley Con Attendee App V4.82
+   Admin-controlled Event Guide button layout. */
+.sfvc-event-layout-hidden{display:none!important}
+.sfvc-event-guide-main-layout-zone{display:contents}
+.sfvc-event-layout-custom-main .sfvc-event-layout-custom-icon{font-size:.78em}
+.sfvc-event-layout-custom-main.sfvc-event-layout-style-coral .sfvc-event-layout-custom-icon{background:#e76a42}
+.sfvc-event-layout-custom-main.sfvc-event-layout-style-aqua .sfvc-event-layout-custom-icon{background:#73c7cb;color:#251e1a}
+.sfvc-event-layout-custom-main.sfvc-event-layout-style-mustard .sfvc-event-layout-custom-icon{background:#efc448;color:#251e1a}
+.sfvc-event-layout-custom-main.sfvc-event-layout-style-pink .sfvc-event-layout-custom-icon{background:#d36a9b}
+.sfvc-event-layout-custom-main.sfvc-event-layout-style-paper .sfvc-event-layout-custom-icon{background:#f3e9d6;color:#251e1a}

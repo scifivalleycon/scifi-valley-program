@@ -1,31 +1,30 @@
-Sci-Fi Valley Con Attendee App V4.81 - Admin-Managed Homepage Layout
+Sci-Fi Valley Con Attendee App V4.82
+EVENT GUIDE LAYOUT DESIGNER SUPPORT
 
-Rolled forward cumulatively from V4.80.
+Rolled forward from V4.81 App Layout Designer.
 
-ADDED
-- Reads homepage layout from homeLayout inside data/map-settings.json
-- Admin-controlled ordering of homepage clickable objects
-- Admin-controlled show/hide state for built-in objects
-- Supports custom homepage cards created in the App Layout Designer
-- Custom cards can link to an app page, Event Guide item, or external HTTPS website
-- Layout refreshes when the app becomes visible and checks again every 60 seconds
+WHAT CHANGED
+- Keeps the existing Admin-controlled Home layout system.
+- Adds Admin-controlled layout support to the EVENT GUIDE screen (the MORE tab).
+- Event Guide main shortcut buttons can now be reordered or hidden from Program Admin.
+- Events & Activities quick buttons can now be reordered or hidden from Program Admin.
+- Custom buttons created in Program Admin can be added to Home, Event Guide main buttons, or Events & Activities.
+- Custom buttons may link to another app page, a specific Event Guide item, or an external HTTPS website.
+- Event Guide layout is stored inside the existing data/map-settings.json as eventGuideLayout.
+- Existing map coordinates, vendor assignments, reports, schedules, guests, settings, accessibility, notifications, and all prior app features are preserved.
 
-PROTECTED / NOT MOVABLE
-- Add App system prompt
-- Retro event hero
-- Top Sci-Fi Valley Con header and back button
-- Program Tools drawer/tab
-- Sponsor strip
-- Bottom navigation
+FILES IN THIS PATCH
+- index.html
+- event-guide-layout.js
+- event-guide-layout.css
+- service-worker.js
+- version.json
+- data/version.json
 
-PRESERVED
-- V4.80 native Cosplay Clinic content
-- Reporting, Lost & Found, map, notifications, accessibility, My Con, guests, schedule, Event Guide, and all prior features
+IMPORTANT
+This ZIP intentionally does NOT include data/map-settings.json. Your live Home layout, floor-plan settings and map data must not be overwritten by a code update.
 
-INSTALL
-Upload the files inside this folder over the matching files in scifivalleycon/scifi-valley-program.
-New files: home-layout.js and home-layout.css.
-No data/map-settings.json replacement is included, so your current map settings and floor-map configuration are not overwritten.
+UPLOAD TO
+scifivalleycon/scifi-valley-program
 
-PAIRING
-Install the Admin App Layout Designer add-on from the other folder in this package.
+No Notify Worker update is required.
