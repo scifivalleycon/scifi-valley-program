@@ -275,7 +275,7 @@ async function refresh(force=false){
       activityItems:normalize(layout.activityItems,ACTIVITY_DEFAULTS,"activities")
     };
     const signature=JSON.stringify(normalized);
-    if(force||signature!==lastSignature){
+    if(signature!==lastSignature){
       lastSignature=signature;
       apply(normalized);
     }
