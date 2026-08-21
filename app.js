@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.86";
+const APP_BUILD_VERSION="4.87";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -325,6 +325,7 @@ function goTo(screenId,{recordHistory=true,restoreScrollY=null}={}){
   requestAnimationFrame(()=>{
     const destination=document.getElementById(screenId);
     fitProgramPageHeadings(destination||document);
+    if(screenId==="map")renderMapScreen();
     if(Number.isFinite(restoreScrollY)){
       window.scrollTo({top:Math.max(0,restoreScrollY),behavior:"auto"});
     }
@@ -784,18 +785,25 @@ function initializeProgramTextScaling(){
 
   programTextObserver?.disconnect();
   let rescaleQueued=false;
+  const addedRoots=new Set();
   programTextObserver=new MutationObserver(mutations=>{
-    if(rescaleQueued)return;
-    const added=mutations.some(mutation=>{
-      if(!mutation.addedNodes.length)return false;
-      const target=mutation.target instanceof Element?mutation.target:mutation.target?.parentElement;
-      return !target?.closest?.('[data-sfvc-heading-measure="true"]');
-    });
-    if(!added)return;
+    mutations.forEach(mutation=>mutation.addedNodes.forEach(node=>{
+      if(!(node instanceof Element))return;
+      if(node.closest?.('[data-sfvc-heading-measure="true"]'))return;
+      addedRoots.add(node);
+    }));
+    if(!addedRoots.size||rescaleQueued)return;
     rescaleQueued=true;
     requestAnimationFrame(()=>{
       rescaleQueued=false;
-      applyProgramTextScale(programTextScale,{persist:false});
+      const roots=[...addedRoots].filter(root=>root.isConnected);
+      addedRoots.clear();
+      const topRoots=roots.filter(root=>!roots.some(other=>other!==root&&other.contains(root)));
+      topRoots.forEach(root=>{
+        scaleTextTree(root);
+        if(programEffectiveTextScale()>1)fitProgramPageHeadings(root);
+        fitGuestNames(root);
+      });
     });
   });
   programTextObserver.observe(document.body,{childList:true,subtree:true});
@@ -1669,7 +1677,7 @@ function startLiveVendorDirectoryRefresh(){
 }
 
 async function loadData({silent=false,force=false,versionInfo=null}={}){
-  if(appDataRefreshPromise&&!force)return appDataRefreshPromise;
+  if(appDataRefreshPromise)return appDataRefreshPromise;
   const now=Date.now();
   if(!force&&appDataLastRefreshAt&&now-appDataLastRefreshAt<APP_REFRESH_MIN_GAP_MS){
     return;
@@ -1713,12 +1721,6 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.faq=Array.isArray(faq)?faq:[];
     state.hotels=Array.isArray(hotels)?hotels:[];
     state.homeBanner=Array.isArray(homeBannerData)&&homeBannerData[0]?homeBannerData[0]:{};
-
-    // Render these immediately instead of waiting for the rest of the program.
-    renderHomeGuestBanner();
-    renderSocialLinks();
-    renderSponsors();
-    renderTshirts();
 
     state.mapLayout=Array.isArray(mapLayoutData)&&mapLayoutData[0]?mapLayoutData[0]:{};
     state.mapSettings=Array.isArray(mapSettingsData)&&mapSettingsData[0]?mapSettingsData[0]:{};
@@ -1905,10 +1907,11 @@ function setFlipCountdownValue(id,value){
   if(!el)return;
   const next=String(Math.max(0,Number(value)||0)).padStart(2,"0");
   if(el.textContent===next)return;
+  const animate=document.visibilityState==="visible"&&document.getElementById("home")?.classList.contains("active");
   el.classList.remove("flip-changing");
-  void el.offsetWidth;
+  if(animate)void el.offsetWidth;
   el.textContent=next;
-  el.classList.add("flip-changing");
+  if(animate)el.classList.add("flip-changing");
 }
 function renderEventCountdown(){
   const clock=document.getElementById("eventCountdownClock");
@@ -1946,7 +1949,7 @@ function renderEventCountdown(){
 function initializeEventCountdown(){
   renderEventCountdown();
   if(eventCountdownTimer)clearInterval(eventCountdownTimer);
-  eventCountdownTimer=setInterval(renderEventCountdown,1000);
+  eventCountdownTimer=setInterval(()=>{if(document.visibilityState==="visible")renderEventCountdown()},1000);
 }
 
 function applyEventSettings(){
@@ -4474,6 +4477,9 @@ function initializeLostFoundInquiry(){
 /* Interactive vector floor plan — V4.2 */
 let mapZoom=1.15;
 let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
+let mapLastRenderSignature="";
+let mapVendorIndexSource=null;
+let mapVendorByLocation=new Map();
 
 function expandLocationCodes(value){
   const result=[];
@@ -4489,7 +4495,14 @@ function expandLocationCodes(value){
 }
 function vendorForLocation(code){
   const target=String(code||"").toUpperCase();
-  return state.vendors.find(v=>expandLocationCodes(v.location).includes(target))||null;
+  if(mapVendorIndexSource!==state.vendors){
+    mapVendorIndexSource=state.vendors;
+    mapVendorByLocation=new Map();
+    state.vendors.forEach(vendor=>expandLocationCodes(vendor.location).forEach(location=>{
+      if(!mapVendorByLocation.has(location))mapVendorByLocation.set(location,vendor);
+    }));
+  }
+  return mapVendorByLocation.get(target)||null;
 }
 function mapDirectoryVisible(){return state.mapSettings.directoryPublished===true||mapPreviewMode}
 function mapVisible(){return state.mapSettings.published===true||mapPreviewMode}
@@ -4758,9 +4771,17 @@ function applyMapZoom(){
     if(selected)requestAnimationFrame(()=>positionVendorMapPointer(selected));
   }
 }
-function renderMapScreen(){
+function currentMapRenderSignature(){
+  return JSON.stringify({layout:state.mapLayout,settings:state.mapSettings,vendors:liveVendorDirectorySignature(state.vendors)});
+}
+function renderMapScreen({force=false}={}){
   const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
-  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();
+  const mapActive=document.getElementById('map')?.classList.contains('active')||mapPreviewMode;
+  if(!mapActive)return;
+  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;
+  const signature=currentMapRenderSignature(),hasMap=Boolean(document.querySelector('#mapSvgHost svg'));
+  if(!force&&hasMap&&signature===mapLastRenderSignature){renderMapDirectory();applyMapSelection();return}
+  renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();mapLastRenderSignature=signature;
 }
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
 document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1.15;applyMapZoom()});

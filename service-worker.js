@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-86-map-vendor-refresh";
+const CACHE="sfvc-program-v4-87-render-stability";
 const LOCAL=[
   "./","./index.html","./styles.css","./home-layout.css","./event-guide-layout.css","./app.js","./home-layout.js","./event-guide-layout.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/hotels.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -18,6 +18,11 @@ self.addEventListener("fetch",event=>{
   if(event.request.method!=="GET")return;
 
   const url=new URL(event.request.url);
+  if(url.origin!==self.location.origin){
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  const cacheKey=new Request(`${url.origin}${url.pathname}`);
   const isProgramData=url.origin===self.location.origin && url.pathname.includes("/data/") && url.pathname.endsWith(".json");
 
   if(isProgramData){
@@ -26,11 +31,11 @@ self.addEventListener("fetch",event=>{
         const network=await fetch(event.request,{cache:"no-store"});
         if(network.ok){
           const copy=network.clone();
-          caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
+          caches.open(CACHE).then(cache=>cache.put(cacheKey,copy)).catch(()=>{});
         }
         return network;
       }catch{
-        return (await caches.match(event.request,{ignoreSearch:true})) || new Response("[]",{
+        return (await caches.match(cacheKey)) || new Response("[]",{
           status:200,
           headers:{"Content-Type":"application/json"}
         });
@@ -41,10 +46,12 @@ self.addEventListener("fetch",event=>{
 
   event.respondWith(
     fetch(event.request).then(response=>{
-      const copy=response.clone();
-      caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
+      if(response.ok){
+        const copy=response.clone();
+        caches.open(CACHE).then(cache=>cache.put(cacheKey,copy)).catch(()=>{});
+      }
       return response;
-    }).catch(()=>caches.match(event.request).then(cached=>cached||caches.match("./index.html")))
+    }).catch(()=>caches.match(cacheKey).then(cached=>cached||caches.match("./index.html")))
   );
 });
 
