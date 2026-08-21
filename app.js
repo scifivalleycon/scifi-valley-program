@@ -17,11 +17,11 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.87";
+const APP_BUILD_VERSION="4.88";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
-const VENDOR_DIRECTORY_URL="https://vendor.scifivalleycon.com/api/public/directory";
+const VENDOR_DIRECTORY_URL="/api/vendor-directory";
 const VENDOR_DIRECTORY_REFRESH_MS=30*1000;
 const DEVICE_SAFETY_SYNC_MS=15*60*1000;
 const REGISTRATION_SYNC_SAFETY_MS=6*60*60*1000;
@@ -1627,8 +1627,7 @@ async function fetchLiveVendorDirectory(){
   const stamp=`v=${Date.now()}`;
   const response=await fetch(`${VENDOR_DIRECTORY_URL}?${stamp}`,{
     cache:"no-store",
-    mode:"cors",
-    credentials:"omit",
+    credentials:"same-origin",
     headers:{Accept:"application/json"}
   });
   const contentType=response.headers.get("content-type")||"";
