@@ -17,10 +17,12 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.79";
+const APP_BUILD_VERSION="4.85";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
+const VENDOR_DIRECTORY_URL="https://vendor.scifivalleycon.com/api/public/directory";
+const VENDOR_DIRECTORY_REFRESH_MS=30*1000;
 const DEVICE_SAFETY_SYNC_MS=15*60*1000;
 const REGISTRATION_SYNC_SAFETY_MS=6*60*60*1000;
 let appDataRefreshPromise=null;
@@ -28,6 +30,9 @@ let appDataLastRefreshAt=0;
 let appVisibleRefreshTimer=null;
 let appVersionCheckSignature="";
 let appVersionLastCheckedAt=0;
+let vendorDirectoryRefreshPromise=null;
+let vendorDirectoryRefreshTimer=null;
+let vendorDirectoryLastSignature="";
 let deviceSafetySyncTimer=null;
 
 function withJitter(baseMs,spread=0.25){
@@ -1599,6 +1604,65 @@ function initializeProgramTools(){
   updateFontSizeControls();
 }
 
+function liveVendorDirectorySignature(rows){
+  return JSON.stringify((Array.isArray(rows)?rows:[]).map(row=>({
+    id:row.id||"",name:row.name||"",location:row.location||"",totalTables:row.totalTables??null,
+    area:row.area||"",type:row.type||"",conQuest:Boolean(row.conQuest),website:row.website||"",
+    description:row.description||"",categories:row.categories||"",notes:row.notes||"",
+    registered:Boolean(row.registered),updatedAt:row.updatedAt||"",
+    photos:(Array.isArray(row.photos)?row.photos:[]).map(photo=>[photo.id||"",photo.url||""])
+  })));
+}
+
+async function fetchLiveVendorDirectory(){
+  const stamp=`v=${Date.now()}`;
+  const response=await fetch(`${VENDOR_DIRECTORY_URL}?${stamp}`,{
+    cache:"no-store",
+    mode:"cors",
+    credentials:"omit",
+    headers:{Accept:"application/json"}
+  });
+  const contentType=response.headers.get("content-type")||"";
+  if(!response.ok||!contentType.includes("application/json")){
+    throw new Error(`Live vendor directory request failed (${response.status}).`);
+  }
+  const rows=await response.json();
+  if(!Array.isArray(rows))throw new Error("Live vendor directory returned an invalid response.");
+  return rows;
+}
+
+async function refreshLiveVendorDirectory(reason="automatic"){
+  if(document.visibilityState==="hidden")return false;
+  if(vendorDirectoryRefreshPromise)return vendorDirectoryRefreshPromise;
+  vendorDirectoryRefreshPromise=(async()=>{
+    const rows=await fetchLiveVendorDirectory();
+    const signature=liveVendorDirectorySignature(rows);
+    if(signature===vendorDirectoryLastSignature)return false;
+    vendorDirectoryLastSignature=signature;
+    state.vendors=rows;
+    if(state.mapSelectedVendorId&&!rows.some(row=>row.id===state.mapSelectedVendorId)){
+      state.mapSelectedVendorId="";
+      state.mapSelectedCodes.clear();
+    }
+    safeRenderSection("live vendor map",renderMapScreen);
+    console.info(`SFVC live vendor directory refreshed: ${reason}`);
+    return true;
+  })().catch(err=>{
+    console.warn(`SFVC live vendor directory refresh failed: ${reason}`,err);
+    return false;
+  }).finally(()=>{vendorDirectoryRefreshPromise=null});
+  return vendorDirectoryRefreshPromise;
+}
+
+function startLiveVendorDirectoryRefresh(){
+  clearTimeout(vendorDirectoryRefreshTimer);
+  const loop=async()=>{
+    if(document.visibilityState==="visible")await refreshLiveVendorDirectory("visible-interval");
+    vendorDirectoryRefreshTimer=setTimeout(loop,VENDOR_DIRECTORY_REFRESH_MS);
+  };
+  vendorDirectoryRefreshTimer=setTimeout(loop,VENDOR_DIRECTORY_REFRESH_MS);
+}
+
 async function loadData({silent=false,force=false,versionInfo=null}={}){
   if(appDataRefreshPromise&&!force)return appDataRefreshPromise;
   const now=Date.now();
@@ -1620,7 +1684,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
     const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
-      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("https://vendor.scifivalleycon.com/api/public/directory"),
+      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),fetchLiveVendorDirectory().catch(err=>{console.warn("SFVC live vendor directory initial load failed",err);return state.vendors.length?state.vendors:safeJson("data/vendors.json")}),
       safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
@@ -1637,6 +1701,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.schedule=normalizedSchedule;
     state.events=Array.isArray(events)?events:[];
     state.vendors=Array.isArray(vendors)?vendors:[];
+    vendorDirectoryLastSignature=liveVendorDirectorySignature(state.vendors);
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.tshirts=Array.isArray(tshirts)?tshirts:[];
@@ -5115,6 +5180,7 @@ document.addEventListener("visibilitychange",()=>{
     updateNotificationStatus().catch(()=>{});
     refreshRemoteReminderStatus().catch(()=>{});
     refreshAnonymousDeviceStatus().catch(()=>{});
+    refreshLiveVendorDirectory("foreground").catch(()=>{});
     maybeRefreshProgramData("foreground").catch(()=>{});
     syncSavedAppRegistration().catch(()=>{});
 
@@ -5132,6 +5198,7 @@ document.addEventListener("visibilitychange",()=>{
 });
 
 window.addEventListener("online",()=>{
+  refreshLiveVendorDirectory("online").catch(()=>{});
   ensurePushSubscriptionHealthy({force:true}).then(()=>{
     updateNotificationStatus();
     syncServerReminders({force:true}).catch(()=>{});
@@ -5141,6 +5208,7 @@ window.addEventListener("online",()=>{
 });
 window.addEventListener("pageshow",()=>{
   ensurePushSubscriptionHealthy().then(()=>updateNotificationStatus()).catch(()=>{});
+  refreshLiveVendorDirectory("pageshow").catch(()=>{});
   maybeRefreshProgramData("pageshow").catch(()=>{});
 });
 navigator.serviceWorker?.addEventListener?.("controllerchange",()=>{
@@ -5337,6 +5405,7 @@ initializeLostFoundInquiry();
 
 loadData().then(()=>{
   startVisibleAppRefresh();
+  startLiveVendorDirectoryRefresh();
   startSafetySyncLoops();
   syncSavedAppRegistration().catch(()=>{});
   const startupScreen=new URLSearchParams(location.search).get("screen");
