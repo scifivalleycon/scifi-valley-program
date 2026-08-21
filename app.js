@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.85";
+const APP_BUILD_VERSION="4.86";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -33,6 +33,7 @@ let appVersionLastCheckedAt=0;
 let vendorDirectoryRefreshPromise=null;
 let vendorDirectoryRefreshTimer=null;
 let vendorDirectoryLastSignature="";
+let mapOpenLocationCode="";
 let deviceSafetySyncTimer=null;
 
 function withJitter(baseMs,spread=0.25){
@@ -1645,6 +1646,10 @@ async function refreshLiveVendorDirectory(reason="automatic"){
       state.mapSelectedCodes.clear();
     }
     safeRenderSection("live vendor map",renderMapScreen);
+    const modal=document.getElementById("mapLocationModal");
+    if(mapOpenLocationCode&&modal?.open){
+      renderMapLocationProfile(mapOpenLocationCode,{status:"Vendor profile updated automatically."});
+    }
     console.info(`SFVC live vendor directory refreshed: ${reason}`);
     return true;
   })().catch(err=>{
@@ -4628,16 +4633,45 @@ function renderFloorPlanSvg(){
   });
   applyMapZoom();
 }
+function mapVendorRefreshControls(code,status="",error=false){
+  return `<button class="map-vendor-refresh" type="button" data-refresh-map-vendor>↻ REFRESH VENDOR PROFILE</button><p class="map-vendor-refresh-status${error?' error':''}" aria-live="polite">${escapeAppHtml(status)}</p>`;
+}
+function renderMapLocationProfile(code,{status="",error=false}={}){
+  const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent');if(!content)return;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}${mapVendorPhotoGallery(vendor)}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}${mapVendorRefreshControls(code,status,error)}`;
+  else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>${mapVendorRefreshControls(code,status,error)}`;
+  content.querySelector('[data-refresh-map-vendor]')?.addEventListener('click',()=>forceMapVendorProfileRefresh(code));
+}
+async function forceMapVendorProfileRefresh(code,{automatic=false}={}){
+  const content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');
+  const button=content?.querySelector('[data-refresh-map-vendor]'),status=content?.querySelector('.map-vendor-refresh-status');
+  if(button){button.disabled=true;button.textContent='↻ REFRESHING…'}
+  if(status){status.classList.remove('error');status.textContent=automatic?'Checking the live Vendor Portal…':'Loading the newest Vendor Portal profile…'}
+  try{
+    const rows=await fetchLiveVendorDirectory(),signature=liveVendorDirectorySignature(rows),changed=signature!==vendorDirectoryLastSignature;
+    vendorDirectoryLastSignature=signature;state.vendors=rows;
+    if(state.mapSelectedVendorId&&!rows.some(row=>row.id===state.mapSelectedVendorId)){state.mapSelectedVendorId='';state.mapSelectedCodes.clear()}
+    renderMapScreen();
+    if(modal?.open&&mapOpenLocationCode===String(code||'').toUpperCase())renderMapLocationProfile(code,{status:changed?'Updated from the Vendor Portal just now.':'Latest Vendor Portal profile loaded.'});
+    return true;
+  }catch(err){
+    console.warn('SFVC map vendor profile refresh failed',err);
+    const liveStatus=document.getElementById('mapLocationModalContent')?.querySelector('.map-vendor-refresh-status'),liveButton=document.getElementById('mapLocationModalContent')?.querySelector('[data-refresh-map-vendor]');
+    if(liveStatus){liveStatus.classList.add('error');liveStatus.textContent='Could not reach the live Vendor Portal. Showing the last published profile.'}
+    if(liveButton){liveButton.disabled=false;liveButton.textContent='↻ TRY REFRESH AGAIN'}
+    return false;
+  }
+}
 function openMapLocation(code,{nonModal=false}={}){
-  const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}${mapVendorPhotoGallery(vendor)}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
-  else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
-
+  const modal=document.getElementById('mapLocationModal');if(!modal)return;
   if(modal.open)modal.close();
+  mapOpenLocationCode=String(code||'').toUpperCase();renderMapLocationProfile(mapOpenLocationCode);
   modal.classList.toggle('map-directory-popover',Boolean(nonModal));
   if(nonModal&&typeof modal.show==='function')modal.show();
   else if(typeof modal.showModal==='function')modal.showModal();
   else modal.setAttribute('open','');
+  const requestedCode=mapOpenLocationCode;
+  setTimeout(()=>forceMapVendorProfileRefresh(requestedCode,{automatic:true}),0);
 }
 function mapVendorPhotoGallery(vendor){
   const photos=Array.isArray(vendor?.photos)?vendor.photos.slice(0,5):[];
@@ -4731,7 +4765,7 @@ function renderMapScreen(){
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
 document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1.15;applyMapZoom()});
 document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
-document.getElementById('mapLocationModal')?.addEventListener('close',e=>e.currentTarget.classList.remove('map-directory-popover'));
+document.getElementById('mapLocationModal')?.addEventListener('close',e=>{e.currentTarget.classList.remove('map-directory-popover');mapOpenLocationCode=''});
 document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
 function openConQuestInfo(){

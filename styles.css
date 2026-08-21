@@ -2426,6 +2426,10 @@ button,
 .map-vendor-description{margin:12px 0 8px;padding:10px;border:1px solid rgba(58,39,32,.5);border-radius:7px;background:rgba(226,173,52,.14)}
 .map-vendor-description strong{display:block;margin-bottom:4px;color:var(--coral2);font-size:7px;letter-spacing:.07em}
 .map-vendor-description p{margin:0;font-family:Georgia,serif;font-size:9px;line-height:1.45}
+.map-vendor-refresh{display:block;width:100%;margin-top:10px;padding:9px;border:2px solid var(--ink);border-radius:6px;background:var(--teal);color:var(--ink);font:inherit;font-size:8px;font-weight:900;letter-spacing:.03em;cursor:pointer}
+.map-vendor-refresh:disabled{cursor:wait;opacity:.7}
+.map-vendor-refresh-status{min-height:1.2em;margin:5px 0 0;font-size:7px;font-weight:800;color:#236447;text-align:center}
+.map-vendor-refresh-status.error{color:#a22b20}
 .map-viewport{position:relative}
 .map-vendor-pointer{
   position:absolute;z-index:16;transform:translate(-50%,-100%);
