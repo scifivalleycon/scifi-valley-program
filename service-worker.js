@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-v4-87-render-stability";
+const CACHE="sfvc-program-v4-88-vendor-service-sync";
 const LOCAL=[
   "./","./index.html","./styles.css","./home-layout.css","./event-guide-layout.css","./app.js","./home-layout.js","./event-guide-layout.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/hotels.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -20,6 +20,10 @@ self.addEventListener("fetch",event=>{
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin){
     event.respondWith(fetch(event.request));
+    return;
+  }
+  if(url.pathname.startsWith("/api/")){
+    event.respondWith(fetch(event.request,{cache:"no-store"}));
     return;
   }
   const cacheKey=new Request(`${url.origin}${url.pathname}`);
