@@ -5873,3 +5873,20 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
   .cosplay-clinic-poster-panel{padding:5px}
   .cosplay-clinic-copy p{font-size:10px}
 }
+
+.map-vendor-photos{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(86px,1fr));
+  gap:8px;
+  margin:12px 0;
+}
+.map-vendor-photos img{
+  display:block;
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border:2px solid var(--ink);
+  border-radius:7px;
+  background:var(--paper2);
+  box-shadow:2px 3px 0 rgba(58,39,32,.12);
+}

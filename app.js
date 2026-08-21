@@ -1620,7 +1620,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
     const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
-      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("data/vendors.json"),
+      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),safeJson("https://vendor.scifivalleycon.com/api/public/directory"),
       safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
@@ -4565,7 +4565,7 @@ function renderFloorPlanSvg(){
 }
 function openMapLocation(code,{nonModal=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');if(!content||!modal)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
+  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}${mapVendorPhotoGallery(vendor)}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>`;
 
   if(modal.open)modal.close();
@@ -4573,6 +4573,11 @@ function openMapLocation(code,{nonModal=false}={}){
   if(nonModal&&typeof modal.show==='function')modal.show();
   else if(typeof modal.showModal==='function')modal.showModal();
   else modal.setAttribute('open','');
+}
+function mapVendorPhotoGallery(vendor){
+  const photos=Array.isArray(vendor?.photos)?vendor.photos.slice(0,5):[];
+  if(!photos.length)return "";
+  return `<div class="map-vendor-photos" aria-label="${escapeAppHtml(vendor.name)} photos">${photos.map((photo,index)=>`<img src="${escapeAppHtml(photo.url||"")}" alt="${escapeAppHtml(vendor.name)} photo ${index+1}" loading="lazy">`).join("")}</div>`;
 }
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase();
