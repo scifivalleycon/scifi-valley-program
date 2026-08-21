@@ -5884,7 +5884,21 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
   gap:8px;
   margin:12px 0;
 }
-.map-vendor-photos img{
+.map-vendor-photo-button{
+  display:block;
+  min-width:0;
+  padding:0;
+  border:0;
+  border-radius:7px;
+  background:transparent;
+  box-shadow:none;
+  cursor:zoom-in;
+}
+.map-vendor-photo-button:focus-visible{
+  outline:3px solid var(--aqua);
+  outline-offset:3px;
+}
+.map-vendor-photo-button img{
   display:block;
   width:100%;
   aspect-ratio:1/1;
@@ -5893,4 +5907,11 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
   border-radius:7px;
   background:var(--paper2);
   box-shadow:2px 3px 0 rgba(58,39,32,.12);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+@media(hover:hover){
+  .map-vendor-photo-button:hover img{
+    transform:translateY(-2px);
+    box-shadow:3px 5px 0 rgba(58,39,32,.18);
+  }
 }

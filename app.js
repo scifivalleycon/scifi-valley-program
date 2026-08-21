@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.88";
+const APP_BUILD_VERSION="4.89";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -4652,6 +4652,7 @@ function renderMapLocationProfile(code,{status="",error=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent');if(!content)return;
   if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}${mapVendorPhotoGallery(vendor)}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}${mapVendorRefreshControls(code,status,error)}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>${mapVendorRefreshControls(code,status,error)}`;
+  bindMapVendorPhotoLightboxes(content);
   content.querySelector('[data-refresh-map-vendor]')?.addEventListener('click',()=>forceMapVendorProfileRefresh(code));
 }
 async function forceMapVendorProfileRefresh(code,{automatic=false}={}){
@@ -4688,7 +4689,16 @@ function openMapLocation(code,{nonModal=false}={}){
 function mapVendorPhotoGallery(vendor){
   const photos=Array.isArray(vendor?.photos)?vendor.photos.slice(0,5):[];
   if(!photos.length)return "";
-  return `<div class="map-vendor-photos" aria-label="${escapeAppHtml(vendor.name)} photos">${photos.map((photo,index)=>`<img src="${escapeAppHtml(photo.url||"")}" alt="${escapeAppHtml(vendor.name)} photo ${index+1}" loading="lazy">`).join("")}</div>`;
+  return `<div class="map-vendor-photos" aria-label="${escapeAppHtml(vendor.name)} photos">${photos.map((photo,index)=>`<button class="map-vendor-photo-button" type="button" aria-label="Enlarge ${escapeAppHtml(vendor.name)} photo ${index+1}"><img src="${escapeAppHtml(photo.url||"")}" alt="${escapeAppHtml(vendor.name)} photo ${index+1}" loading="lazy"></button>`).join("")}</div>`;
+}
+function bindMapVendorPhotoLightboxes(scope){
+  scope?.querySelectorAll(".map-vendor-photo-button").forEach(button=>{
+    button.addEventListener("click",event=>{
+      event.stopPropagation();
+      const image=button.querySelector("img");
+      if(image)openPhotoLightbox(image.currentSrc||image.src,image.alt);
+    });
+  });
 }
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase();
@@ -5414,13 +5424,13 @@ window.addEventListener("appinstalled",()=>{
 });
 updateInstallExperience();
 
-/* ----- Guest photo lightbox ----- */
+/* ----- Guest and vendor photo lightbox ----- */
 function openPhotoLightbox(src,caption){
   if(!src)return;
   const modal=document.getElementById("photoLightbox");
   const image=document.getElementById("photoLightboxImage");
   image.src=src;
-  image.alt=caption||"Celebrity guest photo";
+  image.alt=caption||"Event photo";
   document.getElementById("photoLightboxCaption").textContent=caption||"";
   if(typeof modal.showModal==="function")modal.showModal();
 }
