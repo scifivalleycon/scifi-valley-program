@@ -201,7 +201,7 @@
           "id": "cosplay-clinic",
           "type": "builtin",
           "visible": true,
-          "kicker": "ATTENDEE SERVICES • TABLE D8",
+          "kicker": "ATTENDEE SERVICES • TABLE D9",
           "title": "COSPLAY CLINIC",
           "description": "Quick costume repairs and emergency cosplay fixes.",
           "icon": "CC",
@@ -276,7 +276,7 @@
           "visible": true,
           "kicker": "EVENT GUIDE",
           "title": "COSPLAY CLINIC",
-          "description": "Quick costume repairs and emergency cosplay fixes at Table D8",
+          "description": "Quick costume repairs and emergency cosplay fixes at Table D9",
           "icon": "CC",
           "style": "coral",
           "order": 50
