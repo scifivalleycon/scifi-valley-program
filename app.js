@@ -11,13 +11,13 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], socialLinks: [], tshirts: [], faq: [], hotels: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], featuredSponsor: {}, socialLinks: [], tshirts: [], faq: [], hotels: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", faqFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.89";
+const APP_BUILD_VERSION="4.90";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1695,9 +1695,9 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
-    const [guests,schedule,events,vendors,sponsors,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,featuredSponsorData,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),fetchLiveVendorDirectory().catch(err=>{console.warn("SFVC live vendor directory initial load failed",err);return state.vendors.length?state.vendors:safeJson("data/vendors.json")}),
-      safeJson("data/sponsors.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
+      safeJson("data/sponsors.json"),safeJson("data/featured-sponsor.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -1715,6 +1715,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.vendors=Array.isArray(vendors)?vendors:[];
     vendorDirectoryLastSignature=liveVendorDirectorySignature(state.vendors);
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
+    state.featuredSponsor=Array.isArray(featuredSponsorData)&&featuredSponsorData[0]?featuredSponsorData[0]:{};
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.tshirts=Array.isArray(tshirts)?tshirts:[];
     state.faq=Array.isArray(faq)?faq:[];
@@ -4910,6 +4911,33 @@ function renderSponsors(){
   }).join("");
 }
 
+function renderFeaturedSponsor(){
+  const section=document.getElementById("featuredSponsorAd");
+  const link=document.getElementById("featuredSponsorLink");
+  const image=document.getElementById("featuredSponsorImage");
+  if(!section||!link||!image)return;
+
+  const cfg=state.featuredSponsor||{};
+  const imageUrl=String(cfg.imageUrl||"").trim();
+  const destinationUrl=String(cfg.destinationUrl||"").trim();
+  const sponsorName=String(cfg.sponsorName||"Featured sponsor").trim();
+  const visible=cfg.enabled===true&&/^https:\/\//i.test(imageUrl)&&/^https:\/\//i.test(destinationUrl);
+
+  section.classList.toggle("hidden",!visible);
+  if(!visible){
+    link.removeAttribute("href");
+    image.removeAttribute("src");
+    return;
+  }
+
+  link.href=destinationUrl;
+  link.setAttribute("aria-label",`Visit ${sponsorName} — featured sponsor link opens in a new tab`);
+  image.alt=String(cfg.alt||`${sponsorName} featured sponsor advertisement`).trim();
+  image.onerror=()=>section.classList.add("hidden");
+  image.onload=()=>section.classList.remove("hidden");
+  if(image.src!==imageUrl)image.src=imageUrl;
+}
+
 
 function tshirtYear(item){
   const match=String(item?.title||item?.badge||"").match(/\b(20\d{2}|19\d{2})\b/);
@@ -5158,6 +5186,7 @@ function renderAll(){
   // These two are intentionally first so a failure elsewhere in the app can
   // never leave their original "Loading..." placeholders on screen.
   safeRenderSection("home guest banner",renderHomeGuestBanner);
+  safeRenderSection("featured sponsor",renderFeaturedSponsor);
   safeRenderSection("social links",renderSocialLinks);
   safeRenderSection("sponsors",renderSponsors);
   safeRenderSection("t-shirts",renderTshirts);
