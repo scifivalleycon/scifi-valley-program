@@ -148,6 +148,14 @@ body.is-standalone .install-app-card{display:none!important}
 .codex-wordmark span{color:#d54b68;letter-spacing:.12em}
 .snake-wordmark span{color:#b92f34}
 
+/* ----- Featured sponsor square advertisement ----- */
+.featured-sponsor-ad{width:min(100%,440px);margin:24px auto 4px;padding:0 10px;text-align:center}
+.featured-sponsor-label{display:block;margin-bottom:9px;color:var(--ink2);font-size:8px;font-weight:900;letter-spacing:.15em}
+.featured-sponsor-link{display:block;width:100%;aspect-ratio:1/1;background:rgba(255,247,223,.72);border:2px solid var(--ink);border-radius:10px;box-shadow:5px 6px 0 rgba(58,39,32,.14);overflow:hidden;transition:transform .15s ease,box-shadow .15s ease}
+.featured-sponsor-link:hover,.featured-sponsor-link:focus-visible{transform:translateY(-2px);box-shadow:7px 8px 0 rgba(58,39,32,.18);outline:3px solid var(--mustard);outline-offset:3px}
+.featured-sponsor-link img{display:block;width:100%;height:100%;object-fit:contain;background:#fff7df}
+@media(max-width:520px){.featured-sponsor-ad{width:min(100%,390px);margin-top:20px;padding:0 8px}}
+
 /* ----- Click-to-enlarge guest photos ----- */
 .guest-photo,.modal-guest-photo{cursor:zoom-in}
 .photo-lightbox{width:100vw;max-width:none;height:100vh;max-height:none;margin:0;padding:0;border:0;background:rgba(20,13,11,.94)}
