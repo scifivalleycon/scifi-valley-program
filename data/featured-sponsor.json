@@ -1,9 +1,9 @@
 [
   {
-    "enabled": false,
-    "sponsorName": "",
-    "imageUrl": "",
-    "destinationUrl": "",
+    "enabled": true,
+    "sponsorName": "Breezeline",
+    "imageUrl": "https://play-lh.googleusercontent.com/uPSRe0jFUAsV2RAE-ZcezAWIwceKEM_XGbVPPsYuCt62v99LKFov4X3smncNsEhc4nOELHeIbJnDN9wv1ytfOsM",
+    "destinationUrl": "https://www.breezeline.com/internet?utm_source=print_materials&utm_medium=program_ad&utm_campaign=sci-fi_valley_con_event_program&utm_term=2024_06_01&utm_content=qr_code_web_link",
     "alt": "Featured sponsor advertisement"
   }
 ]
