@@ -19,27 +19,27 @@
           {
             "name": "Tossed Salad",
             "price": "$7.00",
-            "desc": "Mixed greens, tomatoes, cucumbers, red onion, cheddar, mild pepper rings, olives, chopped egg, roll and dressing. Add grilled chicken for $9.00 or rib-eye steak for $9.25."
+            "desc": "Mixed greens with tomatoes, cucumbers, red onion, cheddar, mild pepper rings, olives and chopped egg, served with a roll, butter and choice of dressing. Available with grilled chicken for $9.00 or rib-eye steak for $9.25."
           },
           {
             "name": "Grilled Half Chicken Platter",
             "price": "$11.00",
-            "desc": "Half chicken with salad du jour, cowboy baked beans, corn, roll and butter."
+            "desc": "Grilled half chicken with salad du jour, cowboy baked beans, corn, roll and butter."
           },
           {
             "name": "Yuengling Meatloaf",
             "price": "$8.50",
-            "desc": "Angus beef meatloaf made with onions, garlic-seasoned breadcrumbs and Yuengling lager, served with fries, brown sauce, corn, roll and butter."
+            "desc": "Angus beef with onions, garlic-seasoned breadcrumbs and Yuengling lager, served with French fries, brown sauce, corn, roll and butter."
           },
           {
             "name": "Penne Pasta with Chunky Marinara",
             "price": "$6.75",
-            "desc": "Penne with marinara, roll and butter. With meatballs $8.75 or chicken $9.25."
+            "desc": "Served with a roll and butter. With meatballs $8.75 or chicken $9.25."
           },
           {
             "name": "Fritters & Fries",
             "price": "$9.00",
-            "desc": "Breaded chicken tenders, fries and ranch."
+            "desc": "Breaded chicken tenders with crisp fries and ranch."
           }
         ]
       },
@@ -49,7 +49,7 @@
       },
       {
         "type": "p",
-        "text": "Sandwich platters include pickles and salad du jour. Gluten-free rolls are available by request."
+        "text": "Served with pickles and salad du jour. Gluten-free rolls are available upon request."
       },
       {
         "type": "menu",
@@ -57,32 +57,32 @@
           {
             "name": "Charcoal Roasted BBQ Pork",
             "price": "$8.25",
-            "desc": "Slow-roasted pork shoulder, Texas BBQ sauce and cheddar on a Kaiser roll."
+            "desc": "Slow-roasted pork shoulder with Texas BBQ sauce and cheddar cheese on a Kaiser roll."
           },
           {
             "name": "Cheese Steak",
             "price": "$9.50",
-            "desc": "Steak with peppers, onions and cheddar on a steak roll."
+            "desc": "Peppers, onions and cheddar cheese on a steak roll."
           },
           {
             "name": "Hot Sausage",
             "price": "$7.50",
-            "desc": "Hot sausage with peppers, onions and garlic on a steak roll."
+            "desc": "Peppers, onions and garlic on a steak roll."
           },
           {
             "name": "Grilled Chicken",
             "price": "$8.25",
-            "desc": "Marinated chicken breast with lettuce, tomato and house ranch-style sauce on a Kaiser roll."
+            "desc": "Marinated grilled chicken breast with lettuce, tomato and house-made ranch-style sauce on a Kaiser roll."
           },
           {
             "name": "Meatball Grinder",
             "price": "$8.50",
-            "desc": "House meatballs, tomato sauce, mozzarella and provolone."
+            "desc": "House-made meatballs with tomato sauce, shredded mozzarella and provolone."
           },
           {
             "name": "Meatless Chicken Patty",
             "price": "$8.50",
-            "desc": "Vegetable-based chicken patty with lettuce and tomato on a Kaiser roll."
+            "desc": "Meatless vegetable chicken patty with lettuce and tomato on a Kaiser roll."
           }
         ]
       },
@@ -101,7 +101,7 @@
           {
             "name": "Mac & Cheese",
             "price": "$4.75",
-            "desc": "Macaroni with house cheese sauce, olive oil and breadcrumbs."
+            "desc": "Macaroni with house-made cheese sauce topped with olive oil and breadcrumbs."
           },
           {
             "name": "Cowboy Baked Beans",
@@ -111,7 +111,7 @@
           {
             "name": "Frankfurters",
             "price": "$3.00",
-            "desc": "All-beef hot dogs, with or without kraut."
+            "desc": "Seared all-beef hot dogs, with or without kraut."
           },
           {
             "name": "Nachos with Cheese",
@@ -165,7 +165,7 @@
     "id": "mini-cafe",
     "title": "Mini Café Menu",
     "category": "Food",
-    "summary": "Upstairs café with sandwiches, walking tacos, chili, sides and drinks.",
+    "summary": "Upstairs café with sandwich platters, BCCC walking tacos, sides and drinks.",
     "content": [
       {
         "type": "note",
@@ -177,7 +177,7 @@
       },
       {
         "type": "p",
-        "text": "Sandwich platters include pickles and salad du jour."
+        "text": "Served with pickles and salad du jour."
       },
       {
         "type": "menu",
@@ -185,22 +185,22 @@
           {
             "name": "Pizza Burger",
             "price": "$8.75",
-            "desc": "Italian-seasoned beef with julienne pepperoni, house pizza sauce, provolone and parmesan on a Kaiser roll."
+            "desc": "Italian-seasoned ground beef with julienne pepperoni in house-made pizza sauce, topped with provolone and parmesan cheese on a Kaiser roll."
           },
           {
             "name": "Chicken Parmesan",
             "price": "$9.00",
-            "desc": "Italian-seasoned chicken breast with marinara, provolone and parmesan on a Kaiser roll."
+            "desc": "Italian-seasoned chicken breast sautéed in olive oil and topped with marinara, provolone and parmesan cheese on a Kaiser roll."
           }
         ]
       },
       {
         "type": "heading",
-        "text": "Walking Tacos"
+        "text": "BCCC Walking Tacos"
       },
       {
         "type": "p",
-        "text": "Choose nacho-cheese or ranch Doritos with cheddar, lettuce, tomatoes, onions, jalapeños, sour cream, guacamole and salsa."
+        "text": "Choose nacho-cheese or ranch-flavored Doritos with cheddar cheese, shredded lettuce, diced tomatoes, onions, jalapeños, sour cream, guacamole and salsa, plus your choice of protein."
       },
       {
         "type": "menu",
@@ -213,17 +213,26 @@
           {
             "name": "Fajita Style Chicken",
             "price": "$8.00",
-            "desc": "Chicken seasoned with chili, cumin and coriander, with sautéed peppers and onions."
+            "desc": "Grilled chicken seasoned with chili, cumin and coriander, with sautéed peppers and onions."
           },
           {
             "name": "Three Bean Chili",
             "price": "$7.25",
-            "desc": "Peppers, onions, kidney beans, white beans, black beans and tomato."
-          },
+            "desc": "Diced onions, peppers, kidney beans, white beans, black beans and chunky tomato."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Sides"
+      },
+      {
+        "type": "menu",
+        "items": [
           {
             "name": "Mac & Cheese",
             "price": "$4.75",
-            "desc": ""
+            "desc": "Macaroni with house-made cheese sauce topped with olive oil and breadcrumbs."
           },
           {
             "name": "Nachos with Cheese",
@@ -239,7 +248,16 @@
             "name": "Assorted Ice Cream Novelties",
             "price": "$3.50",
             "desc": ""
-          },
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Beverages"
+      },
+      {
+        "type": "menu",
+        "items": [
           {
             "name": "Assorted Soda",
             "price": "$3.25",
