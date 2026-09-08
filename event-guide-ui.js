@@ -502,7 +502,7 @@
           </div>
         </div>
         <div class="event-modal-body event-content">
-          ${(event.content||[]).map(renderBlock).join("")}
+          ${(event.content||[]).map(renderBlock).join("")}${typeof window.panelScheduleButtonHtml==="function"?window.panelScheduleButtonHtml(event):""}
         </div>
       </div>`;
 

@@ -5923,3 +5923,11 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
     box-shadow:3px 5px 0 rgba(58,39,32,.18);
   }
 }
+
+/* Guest prices and schedule bulk filters */
+.guest-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.guest-price-grid>div{border:1px solid currentColor;border-radius:8px;padding:8px;min-width:0}
+.guest-price-grid small,.guest-price-grid strong{display:block;overflow-wrap:anywhere}
+.guest-price-grid small{font-size:11px}
+.schedule-bulk-actions{display:flex;flex-wrap:wrap;gap:8px}
+.schedule-filter-head{flex-wrap:wrap}
