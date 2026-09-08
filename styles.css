@@ -5932,6 +5932,13 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
 .schedule-bulk-actions{display:flex;flex-wrap:wrap;gap:8px}
 .schedule-filter-head{flex-wrap:wrap}
 
+/* Matched Row K celebrity profiles use the guest and pricing records. */
+.map-guest-photo-button{display:block;width:min(100%,300px);margin:16px auto;padding:0;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--paper2);cursor:zoom-in}
+.map-guest-photo-button img{display:block;width:100%;height:auto}
+.map-guest-bio{white-space:pre-wrap;overflow-wrap:anywhere;font-family:Georgia,serif;line-height:1.55;margin:14px 0}
+.map-guest-pricing{margin:16px 0;min-width:0}
+.map-guest-pricing .price-note{overflow-wrap:anywhere}
+
 /* Guest photo biographies share the existing Admin bio field. */
 .photo-lightbox.has-biography{
   box-sizing:border-box;height:100dvh;overflow-y:auto;
