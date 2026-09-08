@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.93";
+const APP_BUILD_VERSION="4.94";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1002,6 +1002,7 @@ function programExportBlocks(selection=fullProgramPdfSelection()){
     state.celebrityPricing.forEach(price=>{
       addSub(price.guestName||"Guest");
       addLine(`Autograph: ${price.autograph||"TBD"} | Selfie: ${price.selfie||"TBD"} | Combo: ${price.combo||"TBD"} | Pro Photo: ${price.proPhoto||"TBD"}`);
+      additionalGuestPrices(price).forEach(row=>addLine(`${row.label}: ${row.price}`));
       if(price.notes)addLine(price.notes);
     });
   }
@@ -2010,11 +2011,18 @@ function guestPriceRecord(g){
   const key=value=>String(value||"").toLowerCase().replace(/[^a-z0-9]/g,"");
   return state.celebrityPricing.find(p=>p.id===g.id||key(p.guestName)===key(g.name));
 }
+function additionalGuestPrices(p){
+  return (Array.isArray(p.additionalPrices)?p.additionalPrices:[])
+    .filter(row=>row&&typeof row.label==="string"&&row.label.trim()&&typeof row.price==="string"&&row.price.trim());
+}
+function additionalGuestPricesHtml(p){
+  return additionalGuestPrices(p).map(row=>'<div><small>'+escapeAppHtml(row.label)+'</small><strong>'+escapeAppHtml(row.price)+'</strong></div>').join("");
+}
 function guestPricesHtml(g,includeNotes=false){
   const p=guestPriceRecord(g);
   if(!p)return g.photoOp?'<div class="price-row"><span class="price">PHOTO OP '+escapeAppHtml(g.photoOp)+'</span></div>':"";
   const fields=[["AUTOGRAPH",p.autograph],["SELFIE",p.selfie],["COMBO",p.combo],["PHOTO OP",p.proPhoto]];
-  return '<div class="guest-price-grid">'+fields.map(([label,value])=>'<div><small>'+label+'</small><strong>'+escapeAppHtml(value||"TBD")+'</strong></div>').join("")+'</div>'+
+  return '<div class="guest-price-grid">'+fields.map(([label,value])=>'<div><small>'+label+'</small><strong>'+escapeAppHtml(value||"TBD")+'</strong></div>').join("")+additionalGuestPricesHtml(p)+'</div>'+
     (includeNotes&&p.notes?'<p class="price-note">'+escapeAppHtml(p.notes)+'</p>':"");
 }
 function panelScheduleButtonHtml(event){
@@ -2310,7 +2318,7 @@ function renderCelebrityTabs(){
   Object.entries(ids).forEach(([k,id])=>document.getElementById(id)?.classList.toggle("hidden",k!==state.celebrityTab));
 }
 function renderCelebrityPrices(){
-  document.getElementById("celebrityPricingList").innerHTML=state.celebrityPricing.map(p=>`<article class="price-card"><div class="price-card-name">${p.guestName.toUpperCase()}</div><div class="price-grid"><div><small>AUTOGRAPH</small><strong>${p.autograph||"TBD"}</strong></div><div><small>SELFIE</small><strong>${p.selfie||"TBD"}</strong></div><div><small>COMBO</small><strong>${p.combo||"TBD"}</strong></div><div><small>PRO PHOTO</small><strong>${p.proPhoto||"TBD"}</strong></div></div>${p.notes?`<div class="price-note">${p.notes}</div>`:""}</article>`).join("")||`<div class="paper-panel muted-empty">Guest pricing has not been published yet.</div>`;
+  document.getElementById("celebrityPricingList").innerHTML=state.celebrityPricing.map(p=>`<article class="price-card"><div class="price-card-name">${p.guestName.toUpperCase()}</div><div class="price-grid"><div><small>AUTOGRAPH</small><strong>${p.autograph||"TBD"}</strong></div><div><small>SELFIE</small><strong>${p.selfie||"TBD"}</strong></div><div><small>COMBO</small><strong>${p.combo||"TBD"}</strong></div><div><small>PRO PHOTO</small><strong>${p.proPhoto||"TBD"}</strong></div>${additionalGuestPricesHtml(p)}</div>${p.notes?`<div class="price-note">${p.notes}</div>`:""}</article>`).join("")||`<div class="paper-panel muted-empty">Guest pricing has not been published yet.</div>`;
   document.getElementById("groupPhotoOpList").innerHTML=state.groupPhotoOps.map(g=>`<article class="group-op-card"><span class="tag">PHOTO OP</span><h3>${g.title.toUpperCase()}</h3><p>${g.participants}</p><strong>${g.price||"TBD"}</strong>${g.notes?`<small>${g.notes}</small>`:""}</article>`).join("")||`<div class="muted-empty">No group photo ops currently listed.</div>`;
   document.getElementById("celebrityGeneralNote").textContent=state.celebrityInfo.generalNote||"";
 }
