@@ -181,7 +181,7 @@
           "visible": true,
           "kicker": "ATTENDEE SAFETY & SUPPORT",
           "title": "SEE SOMETHING? SAY SOMETHING.",
-          "description": "Report a concern, request staff help, or report a vendor AI-policy violation.",
+          "description": "Report a concern, request staff help, report a vendor AI-policy violation, or tell us about an app bug.",
           "icon": "!",
           "style": "coral",
           "order": 80
@@ -265,7 +265,7 @@
           "visible": true,
           "kicker": "EVENT GUIDE",
           "title": "ATTENDEE REPORTER",
-          "description": "Safety, venue issues, staff assistance and reports",
+          "description": "Safety, venue issues, staff assistance, and app bug reports",
           "icon": "!",
           "style": "coral",
           "order": 40
