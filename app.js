@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.100";
+const APP_BUILD_VERSION="4.101";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2250,8 +2250,10 @@ function renderFavorites(){
   const guests=[...state.favorites].map(id=>state.guests.find(g=>g.id===id)||savedGuestSnapshots[id]).filter(Boolean);
   updateCombinedSavedCount();
   const c=document.getElementById("favoritePreview");
-  if(!guests.length){c.className="stack muted-empty";c.innerHTML="Tap the heart on a guest to save them here.";return;}
-  c.className="stack";
+  // Preserve tab visibility when guest data renders on startup or refresh.
+  c.classList.add("stack");
+  c.classList.toggle("muted-empty",!guests.length);
+  if(!guests.length){c.innerHTML="Tap the heart on a guest to save them here.";return;}
   c.innerHTML=guests.map(g=>`<div class="status-card"><button type="button" class="mycon-guest-open" data-home-guest="${escapeAppHtml(g.id)}"><strong>${escapeAppHtml(String(g.name||"").toUpperCase())}</strong><span class="meta">${escapeAppHtml(g.group)}${(guestPriceRecord(g)?.proPhoto??g.photoOp)?` • Photo Op ${escapeAppHtml(guestPriceRecord(g)?.proPhoto??g.photoOp)}`:""}</span></button>${myConChangeHtml("guest",g.id)}</div>`).join("");
   c.querySelectorAll("[data-home-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.homeGuest)));
 }
