@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.97";
+const APP_BUILD_VERSION="4.98";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -95,6 +95,7 @@ function stableBaseScheduleId(event){
 function snapshotScheduleEvent(event){
   if(!event?.id)return;
   savedScheduleSnapshots[event.id]={
+    ...myConScheduleSnapshot(event),
     id:event.id,
     day:event.day||"",
     time:event.time||"",
@@ -103,7 +104,7 @@ function snapshotScheduleEvent(event){
     category:event.category||"",
     filterCategory:event.filterCategory||"",
     remindable:event.remindable!==false,
-    savedAt:new Date().toISOString()
+    savedAt:savedScheduleSnapshots[event.id]?.savedAt||new Date().toISOString()
   };
   saveScheduleSnapshots();
 }
@@ -137,6 +138,7 @@ function migrateLegacyScheduleIds(schedule){
   });
 
   for(const oldId of [...state.mySchedule]){
+    if(!/^schedule-(?:(?:Friday|Saturday|Sunday)-|[a-z0-9]{1,7}$)/.test(oldId))continue;
     if(normalized.some(x=>x.explicit===oldId))continue;
     const snap=savedScheduleSnapshots[oldId];
     if(!snap)continue;
@@ -159,6 +161,135 @@ function migrateLegacyScheduleIds(schedule){
   }
 }
 
+
+const MY_CON_GUEST_SNAPSHOTS_KEY="sfvc-my-con-guests-v1";
+const MY_CON_CHANGES_KEY="sfvc-my-con-changes-v1";
+function readMyConObject(key){
+  try{const value=JSON.parse(localStorage.getItem(key)||"{}");return value&&typeof value==="object"&&!Array.isArray(value)?value:{}}catch{return {}}
+}
+let savedGuestSnapshots=readMyConObject(MY_CON_GUEST_SNAPSHOTS_KEY);
+let myConChanges=readMyConObject(MY_CON_CHANGES_KEY);
+let myConCatalogReady=false;
+let myConDataLoaded=false;
+function persistMyCon(){
+  localStorage.setItem("sfvc-favorites",JSON.stringify([...state.favorites]));
+  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  localStorage.setItem(MY_CON_GUEST_SNAPSHOTS_KEY,JSON.stringify(savedGuestSnapshots));
+  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  saveScheduleSnapshots();
+}
+function myConGuestSnapshot(g){
+  const prices=guestPriceRecord(g);
+  const normalize=value=>String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
+  const name=normalize(g.name);
+  const appearances=celebrityPublished()?[...state.panels,...state.photoOps,...state.autographs,...state.groupPhotoOps].filter(row=>name&&normalize([row.guestName,row.title,row.participants,row.guests].filter(Boolean).join(" ")).includes(name)):[];
+  return {appearances:JSON.stringify(appearances),eventDates:JSON.stringify([state.settings.startDate,state.settings.endDate]),id:g.id,name:g.name,group:g.group||"",character:g.character||"",knownFor:g.knownFor||"",bio:g.bio||"",photo:g.photo||"",imdb:g.imdb||"",instagram:g.instagram||"",photoOp:prices?.proPhoto??g.photoOp??"",prices:prices?JSON.stringify(prices):""};
+}
+function myConScheduleSnapshot(e){
+  return {id:e.id,day:e.day||"",time:e.time||"",endTime:e.endTime||"",title:e.title||"",location:e.location||"",category:e.category||"",filterCategory:e.filterCategory||"",description:e.description||"",participants:e.participants||"",eventAt:eventDateTime(e)?.getTime()||null,remindable:e.remindable!==false};
+}
+function myConChangedFields(before,after){
+  // Older snapshots establish a baseline for fields that were not stored yet.
+  return Object.keys(after).filter(key=>key!=="id"&&Object.hasOwn(before,key)&&JSON.stringify(before[key])!==JSON.stringify(after[key]));
+}
+function myConChangeHtml(kind,id){
+  const change=myConChanges[`${kind}:${id}`];
+  return change?`<span class="mycon-change" role="status">${escapeAppHtml(change.message)}</span>`:"";
+}
+function reconcileMyCon(){
+  if(!myConCatalogReady)return;
+  const guests=new Map(state.guests.map(g=>[g.id,g]));
+  const events=new Map(reminderScheduleItems().map(e=>[e.id,e]));
+  let changed=false;
+  for(const id of [...state.favorites]){
+    const guest=guests.get(id);
+    if(!guest){state.favorites.delete(id);delete savedGuestSnapshots[id];delete myConChanges[`guest:${id}`];changed=true;continue;}
+    const next=myConGuestSnapshot(guest),before=savedGuestSnapshots[id];
+    if(before&&myConChangedFields(before,next).length){
+      myConChanges[`guest:${id}`]={message:"UPDATED — Guest appearance or profile details changed. Tap to review the latest information.",updatedAt:new Date().toISOString()};changed=true;
+    }
+    savedGuestSnapshots[id]=next;
+  }
+  for(const id of [...state.mySchedule]){
+    const event=events.get(id);
+    if(!event){state.mySchedule.delete(id);delete savedScheduleSnapshots[id];delete myConChanges[`event:${id}`];changed=true;continue;}
+    const before=savedScheduleSnapshots[id],next=myConScheduleSnapshot(event);
+    const fields=before?myConChangedFields(before,next):[];
+    if(fields.length){
+      const timing=fields.some(key=>["day","time","endTime","eventAt"].includes(key));
+      const room=fields.includes("location");
+      myConChanges[`event:${id}`]={message:`UPDATED — ${timing?"Time or date changed":room?"Location changed":"Event details changed"}. ${next.day} • ${next.time}${next.endTime?`–${next.endTime}`:""} • ${next.location}`,updatedAt:new Date().toISOString()};changed=true;
+    }
+    savedScheduleSnapshots[id]={...next,savedAt:before?.savedAt||new Date().toISOString()};
+  }
+  persistMyCon();
+  if(changed){scheduleAllReminders();scheduleAnonymousDeviceSync();}
+}
+function myConGuestPayload(){
+  return [...state.favorites].map(id=>{
+    const guest=state.guests.find(g=>g.id===id)||savedGuestSnapshots[id];
+    return guest?{eventId:`guest:${id}`,title:guest.name,day:"",time:"",location:guest.group||"",category:"Celebrity Guest",remindable:false,reminderMinutes:0,eventAt:null,notifyAt:null,savedAt:""}:null;
+  }).filter(Boolean);
+}
+
+let myConPromptInFlight=false;
+async function promptMyConSetup(){
+  if(myConPromptInFlight)return;
+  myConPromptInFlight=true;
+  try{
+    const profile=loadAppRegistration();
+    const registered=Boolean(profile?.name&&profile?.email&&profile?.phone);
+    const supported=notificationsSupported();
+    const subscription=supported&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()
+      ?await getPushSubscription().catch(()=>null):null;
+    if(registered&&subscription){scheduleAnonymousDeviceSync();return;}
+    const modal=document.getElementById("myConSetupModal");if(!modal)return;
+    closePushPrompt();
+    pushPromptShownThisSession=true;
+    document.getElementById("myConRegisterButton").hidden=registered;
+    const button=document.getElementById("myConEnableButton"),status=document.getElementById("myConSetupStatus");
+    button.hidden=Boolean(subscription);button.disabled=false;
+    button.textContent="ENABLE NOTIFICATIONS";
+    if(isIOSDevice()&&!isStandaloneMode()){
+      button.textContent="ADD TO HOME SCREEN";
+      status.textContent="On iPhone or iPad, add the app to your Home Screen and open it there to enable notifications.";
+    }else if(!supported){button.hidden=true;status.textContent="Push notifications are not supported in this browser. Your selections are still saved in My Con.";}
+    else if(Notification.permission==="denied"){button.hidden=true;status.textContent="Notifications are blocked. Allow them in your browser or device settings, then reopen the app.";}
+    else status.textContent=subscription?"Notifications are enabled. Register your app to link your saved guests and schedule.":"Your item is saved. Register this app and enable alerts for updates to your saved guests and events.";
+    if(!modal.open)modal.showModal();
+  }finally{myConPromptInFlight=false;}
+}
+async function enableMyConAlerts(){
+  if(isIOSDevice()&&!isStandaloneMode()){
+    document.getElementById("myConSetupModal").close();showInstallHelp();return;
+  }
+  const button=document.getElementById("myConEnableButton"),status=document.getElementById("myConSetupStatus");
+  button.disabled=true;
+  try{
+    // Request permission directly from this button gesture (required on phones).
+    const permission=Notification.permission==="granted"?"granted":await Notification.requestPermission();
+    if(permission!=="granted"){status.textContent="Your selections are saved. Enable notifications in device settings when you are ready.";return;}
+    await registerPushSubscription();
+    const synced=await syncAnonymousDevice({force:true});
+    if(!synced?.ok)throw new Error("My Con sync needs a connection");
+    await updateNotificationStatus();
+    status.textContent="Notifications enabled. You will receive alerts for changes to saved guests and events.";
+    button.hidden=true;
+    if(loadAppRegistration()?.email)document.getElementById("myConSetupModal").close();
+  }catch(err){status.textContent="Could not connect notifications. Please try again when you are online.";}
+  finally{button.disabled=false;}
+}
+function initializeMyConSetup(){
+  const modal=document.getElementById("myConSetupModal");
+  document.getElementById("myConSetupLater")?.addEventListener("click",()=>modal.close());
+  document.getElementById("myConSetupClose")?.addEventListener("click",()=>modal.close());
+  modal?.addEventListener("click",event=>{if(event.target===modal)modal.close()});
+  document.getElementById("myConEnableButton")?.addEventListener("click",enableMyConAlerts);
+  document.getElementById("myConRegisterButton")?.addEventListener("click",()=>{
+    modal.close();document.getElementById("guestModal")?.close();goTo("registration");
+    document.getElementById("registrationName")?.focus();
+  });
+}
 
 const APP_REGISTRATION_KEY="sfvc-app-registration-v1";
 
@@ -227,7 +358,8 @@ function deviceSchedulePayload(){
 }
 
 async function syncAnonymousDevice({force=false}={}){
-  if(deviceSyncPromise&&!force)return deviceSyncPromise;
+  if(!myConCatalogReady)return {ok:false,reason:"program-data-unavailable"};
+  if(deviceSyncPromise){await deviceSyncPromise;return syncAnonymousDevice({force});}
   deviceSyncPromise=(async()=>{
     try{
       const base=pushApiBase();
@@ -246,7 +378,8 @@ async function syncAnonymousDevice({force=false}={}){
           endpoint:subscription?.endpoint||null,
           pushEnabled:Boolean(subscription&&Notification.permission==="granted"&&!pushWasExplicitlyDisabled()),
           reminderMinutes:Number(state.reminderMinutes||0),
-          favorites:deviceSchedulePayload(),
+          favorites:[...deviceSchedulePayload(),...myConGuestPayload()],
+          myConVersion:1,
           appVersion:APP_BUILD_VERSION,
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
@@ -1685,10 +1818,21 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
   appDataRefreshPromise=(async()=>{
     const stamp=`v=${Date.now()}`;
-    const safeJson=(url,fallback=[])=>fetch(`${url}${url.includes("?")?"&":"?"}${stamp}`,{
-      cache:"no-store",
-      credentials:"same-origin"
-    }).then(r=>r.ok?r.json():fallback).catch(()=>fallback);
+    const criticalNames=["guests","schedule","settings","celebrity-info","celebrity-pricing","photo-ops","autograph-schedule","group-photo-ops","panels"];
+    const readStatus=new Map();
+    const safeJson=async(url,fallback=[])=>{
+      try{
+        const response=await fetch(`${url}${url.includes("?")?"&":"?"}${stamp}`,{cache:"no-store",credentials:"same-origin"});
+        if(!response.ok)throw new Error("Program data unavailable");
+        const data=await response.json();
+        if(!Array.isArray(data)||data.some(item=>!item||typeof item!=="object"||Array.isArray(item)))throw new Error("Invalid program data");
+        if(url==="data/settings.json"&&!data[0]?.startDate)throw new Error("Missing event dates");
+        if(url==="data/celebrity-info.json"&&typeof data[0]?.published!=="boolean")throw new Error("Missing celebrity publication status");
+        if(["data/guests.json","data/schedule.json","data/panels.json","data/photo-ops.json"].includes(url)&&data.some(item=>!item.id))throw new Error("Missing stable item ID");
+        readStatus.set(url,!response.headers.get("X-SFVC-Offline"));
+        return data;
+      }catch{readStatus.set(url,false);return fallback;}
+    };
     const safeObjectJson=(url,fallback={})=>fetch(`${url}${url.includes("?")?"&":"?"}${stamp}`,{
       cache:"no-store",
       credentials:"same-origin"
@@ -1704,8 +1848,13 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
     ]);
 
+    const endVersion=await safeObjectJson("data/version.json",{});
+    const versionStable=Boolean(programVersionSignatureFor(resolvedVersionInfo))&&programVersionSignatureFor(resolvedVersionInfo)===programVersionSignatureFor(endVersion);
+    myConCatalogReady=versionStable&&criticalNames.every(name=>readStatus.get(`data/${name}.json`)===true);
+    if(!myConCatalogReady&&myConDataLoaded)return; // Keep the last complete program during partial/offline reads.
+
     const rawSchedule=Array.isArray(schedule)?schedule:[];
-    migrateLegacyScheduleIds(rawSchedule);
+    if(myConCatalogReady)migrateLegacyScheduleIds(rawSchedule);
     const normalizedSchedule=rawSchedule.map(e=>({...e,id:stableBaseScheduleId(e)}));
 
     const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
@@ -1733,15 +1882,14 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.groupPhotoOps=Array.isArray(groupPhotoOps)?groupPhotoOps:[];
     state.panels=Array.isArray(panels)?panels:[];
 
-    // Refresh stored snapshots using the newest event time/location/title.
-    reminderScheduleItems().forEach(event=>{
-      if(state.mySchedule.has(event.id))snapshotScheduleEvent(event);
-    });
+    reconcileMyCon();
+    myConDataLoaded=myConCatalogReady;
+    if(myConCatalogReady)scheduleAnonymousDeviceSync();
 
     appDataLastRefreshAt=Date.now();
     appVersionLastCheckedAt=appDataLastRefreshAt;
     const signature=programVersionSignatureFor(resolvedVersionInfo);
-    if(signature)appVersionCheckSignature=signature;
+    if(signature&&myConCatalogReady)appVersionCheckSignature=signature;
 
     renderAll();
     refreshOpenMapGuestProfile();
@@ -1777,7 +1925,7 @@ async function maybeRefreshProgramData(reason="version-check"){
       return true;
     }
 
-    if(elapsed>=APP_FULL_REFRESH_FALLBACK_MS){
+    if(!myConCatalogReady||elapsed>=APP_FULL_REFRESH_FALLBACK_MS){
       await loadData({silent:true,force:true,versionInfo:versionInfo||null});
       console.info(`SFVC app data refreshed: ${reason} (fallback refresh)`);
       return true;
@@ -2071,18 +2219,23 @@ function renderGuests(){
 }
 
 function toggleFavorite(id){
-  state.favorites.has(id)?state.favorites.delete(id):state.favorites.add(id);
-  localStorage.setItem("sfvc-favorites",JSON.stringify([...state.favorites]));
-  renderGuests(); renderFavorites();
+  const adding=!state.favorites.has(id);
+  if(adding){
+    const guest=state.guests.find(g=>g.id===id);if(!guest)return;
+    state.favorites.add(id);savedGuestSnapshots[id]=myConGuestSnapshot(guest);
+  }else{state.favorites.delete(id);delete savedGuestSnapshots[id];}
+  delete myConChanges[`guest:${id}`];persistMyCon();
+  renderGuests();renderFavorites();scheduleAnonymousDeviceSync();
+  if(adding)promptMyConSetup().catch(console.warn);
 }
 
 function renderFavorites(){
-  const guests=state.guests.filter(g=>state.favorites.has(g.id));
+  const guests=[...state.favorites].map(id=>state.guests.find(g=>g.id===id)||savedGuestSnapshots[id]).filter(Boolean);
   updateCombinedSavedCount();
   const c=document.getElementById("favoritePreview");
   if(!guests.length){c.className="stack muted-empty";c.innerHTML="Tap the heart on a guest to save them here.";return;}
   c.className="stack";
-  c.innerHTML=guests.slice(0,6).map(g=>`<button class="status-card" data-home-guest="${g.id}" style="text-align:left"><strong>${g.name.toUpperCase()}</strong><div class="meta">${g.group}${g.photoOp?` • Photo Op ${g.photoOp}`:""}</div></button>`).join("");
+  c.innerHTML=guests.map(g=>`<button class="status-card" data-home-guest="${escapeAppHtml(g.id)}" style="text-align:left"><strong>${escapeAppHtml(String(g.name||"").toUpperCase())}</strong><div class="meta">${escapeAppHtml(g.group)}${(guestPriceRecord(g)?.proPhoto??g.photoOp)?` • Photo Op ${escapeAppHtml(guestPriceRecord(g)?.proPhoto??g.photoOp)}`:""}</div>${myConChangeHtml("guest",g.id)}</button>`).join("");
   c.querySelectorAll("[data-home-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.homeGuest)));
 }
 
@@ -2548,6 +2701,9 @@ function renderSchedule(){
 
 function formatReminder(m){if(m===0)return"No reminder";if(m===60)return"1 hour before";return`${m} minutes before`}
 function toggleScheduleItem(id){
+  const adding=!state.mySchedule.has(id);
+  if(adding&&!reminderScheduleItems().some(e=>e.id===id))return;
+  delete myConChanges[`event:${id}`];
   if(state.mySchedule.has(id)){
     state.mySchedule.delete(id);
     delete savedScheduleSnapshots[id];
@@ -2558,9 +2714,13 @@ function toggleScheduleItem(id){
     if(event)snapshotScheduleEvent(event);
   }
   localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  persistMyCon();
   renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();scheduleAnonymousDeviceSync();
+  if(adding)promptMyConSetup().catch(console.warn);
 }
 function removeScheduleItem(id){
+  delete myConChanges[`event:${id}`];
+  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
   state.mySchedule.delete(id);
   delete savedScheduleSnapshots[id];
   saveScheduleSnapshots();
@@ -2571,10 +2731,7 @@ function renderMySchedule(){
   const liveById=new Map(reminderScheduleItems().map(e=>[e.id,e]));
   const saved=[...state.mySchedule].map(id=>{
     const live=liveById.get(id);
-    if(live){
-      snapshotScheduleEvent(live);
-      return live;
-    }
+    if(live)return live;
     const snapshot=savedScheduleSnapshots[id];
     return snapshot?{...snapshot,_snapshot:true}:null;
   }).filter(Boolean);
@@ -2600,7 +2757,8 @@ function renderMySchedule(){
     <div class="saved-schedule-item${e._snapshot?" saved-schedule-snapshot":""}">
       <div>
         <strong>${escapeAppHtml(e.title)}</strong>
-        <div class="meta">${escapeAppHtml(e.day)} • ${escapeAppHtml(e.time)} • ${escapeAppHtml(e.location)}</div>
+        <div class="meta">${escapeAppHtml(e.day)} • ${escapeAppHtml(e.time)}${e.endTime?`–${escapeAppHtml(e.endTime)}`:""} • ${escapeAppHtml(e.location)}</div>
+        ${myConChangeHtml("event",e.id)}
         ${e._snapshot?'<div class="saved-sync-note">REFRESHING CURRENT SCHEDULE…</div>':""}
       </div>
       <button class="schedule-remove" data-remove-schedule="${escapeAppHtml(e.id)}" aria-label="Remove ${escapeAppHtml(e.title)}">×</button>
@@ -2966,7 +3124,7 @@ function closePushPrompt(){
 }
 
 async function showPushPromptForSession(){
-  if(pushPromptShownThisSession)return;
+  if(document.getElementById("myConSetupModal")?.open||pushPromptShownThisSession)return;
   pushPromptShownThisSession=true;
 
   const modal=document.getElementById("pushPromptModal");
@@ -3350,8 +3508,17 @@ function applyRecoveredRegistrationState(result){
   restored.forEach(item=>{
     const id=String(item?.eventId||item?.id||"").trim();
     if(!id)return;
+    if(myConCatalogReady){
+      const exists=id.startsWith("guest:")?state.guests.some(g=>g.id===id.slice(6)):reminderScheduleItems().some(e=>e.id===id);
+      if(!exists)return;
+    }
+    if(id.startsWith("guest:")){
+      const guestId=id.slice(6);if(!state.favorites.has(guestId))changed++;state.favorites.add(guestId);
+      if(!savedGuestSnapshots[guestId])savedGuestSnapshots[guestId]={id:guestId,name:String(item.title||""),group:String(item.location||"")};
+      return;
+    }
     if(!state.mySchedule.has(id)){state.mySchedule.add(id);changed++;}
-    savedScheduleSnapshots[id]={
+    if(!savedScheduleSnapshots[id])savedScheduleSnapshots[id]={
       id,day:String(item.day||""),time:String(item.time||item.timeText||""),title:String(item.title||""),
       location:String(item.location||""),category:String(item.category||""),filterCategory:String(item.category||""),
       remindable:item.remindable!==false,savedAt:String(item.savedAt||new Date().toISOString())
@@ -3367,6 +3534,7 @@ function applyRecoveredRegistrationState(result){
     localStorage.setItem("sfvc-reminder-minutes",String(reminder));
   }
   if(restored.length){
+    reconcileMyCon();persistMyCon();renderFavorites();
     renderMySchedule();
     renderNotificationCenter();
   }
@@ -3388,7 +3556,7 @@ async function syncSavedAppRegistration({force=false}={}){
 
   try{
     const result=await sendAppRegistrationToServer(profile);
-    applyRecoveredRegistrationState(result);
+    // Routine profile refresh must not re-add items removed on this device.
     markAppRegistrationSynced();
     return true;
   }catch(err){
@@ -3405,6 +3573,7 @@ async function submitAppRegistration(event){
   if(status){status.textContent="Saving your app registration…";status.className="registration-form-status";}
   try{
     const profile=normalizedRegistrationProfileFromForm();
+    await syncAnonymousDevice({force:true});
     const result=await sendAppRegistrationToServer(profile);
     const recoveredCount=applyRecoveredRegistrationState(result);
     saveAppRegistrationLocal({
@@ -3415,6 +3584,7 @@ async function submitAppRegistration(event){
     markAppRegistrationSynced();
     renderAppRegistration();
     scheduleAnonymousDeviceSync(40);
+    promptMyConSetup().catch(console.warn);
     if(status){status.textContent=recoveredCount
       ? `✓ Registered. Restored ${recoveredCount} saved My Con item${recoveredCount===1?"":"s"} from your linked account.`
       : "✓ This app is registered and linked for future My Con recovery.";status.className="registration-form-status success";}
@@ -5626,6 +5796,7 @@ document.addEventListener("dblclick",event=>{
 document.getElementById("appRegistrationForm")?.addEventListener("submit",submitAppRegistration);
 document.getElementById("removeAppRegistration")?.addEventListener("click",removeAppRegistration);
 
+initializeMyConSetup();
 initializeAppAnalytics();
 initializeRecentAlerts();
 initializeEventCountdown();
@@ -5646,3 +5817,4 @@ loadData().then(()=>{
   renderMySchedule();
   document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Saved My Con items remain available while the app retries the latest program data.</div></div>`;
 });
+
