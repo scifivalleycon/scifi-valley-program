@@ -108,6 +108,18 @@
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
   },
   {
+    "id": "robin-lord-taylor",
+    "name": "Robin Lord Taylor",
+    "group": "Gotham",
+    "knownFor": "Gotham, The Walking Dead, Accepted, John Wick: Chapter 3",
+    "character": "Oswald Cobblepot / Penguin",
+    "bio": "Robin Lord Taylor is best known for his five-season performance as Oswald Cobblepot, the Penguin, on FOX's Gotham. He also appeared in Netflix's You as Will Bettelheim, along with The Walking Dead, Accepted, John Wick: Chapter 3 and Law & Order.",
+    "imdb": "https://www.imdb.com/name/nm2088699/",
+    "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/38/82/25/a8e38f61-690a-4180-bbaa-3ae64898aa1d.jpeg",
+    "photoOp": "$65",
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+  },
+  {
     "id": "david-mazouz",
     "name": "David Mazouz",
     "group": "Gotham",
@@ -120,14 +132,26 @@
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
   },
   {
-    "id": "robin-lord-taylor",
-    "name": "Robin Lord Taylor",
+    "id": "donal-logue",
+    "name": "Donal Logue",
     "group": "Gotham",
-    "knownFor": "Gotham, The Walking Dead, Accepted, John Wick: Chapter 3",
-    "character": "Oswald Cobblepot / Penguin",
-    "bio": "Robin Lord Taylor is best known for his five-season performance as Oswald Cobblepot, the Penguin, on FOX's Gotham. He also appeared in Netflix's You as Will Bettelheim, along with The Walking Dead, Accepted, John Wick: Chapter 3 and Law & Order.",
-    "imdb": "https://www.imdb.com/name/nm2088699/",
-    "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/38/82/25/a8e38f61-690a-4180-bbaa-3ae64898aa1d.jpeg",
+    "knownFor": "Gotham, Grounded for Life, Sons of Anarchy, Vikings, Blade, The Patriot",
+    "character": "Detective Harvey Bullock",
+    "bio": "Donal Logue is best known for portraying Detective Harvey Bullock throughout all five seasons of FOX's Gotham. His extensive film and television career also includes Grounded for Life, Sons of Anarchy, Vikings, Blade and The Patriot.",
+    "imdb": "https://www.imdb.com/name/nm0006610/",
+    "photo": "https://cdn.prod.website-files.com/619e7b191607b360d5afaaf0/6a85c2085a0e4c58b8b54981_Donal%20Logue.jpg",
+    "photoOp": "$65",
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+  },
+  {
+    "id": "chris-chalk",
+    "name": "Chris Chalk",
+    "group": "Gotham",
+    "knownFor": "Gotham, IT: Welcome to Derry, Perry Mason, The Newsroom, Godzilla vs. Kong",
+    "character": "Lucius Fox / Dick Hallorann",
+    "bio": "Chris Chalk is best known as Lucius Fox on FOX's Gotham and Dick Hallorann in HBO's IT: Welcome to Derry. His credits also include Perry Mason, When They See Us, Homeland, The Newsroom, 12 Years a Slave, Godzilla vs. Kong and Detroit.",
+    "imdb": "https://www.imdb.com/name/nm1663252/",
+    "photo": "https://cdn.prod.website-files.com/619e7b191607b360d5afaaf0/6a7efa91967523917c129f27_Chris_Chalk.webp",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
   },
