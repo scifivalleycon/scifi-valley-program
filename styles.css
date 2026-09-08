@@ -5967,6 +5967,11 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
 
 
 /* My Con changes stay visible beside the attendee's current saved details. */
-.mycon-change{display:block;margin-top:.65rem;padding:.7rem .85rem;background:#ffe08a;color:#38251e;border:2px solid #ad4b28;border-left-width:6px;border-radius:8px;font-family:var(--body-font,system-ui,sans-serif);font-size:.9rem;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+.mycon-change{display:flex;align-items:flex-start;gap:.5rem;margin-top:.65rem;padding:.7rem .85rem;background:#ffe08a;color:#38251e;border:2px solid #ad4b28;border-left-width:6px;border-radius:8px;font-family:var(--body-font,system-ui,sans-serif);font-size:.9rem;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+.mycon-change>span{flex:1;min-width:0}
+.mycon-change-dismiss{flex:0 0 44px;width:44px;min-height:44px;display:grid;place-items:center;padding:0;border:2px solid #ad4b28;border-radius:50%;background:#fff4cc;color:#38251e;font:700 24px/1 system-ui,sans-serif;cursor:pointer}
+.mycon-change-dismiss:focus-visible,.mycon-guest-open:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.mycon-guest-open{display:block;width:100%;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.mycon-guest-open>.meta{display:block}
 #myConSetupModal [hidden]{display:none!important}
 #myConSetupModal{max-height:85dvh;overflow-y:auto}
