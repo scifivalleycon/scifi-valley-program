@@ -60,7 +60,29 @@
     "selfie": "$40",
     "combo": "+$30",
     "proPhoto": "$65",
-    "notes": "Poster $60 • Large item / combo +$30 • Quote +$10 • Authentication certificate +$10 • Video $90 • Card payments add $3 to each table price. Amounts marked + are add-ons."
+    "notes": "Card payments add $3 to each table price. Amounts marked + are add-ons.",
+    "additionalPrices": [
+      {
+        "label": "Poster",
+        "price": "$60"
+      },
+      {
+        "label": "Large item / combo",
+        "price": "+$30"
+      },
+      {
+        "label": "Quote",
+        "price": "+$10"
+      },
+      {
+        "label": "Authentication certificate",
+        "price": "+$10"
+      },
+      {
+        "label": "Video",
+        "price": "$90"
+      }
+    ]
   },
   {
     "id": "kimberly-j-brown",
@@ -69,7 +91,37 @@
     "selfie": "$40",
     "combo": "$75",
     "proPhoto": "$65",
-    "notes": "Poster $45 • Large item / combo $80 • Shared table with Daniel Kountz: autograph $65, selfie $60, combo $115, poster $75, large item / combo $125."
+    "notes": "Duo options are shared table pricing for Kimberly J. Brown and Daniel Kountz. Professional photo ops are separate.",
+    "additionalPrices": [
+      {
+        "label": "Poster",
+        "price": "$45"
+      },
+      {
+        "label": "Large item / combo",
+        "price": "$80"
+      },
+      {
+        "label": "Kimberly & Daniel duo autograph",
+        "price": "$65"
+      },
+      {
+        "label": "Kimberly & Daniel duo selfie",
+        "price": "$60"
+      },
+      {
+        "label": "Kimberly & Daniel duo combo",
+        "price": "$115"
+      },
+      {
+        "label": "Kimberly & Daniel duo poster",
+        "price": "$75"
+      },
+      {
+        "label": "Kimberly & Daniel duo large item / combo",
+        "price": "$125"
+      }
+    ]
   },
   {
     "id": "daniel-kountz",
@@ -78,7 +130,37 @@
     "selfie": "$25",
     "combo": "$50",
     "proPhoto": "$55",
-    "notes": "Poster $35 • Large item / combo $55 • Shared table with Kimberly J. Brown: autograph $65, selfie $60, combo $115, poster $75, large item / combo $125."
+    "notes": "Duo options are shared table pricing for Kimberly J. Brown and Daniel Kountz. Professional photo ops are separate.",
+    "additionalPrices": [
+      {
+        "label": "Poster",
+        "price": "$35"
+      },
+      {
+        "label": "Large item / combo",
+        "price": "$55"
+      },
+      {
+        "label": "Kimberly & Daniel duo autograph",
+        "price": "$65"
+      },
+      {
+        "label": "Kimberly & Daniel duo selfie",
+        "price": "$60"
+      },
+      {
+        "label": "Kimberly & Daniel duo combo",
+        "price": "$115"
+      },
+      {
+        "label": "Kimberly & Daniel duo poster",
+        "price": "$75"
+      },
+      {
+        "label": "Kimberly & Daniel duo large item / combo",
+        "price": "$125"
+      }
+    ]
   },
   {
     "id": "robin-lord-taylor",
@@ -114,7 +196,17 @@
     "selfie": "$40",
     "combo": "$80",
     "proPhoto": "$65",
-    "notes": "Poster $60 • Large item / combo $90"
+    "notes": "",
+    "additionalPrices": [
+      {
+        "label": "Poster",
+        "price": "$60"
+      },
+      {
+        "label": "Large item / combo",
+        "price": "$90"
+      }
+    ]
   },
   {
     "id": "rachelle-lefevre",
