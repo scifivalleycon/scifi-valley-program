@@ -11,6 +11,8 @@
     "panelRoom": "PANEL ROOM 1",
     "panelNotice": "Celebrity panel times and participants are subject to change. Check the app for the latest updates.",
     "panelSeatingNote": "",
-    "generalNote": "Guest table prices supersede prices listed in the app if they vary. Combo pricing generally includes one autograph and one selfie unless otherwise noted. Professional photo ops are separate from table purchases."
+    "generalNote": "Guest table prices supersede prices listed in the app if they vary. Combo pricing generally includes one autograph and one selfie unless otherwise noted. Professional photo ops are separate from table purchases.",
+    "scheduleNoticeEnabled": true,
+    "scheduleNoticeMessage": "This is a tentative schedule and is pending approval from the talent and agents, subject to change."
   }
 ]
