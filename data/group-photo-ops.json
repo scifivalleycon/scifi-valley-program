@@ -1,30 +1,44 @@
 [
   {
-    "id": "group-1",
-    "title": "REUNION 1",
-    "participants": "GUEST 1 / GUEST 2 / GUEST 3",
-    "price": "TBD",
-    "notes": ""
+    "id": "group-grimm-group-reunion",
+    "title": "Grimm Group Reunion",
+    "participants": "David Giuntoli / Silas Weir Mitchell / Bree Turner / Sasha Roiz / Reggie Lee / Claire Coffee",
+    "price": "$385",
+    "notes": "Available Friday, Saturday, and Sunday."
   },
   {
-    "id": "group-2",
-    "title": "DUO 1",
-    "participants": "GUEST 1 / GUEST 2",
-    "price": "TBD",
-    "notes": ""
+    "id": "group-gotham-group-reunion",
+    "title": "Gotham Group Reunion",
+    "participants": "Robin Lord Taylor / David Mazouz / Donal Logue / Chris Chalk",
+    "price": "$245",
+    "notes": "Available Friday, Saturday, and Sunday."
   },
   {
-    "id": "group-3",
-    "title": "REUNION 2",
-    "participants": "GUEST 4 / GUEST 5 / GUEST 6",
-    "price": "TBD",
-    "notes": ""
+    "id": "group-halloweentown-reunion-trio",
+    "title": "Halloweentown Reunion Trio",
+    "participants": "Kimberly J. Brown / Daniel Kountz / Judith Hoag",
+    "price": "$155",
+    "notes": "Available Friday, Saturday, and Sunday."
   },
   {
-    "id": "group-4",
-    "title": "DUO 2",
-    "participants": "GUEST 4 / GUEST 5",
-    "price": "TBD",
-    "notes": ""
+    "id": "group-halloweentown-couple-duo",
+    "title": "Halloweentown Couple Duo",
+    "participants": "Kimberly J. Brown / Daniel Kountz",
+    "price": "$105",
+    "notes": "Available Friday, Saturday, and Sunday."
+  },
+  {
+    "id": "group-halloweentown-mom-and-daughter-duo",
+    "title": "Halloweentown Mom & Daughter Duo",
+    "participants": "Kimberly J. Brown / Judith Hoag",
+    "price": "$115",
+    "notes": "Available Friday, Saturday, and Sunday."
+  },
+  {
+    "id": "group-under-the-dome-duo",
+    "title": "Under the Dome Duo",
+    "participants": "Rachelle Lefevre / Mike Vogel",
+    "price": "$125",
+    "notes": "Available Friday, Saturday, and Sunday."
   }
 ]

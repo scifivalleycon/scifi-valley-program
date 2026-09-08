@@ -1,44 +1,107 @@
 [
   {
-    "id": "auto-1",
-    "guestName": "GUEST 1",
-    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
-    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
-    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+    "id": "auto-kimberly-j-brown",
+    "guestName": "Kimberly J. Brown",
+    "Friday": "2:00 PM–4:20 PM\n5:10 PM–8:00 PM",
+    "Saturday": "10:00 AM–11:00 AM\n11:40 AM–12:00 PM\n12:40 PM–1:30 PM\n2:30 PM–3:00 PM\n4:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–12:00 PM\n2:30 PM–5:00 PM"
   },
   {
-    "id": "auto-2",
-    "guestName": "GUEST 2",
-    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
-    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
-    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+    "id": "auto-daniel-kountz",
+    "guestName": "Daniel Kountz",
+    "Friday": "2:00 PM–4:30 PM\n5:10 PM–8:00 PM",
+    "Saturday": "10:00 AM–11:20 AM\n12:00 PM–12:20 PM\n12:40 PM–1:30 PM\n2:30 PM–3:00 PM\n4:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–12:00 PM\n2:30 PM–5:00 PM"
   },
   {
-    "id": "auto-3",
-    "guestName": "GUEST 3",
-    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
-    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
-    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+    "id": "auto-judith-hoag",
+    "guestName": "Judith Hoag",
+    "Friday": "2:00 PM–4:50 PM\n6:30 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–3:00 PM\n4:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–12:00 PM\n1:30 PM–3:30 PM"
   },
   {
-    "id": "auto-4",
-    "guestName": "GUEST 4",
-    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
-    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
-    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+    "id": "auto-david-giuntoli",
+    "guestName": "David Giuntoli",
+    "Friday": "2:00 PM–5:20 PM\n5:40 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–3:40 PM\n4:20 PM–8:00 PM",
+    "Sunday": "10:00 AM–11:00 AM\n11:20 AM–12:30 PM"
   },
   {
-    "id": "auto-5",
-    "guestName": "GUEST 5",
-    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
-    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
-    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+    "id": "auto-silas-weir-mitchell",
+    "guestName": "Silas Weir Mitchell",
+    "Friday": "2:00 PM–5:30 PM\n5:50 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–4:00 PM\n4:40 PM–8:00 PM",
+    "Sunday": "10:00 AM–11:10 AM\n11:30 AM–12:30 PM"
   },
   {
-    "id": "auto-6",
-    "guestName": "GUEST 6",
-    "Friday": "2:00 PM\u20134:00 PM\n6:00 PM\u20138:00 PM",
-    "Saturday": "10:00 AM\u20131:00 PM\n2:00 PM\u20135:00 PM",
-    "Sunday": "10:00 AM\u201312:00 PM\n1:00 PM\u20133:00 PM"
+    "id": "auto-bree-turner",
+    "guestName": "Bree Turner",
+    "Friday": "2:00 PM–5:30 PM\n6:00 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–4:00 PM\n4:20 PM–4:40 PM\n5:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–11:10 AM\n11:40 AM–12:30 PM"
+  },
+  {
+    "id": "auto-sasha-roiz",
+    "guestName": "Sasha Roiz",
+    "Friday": "2:00 PM–5:30 PM\n5:40 PM–6:00 PM\n6:10 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–4:00 PM\n4:20 PM–5:00 PM\n5:20 PM–8:00 PM",
+    "Sunday": "10:00 AM–11:10 AM\n11:20 AM–11:40 AM\n11:50 AM–12:30 PM\n1:30 PM–5:00 PM"
+  },
+  {
+    "id": "auto-reggie-lee",
+    "guestName": "Reggie Lee",
+    "Friday": "2:00 PM–5:30 PM\n5:40 PM–6:10 PM\n6:20 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–4:00 PM\n4:20 PM–5:20 PM\n5:40 PM–8:00 PM",
+    "Sunday": "10:00 AM–11:10 AM\n11:20 AM–11:50 AM\n12:00 PM–12:30 PM\n1:30 PM–5:00 PM"
+  },
+  {
+    "id": "auto-claire-coffee",
+    "guestName": "Claire Coffee",
+    "Friday": "2:00 PM–5:30 PM\n5:40 PM–6:20 PM\n6:30 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:30 PM\n2:30 PM–4:00 PM\n4:20 PM–5:40 PM\n6:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–11:10 AM\n11:20 AM–12:00 PM\n12:10 PM–12:30 PM\n1:30 PM–5:00 PM"
+  },
+  {
+    "id": "auto-rachelle-lefevre",
+    "guestName": "Rachelle Lefevre",
+    "Friday": "2:00 PM–3:50 PM\n4:10 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:40 PM–2:00 PM\n3:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–12:10 PM\n12:30 PM–1:30 PM\n2:30 PM–5:00 PM"
+  },
+  {
+    "id": "auto-mike-vogel",
+    "guestName": "Mike Vogel",
+    "Friday": "2:00 PM–4:00 PM\n4:20 PM–8:00 PM",
+    "Saturday": "10:00 AM–12:00 PM\n1:00 PM–1:20 PM\n3:00 PM–8:00 PM",
+    "Sunday": "10:00 AM–12:20 PM\n12:40 PM–1:30 PM\n2:30 PM–5:00 PM"
+  },
+  {
+    "id": "auto-robin-lord-taylor",
+    "guestName": "Robin Lord Taylor",
+    "Friday": "2:00 PM–3:10 PM\n3:30 PM–8:00 PM",
+    "Saturday": "10:00 AM–1:00 PM\n2:40 PM–4:30 PM\n5:30 PM–8:00 PM",
+    "Sunday": "10:00 AM–12:00 PM\n2:20 PM–3:00 PM"
+  },
+  {
+    "id": "auto-david-mazouz",
+    "guestName": "David Mazouz",
+    "Friday": "2:00 PM–3:10 PM\n3:40 PM–8:00 PM",
+    "Saturday": "10:00 AM–1:00 PM\n2:00 PM–2:20 PM\n3:00 PM–4:30 PM\n5:30 PM–8:00 PM",
+    "Sunday": "10:00 AM–1:00 PM\n2:30 PM–3:00 PM"
+  },
+  {
+    "id": "auto-donal-logue",
+    "guestName": "Donal Logue",
+    "Friday": "2:00 PM–3:10 PM\n3:20 PM–3:40 PM\n3:50 PM–7:00 PM",
+    "Saturday": "10:00 AM–1:00 PM\n2:00 PM–2:20 PM\n2:40 PM–3:00 PM\n3:20 PM–4:30 PM\n5:30 PM–8:00 PM",
+    "Sunday": "10:00 AM–1:00 PM\n2:40 PM–5:00 PM"
+  },
+  {
+    "id": "auto-chris-chalk",
+    "guestName": "Chris Chalk",
+    "Friday": "2:00 PM–3:00 PM\n3:20 PM–4:00 PM\n5:00 PM–8:00 PM",
+    "Saturday": "10:00 AM–1:00 PM\n2:00 PM–2:20 PM\n2:40 PM–3:20 PM\n3:40 PM–4:30 PM\n5:30 PM–8:00 PM",
+    "Sunday": "10:00 AM–1:00 PM\n2:20 PM–2:40 PM"
   }
 ]

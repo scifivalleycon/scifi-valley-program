@@ -1,82 +1,92 @@
 [
   {
-    "id": "panel-1",
+    "id": "panel-friday-chris-chalk-qanda-panel",
     "day": "Friday",
     "startTime": "4:00 PM",
     "endTime": "5:00 PM",
-    "title": "GUEST 1 Q&A PANEL",
+    "title": "CHRIS CHALK Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "GUEST 1",
-    "description": "Join GUEST 1 for a fan Q&A featuring career highlights, behind-the-scenes stories, favorite roles, and audience questions."
+    "participants": "Chris Chalk",
+    "description": "Join Chris Chalk for a fan Q&A covering Gotham, IT: Welcome to Derry, Perry Mason, and more."
   },
   {
-    "id": "panel-2",
+    "id": "panel-friday-judith-hoag-qanda-panel",
     "day": "Friday",
     "startTime": "5:30 PM",
-    "endTime": "6:00 PM",
-    "title": "DUO 1 Q&A PANEL",
+    "endTime": "6:30 PM",
+    "title": "JUDITH HOAG Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "GUEST 1 / GUEST 2",
-    "description": "Join GUEST 1 and GUEST 2 for a special duo Q&A with stories, character discussion, and fan questions."
+    "participants": "Judith Hoag",
+    "description": "Join Judith Hoag for a fan Q&A covering Halloweentown, Teenage Mutant Ninja Turtles, and more."
   },
   {
-    "id": "panel-3",
+    "id": "panel-friday-donal-logue-qanda-panel",
+    "day": "Friday",
+    "startTime": "7:00 PM",
+    "endTime": "8:00 PM",
+    "title": "DONAL LOGUE Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "Donal Logue",
+    "description": "Join Donal Logue for a fan Q&A covering Gotham, Grounded for Life, Sons of Anarchy, Vikings, and more."
+  },
+  {
+    "id": "panel-saturday-under-the-dome-qanda-panel",
     "day": "Saturday",
     "startTime": "12:00 PM",
     "endTime": "1:00 PM",
-    "title": "GUEST 3 Q&A PANEL",
+    "title": "UNDER THE DOME Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "GUEST 3",
-    "description": "A one-hour Q&A with GUEST 3 covering career memories, behind-the-scenes stories, and fan-favorite projects."
+    "participants": "Rachelle Lefevre / Mike Vogel",
+    "description": "Rachelle Lefevre and Mike Vogel reunite for stories from Under the Dome and audience questions."
   },
   {
-    "id": "panel-4",
+    "id": "panel-saturday-grimm-qanda-panel",
     "day": "Saturday",
     "startTime": "1:30 PM",
     "endTime": "2:30 PM",
-    "title": "REUNION 1 Q&A PANEL",
+    "title": "GRIMM Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "GUEST 1 / GUEST 2 / GUEST 3",
-    "description": "Celebrate REUNION 1 with cast stories, behind-the-scenes memories, fan-favorite moments, and audience questions."
+    "participants": "David Giuntoli / Silas Weir Mitchell / Bree Turner / Sasha Roiz / Reggie Lee / Claire Coffee",
+    "description": "The Grimm cast reunites for behind-the-scenes stories, favorite memories, and audience questions."
   },
   {
-    "id": "panel-5",
+    "id": "panel-saturday-halloweentown-qanda-panel",
     "day": "Saturday",
     "startTime": "3:00 PM",
     "endTime": "4:00 PM",
-    "title": "REUNION 2 Q&A PANEL",
+    "title": "HALLOWEENTOWN Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "GUEST 4 / GUEST 5 / GUEST 6",
-    "description": "Join the cast of REUNION 2 for a reunion Q&A celebrating the project, its legacy, and stories from the set."
+    "participants": "Kimberly J. Brown / Daniel Kountz / Judith Hoag",
+    "description": "The Halloweentown cast reunites to celebrate the films, share memories, and answer fan questions."
   },
   {
-    "id": "panel-6",
+    "id": "panel-saturday-gotham-qanda-panel",
+    "day": "Saturday",
+    "startTime": "4:30 PM",
+    "endTime": "5:30 PM",
+    "title": "GOTHAM Q&A PANEL",
+    "location": "PANEL ROOM 1",
+    "participants": "Robin Lord Taylor / David Mazouz / Donal Logue / Chris Chalk",
+    "description": "The Gotham cast reunites for stories from the series, favorite character moments, and audience questions."
+  },
+  {
+    "id": "panel-sunday-robin-lord-taylor-qanda-panel",
     "day": "Sunday",
     "startTime": "12:00 PM",
     "endTime": "1:00 PM",
-    "title": "DUO 2 Q&A PANEL",
+    "title": "ROBIN LORD TAYLOR Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "GUEST 4 / GUEST 5",
-    "description": "An intimate duo Q&A with GUEST 4 and GUEST 5 featuring behind-the-scenes stories and audience questions."
+    "participants": "Robin Lord Taylor",
+    "description": "Join Robin Lord Taylor for a fan Q&A covering Gotham, You, The Walking Dead, and more."
   },
   {
-    "id": "panel-1786725934372",
-    "day": "Friday",
-    "startTime": "1:00 PM",
-    "endTime": "2:00 PM",
-    "title": "NEW PANEL",
+    "id": "panel-sunday-halloweentown-couples-reunion-qanda-panel",
+    "day": "Sunday",
+    "startTime": "1:30 PM",
+    "endTime": "2:30 PM",
+    "title": "HALLOWEENTOWN COUPLES REUNION Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "",
-    "description": ""
-  },
-  {
-    "id": "panel-1786730624454",
-    "day": "Friday",
-    "startTime": "2:20 PM",
-    "endTime": "3:00 PM",
-    "title": "NEW PANEL",
-    "location": "PANEL ROOM 1",
-    "participants": "",
-    "description": ""
+    "participants": "Kimberly J. Brown / Daniel Kountz",
+    "description": "Kimberly J. Brown and Daniel Kountz reunite for Halloweentown memories and audience questions."
   }
 ]
