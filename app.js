@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.95";
+const APP_BUILD_VERSION="4.96";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -1744,6 +1744,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     if(signature)appVersionCheckSignature=signature;
 
     renderAll();
+    refreshOpenMapGuestProfile();
 
     if(!silent){
       initializePushPromptExperience();
@@ -4517,6 +4518,7 @@ let mapPreviewMode=new URLSearchParams(location.search).get("mapPreview")==="1";
 let mapLastRenderSignature="";
 let mapVendorIndexSource=null;
 let mapVendorByLocation=new Map();
+let mapOpenProfileSignature="";
 
 function expandLocationCodes(value){
   const result=[];
@@ -4540,6 +4542,57 @@ function vendorForLocation(code){
     }));
   }
   return mapVendorByLocation.get(target)||null;
+}
+function mapGuestNameKey(value){
+  return String(value||"").normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]/g,"");
+}
+function mapGuestForVendor(vendor,code=""){
+  if(!vendor)return null;
+  const locations=expandLocationCodes(vendor.location);
+  const target=String(code||"").trim().toUpperCase();
+  if(target?(!/^K\d+$/.test(target)||!locations.includes(target)):!locations.some(location=>/^K\d+$/.test(location)))return null;
+  const name=mapGuestNameKey(vendor.name);
+  if(!name)return null;
+  const matches=state.guests.filter(guest=>mapGuestNameKey(guest.name)===name);
+  // Require one full-name match; never guess between similarly named guests.
+  return matches.length===1?matches[0]:null;
+}
+function mapGuestUrl(value){
+  const raw=String(value||"").trim();
+  if(!raw)return "";
+  try{return ["https:","http:"].includes(new URL(raw,location.href).protocol)?raw:""}catch{return ""}
+}
+function mapGuestProfileHtml(code,vendor,guest){
+  const photo=mapGuestUrl(guest.photo),imdb=mapGuestUrl(guest.imdb),website=mapGuestUrl(vendor.website);
+  return `<span class="tag">${escapeAppHtml(code)} • CELEBRITY GUEST</span>
+    <h2>${escapeAppHtml(guest.name)}</h2>
+    <div class="map-modal-meta">${escapeAppHtml(vendor.area||"")}${guest.group?` • ${escapeAppHtml(guest.group)}`:""}</div>
+    ${photo?`<button class="map-guest-photo-button" type="button" data-map-guest-photo="${escapeAppHtml(guest.id)}" aria-label="Enlarge photo and biography of ${escapeAppHtml(guest.name)}"><img src="${escapeAppHtml(photo)}" alt="${escapeAppHtml(guest.name)}" loading="lazy"></button>`:""}
+    ${guest.character?`<p>${escapeAppHtml(guest.character)}</p>`:""}
+    ${guest.knownFor?`<p><strong>Known for:</strong> ${escapeAppHtml(guest.knownFor)}</p>`:""}
+    ${guest.bio?`<div class="map-guest-bio">${escapeAppHtml(guest.bio)}</div>`:""}
+    ${imdb?`<a class="map-vendor-website" href="${escapeAppHtml(imdb)}" target="_blank" rel="noopener noreferrer">IMDb PAGE ↗</a>`:""}
+    <div class="map-guest-pricing" aria-label="${escapeAppHtml(guest.name)} prices">${guestPricesHtml(guest,true)}</div>
+    <button class="guest-open" type="button" data-map-open-guest="${escapeAppHtml(guest.id)}">VIEW FULL GUEST PROFILE ›</button>
+    <div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>
+    ${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info>★ CON-QUEST PARTICIPANT</button>`:""}
+    ${website&&website!==imdb?`<a class="map-vendor-website" href="${escapeAppHtml(website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}
+    ${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}${mapVendorPhotoGallery(vendor)}`;
+}
+function mapLocationProfileSignature(code){
+  const vendor=vendorForLocation(code),guest=mapGuestForVendor(vendor,code);
+  return JSON.stringify({published:mapDirectoryVisible(),vendor,guest,pricing:guest?guestPriceRecord(guest):null});
+}
+function refreshOpenMapGuestProfile(){
+  const modal=document.getElementById("mapLocationModal"),content=document.getElementById("mapLocationModalContent");
+  if(!mapOpenLocationCode||!modal?.open||!content)return;
+  if(mapLocationProfileSignature(mapOpenLocationCode)===mapOpenProfileSignature)return;
+  const scrollTop=modal.scrollTop,contentScrollTop=content.scrollTop;
+  const focused=document.activeElement;
+  const focusAttribute=["data-refresh-map-vendor","data-map-guest-photo","data-map-open-guest"].find(attribute=>content.contains(focused)&&focused.hasAttribute(attribute));
+  renderMapLocationProfile(mapOpenLocationCode,{status:"Profile updated automatically."});
+  if(focusAttribute)content.querySelector(`[${focusAttribute}]`)?.focus({preventScroll:true});
+  modal.scrollTop=scrollTop;content.scrollTop=contentScrollTop;
 }
 function mapDirectoryVisible(){return state.mapSettings.directoryPublished===true||mapPreviewMode}
 function mapVisible(){return state.mapSettings.published===true||mapPreviewMode}
@@ -4684,31 +4737,49 @@ function renderFloorPlanSvg(){
   applyMapZoom();
 }
 function mapVendorRefreshControls(code,status="",error=false){
-  return `<button class="map-vendor-refresh" type="button" data-refresh-map-vendor>↻ REFRESH VENDOR PROFILE</button><p class="map-vendor-refresh-status${error?' error':''}" aria-live="polite">${escapeAppHtml(status)}</p>`;
+  return `<button class="map-vendor-refresh" type="button" data-refresh-map-vendor>↻ REFRESH PROFILE</button><p class="map-vendor-refresh-status${error?' error':''}" aria-live="polite">${escapeAppHtml(status)}</p>`;
 }
 function renderMapLocationProfile(code,{status="",error=false}={}){
   const vendor=vendorForLocation(code),content=document.getElementById('mapLocationModalContent');if(!content)return;
-  if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}${mapVendorPhotoGallery(vendor)}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}${mapVendorRefreshControls(code,status,error)}`;
+  const guest=mapGuestForVendor(vendor,code);
+  mapOpenProfileSignature=mapLocationProfileSignature(code);
+  if(guest&&mapDirectoryVisible())content.innerHTML=mapGuestProfileHtml(code,vendor,guest)+mapVendorRefreshControls(code,status,error);
+  else if(vendor&&mapDirectoryVisible())content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>${escapeAppHtml(vendor.name)}</h2><div class="map-modal-meta">${escapeAppHtml(vendor.area||"")} • ${escapeAppHtml(vendor.type||"")}</div>${vendor.description?`<div class="map-vendor-description"><strong>WHAT THEY SELL</strong><p>${escapeAppHtml(vendor.description)}</p></div>`:""}${vendor.categories?`<p><strong>Products / Categories:</strong> ${escapeAppHtml(vendor.categories)}</p>`:""}${mapVendorPhotoGallery(vendor)}<div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>${vendor.conQuest?`<button class="map-conquest-badge conquest-info-trigger" type="button" data-open-conquest-info aria-label="Tap to learn what Con-Quest is" title="Tap to learn what Con-Quest is">★ CON-QUEST PARTICIPANT</button>`:""}${vendor.website?`<a class="map-vendor-website" href="${escapeAppHtml(vendor.website)}" target="_blank" rel="noopener noreferrer">VISIT WEBSITE ↗</a>`:""}${vendor.notes?`<p>${escapeAppHtml(vendor.notes)}</p>`:""}${mapVendorRefreshControls(code,status,error)}`;
   else content.innerHTML=`<span class="tag">${escapeAppHtml(code)}</span><h2>LOCATION ${escapeAppHtml(code)}</h2><p>Vendor or guest assignment has not been published for this location yet.</p>${mapVendorRefreshControls(code,status,error)}`;
   bindMapVendorPhotoLightboxes(content);
+  content.querySelector('[data-map-guest-photo]')?.addEventListener('click',()=>{
+    const current=mapGuestForVendor(vendorForLocation(code),code);
+    if(current)openPhotoLightbox(mapGuestUrl(current.photo),current.name,current.bio);
+  });
+  content.querySelector('[data-map-open-guest]')?.addEventListener('click',()=>{
+    const current=mapGuestForVendor(vendorForLocation(code),code);
+    if(!current)return;
+    document.getElementById('mapLocationModal')?.close();
+    openGuest(current.id);
+  });
   content.querySelector('[data-refresh-map-vendor]')?.addEventListener('click',()=>forceMapVendorProfileRefresh(code));
 }
 async function forceMapVendorProfileRefresh(code,{automatic=false}={}){
   const content=document.getElementById('mapLocationModalContent'),modal=document.getElementById('mapLocationModal');
   const button=content?.querySelector('[data-refresh-map-vendor]'),status=content?.querySelector('.map-vendor-refresh-status');
   if(button){button.disabled=true;button.textContent='↻ REFRESHING…'}
-  if(status){status.classList.remove('error');status.textContent=automatic?'Checking the live Vendor Portal…':'Loading the newest Vendor Portal profile…'}
+  if(status){status.classList.remove('error');status.textContent=automatic?'Checking the latest profile…':'Loading the newest profile…'}
   try{
-    const rows=await fetchLiveVendorDirectory(),signature=liveVendorDirectorySignature(rows),changed=signature!==vendorDirectoryLastSignature;
+    const [rows]=await Promise.all([
+      fetchLiveVendorDirectory(),
+      /^K\d+$/i.test(String(code||""))?maybeRefreshProgramData("map-guest-profile"):Promise.resolve(false)
+    ]);
+    const signature=liveVendorDirectorySignature(rows),changed=signature!==vendorDirectoryLastSignature;
     vendorDirectoryLastSignature=signature;state.vendors=rows;
     if(state.mapSelectedVendorId&&!rows.some(row=>row.id===state.mapSelectedVendorId)){state.mapSelectedVendorId='';state.mapSelectedCodes.clear()}
     renderMapScreen();
-    if(modal?.open&&mapOpenLocationCode===String(code||'').toUpperCase())renderMapLocationProfile(code,{status:changed?'Updated from the Vendor Portal just now.':'Latest Vendor Portal profile loaded.'});
+    if(modal?.open&&mapOpenLocationCode===String(code||'').toUpperCase())renderMapLocationProfile(code,{status:changed?'Profile updated just now.':'Published profile refreshed.'});
     return true;
   }catch(err){
     console.warn('SFVC map vendor profile refresh failed',err);
+    if(!modal?.open||mapOpenLocationCode!==String(code||'').toUpperCase())return false;
     const liveStatus=document.getElementById('mapLocationModalContent')?.querySelector('.map-vendor-refresh-status'),liveButton=document.getElementById('mapLocationModalContent')?.querySelector('[data-refresh-map-vendor]');
-    if(liveStatus){liveStatus.classList.add('error');liveStatus.textContent='Could not reach the live Vendor Portal. Showing the last published profile.'}
+    if(liveStatus){liveStatus.classList.add('error');liveStatus.textContent='Could not refresh the profile. Showing the last published information.'}
     if(liveButton){liveButton.disabled=false;liveButton.textContent='↻ TRY REFRESH AGAIN'}
     return false;
   }
@@ -4833,7 +4904,7 @@ function renderMapScreen({force=false}={}){
 document.getElementById('mapSearch')?.addEventListener('input',event=>{state.mapQuery=event.target.value;renderMapDirectory()});
 document.getElementById('mapZoomIn')?.addEventListener('click',()=>{mapZoom=Math.min(2.75,mapZoom+.25);applyMapZoom()});document.getElementById('mapZoomOut')?.addEventListener('click',()=>{mapZoom=Math.max(.65,mapZoom-.25);applyMapZoom()});document.getElementById('mapZoomReset')?.addEventListener('click',()=>{mapZoom=1.15;applyMapZoom()});
 document.getElementById('closeMapLocationModal')?.addEventListener('click',()=>document.getElementById('mapLocationModal')?.close());
-document.getElementById('mapLocationModal')?.addEventListener('close',e=>{e.currentTarget.classList.remove('map-directory-popover');mapOpenLocationCode=''});
+document.getElementById('mapLocationModal')?.addEventListener('close',e=>{e.currentTarget.classList.remove('map-directory-popover');mapOpenLocationCode='';mapOpenProfileSignature=''});
 document.getElementById('mapLocationModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
 function openConQuestInfo(){
