@@ -5932,6 +5932,15 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
 .schedule-bulk-actions{display:flex;flex-wrap:wrap;gap:8px}
 .schedule-filter-head{flex-wrap:wrap}
 
+/* Admin-controlled notice above the schedule day filters. */
+.schedule-notice{display:flex;align-items:flex-start;gap:16px;padding:20px 22px;margin:0 0 24px;border:3px solid var(--ink);border-left:10px solid var(--coral2);border-radius:12px;background:var(--mustard);color:var(--ink);box-shadow:var(--shadow)}
+.schedule-notice[hidden]{display:none!important}
+.schedule-notice-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;background:var(--paper2);font-size:28px;font-weight:900;line-height:1}
+.schedule-notice h2{margin:0 0 8px;font-size:clamp(22px,3vw,30px);line-height:1.15}
+.schedule-notice p{margin:0;font-size:clamp(17px,2vw,22px);line-height:1.45;font-weight:700;white-space:pre-wrap;overflow-wrap:anywhere}
+.schedule-notice>div{min-width:0;flex:1}
+@media(max-width:480px){.schedule-notice{padding:16px 14px;gap:12px}.schedule-notice-icon{flex-basis:32px;width:32px;height:32px;font-size:22px}}
+
 /* Matched Row K celebrity profiles use the guest and pricing records. */
 .map-guest-photo-button{display:block;width:min(100%,300px);margin:16px auto;padding:0;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--paper2);cursor:zoom-in}
 .map-guest-photo-button img{display:block;width:100%;height:auto}
