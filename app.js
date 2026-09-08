@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.94";
+const APP_BUILD_VERSION="4.95";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2002,7 +2002,7 @@ function renderGuestFilters(){
 
 function guestPhoto(g, cls="guest-photo"){
   return g.photo
-    ? `<img class="${cls}" src="${g.photo}" alt="${g.name}" loading="lazy">`
+    ? `<img class="${cls}" data-guest-photo-id="${escapeAppHtml(g.id)}" tabindex="0" role="button" aria-label="View photo and biography of ${escapeAppHtml(g.name)}" src="${g.photo}" alt="${g.name}" loading="lazy">`
     : `<div class="${cls==="guest-photo"?"guest-placeholder":"modal-photo-placeholder"}">${g.name}</div>`;
 }
 
@@ -5497,22 +5497,37 @@ window.addEventListener("appinstalled",()=>{
 updateInstallExperience();
 
 /* ----- Guest and vendor photo lightbox ----- */
-function openPhotoLightbox(src,caption){
+function openPhotoLightbox(src,caption,bio=""){
   if(!src)return;
   const modal=document.getElementById("photoLightbox");
   const image=document.getElementById("photoLightboxImage");
   image.src=src;
   image.alt=caption||"Event photo";
   document.getElementById("photoLightboxCaption").textContent=caption||"";
+  const biography=document.getElementById("photoLightboxBio");
+  biography.textContent=String(bio||"").trim();
+  biography.hidden=!biography.textContent;
+  modal.classList.toggle("has-biography",!biography.hidden);
   if(typeof modal.showModal==="function")modal.showModal();
+  modal.scrollTop=0;
 }
 function bindGuestPhotoLightboxes(){
   document.querySelectorAll(".guest-photo,.modal-guest-photo").forEach(img=>{
     if(img.dataset.lightboxBound==="yes")return;
     img.dataset.lightboxBound="yes";
+    const open=()=>{
+      const guest=state.guests.find(g=>String(g.id)===img.dataset.guestPhotoId);
+      openPhotoLightbox(img.currentSrc||img.src,guest?.name||img.alt,guest?.bio||"");
+    };
     img.addEventListener("click",e=>{
       e.stopPropagation();
-      openPhotoLightbox(img.currentSrc||img.src,img.alt);
+      open();
+    });
+    img.addEventListener("keydown",e=>{
+      if(e.key!=="Enter"&&e.key!==" ")return;
+      e.preventDefault();
+      e.stopPropagation();
+      open();
     });
   });
 }

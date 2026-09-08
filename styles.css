@@ -5931,3 +5931,20 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
 .guest-price-grid small{font-size:11px}
 .schedule-bulk-actions{display:flex;flex-wrap:wrap;gap:8px}
 .schedule-filter-head{flex-wrap:wrap}
+
+/* Guest photo biographies share the existing Admin bio field. */
+.photo-lightbox.has-biography{
+  box-sizing:border-box;height:100dvh;overflow-y:auto;
+  padding:calc(76px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
+}
+.photo-lightbox.has-biography img{
+  position:static;transform:none;display:block;box-sizing:border-box;
+  width:auto;height:auto;max-width:100%;max-height:65vh;max-height:65dvh;margin:0 auto;
+}
+.photo-lightbox.has-biography .photo-lightbox-caption{
+  position:static;max-width:720px;margin:20px auto 12px;font-size:22px;
+}
+.photo-lightbox-bio{
+  max-width:720px;margin:0 auto;color:var(--paper2);font-size:17px;line-height:1.6;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+}
