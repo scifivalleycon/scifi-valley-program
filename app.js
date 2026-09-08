@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.96";
+const APP_BUILD_VERSION="4.97";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2524,7 +2524,16 @@ function renderScheduleCategoryFilters(){
   }
 }
 
+function renderScheduleNotice(){
+  const notice=document.getElementById("scheduleNotice"),message=document.getElementById("scheduleNoticeMessage");
+  if(!notice||!message)return;
+  const info=state.celebrityInfo||{};
+  const text=typeof info.scheduleNoticeMessage==="string"?info.scheduleNoticeMessage.trim():"";
+  if(message.textContent!==text)message.textContent=text;
+  notice.hidden=info.scheduleNoticeEnabled!==true||!text;
+}
 function renderSchedule(){
+  renderScheduleNotice();
   const items=sortedScheduleItems(
     showScheduleItems().filter(e=>
       e.day===state.dayFilter &&
