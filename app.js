@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.99";
+const APP_BUILD_VERSION="4.100";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -193,9 +193,26 @@ function myConChangedFields(before,after){
   return Object.keys(after).filter(key=>key!=="id"&&Object.hasOwn(before,key)&&JSON.stringify(before[key])!==JSON.stringify(after[key]));
 }
 function myConChangeHtml(kind,id){
-  const change=myConChanges[`${kind}:${id}`];
-  return change?`<span class="mycon-change" role="status">${escapeAppHtml(change.message)}</span>`:"";
+  const key=`${kind}:${id}`;
+  const change=myConChanges[key];
+  return change?`<span class="mycon-change" role="status"><span>${escapeAppHtml(change.message)}</span><button type="button" class="mycon-change-dismiss" data-dismiss-mycon-change="${escapeAppHtml(key)}" aria-label="Close update notification" title="Close update notification">×</button></span>`:"";
 }
+function dismissMyConChange(key){
+  if(!Object.hasOwn(myConChanges,key))return;
+  delete myConChanges[key];
+  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  // Keep saved items and their latest snapshots: only dismiss this change.
+  document.querySelectorAll("[data-dismiss-mycon-change]").forEach(button=>{
+    if(button.dataset.dismissMyconChange===key)button.closest(".mycon-change")?.remove();
+  });
+}
+document.addEventListener("click",event=>{
+  const button=event.target.closest?.("[data-dismiss-mycon-change]");
+  if(!button)return;
+  event.preventDefault();
+  event.stopPropagation();
+  dismissMyConChange(button.dataset.dismissMyconChange);
+});
 function reconcileMyCon(){
   if(!myConCatalogReady)return;
   const guests=new Map(state.guests.map(g=>[g.id,g]));
@@ -2235,7 +2252,7 @@ function renderFavorites(){
   const c=document.getElementById("favoritePreview");
   if(!guests.length){c.className="stack muted-empty";c.innerHTML="Tap the heart on a guest to save them here.";return;}
   c.className="stack";
-  c.innerHTML=guests.map(g=>`<button class="status-card" data-home-guest="${escapeAppHtml(g.id)}" style="text-align:left"><strong>${escapeAppHtml(String(g.name||"").toUpperCase())}</strong><div class="meta">${escapeAppHtml(g.group)}${(guestPriceRecord(g)?.proPhoto??g.photoOp)?` • Photo Op ${escapeAppHtml(guestPriceRecord(g)?.proPhoto??g.photoOp)}`:""}</div>${myConChangeHtml("guest",g.id)}</button>`).join("");
+  c.innerHTML=guests.map(g=>`<div class="status-card"><button type="button" class="mycon-guest-open" data-home-guest="${escapeAppHtml(g.id)}"><strong>${escapeAppHtml(String(g.name||"").toUpperCase())}</strong><span class="meta">${escapeAppHtml(g.group)}${(guestPriceRecord(g)?.proPhoto??g.photoOp)?` • Photo Op ${escapeAppHtml(guestPriceRecord(g)?.proPhoto??g.photoOp)}`:""}</span></button>${myConChangeHtml("guest",g.id)}</div>`).join("");
   c.querySelectorAll("[data-home-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.homeGuest)));
 }
 
@@ -5818,4 +5835,3 @@ loadData().then(()=>{
   renderMySchedule();
   document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Saved My Con items remain available while the app retries the latest program data.</div></div>`;
 });
-
