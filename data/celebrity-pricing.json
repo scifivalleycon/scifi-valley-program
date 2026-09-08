@@ -1,56 +1,137 @@
 [
   {
-    "id": "guest-1",
-    "guestName": "GUEST 1",
-    "autograph": "TBD",
-    "selfie": "TBD",
-    "combo": "TBD",
-    "proPhoto": "TBD",
+    "id": "david-giuntoli",
+    "guestName": "David Giuntoli",
+    "autograph": "$80",
+    "selfie": "$80",
+    "combo": "$120",
+    "proPhoto": "$105",
     "notes": ""
   },
   {
-    "id": "guest-2",
-    "guestName": "GUEST 2",
-    "autograph": "TBD",
-    "selfie": "TBD",
-    "combo": "TBD",
-    "proPhoto": "TBD",
+    "id": "silas-weir-mitchell",
+    "guestName": "Silas Weir Mitchell",
+    "autograph": "$60",
+    "selfie": "$60",
+    "combo": "$80",
+    "proPhoto": "$85",
     "notes": ""
   },
   {
-    "id": "guest-3",
-    "guestName": "GUEST 3",
-    "autograph": "TBD",
-    "selfie": "TBD",
-    "combo": "TBD",
-    "proPhoto": "TBD",
+    "id": "bree-turner",
+    "guestName": "Bree Turner",
+    "autograph": "$50",
+    "selfie": "$50",
+    "combo": "$70",
+    "proPhoto": "$75",
     "notes": ""
   },
   {
-    "id": "guest-4",
-    "guestName": "GUEST 4",
-    "autograph": "TBD",
-    "selfie": "TBD",
-    "combo": "TBD",
-    "proPhoto": "TBD",
+    "id": "sasha-roiz",
+    "guestName": "Sasha Roiz",
+    "autograph": "$50",
+    "selfie": "$50",
+    "combo": "$70",
+    "proPhoto": "$75",
     "notes": ""
   },
   {
-    "id": "guest-5",
-    "guestName": "GUEST 5",
-    "autograph": "TBD",
-    "selfie": "TBD",
-    "combo": "TBD",
-    "proPhoto": "TBD",
+    "id": "reggie-lee",
+    "guestName": "Reggie Lee",
+    "autograph": "$50",
+    "selfie": "$50",
+    "combo": "$70",
+    "proPhoto": "$75",
     "notes": ""
   },
   {
-    "id": "guest-6",
-    "guestName": "GUEST 6",
-    "autograph": "TBD",
-    "selfie": "TBD",
-    "combo": "TBD",
-    "proPhoto": "TBD",
+    "id": "claire-coffee",
+    "guestName": "Claire Coffee",
+    "autograph": "$50",
+    "selfie": "$50",
+    "combo": "$70",
+    "proPhoto": "$75",
+    "notes": ""
+  },
+  {
+    "id": "judith-hoag",
+    "guestName": "Judith Hoag",
+    "autograph": "$50",
+    "selfie": "$40",
+    "combo": "+$30",
+    "proPhoto": "$65",
+    "notes": "Poster $60 • Large item / combo +$30 • Quote +$10 • Authentication certificate +$10 • Video $90 • Card payments add $3 to each table price. Amounts marked + are add-ons."
+  },
+  {
+    "id": "kimberly-j-brown",
+    "guestName": "Kimberly J. Brown",
+    "autograph": "$40",
+    "selfie": "$40",
+    "combo": "$75",
+    "proPhoto": "$65",
+    "notes": "Poster $45 • Large item / combo $80 • Shared table with Daniel Kountz: autograph $65, selfie $60, combo $115, poster $75, large item / combo $125."
+  },
+  {
+    "id": "daniel-kountz",
+    "guestName": "Daniel Kountz",
+    "autograph": "$30",
+    "selfie": "$25",
+    "combo": "$50",
+    "proPhoto": "$55",
+    "notes": "Poster $35 • Large item / combo $55 • Shared table with Kimberly J. Brown: autograph $65, selfie $60, combo $115, poster $75, large item / combo $125."
+  },
+  {
+    "id": "robin-lord-taylor",
+    "guestName": "Robin Lord Taylor",
+    "autograph": "$40",
+    "selfie": "$40",
+    "combo": "$70",
+    "proPhoto": "$65",
+    "notes": ""
+  },
+  {
+    "id": "david-mazouz",
+    "guestName": "David Mazouz",
+    "autograph": "$40",
+    "selfie": "$40",
+    "combo": "$70",
+    "proPhoto": "$65",
+    "notes": ""
+  },
+  {
+    "id": "donal-logue",
+    "guestName": "Donal Logue",
+    "autograph": "$40",
+    "selfie": "$40",
+    "combo": "$60",
+    "proPhoto": "$65",
+    "notes": ""
+  },
+  {
+    "id": "chris-chalk",
+    "guestName": "Chris Chalk",
+    "autograph": "$50",
+    "selfie": "$40",
+    "combo": "$80",
+    "proPhoto": "$65",
+    "notes": "Poster $60 • Large item / combo $90"
+  },
+  {
+    "id": "rachelle-lefevre",
+    "guestName": "Rachelle Lefevre",
+    "autograph": "$50",
+    "selfie": "$50",
+    "combo": "$70",
+    "proPhoto": "$75",
+    "notes": ""
+  },
+  {
+    "id": "mike-vogel",
+    "guestName": "Mike Vogel",
+    "autograph": "$40",
+    "selfie": "$40",
+    "combo": "$60",
+    "proPhoto": "$65",
     "notes": ""
   }
 ]
