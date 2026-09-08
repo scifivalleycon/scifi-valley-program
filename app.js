@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.90";
+const APP_BUILD_VERSION="4.93";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2005,6 +2005,31 @@ function guestPhoto(g, cls="guest-photo"){
     : `<div class="${cls==="guest-photo"?"guest-placeholder":"modal-photo-placeholder"}">${g.name}</div>`;
 }
 
+
+function guestPriceRecord(g){
+  const key=value=>String(value||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+  return state.celebrityPricing.find(p=>p.id===g.id||key(p.guestName)===key(g.name));
+}
+function guestPricesHtml(g,includeNotes=false){
+  const p=guestPriceRecord(g);
+  if(!p)return g.photoOp?'<div class="price-row"><span class="price">PHOTO OP '+escapeAppHtml(g.photoOp)+'</span></div>':"";
+  const fields=[["AUTOGRAPH",p.autograph],["SELFIE",p.selfie],["COMBO",p.combo],["PHOTO OP",p.proPhoto]];
+  return '<div class="guest-price-grid">'+fields.map(([label,value])=>'<div><small>'+label+'</small><strong>'+escapeAppHtml(value||"TBD")+'</strong></div>').join("")+'</div>'+
+    (includeNotes&&p.notes?'<p class="price-note">'+escapeAppHtml(p.notes)+'</p>':"");
+}
+function panelScheduleButtonHtml(event){
+  if(event.id!=="guest-panels"||state.celebrityInfo.panelScheduleButtonVisible===false)return "";
+  return '<button type="button" class="primary-action" data-open-panel-schedule>'+escapeAppHtml(state.celebrityInfo.panelScheduleButtonLabel||"VIEW PANEL SCHEDULE")+' ›</button>';
+}
+document.addEventListener("click",event=>{
+  if(!event.target.closest?.("[data-open-panel-schedule]"))return;
+  event.preventDefault();
+  closeEventDetails();
+  state.celebrityTab="panels";
+  renderCelebrityGuide();
+  goTo("celebrity");
+});
+
 function renderGuests(){
   const q=document.getElementById("guestSearch").value.trim().toLowerCase();
   const matches=state.guests.filter(g=>{
@@ -2021,7 +2046,7 @@ function renderGuests(){
           <button class="favorite ${state.favorites.has(g.id)?"saved":""}" data-favorite="${g.id}" aria-label="Save ${g.name}">${state.favorites.has(g.id)?"♥":"♡"}</button>
         </div>
         <div class="guest-sub">${g.character||""}<br>${g.knownFor}</div>
-        <div class="price-row">${g.photoOp?`<span class="price">PHOTO OP ${g.photoOp}</span>`:""}<span class="price">FULL BIO</span></div>
+        ${guestPricesHtml(g,true)}
         <button class="guest-open" data-open-guest="${g.id}">VIEW GUEST DETAILS ›</button>
       </div>
     </article>`).join("") || `<div class="paper-panel muted-empty">No guests match that search.</div>`;
@@ -2059,15 +2084,16 @@ function openGuest(id){
   // V4.73: the event-level Photo Op Store URL from Admin is authoritative.
   // Guest records may still contain legacy photoShop values from older builds,
   // but those must not pin a celebrity to a previous event's checkout page.
+  const currentPhotoPrice=guestPriceRecord(g)?.proPhoto??g.photoOp;
   const livePhotoShop=String(state.settings.photoShop||PHOTO_SHOP||"").trim();
   const photoAction=livePhotoShop
-    ?`<a class="full-action" href="${escapeAppHtml(livePhotoShop)}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${g.photoOp?` • ${g.photoOp}`:""} ↗</a>`
+    ?`<a class="full-action" href="${escapeAppHtml(livePhotoShop)}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${currentPhotoPrice?` • ${escapeAppHtml(currentPhotoPrice)}`:""} ↗</a>`
     :`<span class="full-action photo-shop-unavailable" aria-disabled="true">PHOTO OP STORE LINK COMING SOON</span>`;
   document.getElementById("guestModalContent").innerHTML=`
     <div class="modal-inner">
       <div class="modal-hero">
         ${guestPhoto(g,"modal-guest-photo").replace('class="modal-guest-photo"','class="modal-guest-photo"')}
-        <div><span class="tag">${g.group.toUpperCase()}</span><h2>${g.name.toUpperCase()}</h2><div class="modal-known">${g.character||""}<br><b>Known for:</b> ${g.knownFor}</div>${g.photoOp?`<div class="price-row"><span class="price">PRO PHOTO OP ${g.photoOp}</span></div>`:""}</div>
+        <div><span class="tag">${g.group.toUpperCase()}</span><h2>${g.name.toUpperCase()}</h2><div class="modal-known">${g.character||""}<br><b>Known for:</b> ${g.knownFor}</div>${guestPricesHtml(g,true)}</div>
       </div>
       <div class="modal-bio">${g.bio}</div>
       <div class="modal-actions">${external}<a class="primary-action" href="https://scifivalleycon.com/celebrity-guests" target="_blank" rel="noopener">OFFICIAL GUEST PAGE ↗</a>${photoAction}</div>
@@ -2458,6 +2484,9 @@ function renderDayFilters(){
 }
 
 function renderScheduleCategoryFilters(){
+  const info=state.celebrityInfo||{};
+  document.getElementById("showAllScheduleCategories").textContent=info.scheduleShowAllLabel||"SHOW ALL";
+  document.getElementById("hideAllScheduleCategories").textContent=info.scheduleHideAllLabel||"HIDE ALL";
   const container=document.getElementById("scheduleCategoryFilters");
   if(!container)return;
   const categories=scheduleCategoriesForDay(state.dayFilter);
@@ -3709,7 +3738,7 @@ function openEventDetails(eventId){
         </div>
       </div>
       <div class="event-modal-body event-content">
-        ${(event.content||[]).map(renderBlock).join("")}
+        ${(event.content||[]).map(renderBlock).join("")}${panelScheduleButtonHtml(event)}
       </div>
     </div>`;
 
@@ -3736,7 +3765,7 @@ function renderEvents(){
           <span class="event-arrow">›</span>
         </div>
       </summary>
-      <div class="event-content">${e.content.map(renderBlock).join("")}</div>
+      <div class="event-content">${e.content.map(renderBlock).join("")}${panelScheduleButtonHtml(e)}</div>
     </details>`).join("") || `<div class="paper-panel muted-empty">No program information matches that search.</div>`;
 }
 
@@ -5214,6 +5243,12 @@ function renderAll(){
 }
 document.getElementById("guestSearch").addEventListener("input",renderGuests);
 document.getElementById("eventSearch").addEventListener("input",renderEvents);
+document.getElementById("hideAllScheduleCategories")?.addEventListener("click",()=>{
+  showScheduleItems().map(primaryScheduleCategory).forEach(category=>state.scheduleHiddenCategories.add(category));
+  localStorage.setItem("sfvc-schedule-hidden-categories",JSON.stringify([...state.scheduleHiddenCategories]));
+  renderScheduleCategoryFilters();
+  renderSchedule();
+});
 document.getElementById("showAllScheduleCategories")?.addEventListener("click",()=>{
   state.scheduleHiddenCategories.clear();
   localStorage.setItem("sfvc-schedule-hidden-categories","[]");
