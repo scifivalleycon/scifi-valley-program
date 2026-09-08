@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.98";
+const APP_BUILD_VERSION="4.99";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -4332,6 +4332,7 @@ const REPORT_CATEGORY_INFO={
   medical:{label:"Medical Concern",guidance:"Do not wait for an app response when urgent medical help is needed. Call 911 when appropriate and alert the Front Admissions / Staff Area immediately."},
   ai:{label:"Vendor AI-Policy Violation",guidance:"Tell us which vendor or artist is involved, the table/booth number if known, and attach clear product/display photos when safe to do so."},
   accessibility:{label:"Accessibility Concern",guidance:"Tell us the location and what access or accommodation problem you encountered."},
+  appbug:{label:"App Bug / Technical Issue",guidance:"Tell us what you were trying to do, what went wrong, and which page or feature was affected. A screenshot or short screen recording can help us diagnose the problem."},
   other:{label:"Other Concern",guidance:"Describe the issue and include the location or people involved when that information is useful."}
 };
 
