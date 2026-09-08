@@ -5964,3 +5964,9 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
   max-width:720px;margin:0 auto;color:var(--paper2);font-size:17px;line-height:1.6;
   white-space:pre-wrap;overflow-wrap:anywhere;
 }
+
+
+/* My Con changes stay visible beside the attendee's current saved details. */
+.mycon-change{display:block;margin-top:.65rem;padding:.7rem .85rem;background:#ffe08a;color:#38251e;border:2px solid #ad4b28;border-left-width:6px;border-radius:8px;font-family:var(--body-font,system-ui,sans-serif);font-size:.9rem;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+#myConSetupModal [hidden]{display:none!important}
+#myConSetupModal{max-height:85dvh;overflow-y:auto}
