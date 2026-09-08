@@ -7,9 +7,9 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.97">
-  <link rel="stylesheet" href="home-layout.css?v=4.97">
-  <link rel="stylesheet" href="event-guide-layout.css?v=4.97">
+  <link rel="stylesheet" href="styles.css?v=4.98">
+  <link rel="stylesheet" href="home-layout.css?v=4.98">
+  <link rel="stylesheet" href="event-guide-layout.css?v=4.98">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -1439,6 +1439,23 @@
   
 
 
+  <dialog id="myConSetupModal" class="push-prompt-modal" aria-labelledby="myConSetupTitle" aria-describedby="myConSetupStatus">
+    <div class="push-prompt-card">
+      <button id="myConSetupClose" class="push-prompt-close" type="button" aria-label="Close My Con setup">×</button>
+      <div class="push-prompt-bell" aria-hidden="true">♥</div>
+      <span class="push-optin-kicker">SAVED TO MY CON</span>
+      <h2 id="myConSetupTitle">KEEP UP WITH YOUR FAVORITES</h2>
+      <p>Register this app and enable notifications for changes to your saved guests and schedule.</p>
+      <p id="myConSetupStatus" role="status"></p>
+      <div class="push-prompt-actions">
+        <button id="myConRegisterButton" class="push-optin-primary" type="button">REGISTER MY APP</button>
+        <button id="myConEnableButton" class="push-optin-primary" type="button">ENABLE NOTIFICATIONS</button>
+        <button id="myConSetupLater" class="push-optin-secondary" type="button">NOT NOW</button>
+      </div>
+      <small>Your selections are saved even if you choose Not Now. You can manage notifications in Settings.</small>
+    </div>
+  </dialog>
+
   <dialog id="pushPromptModal" class="push-prompt-modal">
     <div class="push-prompt-card">
       <button id="closePushPromptModal" class="push-prompt-close" type="button" data-font-scale="locked" aria-label="Close notification prompt">×</button>
@@ -1520,9 +1537,10 @@
 
   <script src="event-guide-ui.js?v=4.82"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.97"></script>
-  <script src="home-layout.js?v=4.97"></script>
-  <script src="event-guide-layout.js?v=4.97"></script>
+  <script src="app.js?v=4.98"></script>
+  <script src="home-layout.js?v=4.98"></script>
+  <script src="event-guide-layout.js?v=4.98"></script>
 </body>
 </html>
+
 
