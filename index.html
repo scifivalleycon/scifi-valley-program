@@ -7,9 +7,9 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=4.98">
-  <link rel="stylesheet" href="home-layout.css?v=4.98">
-  <link rel="stylesheet" href="event-guide-layout.css?v=4.98">
+  <link rel="stylesheet" href="styles.css?v=4.99">
+  <link rel="stylesheet" href="home-layout.css?v=4.99">
+  <link rel="stylesheet" href="event-guide-layout.css?v=4.99">
   <title>Sci-Fi Valley Con | Digital Program</title>
 </head>
 <body>
@@ -59,7 +59,7 @@
         <div class="utility-tool-copy">
           <span>SAFETY & ATTENDEE SUPPORT</span>
           <strong>SEE SOMETHING? SAY SOMETHING.</strong>
-          <small>Report venue problems, safety concerns, harassment, medical concerns, vendor AI-policy violations and other issues to convention staff.</small>
+          <small>Report venue problems, safety concerns, harassment, medical concerns, vendor AI-policy violations, app bugs, and other issues to convention staff.</small>
         </div>
         <button class="utility-report-button" type="button" data-utility-go="report">
           <span aria-hidden="true">!</span>
@@ -228,7 +228,7 @@
         <span>
           <small>ATTENDEE SAFETY & SUPPORT</small>
           <strong>SEE SOMETHING? SAY SOMETHING.</strong>
-          <em>Report a concern, request staff help, or report a vendor AI-policy violation.</em>
+          <em>Report a concern, request staff help, flag an AI-policy violation, or tell us about an app bug.</em>
         </span>
         <b>›</b>
       </button>
@@ -660,7 +660,7 @@
       <div class="page-title poster-title reporter-title">
         <p class="kicker">ATTENDEE SAFETY & SUPPORT</p>
         <h1>SEE SOMETHING? <span>SAY SOMETHING.</span></h1>
-        <p>Use the Attendee Reporter to tell Sci-Fi Valley Con staff about problems, concerns, safety issues, harassment, medical concerns, or vendor AI-policy violations.</p>
+        <p>Use the Attendee Reporter to tell Sci-Fi Valley Con staff about problems, concerns, safety issues, harassment, medical concerns, vendor AI-policy violations, or app bugs.</p>
       </div>
 
       <section class="report-emergency-banner">
@@ -692,6 +692,7 @@
             <label class="report-category-card medical"><input type="radio" name="reportCategory" value="medical"><span class="report-category-icon">+</span><span><b>MEDICAL CONCERN</b><small>Someone appears ill, injured, overheated, faint, or may need medical attention.</small></span></label>
             <label class="report-category-card ai"><input type="radio" name="reportCategory" value="ai"><span class="report-category-icon">AI</span><span><b>VENDOR AI-POLICY VIOLATION</b><small>Report suspected generative-AI products, artwork, or vendor marketing.</small></span></label>
             <label class="report-category-card access"><input type="radio" name="reportCategory" value="accessibility"><span class="report-category-icon">A</span><span><b>ACCESSIBILITY CONCERN</b><small>Blocked access, mobility issue, accommodation concern, or another accessibility problem.</small></span></label>
+            <label class="report-category-card app-bug"><input type="radio" name="reportCategory" value="appbug"><span class="report-category-icon">BUG</span><span><b>APP BUG / TECHNICAL ISSUE</b><small>Report a broken feature, display problem, notification issue, or other app malfunction.</small></span></label>
             <label class="report-category-card other"><input type="radio" name="reportCategory" value="other"><span class="report-category-icon">?</span><span><b>OTHER CONCERN</b><small>Anything else convention staff should know about.</small></span></label>
           </div>
           <p id="reportCategoryGuidance" class="report-category-guidance">Select the option that best matches what you need to report.</p>
@@ -730,8 +731,8 @@
         </section>
 
         <section class="paper-panel report-form-section">
-          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH PHOTOS</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
-          <p class="report-photo-note">You may attach up to 3 images. Photos are especially useful for venue problems and AI-policy reports. <b>Do not photograph a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
+          <div class="section-heading"><div><span class="section-kicker">OPTIONAL EVIDENCE</span><h2>ATTACH EVIDENCE</h2></div><span id="reportUploadAvailability" class="pill">CHECKING…</span></div>
+          <p class="report-photo-note">You may attach up to 3 evidence files. Photos or screen recordings are especially useful for venue problems, AI-policy reports, and app bugs. <b>Do not photograph a medical emergency, restroom/changing area, or a person in a private or vulnerable situation.</b></p>
           <input id="reportImages" class="report-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,video/mp4,video/quicktime,video/webm" multiple>
           <label class="report-file-picker" for="reportImages"><span>＋</span><strong>ADD PHOTO / VIDEO EVIDENCE</strong><small>Photos max 5 MB • one video max 20 MB • max 3 evidence files total</small></label>
           <div id="reportImagePreview" class="report-image-preview"></div>
@@ -802,7 +803,7 @@
 
       <button class="settings-menu-card reporter-menu-card" data-go="report">
         <span class="settings-menu-icon reporter-menu-icon" data-font-scale="locked" aria-hidden="true">!</span>
-        <span><strong>ATTENDEE REPORTER</strong><small>Safety, venue issues, staff assistance, harassment, medical concerns & AI-policy reports</small></span>
+        <span><strong>ATTENDEE REPORTER</strong><small>Safety, venue issues, staff assistance, harassment, medical concerns, AI-policy reports & app bugs</small></span>
         <b>›</b>
       </button>
 
@@ -1537,9 +1538,9 @@
 
   <script src="event-guide-ui.js?v=4.82"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=4.98"></script>
-  <script src="home-layout.js?v=4.98"></script>
-  <script src="event-guide-layout.js?v=4.98"></script>
+  <script src="app.js?v=4.99"></script>
+  <script src="home-layout.js?v=4.99"></script>
+  <script src="event-guide-layout.js?v=4.99"></script>
 </body>
 </html>
 
