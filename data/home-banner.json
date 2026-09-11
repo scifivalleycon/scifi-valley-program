@@ -2,12 +2,12 @@
   {
     "id": "home-guest-banner",
     "enabled": true,
-    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6a85cdbd5a0e4c58b8bff28a_Website%20Slider%20Guest%20Banner%2010-2026%20(8-19-26)%20(1).avif",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6aa432d5ed196e476e315b7d_Website%20Slider%20Guest%20Banner%2010-2026%20(8-19-26)%20(1).avif",
     "alt": "Sci-Fi Valley Con October 2026 celebrity guest banner",
     "linkTarget": "guests",
     "autoUpdate": true,
     "sourceUrl": "https://scifivalleycon.com/",
     "sourceMode": "website-auto",
-    "sourceUpdatedAt": "2026-08-19T15:41:09.967Z"
+    "sourceUpdatedAt": "2026-09-11T16:58:30.289Z"
   }
 ]
