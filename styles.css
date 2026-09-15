@@ -5891,6 +5891,33 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
   .cosplay-clinic-copy p{font-size:10px}
 }
 
+.map-directory-copy .sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}
+.map-directory-photos{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:7px;
+}
+.map-directory-photos img{
+  display:block;
+  flex:0 0 40px;
+  width:40px;
+  height:40px;
+  object-fit:cover;
+  border:1px solid var(--ink);
+  border-radius:4px;
+  background:var(--paper);
+}
 .map-vendor-photos{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(86px,1fr));
