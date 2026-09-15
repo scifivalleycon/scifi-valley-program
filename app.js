@@ -5010,6 +5010,11 @@ function bindMapVendorPhotoLightboxes(scope){
     });
   });
 }
+function mapVendorDirectoryThumbnails(vendor){
+  const photos=Array.isArray(vendor?.photos)?vendor.photos.filter(photo=>photo&&typeof photo.url==="string"&&photo.url.trim()).slice(0,5):[];
+  if(!photos.length)return "";
+  return `<span class="map-directory-photos" aria-hidden="true">${photos.map(photo=>`<img src="${escapeAppHtml(photo.url)}" alt="" width="40" height="40" loading="lazy" decoding="async">`).join("")}</span><span class="sr-only">${photos.length} vendor photo${photos.length===1?"":"s"} available.</span>`;
+}
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase();
   if(!q)return true;
@@ -5019,7 +5024,7 @@ function renderMapDirectory(){
   const list=document.getElementById('mapDirectoryList'),count=document.getElementById('mapDirectoryCount'),notice=document.getElementById('mapDirectoryNotice');if(!list||!count)return;
   if(!mapDirectoryVisible()){list.innerHTML='';count.textContent='DRAFT';notice?.classList.remove('hidden');if(notice)notice.textContent='Vendor and table assignments are still being finalized. The vector floor plan can be published separately from the vendor directory.';return;}
   notice?.classList.add('hidden');const rows=state.vendors.filter(mapVendorMatches).sort((a,b)=>String(a.location).localeCompare(String(b.location),undefined,{numeric:true}));count.textContent=String(rows.length);
-  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.description?` • ${escapeAppHtml(v.description)}`:v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small></span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>DETAILS + LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search.</div>`;
+  list.innerHTML=rows.map(v=>`<button class="map-directory-card ${state.mapSelectedVendorId===v.id?'selected-vendor':''}" data-map-vendor="${escapeAppHtml(v.id)}"><span class="map-directory-location">${escapeAppHtml(v.location)}</span><span class="map-directory-copy"><strong>${escapeAppHtml(v.name)}</strong><small>${escapeAppHtml(v.area||"")}${v.description?` • ${escapeAppHtml(v.description)}`:v.categories?` • ${escapeAppHtml(v.categories)}`:""}</small>${mapVendorDirectoryThumbnails(v)}</span>${v.conQuest?'<span class="map-directory-cq">CQ</span>':''}<b>DETAILS + LOCATE ›</b></button>`).join('')||`<div class="paper-panel muted-empty">No vendors match this search.</div>`;
   list.querySelectorAll('[data-map-vendor]').forEach(btn=>btn.addEventListener('click',()=>{const v=state.vendors.find(x=>x.id===btn.dataset.mapVendor);if(v)selectVendorOnMap(v,{openInfo:true})}));
 }
 function hideVendorMapPointer(){
