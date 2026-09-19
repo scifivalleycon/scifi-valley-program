@@ -179,7 +179,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/98/47/38/6c6b06d7-a4a1-4b19-85f5-44ef9ac14086.jpeg",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K13"
+    "mapLocation": "K13",
+    "instagram": "https://www.instagram.com/realmikevogel/"
   },
   {
     "id": "malcolm-kelner",
@@ -219,7 +220,8 @@
     "instagram": "https://www.instagram.com/wildefellwolves/",
     "photo": "https://cdn.prod.website-files.com/619e7b191607b360d5afaaf0/68bc21a7dc33c480c1616152_68bc2114f6f8831e1797246e_Wildefell%20Wolves.avif",
     "photoOp": "",
-    "photoShop": ""
+    "photoShop": "",
+    "imdb": ""
   },
   {
     "id": "samurai-jill",
