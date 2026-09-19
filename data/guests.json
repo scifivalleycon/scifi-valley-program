@@ -49,7 +49,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/49/78/39/8f1c6fd8-eab1-4075-9d96-484ea1824b92.jpeg",
     "photoOp": "$75",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K2"
+    "mapLocation": "K2",
+    "instagram": ""
   },
   {
     "id": "claire-coffee",
@@ -62,7 +63,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/84/94/74/df3c1bf9-d15f-404d-ad27-b1fabd5d35fe.jpeg",
     "photoOp": "$75",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K1"
+    "mapLocation": "K1",
+    "instagram": "https://www.instagram.com/clairecoffee/"
   },
   {
     "id": "judith-hoag",
