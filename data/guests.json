@@ -88,7 +88,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/83/33/1/85c5b2a3-807b-42ec-b06d-a577903452b6.jpeg",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K11"
+    "mapLocation": "K11",
+    "instagram": ""
   },
   {
     "id": "daniel-kountz",
@@ -101,7 +102,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/39/89/39/c95094a4-3c45-434e-b3f4-780c4a836c04.jpeg",
     "photoOp": "$55",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K12"
+    "mapLocation": "K12",
+    "instagram": "https://www.instagram.com/danielkountz/"
   },
   {
     "id": "robin-lord-taylor",
