@@ -2,8 +2,8 @@
   {
     "id": "group-grimm-group-reunion",
     "title": "Grimm Group Reunion",
-    "participants": "David Giuntoli / Silas Weir Mitchell / Bree Turner / Sasha Roiz / Reggie Lee / Claire Coffee",
-    "price": "$385",
+    "participants": "David Giuntoli / Silas Weir Mitchell / Bree Turner / Reggie Lee / Claire Coffee",
+    "price": "TBD",
     "notes": "Available Friday, Saturday, and Sunday."
   },
   {
@@ -39,6 +39,13 @@
     "title": "Under the Dome Duo",
     "participants": "Rachelle Lefevre / Mike Vogel",
     "price": "$125",
+    "notes": "Available Friday, Saturday, and Sunday."
+  },
+  {
+    "id": "group-obsession-duo",
+    "title": "Obsession Duo",
+    "participants": "Malcolm Kelner / Haley Fitzgerald",
+    "price": "$95",
     "notes": "Available Friday, Saturday, and Sunday."
   }
 ]

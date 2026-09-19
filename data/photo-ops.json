@@ -1,8 +1,16 @@
 [
   {
-    "id": "photo-friday-chris-chalk",
+    "id": "photo-friday-donal-logue",
     "day": "Friday",
     "time": "3:00 PM",
+    "title": "Donal Logue",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-friday-chris-chalk",
+    "day": "Friday",
+    "time": "3:05 PM",
     "title": "Chris Chalk",
     "type": "Solo",
     "notes": ""
@@ -18,7 +26,7 @@
   {
     "id": "photo-friday-robin-lord-taylor",
     "day": "Friday",
-    "time": "3:20 PM",
+    "time": "3:30 PM",
     "title": "Robin Lord Taylor",
     "type": "Solo",
     "notes": ""
@@ -26,23 +34,39 @@
   {
     "id": "photo-friday-david-mazouz",
     "day": "Friday",
-    "time": "3:30 PM",
+    "time": "3:35 PM",
     "title": "David Mazouz",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-friday-donal-logue",
+    "id": "photo-friday-malcolm-kelner",
     "day": "Friday",
-    "time": "3:40 PM",
-    "title": "Donal Logue",
+    "time": "3:45 PM",
+    "title": "Malcolm Kelner",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-friday-obsession-duo",
+    "day": "Friday",
+    "time": "3:50 PM",
+    "title": "Obsession Duo",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-friday-haley-fitzgerald",
+    "day": "Friday",
+    "time": "3:55 PM",
+    "title": "Haley Fitzgerald",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-friday-rachelle-lefevre",
     "day": "Friday",
-    "time": "3:50 PM",
+    "time": "4:00 PM",
     "title": "Rachelle Lefevre",
     "type": "Solo",
     "notes": ""
@@ -50,9 +74,9 @@
   {
     "id": "photo-friday-under-the-dome-duo",
     "day": "Friday",
-    "time": "4:00 PM",
+    "time": "4:05 PM",
     "title": "Under the Dome Duo",
-    "type": "Duo",
+    "type": "Group",
     "notes": ""
   },
   {
@@ -64,9 +88,17 @@
     "notes": ""
   },
   {
+    "id": "photo-friday-daniel-kountz",
+    "day": "Friday",
+    "time": "4:15 PM",
+    "title": "Daniel Kountz",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
     "id": "photo-friday-kimberly-j-brown",
     "day": "Friday",
-    "time": "4:20 PM",
+    "time": "4:30 PM",
     "title": "Kimberly J. Brown",
     "type": "Solo",
     "notes": ""
@@ -74,39 +106,31 @@
   {
     "id": "photo-friday-halloweentown-couple-duo",
     "day": "Friday",
-    "time": "4:30 PM",
+    "time": "4:35 PM",
     "title": "Halloweentown Couple Duo",
-    "type": "Duo",
-    "notes": ""
-  },
-  {
-    "id": "photo-friday-daniel-kountz",
-    "day": "Friday",
-    "time": "4:40 PM",
-    "title": "Daniel Kountz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-friday-halloweentown-mom-and-daughter-duo",
-    "day": "Friday",
-    "time": "4:50 PM",
-    "title": "Halloweentown Mom & Daughter Duo",
-    "type": "Duo",
+    "type": "Group",
     "notes": ""
   },
   {
     "id": "photo-friday-halloweentown-reunion-trio",
     "day": "Friday",
-    "time": "5:00 PM",
+    "time": "4:40 PM",
     "title": "Halloweentown Reunion Trio",
-    "type": "Trio",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-friday-halloweentown-mom-and-daughter-duo",
+    "day": "Friday",
+    "time": "4:45 PM",
+    "title": "Halloweentown Mom & Daughter Duo",
+    "type": "Group",
     "notes": ""
   },
   {
     "id": "photo-friday-judith-hoag",
     "day": "Friday",
-    "time": "5:10 PM",
+    "time": "4:50 PM",
     "title": "Judith Hoag",
     "type": "Solo",
     "notes": ""
@@ -114,7 +138,7 @@
   {
     "id": "photo-friday-david-giuntoli",
     "day": "Friday",
-    "time": "5:20 PM",
+    "time": "6:00 PM",
     "title": "David Giuntoli",
     "type": "Solo",
     "notes": ""
@@ -122,7 +146,7 @@
   {
     "id": "photo-friday-grimm-group-reunion",
     "day": "Friday",
-    "time": "5:30 PM",
+    "time": "6:05 PM",
     "title": "Grimm Group Reunion",
     "type": "Group",
     "notes": ""
@@ -130,47 +154,71 @@
   {
     "id": "photo-friday-silas-weir-mitchell",
     "day": "Friday",
-    "time": "5:40 PM",
-    "title": "Silas Weir Mitchell",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-friday-bree-turner",
-    "day": "Friday",
-    "time": "5:50 PM",
-    "title": "Bree Turner",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-friday-sasha-roiz",
-    "day": "Friday",
-    "time": "6:00 PM",
-    "title": "Sasha Roiz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-friday-reggie-lee",
-    "day": "Friday",
     "time": "6:10 PM",
-    "title": "Reggie Lee",
+    "title": "Silas Weir Mitchell",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-friday-claire-coffee",
     "day": "Friday",
-    "time": "6:20 PM",
+    "time": "6:15 PM",
     "title": "Claire Coffee",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-friday-reggie-lee",
+    "day": "Friday",
+    "time": "6:20 PM",
+    "title": "Reggie Lee",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-friday-bree-turner",
+    "day": "Friday",
+    "time": "6:25 PM",
+    "title": "Bree Turner",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-malcolm-kelner",
+    "day": "Saturday",
+    "time": "12:30 PM",
+    "title": "Malcolm Kelner",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-obsession-duo",
+    "day": "Saturday",
+    "time": "12:35 PM",
+    "title": "Obsession Duo",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-haley-fitzgerald",
+    "day": "Saturday",
+    "time": "12:40 PM",
+    "title": "Haley Fitzgerald",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-daniel-kountz",
+    "day": "Saturday",
+    "time": "12:50 PM",
+    "title": "Daniel Kountz",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-saturday-kimberly-j-brown",
     "day": "Saturday",
-    "time": "11:00 AM",
+    "time": "12:55 PM",
     "title": "Kimberly J. Brown",
     "type": "Solo",
     "notes": ""
@@ -178,39 +226,31 @@
   {
     "id": "photo-saturday-halloweentown-couple-duo",
     "day": "Saturday",
-    "time": "11:20 AM",
+    "time": "1:00 PM",
     "title": "Halloweentown Couple Duo",
-    "type": "Duo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-daniel-kountz",
-    "day": "Saturday",
-    "time": "11:40 AM",
-    "title": "Daniel Kountz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-halloweentown-mom-and-daughter-duo",
-    "day": "Saturday",
-    "time": "12:00 PM",
-    "title": "Halloweentown Mom & Daughter Duo",
-    "type": "Duo",
+    "type": "Group",
     "notes": ""
   },
   {
     "id": "photo-saturday-halloweentown-reunion-trio",
     "day": "Saturday",
-    "time": "12:20 PM",
+    "time": "1:05 PM",
     "title": "Halloweentown Reunion Trio",
-    "type": "Trio",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-halloweentown-mom-and-daughter-duo",
+    "day": "Saturday",
+    "time": "1:10 PM",
+    "title": "Halloweentown Mom & Daughter Duo",
+    "type": "Group",
     "notes": ""
   },
   {
     "id": "photo-saturday-judith-hoag",
     "day": "Saturday",
-    "time": "12:40 PM",
+    "time": "1:15 PM",
     "title": "Judith Hoag",
     "type": "Solo",
     "notes": ""
@@ -218,7 +258,7 @@
   {
     "id": "photo-saturday-rachelle-lefevre",
     "day": "Saturday",
-    "time": "1:00 PM",
+    "time": "1:30 PM",
     "title": "Rachelle Lefevre",
     "type": "Solo",
     "notes": ""
@@ -226,9 +266,9 @@
   {
     "id": "photo-saturday-under-the-dome-duo",
     "day": "Saturday",
-    "time": "1:20 PM",
+    "time": "1:35 PM",
     "title": "Under the Dome Duo",
-    "type": "Duo",
+    "type": "Group",
     "notes": ""
   },
   {
@@ -240,89 +280,9 @@
     "notes": ""
   },
   {
-    "id": "photo-saturday-robin-lord-taylor",
-    "day": "Saturday",
-    "time": "2:00 PM",
-    "title": "Robin Lord Taylor",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-gotham-group-reunion",
-    "day": "Saturday",
-    "time": "2:20 PM",
-    "title": "Gotham Group Reunion",
-    "type": "Group",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-david-mazouz",
-    "day": "Saturday",
-    "time": "2:40 PM",
-    "title": "David Mazouz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-donal-logue",
-    "day": "Saturday",
-    "time": "3:00 PM",
-    "title": "Donal Logue",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-chris-chalk",
-    "day": "Saturday",
-    "time": "3:20 PM",
-    "title": "Chris Chalk",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-david-giuntoli",
-    "day": "Saturday",
-    "time": "3:40 PM",
-    "title": "David Giuntoli",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-grimm-group-reunion",
-    "day": "Saturday",
-    "time": "4:00 PM",
-    "title": "Grimm Group Reunion",
-    "type": "Group",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-silas-weir-mitchell",
-    "day": "Saturday",
-    "time": "4:20 PM",
-    "title": "Silas Weir Mitchell",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-bree-turner",
-    "day": "Saturday",
-    "time": "4:40 PM",
-    "title": "Bree Turner",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-saturday-sasha-roiz",
-    "day": "Saturday",
-    "time": "5:00 PM",
-    "title": "Sasha Roiz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
     "id": "photo-saturday-reggie-lee",
     "day": "Saturday",
-    "time": "5:20 PM",
+    "time": "2:40 PM",
     "title": "Reggie Lee",
     "type": "Solo",
     "notes": ""
@@ -330,71 +290,87 @@
   {
     "id": "photo-saturday-claire-coffee",
     "day": "Saturday",
-    "time": "5:40 PM",
+    "time": "2:45 PM",
     "title": "Claire Coffee",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-david-giuntoli",
-    "day": "Sunday",
-    "time": "11:00 AM",
-    "title": "David Giuntoli",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-sunday-grimm-group-reunion",
-    "day": "Sunday",
-    "time": "11:10 AM",
+    "id": "photo-saturday-grimm-group-reunion",
+    "day": "Saturday",
+    "time": "2:50 PM",
     "title": "Grimm Group Reunion",
     "type": "Group",
     "notes": ""
   },
   {
-    "id": "photo-sunday-silas-weir-mitchell",
-    "day": "Sunday",
-    "time": "11:20 AM",
+    "id": "photo-saturday-david-giuntoli",
+    "day": "Saturday",
+    "time": "3:00 PM",
+    "title": "David Giuntoli",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-silas-weir-mitchell",
+    "day": "Saturday",
+    "time": "3:05 PM",
     "title": "Silas Weir Mitchell",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-bree-turner",
-    "day": "Sunday",
-    "time": "11:30 AM",
+    "id": "photo-saturday-bree-turner",
+    "day": "Saturday",
+    "time": "3:10 PM",
     "title": "Bree Turner",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-sasha-roiz",
-    "day": "Sunday",
-    "time": "11:40 AM",
-    "title": "Sasha Roiz",
+    "id": "photo-saturday-donal-logue",
+    "day": "Saturday",
+    "time": "3:30 PM",
+    "title": "Donal Logue",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-reggie-lee",
-    "day": "Sunday",
-    "time": "11:50 AM",
-    "title": "Reggie Lee",
+    "id": "photo-saturday-david-mazouz",
+    "day": "Saturday",
+    "time": "3:35 PM",
+    "title": "David Mazouz",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-claire-coffee",
-    "day": "Sunday",
-    "time": "12:00 PM",
-    "title": "Claire Coffee",
+    "id": "photo-saturday-gotham-group-reunion",
+    "day": "Saturday",
+    "time": "3:40 PM",
+    "title": "Gotham Group Reunion",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-robin-lord-taylor",
+    "day": "Saturday",
+    "time": "3:50 PM",
+    "title": "Robin Lord Taylor",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-saturday-chris-chalk",
+    "day": "Saturday",
+    "time": "4:00 PM",
+    "title": "Chris Chalk",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-sunday-rachelle-lefevre",
     "day": "Sunday",
-    "time": "12:10 PM",
+    "time": "11:00 AM",
     "title": "Rachelle Lefevre",
     "type": "Solo",
     "notes": ""
@@ -402,79 +378,63 @@
   {
     "id": "photo-sunday-under-the-dome-duo",
     "day": "Sunday",
-    "time": "12:20 PM",
+    "time": "11:05 AM",
     "title": "Under the Dome Duo",
-    "type": "Duo",
+    "type": "Group",
     "notes": ""
   },
   {
     "id": "photo-sunday-mike-vogel",
     "day": "Sunday",
-    "time": "12:30 PM",
+    "time": "11:10 AM",
     "title": "Mike Vogel",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-kimberly-j-brown",
+    "id": "photo-sunday-malcolm-kelner",
     "day": "Sunday",
-    "time": "1:00 PM",
-    "title": "Kimberly J. Brown",
+    "time": "11:15 AM",
+    "title": "Malcolm Kelner",
     "type": "Solo",
     "notes": ""
   },
   {
-    "id": "photo-sunday-halloweentown-couple-duo",
+    "id": "photo-sunday-obsession-duo",
     "day": "Sunday",
-    "time": "1:05 PM",
-    "title": "Halloweentown Couple Duo",
-    "type": "Duo",
+    "time": "11:20 AM",
+    "title": "Obsession Duo",
+    "type": "Group",
     "notes": ""
   },
   {
-    "id": "photo-sunday-daniel-kountz",
+    "id": "photo-sunday-haley-fitzgerald",
     "day": "Sunday",
-    "time": "1:10 PM",
-    "title": "Daniel Kountz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-sunday-halloweentown-mom-and-daughter-duo",
-    "day": "Sunday",
-    "time": "1:15 PM",
-    "title": "Halloweentown Mom & Daughter Duo",
-    "type": "Duo",
-    "notes": ""
-  },
-  {
-    "id": "photo-sunday-halloweentown-reunion-trio",
-    "day": "Sunday",
-    "time": "1:20 PM",
-    "title": "Halloweentown Reunion Trio",
-    "type": "Trio",
-    "notes": ""
-  },
-  {
-    "id": "photo-sunday-judith-hoag",
-    "day": "Sunday",
-    "time": "1:25 PM",
-    "title": "Judith Hoag",
+    "time": "11:25 AM",
+    "title": "Haley Fitzgerald",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-sunday-robin-lord-taylor",
     "day": "Sunday",
-    "time": "2:00 PM",
+    "time": "11:30 AM",
     "title": "Robin Lord Taylor",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-donal-logue",
+    "day": "Sunday",
+    "time": "11:35 AM",
+    "title": "Donal Logue",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-sunday-gotham-group-reunion",
     "day": "Sunday",
-    "time": "2:10 PM",
+    "time": "11:40 AM",
     "title": "Gotham Group Reunion",
     "type": "Group",
     "notes": ""
@@ -482,24 +442,112 @@
   {
     "id": "photo-sunday-david-mazouz",
     "day": "Sunday",
-    "time": "2:20 PM",
+    "time": "11:45 AM",
     "title": "David Mazouz",
-    "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-sunday-donal-logue",
-    "day": "Sunday",
-    "time": "2:30 PM",
-    "title": "Donal Logue",
     "type": "Solo",
     "notes": ""
   },
   {
     "id": "photo-sunday-chris-chalk",
     "day": "Sunday",
-    "time": "2:40 PM",
+    "time": "11:50 AM",
     "title": "Chris Chalk",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-bree-turner",
+    "day": "Sunday",
+    "time": "11:55 AM",
+    "title": "Bree Turner",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-david-giuntoli",
+    "day": "Sunday",
+    "time": "12:00 PM",
+    "title": "David Giuntoli",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-grimm-group-reunion",
+    "day": "Sunday",
+    "time": "12:05 PM",
+    "title": "Grimm Group Reunion",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-reggie-lee",
+    "day": "Sunday",
+    "time": "12:10 PM",
+    "title": "Reggie Lee",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-silas-weir-mitchell",
+    "day": "Sunday",
+    "time": "12:15 PM",
+    "title": "Silas Weir Mitchell",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-claire-coffee",
+    "day": "Sunday",
+    "time": "12:20 PM",
+    "title": "Claire Coffee",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-daniel-kountz",
+    "day": "Sunday",
+    "time": "12:25 PM",
+    "title": "Daniel Kountz",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-kimberly-j-brown",
+    "day": "Sunday",
+    "time": "12:30 PM",
+    "title": "Kimberly J. Brown",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-halloweentown-couple-duo",
+    "day": "Sunday",
+    "time": "12:35 PM",
+    "title": "Halloweentown Couple Duo",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-halloweentown-reunion-trio",
+    "day": "Sunday",
+    "time": "12:40 PM",
+    "title": "Halloweentown Reunion Trio",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-halloweentown-mom-and-daughter-duo",
+    "day": "Sunday",
+    "time": "12:45 PM",
+    "title": "Halloweentown Mom & Daughter Duo",
+    "type": "Group",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-judith-hoag",
+    "day": "Sunday",
+    "time": "12:50 PM",
+    "title": "Judith Hoag",
     "type": "Solo",
     "notes": ""
   }

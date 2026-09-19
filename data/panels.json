@@ -20,14 +20,14 @@
     "description": "Join Judith Hoag for a fan Q&A covering Halloweentown, Teenage Mutant Ninja Turtles, and more."
   },
   {
-    "id": "panel-friday-donal-logue-qanda-panel",
+    "title": "OBSESSION Q&A PANEL",
+    "participants": "Malcolm Kelner / Haley Fitzgerald",
+    "description": "Join Obsession’s Malcolm Kelner and Haley Fitzgerald for behind-the-scenes stories, on-set memories, and audience questions.",
+    "id": "panel-friday-obsession-qanda-panel",
     "day": "Friday",
     "startTime": "7:00 PM",
     "endTime": "8:00 PM",
-    "title": "DONAL LOGUE Q&A PANEL",
-    "location": "PANEL ROOM 1",
-    "participants": "Donal Logue",
-    "description": "Join Donal Logue for a fan Q&A covering Gotham, Grounded for Life, Sons of Anarchy, Vikings, and more."
+    "location": "PANEL ROOM 1"
   },
   {
     "id": "panel-saturday-under-the-dome-qanda-panel",
@@ -46,7 +46,7 @@
     "endTime": "2:30 PM",
     "title": "GRIMM Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "David Giuntoli / Silas Weir Mitchell / Bree Turner / Sasha Roiz / Reggie Lee / Claire Coffee",
+    "participants": "David Giuntoli / Silas Weir Mitchell / Bree Turner / Reggie Lee / Claire Coffee",
     "description": "The Grimm cast reunites for behind-the-scenes stories, favorite memories, and audience questions."
   },
   {
@@ -80,13 +80,13 @@
     "description": "Join Robin Lord Taylor for a fan Q&A covering Gotham, You, The Walking Dead, and more."
   },
   {
-    "id": "panel-sunday-halloweentown-couples-reunion-qanda-panel",
+    "id": "panel-sunday-donal-logue-qanda-panel",
     "day": "Sunday",
     "startTime": "1:30 PM",
     "endTime": "2:30 PM",
-    "title": "HALLOWEENTOWN COUPLES REUNION Q&A PANEL",
+    "title": "DONAL LOGUE Q&A PANEL",
     "location": "PANEL ROOM 1",
-    "participants": "Kimberly J. Brown / Daniel Kountz",
-    "description": "Kimberly J. Brown and Daniel Kountz reunite for Halloweentown memories and audience questions."
+    "participants": "Donal Logue",
+    "description": "Join Donal Logue for a fan Q&A covering Gotham, Grounded for Life, Sons of Anarchy, Vikings, and more."
   }
 ]

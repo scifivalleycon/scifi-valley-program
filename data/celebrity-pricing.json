@@ -27,15 +27,6 @@
     "notes": ""
   },
   {
-    "id": "sasha-roiz",
-    "guestName": "Sasha Roiz",
-    "autograph": "$50",
-    "selfie": "$50",
-    "combo": "$70",
-    "proPhoto": "$75",
-    "notes": ""
-  },
-  {
     "id": "reggie-lee",
     "guestName": "Reggie Lee",
     "autograph": "$50",
@@ -224,6 +215,24 @@
     "selfie": "$40",
     "combo": "$60",
     "proPhoto": "$65",
+    "notes": ""
+  },
+  {
+    "id": "malcolm-kelner",
+    "guestName": "Malcolm Kelner",
+    "autograph": "$30",
+    "selfie": "$30",
+    "combo": "$50",
+    "proPhoto": "$55",
+    "notes": ""
+  },
+  {
+    "id": "haley-fitzgerald",
+    "guestName": "Haley Fitzgerald",
+    "autograph": "$30",
+    "selfie": "$30",
+    "combo": "$50",
+    "proPhoto": "$55",
     "notes": ""
   }
 ]
