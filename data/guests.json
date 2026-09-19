@@ -127,7 +127,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/96/26/96/b0de1312-8525-41f4-b3e8-7f7f61ea22c9.jpeg",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K6"
+    "mapLocation": "K6",
+    "instagram": ""
   },
   {
     "id": "donal-logue",
@@ -140,7 +141,8 @@
     "photo": "https://cdn.prod.website-files.com/619e7b191607b360d5afaaf0/6a85c2085a0e4c58b8b54981_Donal%20Logue.jpg",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K8"
+    "mapLocation": "K8",
+    "instagram": "https://www.instagram.com/donalflogue/"
   },
   {
     "id": "chris-chalk",
