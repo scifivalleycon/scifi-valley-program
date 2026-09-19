@@ -114,7 +114,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/38/82/25/a8e38f61-690a-4180-bbaa-3ae64898aa1d.jpeg",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K7"
+    "mapLocation": "K7",
+    "instagram": ""
   },
   {
     "id": "david-mazouz",
@@ -128,7 +129,7 @@
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
     "mapLocation": "K6",
-    "instagram": ""
+    "instagram": "https://www.instagram.com/davidamazouz/"
   },
   {
     "id": "donal-logue",
