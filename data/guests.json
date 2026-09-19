@@ -9,7 +9,8 @@
     "imdb": "https://www.imdb.com/name/nm1365912/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/76/48/26/c1b192b1-5751-4675-8d7b-62af78969461.jpeg",
     "photoOp": "$105",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K5"
   },
   {
     "id": "silas-weir-mitchell",
@@ -21,7 +22,8 @@
     "imdb": "https://www.imdb.com/name/nm0593734/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/11/17/13/5ae8b1d3-2d7a-42ec-83f8-f06ffd45cb47.jpeg",
     "photoOp": "$85",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K4"
   },
   {
     "id": "bree-turner",
@@ -33,7 +35,8 @@
     "imdb": "https://www.imdb.com/name/nm0877430/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/53/13/62/78baa881-0d3c-43a6-a99e-a520ff1a6343.jpeg",
     "photoOp": "$75",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K3"
   },
   {
     "id": "reggie-lee",
@@ -45,7 +48,8 @@
     "imdb": "https://www.imdb.com/name/nm0498046/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/49/78/39/8f1c6fd8-eab1-4075-9d96-484ea1824b92.jpeg",
     "photoOp": "$75",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K2"
   },
   {
     "id": "claire-coffee",
@@ -57,7 +61,8 @@
     "imdb": "https://www.imdb.com/name/nm1309643",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/84/94/74/df3c1bf9-d15f-404d-ad27-b1fabd5d35fe.jpeg",
     "photoOp": "$75",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K1"
   },
   {
     "id": "judith-hoag",
@@ -69,7 +74,8 @@
     "imdb": "https://www.imdb.com/name/nm0387432/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/30/48/57/b26137fc-a6ea-4739-8b9f-9a2657716310.jpeg",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K10"
   },
   {
     "id": "kimberly-j-brown",
@@ -81,7 +87,8 @@
     "imdb": "https://www.imdb.com/name/nm0004782",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/83/33/1/85c5b2a3-807b-42ec-b06d-a577903452b6.jpeg",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K11"
   },
   {
     "id": "daniel-kountz",
@@ -93,7 +100,8 @@
     "imdb": "https://www.imdb.com/name/nm0468014",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/39/89/39/c95094a4-3c45-434e-b3f4-780c4a836c04.jpeg",
     "photoOp": "$55",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K12"
   },
   {
     "id": "robin-lord-taylor",
@@ -105,7 +113,8 @@
     "imdb": "https://www.imdb.com/name/nm2088699/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/38/82/25/a8e38f61-690a-4180-bbaa-3ae64898aa1d.jpeg",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K7"
   },
   {
     "id": "david-mazouz",
@@ -117,7 +126,8 @@
     "imdb": "https://www.imdb.com/name/nm3458761/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/96/26/96/b0de1312-8525-41f4-b3e8-7f7f61ea22c9.jpeg",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K6"
   },
   {
     "id": "donal-logue",
@@ -129,7 +139,8 @@
     "imdb": "https://www.imdb.com/name/nm0006610/",
     "photo": "https://cdn.prod.website-files.com/619e7b191607b360d5afaaf0/6a85c2085a0e4c58b8b54981_Donal%20Logue.jpg",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K8"
   },
   {
     "id": "chris-chalk",
@@ -141,7 +152,8 @@
     "imdb": "https://www.imdb.com/name/nm1663252/",
     "photo": "https://cdn.prod.website-files.com/619e7b191607b360d5afaaf0/6a7efa91967523917c129f27_Chris_Chalk.webp",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K9"
   },
   {
     "id": "rachelle-lefevre",
@@ -153,7 +165,8 @@
     "imdb": "https://www.imdb.com/name/nm0498956/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/16/62/55/5be50242-b7d2-42b1-92c9-9bb6274d326b.jpeg",
     "photoOp": "$75",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K14"
   },
   {
     "id": "mike-vogel",
@@ -165,7 +178,8 @@
     "imdb": "https://www.imdb.com/name/nm1036181/",
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/98/47/38/6c6b06d7-a4a1-4b19-85f5-44ef9ac14086.jpeg",
     "photoOp": "$65",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K13"
   },
   {
     "id": "malcolm-kelner",
@@ -177,7 +191,8 @@
     "imdb": "",
     "photo": "assets/guests/Malcolm_Kelner.webp",
     "photoOp": "$55",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K16"
   },
   {
     "id": "haley-fitzgerald",
@@ -189,7 +204,8 @@
     "imdb": "",
     "photo": "assets/guests/Haley_Fitzgerald.webp",
     "photoOp": "$55",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops"
+    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
+    "mapLocation": "K15"
   },
   {
     "id": "wildefell-wolves",

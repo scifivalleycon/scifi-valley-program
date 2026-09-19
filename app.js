@@ -1774,6 +1774,36 @@ function liveVendorDirectorySignature(rows){
   })));
 }
 
+function applyGuestMapAssignments(rows,guests=state.guests){
+  const assignments=(Array.isArray(guests)?guests:[]).filter(g=>/^K(?:[1-9]|1[0-6])$/.test(g.mapLocation||""));
+  if(!assignments.length)return rows;
+  const reserved=new Set(assignments.map(g=>g.mapLocation));
+  const key=name=>mapGuestNameKey(name);
+  const directory=rows.flatMap(row=>{
+    const codes=expandLocationCodes(row.location);
+    if(!codes.some(code=>reserved.has(code)))return [row];
+    const remaining=codes.filter(code=>!reserved.has(code));
+    return remaining.length?[{...row,location:remaining.join(", ")}]:[];
+  });
+  for(const guest of assignments){
+    const existing=rows.find(row=>key(row.name)===key(guest.name)&&expandLocationCodes(row.location).some(code=>/^K\d+$/.test(code)));
+    directory.push({
+      ...(existing||{}),
+      id:"map-guest-"+guest.id,
+      name:guest.name,
+      location:guest.mapLocation,
+      area:"Celebrity Guest Alley",
+      type:"Celebrity",
+      totalTables:1,
+      description:guest.knownFor||guest.group||"",
+      website:"",
+      notes:"",
+      conQuest:false,
+      photos:[]
+    });
+  }
+  return directory;
+}
 async function fetchLiveVendorDirectory(){
   const stamp=`v=${Date.now()}`;
   const response=await fetch(`${VENDOR_DIRECTORY_URL}?${stamp}`,{
@@ -1794,7 +1824,7 @@ async function refreshLiveVendorDirectory(reason="automatic"){
   if(document.visibilityState==="hidden")return false;
   if(vendorDirectoryRefreshPromise)return vendorDirectoryRefreshPromise;
   vendorDirectoryRefreshPromise=(async()=>{
-    const rows=await fetchLiveVendorDirectory();
+    const rows=applyGuestMapAssignments(await fetchLiveVendorDirectory());
     const signature=liveVendorDirectorySignature(rows);
     if(signature===vendorDirectoryLastSignature)return false;
     vendorDirectoryLastSignature=signature;
@@ -1879,7 +1909,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.guests=Array.isArray(guests)?guests:[];
     state.schedule=normalizedSchedule;
     state.events=Array.isArray(events)?events:[];
-    state.vendors=Array.isArray(vendors)?vendors:[];
+    state.vendors=applyGuestMapAssignments(Array.isArray(vendors)?vendors:[]);
     vendorDirectoryLastSignature=liveVendorDirectorySignature(state.vendors);
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.featuredSponsor=Array.isArray(featuredSponsorData)&&featuredSponsorData[0]?featuredSponsorData[0]:{};
@@ -4965,7 +4995,7 @@ async function forceMapVendorProfileRefresh(code,{automatic=false}={}){
   if(status){status.classList.remove('error');status.textContent=automatic?'Checking the latest profile…':'Loading the newest profile…'}
   try{
     const [rows]=await Promise.all([
-      fetchLiveVendorDirectory(),
+      fetchLiveVendorDirectory().then(rows=>applyGuestMapAssignments(rows)),
       /^K\d+$/i.test(String(code||""))?maybeRefreshProgramData("map-guest-profile"):Promise.resolve(false)
     ]);
     const signature=liveVendorDirectorySignature(rows),changed=signature!==vendorDirectoryLastSignature;
