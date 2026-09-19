@@ -10,7 +10,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/76/48/26/c1b192b1-5751-4675-8d7b-62af78969461.jpeg",
     "photoOp": "$105",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K5"
+    "mapLocation": "K5",
+    "instagram": "https://www.instagram.com/mrgiuntoli/"
   },
   {
     "id": "silas-weir-mitchell",
@@ -23,7 +24,8 @@
     "photo": "https://conv-prod-app.s3.amazonaws.com/media/med/11/17/13/5ae8b1d3-2d7a-42ec-83f8-f06ffd45cb47.jpeg",
     "photoOp": "$85",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K4"
+    "mapLocation": "K4",
+    "instagram": ""
   },
   {
     "id": "bree-turner",
