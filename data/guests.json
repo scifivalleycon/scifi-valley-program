@@ -201,11 +201,12 @@
     "knownFor": "Obsession",
     "character": "Viola",
     "bio": "Haley Fitzgerald plays Viola in Obsession. Join Haley at Sci-Fi Valley Con for autographs, photos, and the Obsession panel.",
-    "imdb": "",
+    "imdb": "https://www.imdb.com/name/nm9866557/",
     "photo": "assets/guests/Haley_Fitzgerald.webp",
     "photoOp": "$55",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "mapLocation": "K15"
+    "mapLocation": "K15",
+    "instagram": ""
   },
   {
     "id": "wildefell-wolves",
