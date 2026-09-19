@@ -2288,10 +2288,15 @@ function renderFavorites(){
   c.querySelectorAll("[data-home-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.homeGuest)));
 }
 
+function guestExternalLinksHtml(guest,className="secondary-action"){
+  return [["imdb","IMDb PAGE"],["instagram","INSTAGRAM"]].map(([field,label])=>{
+    const url=mapGuestUrl(guest[field]);
+    return url?`<a class="${className}" href="${escapeAppHtml(url)}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`:"";
+  }).join("");
+}
 function openGuest(id){
   const g=state.guests.find(x=>x.id===id); if(!g)return;
-  const external=g.imdb?`<a class="secondary-action" href="${g.imdb}" target="_blank" rel="noopener">IMDb PAGE ↗</a>`:
-    g.instagram?`<a class="secondary-action" href="${g.instagram}" target="_blank" rel="noopener">INSTAGRAM ↗</a>`:"";
+  const external=guestExternalLinksHtml(g);
   // V4.73: the event-level Photo Op Store URL from Admin is authoritative.
   // Guest records may still contain legacy photoShop values from older builds,
   // but those must not pin a celebrity to a previous event's checkout page.
@@ -4800,7 +4805,7 @@ function mapGuestProfileHtml(code,vendor,guest){
     ${guest.character?`<p>${escapeAppHtml(guest.character)}</p>`:""}
     ${guest.knownFor?`<p><strong>Known for:</strong> ${escapeAppHtml(guest.knownFor)}</p>`:""}
     ${guest.bio?`<div class="map-guest-bio">${escapeAppHtml(guest.bio)}</div>`:""}
-    ${imdb?`<a class="map-vendor-website" href="${escapeAppHtml(imdb)}" target="_blank" rel="noopener noreferrer">IMDb PAGE ↗</a>`:""}
+    ${guestExternalLinksHtml(guest,"map-vendor-website")}
     <div class="map-guest-pricing" aria-label="${escapeAppHtml(guest.name)} prices">${guestPricesHtml(guest,true)}</div>
     <button class="guest-open" type="button" data-map-open-guest="${escapeAppHtml(guest.id)}">VIEW FULL GUEST PROFILE ›</button>
     <div class="map-modal-location"><strong>LOCATION:</strong> ${escapeAppHtml(vendor.location)}</div>
