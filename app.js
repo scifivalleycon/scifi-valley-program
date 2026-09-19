@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const state = {
-  guests: [], schedule: [], events: [], vendors: [], sponsors: [], featuredSponsor: {}, socialLinks: [], tshirts: [], faq: [], hotels: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
+  guests: [], schedule: [], events: [], vendors: [], sponsors: [], featuredSponsor: {}, nextEventAd: {}, socialLinks: [], tshirts: [], faq: [], hotels: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", faqFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
   favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
@@ -1887,9 +1887,9 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
-    const [guests,schedule,events,vendors,sponsors,featuredSponsorData,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
+    const [guests,schedule,events,vendors,sponsors,featuredSponsorData,nextEventAdData,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
       safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),fetchLiveVendorDirectory().catch(err=>{console.warn("SFVC live vendor directory initial load failed",err);return state.vendors.length?state.vendors:safeJson("data/vendors.json")}),
-      safeJson("data/sponsors.json"),safeJson("data/featured-sponsor.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
+      safeJson("data/sponsors.json"),safeJson("data/featured-sponsor.json"),safeJson("data/next-event-ad.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
       safeJson("data/group-photo-ops.json"),safeJson("data/panels.json")
@@ -1912,6 +1912,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     state.vendors=applyGuestMapAssignments(Array.isArray(vendors)?vendors:[]);
     vendorDirectoryLastSignature=liveVendorDirectorySignature(state.vendors);
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
+    state.nextEventAd=Array.isArray(nextEventAdData)&&nextEventAdData[0]?nextEventAdData[0]:{};
     state.featuredSponsor=Array.isArray(featuredSponsorData)&&featuredSponsorData[0]?featuredSponsorData[0]:{};
     state.socialLinks=Array.isArray(socialLinks)?socialLinks:[];
     state.tshirts=Array.isArray(tshirts)?tshirts:[];
@@ -5260,6 +5261,35 @@ function renderSponsors(){
   }).join("");
 }
 
+function nextEventAdVisible(cfg,startDate,now=new Date()){
+  if(cfg.mode==="off")return false;
+  if(cfg.mode==="on")return true;
+  if(cfg.mode!=="scheduled")return false;
+  const date=String(cfg.startDate||startDate||"");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(now);
+  const value=type=>parts.find(p=>p.type===type).value;
+  return value("year")+"-"+value("month")+"-"+value("day")>=date;
+}
+function renderNextEventAd(){
+  const section=document.getElementById("nextEventAd"),link=document.getElementById("nextEventAdLink"),image=document.getElementById("nextEventAdImage"),heading=document.getElementById("nextEventAdHeading");
+  if(!section||!link||!image||!heading)return;
+  const cfg=state.nextEventAd||{};
+  const valid=value=>{try{return new URL(value).protocol==="https:"}catch{return false}};
+  const visible=nextEventAdVisible(cfg,state.settings.startDate)&&valid(cfg.imageUrl)&&valid(cfg.destinationUrl);
+  section.classList.toggle("hidden",!visible);
+  if(!visible){image.onload=null;image.onerror=null;link.removeAttribute("href");image.removeAttribute("src");return}
+  heading.textContent=cfg.heading||"Order Tickets Now for Our Next Event";
+  link.href=cfg.destinationUrl;
+  link.setAttribute("aria-label",heading.textContent+" — opens in a new tab");
+  image.alt=cfg.alt||"Tickets for our next Sci-Fi Valley Con";
+  image.onerror=()=>section.classList.add("hidden");
+  image.onload=()=>section.classList.toggle("hidden",!nextEventAdVisible(state.nextEventAd||{},state.settings.startDate));
+  if(image.src!==cfg.imageUrl)image.src=cfg.imageUrl;
+}
+setInterval(()=>{if(document.visibilityState==="visible")renderNextEventAd()},30000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")renderNextEventAd()});
+
 function renderFeaturedSponsor(){
   const section=document.getElementById("featuredSponsorAd");
   const link=document.getElementById("featuredSponsorLink");
@@ -5535,6 +5565,7 @@ function renderAll(){
   // These two are intentionally first so a failure elsewhere in the app can
   // never leave their original "Loading..." placeholders on screen.
   safeRenderSection("home guest banner",renderHomeGuestBanner);
+  safeRenderSection("next event ad",renderNextEventAd);
   safeRenderSection("featured sponsor",renderFeaturedSponsor);
   safeRenderSection("social links",renderSocialLinks);
   safeRenderSection("sponsors",renderSponsors);
