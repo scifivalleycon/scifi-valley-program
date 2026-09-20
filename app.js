@@ -1133,7 +1133,7 @@ function programExportBlocks(selection=fullProgramPdfSelection()){
       if(!items.length)return;
       add("day",day);
       items.forEach(item=>{
-        addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location} | ${primaryScheduleCategory(item)}`);
+        addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location} | ${scheduleCategoryLabel(primaryScheduleCategory(item))}`);
       });
     });
   }
@@ -2367,6 +2367,12 @@ document.getElementById("guestModal").addEventListener("close",e=>e.currentTarge
 
 function celebrityPublished(){return state.celebrityInfo?.published===true}
 
+function scheduleCategoryLabel(category){
+  if(category==="Guest Panels")return "Celebrity Guest Panels";
+  if(category==="Fan & Vendor Panels")return "Guest Panels";
+  return category;
+}
+
 function primaryScheduleCategory(e){
   if(e.filterCategory)return e.filterCategory;
   const category=String(e.category||"").trim();
@@ -2547,9 +2553,9 @@ function scheduleCardHtml(e){
     <div class="schedule-time-stack"><div class="schedule-time">${escapeAppHtml(e.time)}</div>${scheduleDayBadgeHtml(e.day)}</div>
     <div class="schedule-card-main">
       <strong>${escapeAppHtml(String(e.title||"").toUpperCase())}</strong>
-      <div class="meta">${escapeAppHtml(e.location||"")} • ${escapeAppHtml(e.category||"")}</div>
+      <div class="meta">${escapeAppHtml(e.location||"")} • ${escapeAppHtml(category==="Guest Panels"||category==="Fan & Vendor Panels"?scheduleCategoryLabel(category):e.category||"")}</div>
       ${e.location==="Panel Room 2"&&e.endTime?`<div class="meta schedule-session-range">${escapeAppHtml(e.time)} – ${escapeAppHtml(e.endTime)}</div>`:""}
-      <span class="schedule-category-tag">${escapeAppHtml(category)}</span>
+      <span class="schedule-category-tag">${escapeAppHtml(scheduleCategoryLabel(category))}</span>
       ${scheduleMoreInfoHtml(e)}
       ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<button type="button" class="schedule-reminder-label" data-open-reminder-settings aria-label="Change reminder time. Current setting: ${escapeAppHtml(formatReminder(state.reminderMinutes))}">🔔 ${formatReminder(state.reminderMinutes)} <span>CHANGE</span></button>`:""}
     </div>
@@ -2723,14 +2729,14 @@ function renderStatus(){
       cards.push(statusCardHtml(
         "STARTED RECENTLY",
         recentlyStarted.title,
-        `${recentlyStarted.time} • ${recentlyStarted.location} • ${primaryScheduleCategory(recentlyStarted)}`,
+        `${recentlyStarted.time} • ${recentlyStarted.location} • ${scheduleCategoryLabel(primaryScheduleCategory(recentlyStarted))}`,
         "status-live"
       ));
     }
     upcoming.forEach((item,index)=>cards.push(statusCardHtml(
       index===0?"UP NEXT":"COMING UP",
       item.title,
-      `${item.time}${item.endTime?`–${item.endTime}`:""} • ${item.location} • ${primaryScheduleCategory(item)}`,
+      `${item.time}${item.endTime?`–${item.endTime}`:""} • ${item.location} • ${scheduleCategoryLabel(primaryScheduleCategory(item))}`,
       index===0?"status-next":""
     )));
     host.innerHTML=cards.join("");
@@ -2772,7 +2778,7 @@ function renderScheduleCategoryFilters(){
     return `<label class="schedule-check ${checked?"checked":""}" data-schedule-tone="${scheduleCategoryTone(category)}">
       <input type="checkbox" value="${escapeAppHtml(category)}" ${checked?"checked":""}>
       <span class="schedule-check-box">✓</span>
-      <span>${escapeAppHtml(category.toUpperCase())}</span>
+      <span>${escapeAppHtml(scheduleCategoryLabel(category).toUpperCase())}</span>
     </label>`;
   }).join("")||`<div class="muted-empty">No schedule categories are available for this day yet.</div>`;
 
@@ -5003,11 +5009,11 @@ function mapCelebrityAutographsHtml(){
 }
 function panelRoomTwoScheduleHtml(rows){
   const categories=[...new Set(rows.map(primaryScheduleCategory))];
-  return `<div class="panel-room-filters" aria-label="Panel Room 2 event categories">${categories.map(category=>`<label class="schedule-check checked" data-schedule-tone="${scheduleCategoryTone(category)}"><input type="checkbox" data-room-filter value="${escapeAppHtml(category)}" checked><span class="schedule-check-box">✓</span><span>${escapeAppHtml(category)}</span></label>`).join('')}</div>
+  return `<div class="panel-room-filters" aria-label="Panel Room 2 event categories">${categories.map(category=>`<label class="schedule-check checked" data-schedule-tone="${scheduleCategoryTone(category)}"><input type="checkbox" data-room-filter value="${escapeAppHtml(category)}" checked><span class="schedule-check-box">✓</span><span>${escapeAppHtml(scheduleCategoryLabel(category))}</span></label>`).join('')}</div>
     <p class="muted-empty hidden" data-room-empty>No categories selected.</p>`+
     ['Friday','Saturday','Sunday'].map(day=>{
       const items=rows.filter(row=>row.day===day);if(!items.length)return '';
-      return `<section class="map-zone-day panel-room-day"><h3>${day.toUpperCase()}</h3>${items.map(row=>`<article class="panel-room-event" data-room-category="${escapeAppHtml(primaryScheduleCategory(row))}" data-schedule-tone="${scheduleCategoryTone(primaryScheduleCategory(row))}"><b>${escapeAppHtml(row.time)}${row.endTime?' – '+escapeAppHtml(row.endTime):''}</b><strong>${escapeAppHtml(row.title)}</strong><small>${escapeAppHtml(primaryScheduleCategory(row))}</small>${scheduleMoreInfoHtml(row)}</article>`).join('')}</section>`;
+      return `<section class="map-zone-day panel-room-day"><h3>${day.toUpperCase()}</h3>${items.map(row=>`<article class="panel-room-event" data-room-category="${escapeAppHtml(primaryScheduleCategory(row))}" data-schedule-tone="${scheduleCategoryTone(primaryScheduleCategory(row))}"><b>${escapeAppHtml(row.time)}${row.endTime?' – '+escapeAppHtml(row.endTime):''}</b><strong>${escapeAppHtml(row.title)}</strong><small>${escapeAppHtml(scheduleCategoryLabel(primaryScheduleCategory(row)))}</small>${scheduleMoreInfoHtml(row)}</article>`).join('')}</section>`;
     }).join('');
 }
 function bindPanelRoomFilters(content){
@@ -6210,4 +6216,5 @@ function initializeMetaAdvertising(){
   updateChoiceUi();pageView();
 }
 initializeMetaAdvertising();
+
 
