@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.102";
+const APP_BUILD_VERSION="4.103";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2477,6 +2477,26 @@ function sortedScheduleItems(items){
   return [...items].sort((a,b)=>parseScheduleStartMinutes(a.time)-parseScheduleStartMinutes(b.time)||String(a.title).localeCompare(String(b.title)));
 }
 
+function scheduleCategoryTone(category){
+  const normalized=String(category||"Other").trim().toLowerCase();
+  const tones={
+    "guest panels":"guest-panels",
+    "trivia":"trivia",
+    "photo ops":"photo-ops",
+    "autographs":"autographs",
+    "artist panels":"artist-panels",
+    "event room":"event-room",
+    "gaming":"gaming",
+    "workshops":"workshops",
+    "costume & cosplay":"costume-cosplay",
+    "charity":"charity",
+    "activities":"activities",
+    "after party":"after-party",
+    "other":"other"
+  };
+  return tones[normalized]||"other";
+}
+
 function scheduleCategoriesForDay(day){
   const preferred=["Guest Panels","Trivia","Photo Ops","Autographs","Artist Panels","Event Room","Gaming","Workshops","Costume & Cosplay","Charity","Activities","After Party","Other"];
   const categories=[...new Set(showScheduleItems().filter(e=>e.day===day).map(primaryScheduleCategory))];
@@ -2519,7 +2539,7 @@ function scheduleCardHtml(e){
     ? `<span class="schedule-no-reminder" title="Flexible availability">FLEX</span>`
     : `<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${escapeAppHtml(e.id)}" aria-label="${saved?"Remove from":"Add to"} My Schedule">${saved?"🔔":"♡"}</button>`;
 
-  return `<article class="schedule-card" data-schedule-category="${escapeAppHtml(category)}">
+  return `<article class="schedule-card" data-schedule-category="${escapeAppHtml(category)}" data-schedule-tone="${scheduleCategoryTone(category)}">
     <div class="schedule-time-stack"><div class="schedule-time">${escapeAppHtml(e.time)}</div>${scheduleDayBadgeHtml(e.day)}</div>
     <div class="schedule-card-main">
       <strong>${escapeAppHtml(String(e.title||"").toUpperCase())}</strong>
@@ -2744,10 +2764,10 @@ function renderScheduleCategoryFilters(){
 
   container.innerHTML=categories.map(category=>{
     const checked=!state.scheduleHiddenCategories.has(category);
-    return `<label class="schedule-check ${checked?"checked":""}">
-      <input type="checkbox" value="${category}" ${checked?"checked":""}>
+    return `<label class="schedule-check ${checked?"checked":""}" data-schedule-tone="${scheduleCategoryTone(category)}">
+      <input type="checkbox" value="${escapeAppHtml(category)}" ${checked?"checked":""}>
       <span class="schedule-check-box">✓</span>
-      <span>${category.toUpperCase()}</span>
+      <span>${escapeAppHtml(category.toUpperCase())}</span>
     </label>`;
   }).join("")||`<div class="muted-empty">No schedule categories are available for this day yet.</div>`;
 
