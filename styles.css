@@ -6042,3 +6042,74 @@ body .schedule-day-badge{
     font-size:min(1em,calc((100cqw - 20px) / 6.6))!important;
   }
 }
+
+
+/* Expandable attendee-facing details on Show Schedule cards — V4.102 */
+.schedule-card-main{min-width:0}
+.schedule-more-info{
+  margin-top:8px;
+  width:100%;
+}
+.schedule-more-info>summary{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:30px;
+  padding:6px 9px;
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  color:var(--ink);
+  background:var(--aqua);
+  border:1.5px solid var(--ink);
+  border-radius:5px;
+  box-shadow:2px 2px 0 rgba(58,39,32,.12);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.065em;
+}
+.schedule-more-info>summary::-webkit-details-marker{display:none}
+.schedule-more-label::before{content:"MORE INFO"}
+.schedule-more-icon{
+  display:inline-grid;
+  place-items:center;
+  width:15px;
+  height:15px;
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+}
+.schedule-more-info[open]>summary{
+  background:var(--mustard);
+}
+.schedule-more-info[open] .schedule-more-label::before{content:"LESS INFO"}
+.schedule-more-info[open] .schedule-more-icon{transform:rotate(45deg)}
+.schedule-more-body{
+  margin-top:8px;
+  padding:9px 10px;
+  background:rgba(115,199,203,.12);
+  border:1.5px dashed rgba(58,39,32,.55);
+  border-radius:6px;
+  color:var(--ink2);
+  font-family:Georgia,serif;
+  font-size:10px;
+  line-height:1.5;
+}
+.schedule-more-body p{margin:0}
+.schedule-more-body p+p{margin-top:7px}
+.schedule-more-participants{
+  margin-bottom:6px;
+  color:var(--ink);
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  font-size:8px;
+  line-height:1.4;
+  letter-spacing:.035em;
+}
+.schedule-more-note{font-style:italic}
+@media(max-width:430px){
+  .schedule-more-info>summary{
+    min-height:32px;
+    padding:6px 8px;
+  }
+  .schedule-more-body{font-size:10px}
+}
