@@ -5033,12 +5033,11 @@ function openMapZone(def){
   const days=["Friday","Saturday","Sunday"];
   const scheduleHtml=def.key==="celebrity"?mapCelebrityAutographsHtml():def.key==="panel2"?panelRoomTwoScheduleHtml(rows):days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
   const related=(def.eventIds||[]).map(id=>state.events.find(e=>e.id===id)).filter(Boolean);
-  const emptyScheduleHtml=def.menuOnly?"":'<p class="muted-empty">No timed events are currently published for this room.</p>';
   const relatedHtml=related.length
     ? `<div class="map-zone-related ${def.menuOnly?"map-zone-related-menu-only":""}">${def.menuOnly?"":"<strong>MORE INFO</strong>"}${related.map(e=>`<button type="button" data-map-event-id="${escapeAppHtml(e.id)}">${escapeAppHtml(e.title)} ›</button>`).join("")}</div>`
     : "";
   const intro=def.description?`<p class="map-zone-description">${escapeAppHtml(def.description)}</p>`:"";
-  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${intro}${scheduleHtml||emptyScheduleHtml}${relatedHtml}`;
+  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${intro}${scheduleHtml}${relatedHtml}`;
   if(def.key==="panel2")bindPanelRoomFilters(content);
   content.querySelectorAll("[data-map-event-id]").forEach(button=>button.addEventListener("click",()=>{modal.close();setTimeout(()=>window.SFVCEventGuide?.open?.(button.dataset.mapEventId),35)}));
   if(modal.open)modal.close();
