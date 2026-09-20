@@ -6431,3 +6431,97 @@ body .schedule-day-badge{
     font-size:12px;
   }
 }
+
+
+/* Medium map legend sizing — V4.106
+   Balanced between the original compact legend and the oversized V4.105 version. */
+.map-legend-panel{
+  padding:13px;
+}
+.map-legend-panel summary{
+  font-size:12px;
+}
+.map-legend-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin-top:11px;
+}
+.map-legend-item.map-legend-button{
+  min-height:64px;
+  grid-template-columns:40px minmax(0,1fr);
+  gap:9px;
+  padding:9px 10px;
+  border-width:2px;
+  border-radius:8px;
+}
+.map-legend-item.map-legend-button .map-legend-swatch{
+  width:40px;
+  height:38px;
+  border-width:2px;
+  border-radius:5px;
+  grid-row:1 / span 2;
+}
+.map-legend-item.map-legend-button b{
+  font-size:12px;
+  line-height:1.15;
+  align-self:end;
+}
+.map-legend-item.map-legend-button em{
+  grid-column:2;
+  align-self:start;
+  margin-top:1px;
+  font-size:7.5px;
+  line-height:1;
+}
+.map-legend-note{
+  margin-top:9px;
+  padding-top:8px;
+  font-size:10px;
+  line-height:1.4;
+}
+
+@media(max-width:700px){
+  .map-legend-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:520px){
+  .map-legend-panel{
+    padding:12px;
+  }
+  .map-legend-panel summary{
+    font-size:12px;
+  }
+  .map-legend-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  .map-legend-item.map-legend-button{
+    min-height:68px;
+    grid-template-columns:38px minmax(0,1fr);
+    gap:8px;
+    padding:9px;
+  }
+  .map-legend-item.map-legend-button .map-legend-swatch{
+    width:38px;
+    height:38px;
+  }
+  .map-legend-item.map-legend-button b{
+    font-size:11.5px;
+  }
+  .map-legend-item.map-legend-button em{
+    grid-column:2;
+    margin-top:1px;
+    font-size:7px;
+  }
+  .map-legend-note{
+    font-size:9.5px;
+  }
+}
+
+@media(max-width:360px){
+  .map-legend-grid{
+    grid-template-columns:1fr;
+  }
+}
