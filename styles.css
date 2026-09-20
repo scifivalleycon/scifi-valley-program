@@ -6659,3 +6659,17 @@ body .schedule-day-badge{
 /* Group photo-op pricing and availability occupy separate lines at every size. */
 .group-op-card>strong{display:block}
 .group-op-card>small{display:block;margin-top:6px;line-height:1.4}
+
+
+/* Fan programming in Panel Room 2 shares its colors with the Show Schedule. */
+[data-schedule-tone="fan-vendor-panels"]{--schedule-tone:#91c9b4;--schedule-tone-strong:#39765f;--schedule-tone-soft:#d2e8dc}
+[data-schedule-tone="costume-registration"]{--schedule-tone:#c5a5cf;--schedule-tone-strong:#80528e;--schedule-tone-soft:#e9d9ee}
+.panel-room-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.panel-room-filters .schedule-check{min-width:0;overflow-wrap:anywhere}
+.map-zone-day .panel-room-event{display:block;padding:12px;margin:8px 0;border:2px solid var(--ink);border-radius:8px;background:var(--schedule-tone-soft)}
+.map-zone-day .panel-room-event>b,.map-zone-day .panel-room-event>strong,.map-zone-day .panel-room-event>small{display:block;margin-bottom:6px}
+.map-zone-day .panel-room-event>b{color:var(--ink)}
+.map-zone-day .panel-room-event>small{font-weight:bold}
+.panel-room-event .schedule-more-info>summary{background:var(--schedule-tone)}
+.schedule-session-range{font-weight:700;margin-top:4px}
+@media(max-width:360px){.panel-room-filters{grid-template-columns:1fr}}

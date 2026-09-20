@@ -11,9 +11,22 @@
     "day": "Friday",
     "time": "3:30 PM",
     "title": "Trivia Tournament",
-    "location": "Event Room",
-    "category": "Gaming",
-    "id": "sched-friday-trivia-tournament"
+    "location": "Panel Room 2",
+    "category": "Trivia",
+    "id": "sched-friday-trivia-tournament",
+    "endTime": "4:25 PM",
+    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament."
+  },
+  {
+    "id": "sched-friday-panel2-dragons-cryptids-dinos",
+    "day": "Friday",
+    "time": "5:00 PM",
+    "endTime": "5:55 PM",
+    "title": "Dragons, Cryptids, and Dinos, OH MY!",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "JD Donnelly—Painting Dragon Feathers",
+    "description": "Learn how to craft vibrant, exotic creature characters for your stories and artwork by studying zoology, paleontology, folklore, history, and a menagerie of other authors’ work. We will also dissect a dragon—from inspiration, to designing, to writing his story and crafting a maquette for drawing. A Q and A will follow."
   },
   {
     "day": "Friday",
@@ -22,6 +35,38 @@
     "location": "Event Room",
     "category": "Charity",
     "id": "sched-friday-charity-quick-sketches"
+  },
+  {
+    "id": "sched-friday-panel2-cosplay-sloper",
+    "day": "Friday",
+    "time": "6:00 PM",
+    "endTime": "6:55 PM",
+    "title": "Let's get Drafting Cosplay Part Dues: Making your custom sloper. The basis to all pattern making.",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Kristena Martin Snowtiger Designs",
+    "description": "We will take you from your measurements to a Sloper. The base custom patern that will make that cosplay fit you to a T. During the panel we will walk through the steps of making a sloper, and how it is used to modify any pattern you have to fit you and your body shape. A handout will be given of common pattern formulas."
+  },
+  {
+    "id": "sched-friday-panel2-fantasy-world",
+    "day": "Friday",
+    "time": "7:30 PM",
+    "endTime": "7:55 PM",
+    "title": "Let's Make A Fantasy World Together.",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Rodney O'Neal",
+    "description": "Building a fun world setting with audience participation and questionable whiteboard art. Will it survive its first year or crumble in the chaos. Come and find out."
+  },
+  {
+    "id": "sched-friday-panel2-downtime-podcast",
+    "day": "Friday",
+    "time": "8:00 PM",
+    "endTime": "8:55 PM",
+    "title": "Downtime Podcast",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "description": "Join the Downtime Podcast in Panel Room 2."
   },
   {
     "day": "Saturday",
@@ -40,12 +85,45 @@
     "id": "sched-saturday-magic-the-gathering-casual-commander"
   },
   {
+    "id": "sched-saturday-panel2-animated-short-film",
+    "day": "Saturday",
+    "time": "11:00 AM",
+    "endTime": "11:25 AM",
+    "title": "How to Make an Animated Short Film",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Rachel Immel",
+    "description": "This panel would include a concise glimpse into the animation pipeline for a short animated film made by only a few people, utilizing samples from my own animated films. This will be a great panel for artists, students and all animation enthusiasts alike to see what goes into making your own animated short film."
+  },
+  {
+    "id": "sched-saturday-panel2-fantasy-world",
+    "day": "Saturday",
+    "time": "11:30 AM",
+    "endTime": "11:55 AM",
+    "title": "Let's Make A Fantasy World Together.",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Rodney O'Neal",
+    "description": "Building a fun world setting with audience participation and questionable whiteboard art. Will it survive its first year or crumble in the chaos. Come and find out."
+  },
+  {
     "day": "Saturday",
     "time": "12:00 PM",
     "title": "HeroClix – Battle Royale",
     "location": "Game Room",
     "category": "Gaming",
     "id": "sched-saturday-heroclix-battle-royale"
+  },
+  {
+    "id": "sched-saturday-panel2-hot-sauce-bbq",
+    "day": "Saturday",
+    "time": "12:00 PM",
+    "endTime": "12:55 PM",
+    "title": "Hot Sauce and BBQ Sauce: A How-To",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Andrew and Ross",
+    "description": "Join Andrew and Ross for a panel about hot sauce and BBQ sauce."
   },
   {
     "day": "Saturday",
@@ -64,6 +142,17 @@
     "id": "sched-saturday-miniature-painting-competition-session-1"
   },
   {
+    "id": "sched-saturday-panel2-writing-villains",
+    "day": "Saturday",
+    "time": "1:00 PM",
+    "endTime": "1:55 PM",
+    "title": "Devil’s Advocate: How to Write a “Good” Villain",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "JD Donnelly—Painting Dragon Feathers",
+    "description": "A hero is only as good as their villain, and the best villains are the ones we love to hate. But how do you avoid the pitfalls of making your villain too flat, or too lame, or “evil for the sake of being evil”? In this lecture we’ll discuss the morals, motives, and modus opperandi of some famous villains, the nuances of antiheros, antagonists, and villains, and how to cut Satan a break—there are much more interesting and sinister figures for inspiration for your big baddies. A Q and A will follow."
+  },
+  {
     "day": "Saturday",
     "time": "2:00 PM",
     "title": "Charity Quick Sketches",
@@ -72,12 +161,25 @@
     "id": "sched-saturday-charity-quick-sketches"
   },
   {
+    "id": "sched-saturday-panel2-your-brother-theo",
+    "day": "Saturday",
+    "time": "2:00 PM",
+    "endTime": "2:25 PM",
+    "title": "Your Brother, Theo. — Filmmaking in PA!",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Bryant Eberhart (Writer & Director), Matt Jacobs (Director of Photography), Mason Keeler (Composer)",
+    "description": "Your Brother, Theo.' is a 2026 coming of age Short Film, Written & Directed by Bryant Eberhart. It was entirely shot in PA, specifically in Altoona & Duncansville. Come check out a Sneak Peek of the film & join the conversation about the opportunities of filmmaking right here in PA. Questions are definitely welcome!"
+  },
+  {
     "day": "Saturday",
     "time": "2:30 PM",
     "title": "Costume Contest Registration & Prejudging",
     "location": "Panel Room 2",
-    "category": "Costume Contest",
-    "id": "sched-saturday-costume-contest-registration-prejudging"
+    "category": "Costume Registration & Prejudging",
+    "id": "sched-saturday-costume-contest-registration-prejudging",
+    "endTime": "4:55 PM",
+    "description": "Register for the costume contest and take part in optional prejudging. The costume contest begins at 6:00 PM in Panel Room 1."
   },
   {
     "day": "Saturday",
@@ -107,9 +209,11 @@
     "day": "Saturday",
     "time": "5:00 PM",
     "title": "Trivia Tournament",
-    "location": "Event Room",
-    "category": "Gaming",
-    "id": "sched-saturday-trivia-tournament"
+    "location": "Panel Room 2",
+    "category": "Trivia",
+    "id": "sched-saturday-trivia-tournament",
+    "endTime": "6:00 PM",
+    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament."
   },
   {
     "day": "Saturday",
@@ -136,6 +240,28 @@
     "id": "sched-sunday-paint-take-build-battle-opens"
   },
   {
+    "id": "sched-sunday-panel2-wilde-side",
+    "day": "Sunday",
+    "time": "12:00 PM",
+    "endTime": "12:25 PM",
+    "title": "The Wilde side of entertainment",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Raven and Rob Krise",
+    "description": "Learn about us and the animals and how we got started into the entertainment business. Meet and greet with a couple of our animals."
+  },
+  {
+    "id": "sched-sunday-panel2-creative-writing",
+    "day": "Sunday",
+    "time": "12:30 PM",
+    "endTime": "1:25 PM",
+    "title": "Creative Writing Soundboard",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "JD Donnelly—Painting Dragon Feathers",
+    "description": "Are you a writer trying to figure out how to add emotional depth to your characters? Need to untangle a plot knot? Got an OC or a story seed you want to get feedback on, or just share with your fellow creatives? Maybe you have questions about how to share your work, whether through traditional publishing or the indie publishing route? Scifi Valley Con is a hub of creative folks, so let’s share what we’re working on with our community! This roundtable will be moderated by JD Donnelly, experienced artist and writer behind Painting Dragon Feathers, and author of CryptoZoo, with other talented authors on our panel. And if we can’t help with your questions, maybe your fellow con-goers can!"
+  },
+  {
     "day": "Sunday",
     "time": "1:00 PM",
     "title": "HeroClix – Battle Royale",
@@ -152,6 +278,17 @@
     "id": "sched-sunday-charity-quick-sketches"
   },
   {
+    "id": "sched-sunday-panel2-hot-sauce-bbq",
+    "day": "Sunday",
+    "time": "1:30 PM",
+    "endTime": "2:25 PM",
+    "title": "Hot Sauce and BBQ Sauce: A How-To",
+    "location": "Panel Room 2",
+    "category": "Fan & Vendor Panels",
+    "participants": "Andrew and Ross",
+    "description": "Join Andrew and Ross for a panel about hot sauce and BBQ sauce."
+  },
+  {
     "day": "Sunday",
     "time": "2:00 PM",
     "title": "Miniature Painting Competition Winners",
@@ -163,8 +300,21 @@
     "day": "Sunday",
     "time": "2:30 PM",
     "title": "Trivia Tournament",
-    "location": "Event Room",
-    "category": "Gaming",
-    "id": "sched-sunday-trivia-tournament"
+    "location": "Panel Room 2",
+    "category": "Trivia",
+    "id": "sched-sunday-trivia-tournament",
+    "endTime": "3:25 PM",
+    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament."
+  },
+  {
+    "id": "sched-sunday-panel2-conquest-raffle",
+    "day": "Sunday",
+    "time": "3:30 PM",
+    "endTime": "4:55 PM",
+    "title": "The GBU Presents: The Con-Quest Charity Raffle",
+    "location": "Panel Room 2",
+    "category": "Charity",
+    "participants": "Gearbox Union",
+    "description": "Join Gearbox Union for the Con-Quest charity raffle."
   }
 ]

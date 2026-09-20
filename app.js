@@ -2378,6 +2378,7 @@ function primaryScheduleCategory(e){
   if(/trivia/i.test(title)||/trivia/i.test(category))return "Trivia";
   if(/celebrity panel|guest panel|q&a panel|reunion.*panel/i.test(`${title} ${category}`))return "Guest Panels";
   if(/artist/i.test(category))return "Artist Panels";
+  if(category==="Costume Registration & Prejudging")return category;
   if(/costume|cosplay/i.test(category))return "Costume & Cosplay";
   if(/workshop|paint/i.test(category))return "Workshops";
   if(/gaming|game/i.test(category))return "Gaming";
@@ -2482,6 +2483,8 @@ function scheduleCategoryTone(category){
   const normalized=String(category||"Other").trim().toLowerCase();
   const tones={
     "guest panels":"guest-panels",
+    "fan & vendor panels":"fan-vendor-panels",
+    "costume registration & prejudging":"costume-registration",
     "trivia":"trivia",
     "photo ops":"photo-ops",
     "autographs":"autographs",
@@ -2499,7 +2502,7 @@ function scheduleCategoryTone(category){
 }
 
 function scheduleCategoriesForDay(day){
-  const preferred=["Guest Panels","Trivia","Photo Ops","Autographs","Artist Panels","Event Room","Gaming","Workshops","Costume & Cosplay","Charity","Activities","After Party","Other"];
+  const preferred=["Guest Panels","Fan & Vendor Panels","Trivia","Costume Registration & Prejudging","Photo Ops","Autographs","Artist Panels","Event Room","Gaming","Workshops","Costume & Cosplay","Charity","Activities","After Party","Other"];
   const categories=[...new Set(showScheduleItems().filter(e=>e.day===day).map(primaryScheduleCategory))];
   return categories.sort((a,b)=>{
     const ai=preferred.indexOf(a), bi=preferred.indexOf(b);
@@ -2545,6 +2548,7 @@ function scheduleCardHtml(e){
     <div class="schedule-card-main">
       <strong>${escapeAppHtml(String(e.title||"").toUpperCase())}</strong>
       <div class="meta">${escapeAppHtml(e.location||"")} • ${escapeAppHtml(e.category||"")}</div>
+      ${e.location==="Panel Room 2"&&e.endTime?`<div class="meta schedule-session-range">${escapeAppHtml(e.time)} – ${escapeAppHtml(e.endTime)}</div>`:""}
       <span class="schedule-category-tag">${escapeAppHtml(category)}</span>
       ${scheduleMoreInfoHtml(e)}
       ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<button type="button" class="schedule-reminder-label" data-open-reminder-settings aria-label="Change reminder time. Current setting: ${escapeAppHtml(formatReminder(state.reminderMinutes))}">🔔 ${formatReminder(state.reminderMinutes)} <span>CHANGE</span></button>`:""}
@@ -4933,7 +4937,7 @@ function mapElementTransform(item){
 }
 const MAP_ZONE_DEFS={
   "panel-room-1-box":{key:"panel1",title:"Panel Room 1",locations:["panel room 1"],sources:["panels","schedule"],description:"Celebrity guest Q&A panels, reunion panels, and other scheduled programming take place here."},
-  "panel-room-2-box":{key:"panel2",title:"Panel Room 2",locations:["panel room 2"],sources:["panels","schedule"],description:"Scheduled panels, trivia, presentations, and other attendee programming take place here."},
+  "panel-room-2-box":{key:"panel2",title:"Panel Room 2",locations:["panel room 2"],sources:["panels","schedule"],eventIds:["trivia","costume-contest","con-quest"],description:"Fan and vendor panels, trivia, costume contest registration and prejudging, and the Con-Quest charity raffle take place here. Use the colored checkboxes to choose what to show."},
   "event-room-box":{key:"event",title:"Event Room",locations:["event room"],sources:["schedule"],description:"A rotating schedule of convention activities and special events takes place in the Event Room."},
   "paint-room-box":{key:"paint",title:"Paint & Hobby Room",locations:["paint and hobby room","paint & hobby room"],sources:["schedule"],description:"Hands-on hobby programming, workshops, painting, and tabletop activities are hosted in this room."},
   "mini-cafe-box":{key:"miniCafe",title:"The Mini Café",locations:[],eventIds:["mini-cafe"],menuOnly:true,description:"A convenient food and refreshment stop inside the convention center."},
@@ -4978,7 +4982,7 @@ function mapZoneScheduleItems(def){
   const rows=[];
   const add=(item,location)=>{
     if(!item)return;
-    rows.push({id:item.id||`${item.day}-${item.time||item.startTime}-${item.title}`,day:item.day||"",time:item.time||item.startTime||"",endTime:item.endTime||"",title:item.title||"",location:location||item.location||def.title});
+    rows.push({...item,id:item.id||`${item.day}-${item.time||item.startTime}-${item.title}`,day:item.day||"",time:item.time||item.startTime||"",endTime:item.endTime||"",title:item.title||"",location:location||item.location||def.title});
   };
   if(def.sources?.includes("schedule"))state.schedule.filter(x=>names.has(String(x.location||"").toLowerCase())).forEach(x=>add(x));
   if(def.sources?.includes("panels"))state.panels.filter(x=>names.has(String(x.location||"").toLowerCase())).forEach(x=>add(x));
@@ -4997,12 +5001,31 @@ function mapCelebrityAutographsHtml(){
     }).join("")}</section>`
   ).join("");
 }
+function panelRoomTwoScheduleHtml(rows){
+  const categories=[...new Set(rows.map(primaryScheduleCategory))];
+  return `<div class="panel-room-filters" aria-label="Panel Room 2 event categories">${categories.map(category=>`<label class="schedule-check checked" data-schedule-tone="${scheduleCategoryTone(category)}"><input type="checkbox" data-room-filter value="${escapeAppHtml(category)}" checked><span class="schedule-check-box">✓</span><span>${escapeAppHtml(category)}</span></label>`).join('')}</div>
+    <p class="muted-empty hidden" data-room-empty>No categories selected.</p>`+
+    ['Friday','Saturday','Sunday'].map(day=>{
+      const items=rows.filter(row=>row.day===day);if(!items.length)return '';
+      return `<section class="map-zone-day panel-room-day"><h3>${day.toUpperCase()}</h3>${items.map(row=>`<article class="panel-room-event" data-room-category="${escapeAppHtml(primaryScheduleCategory(row))}" data-schedule-tone="${scheduleCategoryTone(primaryScheduleCategory(row))}"><b>${escapeAppHtml(row.time)}${row.endTime?' – '+escapeAppHtml(row.endTime):''}</b><strong>${escapeAppHtml(row.title)}</strong><small>${escapeAppHtml(primaryScheduleCategory(row))}</small>${scheduleMoreInfoHtml(row)}</article>`).join('')}</section>`;
+    }).join('');
+}
+function bindPanelRoomFilters(content){
+  content.querySelectorAll('[data-room-filter]').forEach(input=>input.addEventListener('change',()=>{
+    input.closest('label').classList.toggle('checked',input.checked);
+    const selected=new Set([...content.querySelectorAll('[data-room-filter]:checked')].map(i=>i.value));
+    content.querySelectorAll('[data-room-category]').forEach(row=>row.classList.toggle('hidden',!selected.has(row.dataset.roomCategory)));
+    content.querySelectorAll('.panel-room-day').forEach(day=>day.classList.toggle('hidden',!day.querySelector('[data-room-category]:not(.hidden)')));
+    content.querySelector('[data-room-empty]')?.classList.toggle('hidden',selected.size>0);
+  }));
+}
+
 function openMapZone(def){
   const modal=document.getElementById("mapLocationModal"),content=document.getElementById("mapLocationModalContent");
   if(!modal||!content||!def)return;
   const rows=mapZoneScheduleItems(def);
   const days=["Friday","Saturday","Sunday"];
-  const scheduleHtml=def.key==="celebrity"?mapCelebrityAutographsHtml():days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
+  const scheduleHtml=def.key==="celebrity"?mapCelebrityAutographsHtml():def.key==="panel2"?panelRoomTwoScheduleHtml(rows):days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
   const related=(def.eventIds||[]).map(id=>state.events.find(e=>e.id===id)).filter(Boolean);
   const emptyScheduleHtml=def.menuOnly?"":'<p class="muted-empty">No timed events are currently published for this room.</p>';
   const relatedHtml=related.length
@@ -5010,6 +5033,7 @@ function openMapZone(def){
     : "";
   const intro=def.description?`<p class="map-zone-description">${escapeAppHtml(def.description)}</p>`:"";
   content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${intro}${scheduleHtml||emptyScheduleHtml}${relatedHtml}`;
+  if(def.key==="panel2")bindPanelRoomFilters(content);
   content.querySelectorAll("[data-map-event-id]").forEach(button=>button.addEventListener("click",()=>{modal.close();setTimeout(()=>window.SFVCEventGuide?.open?.(button.dataset.mapEventId),35)}));
   if(modal.open)modal.close();
   if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");
@@ -6186,3 +6210,4 @@ function initializeMetaAdvertising(){
   updateChoiceUi();pageView();
 }
 initializeMetaAdvertising();
+

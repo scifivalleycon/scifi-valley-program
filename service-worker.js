@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-archive-meta-20260920";
+const CACHE="sfvc-program-panel-room2-20260920";
 const LOCAL=[
   "./","./index.html","./styles.css","./home-layout.css","./event-guide-layout.css","./app.js","./home-layout.js","./event-guide-layout.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/featured-sponsor.json","./data/next-event-ad.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/hotels.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
@@ -139,6 +139,7 @@ self.addEventListener("notificationclick",event=>{
     return clients.openWindow(target);
   })());
 });
+
 
 
 

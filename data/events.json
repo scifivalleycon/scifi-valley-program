@@ -311,6 +311,12 @@
       {
         "type": "p",
         "text": "Exhibitors can participate as quest stops by contributing to the charity raffle and offering a simple interactive challenge at their table. Contact GearboxUnion@gmail.com to participate."
+      },
+      {
+        "type": "schedule",
+        "items": [
+          "The GBU Presents: The Con-Quest Charity Raffle • Sunday, Oct. 18 • 3:30-4:55 PM • Panel Room 2"
+        ]
       }
     ]
   },
@@ -327,7 +333,7 @@
       {
         "type": "schedule",
         "items": [
-          "Registration & optional prejudging: Saturday, Oct. 17 • 2:30-5:00 PM • Panel Room 2",
+          "Registration & optional prejudging: Saturday, Oct. 17 • 2:30-4:55 PM • Panel Room 2",
           "Costume Contest: Saturday, Oct. 17 • 6:00 PM • Panel Room 1"
         ]
       },
@@ -832,9 +838,9 @@
       {
         "type": "schedule",
         "items": [
-          "Friday • 3:30-4:30 PM • Event Room",
-          "Saturday • 5:00-6:00 PM • Event Room",
-          "Sunday • 2:30-3:30 PM • Event Room"
+          "Friday • 3:30-4:25 PM • Panel Room 2",
+          "Saturday • 5:00-6:00 PM • Panel Room 2",
+          "Sunday • 2:30-3:25 PM • Panel Room 2"
         ]
       },
       {
