@@ -2544,6 +2544,14 @@ function renderCelebrityAutographs(){
   document.getElementById("autographInfo").textContent=state.celebrityInfo.autographNotice||"Autograph availability is flexible and subject to change.";
   document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3><div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${String(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
 }
+function panelTimeLabel(panel){
+  const time=String(panel.startTime||"")+(panel.endTime?`–${panel.endTime}`:"");
+  const day=String(panel.day||"");
+  const iso=eventDayDates()[day];
+  const match=String(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const date=match?`${match[2]}/${match[3]}/${match[1].slice(-2)}`:"";
+  return time+(day?` - ${day}${date?`: ${date}`:""}`:"");
+}
 function renderCelebrityPanels(){
   const info=state.celebrityInfo;
   document.getElementById("panelInfo").innerHTML=`<span class="section-kicker">CELEBRITY Q&amp;A</span><h2>${(info.panelRoom||"CELEBRITY PANELS").toUpperCase()}</h2><p>${info.panelNotice||""}</p>${info.panelSeatingNote?`<p><strong>${info.panelSeatingNote}</strong></p>`:""}`;
@@ -2551,7 +2559,7 @@ function renderCelebrityPanels(){
   filters.innerHTML=days.map(d=>`<button class="chip ${d===state.celebrityPanelDay?"active":""}" data-panel-day="${d}">${d.toUpperCase()}</button>`).join("");
   filters.querySelectorAll("[data-panel-day]").forEach(b=>b.addEventListener("click",()=>{state.celebrityPanelDay=b.dataset.panelDay;renderCelebrityPanels()}));
   const records=state.panels.filter(p=>p.day===state.celebrityPanelDay);
-  document.getElementById("panelList").innerHTML=records.map((p,i)=>{const e=panelScheduleItems().find(x=>x.id===`panel-${p.id||i}`),saved=e&&state.mySchedule.has(e.id);return `<article class="celebrity-panel-card"><div class="panel-card-head"><div><span class="panel-time">${p.startTime}${p.endTime?`–${p.endTime}`:""}</span><h3>${p.title}</h3></div>${e?`<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`:""}</div><div class="meta">${p.location||info.panelRoom||""}${p.participants?` • ${p.participants}`:""}</div>${p.description?`<p>${p.description}</p>`:""}</article>`}).join("")||`<div class="paper-panel muted-empty">No celebrity panels listed for this day.</div>`;
+  document.getElementById("panelList").innerHTML=records.map((p,i)=>{const e=panelScheduleItems().find(x=>x.id===`panel-${p.id||i}`),saved=e&&state.mySchedule.has(e.id);return `<article class="celebrity-panel-card"><div class="panel-card-head"><div><span class="panel-time">${escapeAppHtml(panelTimeLabel(p))}</span><h3>${p.title}</h3></div>${e?`<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`:""}</div><div class="meta">${p.location||info.panelRoom||""}${p.participants?` • ${p.participants}`:""}</div>${p.description?`<p>${p.description}</p>`:""}</article>`}).join("")||`<div class="paper-panel muted-empty">No celebrity panels listed for this day.</div>`;
   bindScheduleSaveButtons();
 }
 
