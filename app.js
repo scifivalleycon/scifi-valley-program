@@ -235,7 +235,7 @@ function reconcileMyCon(){
     if(fields.length){
       const timing=fields.some(key=>["day","time","endTime","eventAt"].includes(key));
       const room=fields.includes("location");
-      myConChanges[`event:${id}`]={message:`UPDATED — ${timing?"Time or date changed":room?"Location changed":"Event details changed"}. ${next.day} • ${next.time}${next.endTime?`–${next.endTime}`:""} • ${next.location}`,updatedAt:new Date().toISOString()};changed=true;
+      myConChanges[`event:${id}`]={message:`UPDATED — ${timing?"Time or date changed":room?"Location changed":"Event details changed"}. ${next.day} • ${formatDisplayTimeRange(next.time,next.endTime)} • ${next.location}`,updatedAt:new Date().toISOString()};changed=true;
     }
     savedScheduleSnapshots[id]={...next,savedAt:before?.savedAt||new Date().toISOString()};
   }
@@ -1113,7 +1113,7 @@ function programExportBlocks(selection=fullProgramPdfSelection()){
           const items=sortedScheduleItems(myItems.filter(item=>item.day===day));
           if(!items.length)return;
           add("day",day);
-          items.forEach(item=>addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location}`));
+          items.forEach(item=>addBullet(`${formatDisplayTimeRange(item.time,item.endTime)} | ${item.title} | ${item.location}`));
         });
       }
       if(myGuests.length){
@@ -1133,7 +1133,7 @@ function programExportBlocks(selection=fullProgramPdfSelection()){
       if(!items.length)return;
       add("day",day);
       items.forEach(item=>{
-        addBullet(`${item.time}${item.endTime?` - ${item.endTime}`:""} | ${item.title} | ${item.location} | ${scheduleCategoryLabel(primaryScheduleCategory(item))}`);
+        addBullet(`${formatDisplayTimeRange(item.time,item.endTime)} | ${item.title} | ${item.location} | ${scheduleCategoryLabel(primaryScheduleCategory(item))}`);
       });
     });
   }
@@ -2542,6 +2542,14 @@ function scheduleMoreInfoHtml(e){
   </details>`;
 }
 
+function formatDisplayTimeRange(start,end=""){
+  const label=String(start||"")+(end?"–"+String(end):"");
+  return label.replace(/\b(\d{1,2}(?::\d{2})?)\s*(AM|PM)\s*[-–—]\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)\b/gi,
+    (match,from,fromPeriod,to,toPeriod)=>fromPeriod.toUpperCase()===toPeriod.toUpperCase()
+      ? from+"–"+to+" "+toPeriod.toUpperCase()
+      : from+" "+fromPeriod.toUpperCase()+"–"+to+" "+toPeriod.toUpperCase());
+}
+
 function scheduleCardHtml(e){
   const saved=state.mySchedule.has(e.id);
   const category=primaryScheduleCategory(e);
@@ -2550,11 +2558,11 @@ function scheduleCardHtml(e){
     : `<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${escapeAppHtml(e.id)}" aria-label="${saved?"Remove from":"Add to"} My Schedule">${saved?"🔔":"♡"}</button>`;
 
   return `<article class="schedule-card" data-schedule-category="${escapeAppHtml(category)}" data-schedule-tone="${scheduleCategoryTone(category)}">
-    <div class="schedule-time-stack"><div class="schedule-time">${escapeAppHtml(e.time)}</div>${scheduleDayBadgeHtml(e.day)}</div>
+    <div class="schedule-time-stack"><div class="schedule-time">${escapeAppHtml(formatDisplayTimeRange(e.time))}</div>${scheduleDayBadgeHtml(e.day)}</div>
     <div class="schedule-card-main">
       <strong>${escapeAppHtml(String(e.title||"").toUpperCase())}</strong>
       <div class="meta">${escapeAppHtml(e.location||"")} • ${escapeAppHtml(category==="Guest Panels"||category==="Fan & Vendor Panels"?scheduleCategoryLabel(category):e.category||"")}</div>
-      ${e.location==="Panel Room 2"&&e.endTime?`<div class="meta schedule-session-range">${escapeAppHtml(e.time)} – ${escapeAppHtml(e.endTime)}</div>`:""}
+      ${e.location==="Panel Room 2"&&e.endTime?`<div class="meta schedule-session-range">${escapeAppHtml(formatDisplayTimeRange(e.time,e.endTime))}</div>`:""}
       <span class="schedule-category-tag">${escapeAppHtml(scheduleCategoryLabel(category))}</span>
       ${scheduleMoreInfoHtml(e)}
       ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<button type="button" class="schedule-reminder-label" data-open-reminder-settings aria-label="Change reminder time. Current setting: ${escapeAppHtml(formatReminder(state.reminderMinutes))}">🔔 ${formatReminder(state.reminderMinutes)} <span>CHANGE</span></button>`:""}
@@ -2599,10 +2607,10 @@ function renderCelebrityPhotoOps(){
 }
 function renderCelebrityAutographs(){
   document.getElementById("autographInfo").textContent=state.celebrityInfo.autographNotice||"Autograph availability is flexible and subject to change.";
-  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3><div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${String(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
+  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3><div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${formatDisplayTimeRange(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
 }
 function panelTimeLabel(panel){
-  const time=String(panel.startTime||"")+(panel.endTime?`–${panel.endTime}`:"");
+  const time=formatDisplayTimeRange(panel.startTime,panel.endTime);
   const day=String(panel.day||"");
   const iso=eventDayDates()[day];
   const match=String(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -2736,7 +2744,7 @@ function renderStatus(){
     upcoming.forEach((item,index)=>cards.push(statusCardHtml(
       index===0?"UP NEXT":"COMING UP",
       item.title,
-      `${item.time}${item.endTime?`–${item.endTime}`:""} • ${item.location} • ${scheduleCategoryLabel(primaryScheduleCategory(item))}`,
+      `${formatDisplayTimeRange(item.time,item.endTime)} • ${item.location} • ${scheduleCategoryLabel(primaryScheduleCategory(item))}`,
       index===0?"status-next":""
     )));
     host.innerHTML=cards.join("");
@@ -2877,7 +2885,7 @@ function renderMySchedule(){
     <div class="saved-schedule-item${e._snapshot?" saved-schedule-snapshot":""}">
       <div>
         <strong>${escapeAppHtml(e.title)}</strong>
-        <div class="meta">${escapeAppHtml(e.day)} • ${escapeAppHtml(e.time)}${e.endTime?`–${escapeAppHtml(e.endTime)}`:""} • ${escapeAppHtml(e.location)}</div>
+        <div class="meta">${escapeAppHtml(e.day)} • ${escapeAppHtml(formatDisplayTimeRange(e.time,e.endTime))} • ${escapeAppHtml(e.location)}</div>
         ${myConChangeHtml("event",e.id)}
         ${e._snapshot?'<div class="saved-sync-note">REFRESHING CURRENT SCHEDULE…</div>':""}
       </div>
@@ -5003,7 +5011,7 @@ function mapCelebrityAutographsHtml(){
   return '<h3>CELEBRITY AUTOGRAPH TIMES</h3>'+["Friday","Saturday","Sunday"].map(day=>
     `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${guests.map(guest=>{
       const times=String(guest[day]||"").trim().split(/\r?\n/).filter(Boolean);
-      return `<article><b>${escapeAppHtml(guest.guestName||"Celebrity guest")}</b><span>${times.length?times.map(time=>escapeAppHtml(time)).join("<br>"):"No autograph times published."}</span></article>`;
+      return `<article><b>${escapeAppHtml(guest.guestName||"Celebrity guest")}</b><span>${times.length?times.map(time=>escapeAppHtml(formatDisplayTimeRange(time))).join("<br>"):"No autograph times published."}</span></article>`;
     }).join("")}</section>`
   ).join("");
 }
@@ -5013,7 +5021,7 @@ function panelRoomTwoScheduleHtml(rows){
     <p class="muted-empty hidden" data-room-empty>No categories selected.</p>`+
     ['Friday','Saturday','Sunday'].map(day=>{
       const items=rows.filter(row=>row.day===day);if(!items.length)return '';
-      return `<section class="map-zone-day panel-room-day"><h3>${day.toUpperCase()}</h3>${items.map(row=>`<article class="panel-room-event" data-room-category="${escapeAppHtml(primaryScheduleCategory(row))}" data-schedule-tone="${scheduleCategoryTone(primaryScheduleCategory(row))}"><b>${escapeAppHtml(row.time)}${row.endTime?' – '+escapeAppHtml(row.endTime):''}</b><strong>${escapeAppHtml(row.title)}</strong><small>${escapeAppHtml(scheduleCategoryLabel(primaryScheduleCategory(row)))}</small>${scheduleMoreInfoHtml(row)}</article>`).join('')}</section>`;
+      return `<section class="map-zone-day panel-room-day"><h3>${day.toUpperCase()}</h3>${items.map(row=>`<article class="panel-room-event" data-room-category="${escapeAppHtml(primaryScheduleCategory(row))}" data-schedule-tone="${scheduleCategoryTone(primaryScheduleCategory(row))}"><b>${escapeAppHtml(formatDisplayTimeRange(row.time,row.endTime))}</b><strong>${escapeAppHtml(row.title)}</strong><small>${escapeAppHtml(scheduleCategoryLabel(primaryScheduleCategory(row)))}</small>${scheduleMoreInfoHtml(row)}</article>`).join('')}</section>`;
     }).join('');
 }
 function bindPanelRoomFilters(content){
@@ -5031,7 +5039,7 @@ function openMapZone(def){
   if(!modal||!content||!def)return;
   const rows=mapZoneScheduleItems(def);
   const days=["Friday","Saturday","Sunday"];
-  const scheduleHtml=def.key==="celebrity"?mapCelebrityAutographsHtml():def.key==="panel2"?panelRoomTwoScheduleHtml(rows):days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
+  const scheduleHtml=def.key==="celebrity"?mapCelebrityAutographsHtml():def.key==="panel2"?panelRoomTwoScheduleHtml(rows):days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(formatDisplayTimeRange(r.time,r.endTime))}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
   const related=(def.eventIds||[]).map(id=>state.events.find(e=>e.id===id)).filter(Boolean);
   const relatedHtml=related.length
     ? `<div class="map-zone-related ${def.menuOnly?"map-zone-related-menu-only":""}">${def.menuOnly?"":"<strong>MORE INFO</strong>"}${related.map(e=>`<button type="button" data-map-event-id="${escapeAppHtml(e.id)}">${escapeAppHtml(e.title)} ›</button>`).join("")}</div>`
