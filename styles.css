@@ -6023,3 +6023,22 @@ body .schedule-day-badge{
   letter-spacing:0!important;
   min-width:0;
 }
+
+/* Size indivisible weekday labels from their actual column, independent of
+   the global text scaler's inline font size. Reserve padding and breathing room. */
+.schedule-time-stack{container-type:inline-size}
+.panel-card-head>div:first-child{container-type:inline-size;flex:1;min-width:0}
+body .screen .schedule-day-badge,
+body .schedule-day-badge{
+  font-size:10px!important;
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  letter-spacing:0!important;
+}
+@supports (font-size:1cqw){
+  body .screen .schedule-day-badge,
+  body .schedule-day-badge{
+    font-size:min(1em,calc((100cqw - 20px) / 6.6))!important;
+  }
+}
