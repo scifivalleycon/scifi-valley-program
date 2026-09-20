@@ -6012,3 +6012,14 @@ body.sfvc-text-xxl .settings-menu-icon.cosplay-clinic-menu-icon{font-size:9px!im
 .schedule-time-stack{display:grid;align-content:start;gap:5px;min-width:0}
 .schedule-day-badge{display:block;box-sizing:border-box;padding:5px 4px;background:var(--coral);color:var(--cream);border:1px solid var(--ink);text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:800;line-height:1.3;letter-spacing:.025em}
 .panel-card-head .schedule-day-badge{width:fit-content;max-width:100%;margin-top:5px;padding:5px 9px}
+
+/* Weekdays are indivisible labels; JS fits the font to the available box. */
+body .screen .schedule-day-badge,
+body .schedule-day-badge{
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+  letter-spacing:0!important;
+  min-width:0;
+}
