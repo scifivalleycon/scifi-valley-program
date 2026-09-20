@@ -6655,3 +6655,7 @@ body .schedule-day-badge{
   white-space:nowrap!important;
   min-width:max-content;
 }
+
+/* Group photo-op pricing and availability occupy separate lines at every size. */
+.group-op-card>strong{display:block}
+.group-op-card>small{display:block;margin-top:6px;line-height:1.4}
