@@ -6682,3 +6682,52 @@ body .schedule-day-badge{
 .cookie-preferences-actions{display:flex;gap:8px;flex-wrap:wrap}
 .cookie-preferences-actions>button{flex:1 1 120px;min-height:44px;padding:8px 12px;border:1px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);font:700 11px/1.35 Arial,sans-serif;white-space:normal;cursor:pointer}
 .cookie-preferences-actions>button:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+
+/* Keep enlarged schedule times inside their own grid track. */
+body .screen .schedule-card{
+  grid-template-columns:minmax(0,78px) minmax(0,1fr) auto;
+}
+body .screen .schedule-time-stack{
+  grid-template-columns:minmax(0,1fr);
+  min-width:0;
+  width:100%;
+  max-width:100%;
+}
+body .screen .schedule-time,
+body .screen .schedule-day-badge{
+  box-sizing:border-box;
+  min-width:0;
+  width:100%;
+  max-width:100%;
+}
+body .screen .schedule-time{
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+body .screen .schedule-card-main{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+/* Enlarged text gets a full-width time row above the event details. */
+body.sfvc-text-enlarged .screen .schedule-card{
+  grid-template-columns:minmax(0,1fr) auto!important;
+}
+body.sfvc-text-enlarged .screen .schedule-time-stack{
+  grid-column:1/-1;
+  justify-self:start;
+  width:fit-content;
+  max-width:100%;
+  container-type:normal;
+}
+body.sfvc-text-enlarged .screen .schedule-card-main{
+  grid-column:1;
+}
+body.sfvc-text-enlarged .screen .schedule-card>.schedule-save,
+body.sfvc-text-enlarged .screen .schedule-card>.schedule-no-reminder{
+  grid-column:2;
+  align-self:start;
+}
+body.sfvc-text-enlarged .screen .schedule-time-stack .schedule-day-badge{
+  font-size:11px!important;
+}
