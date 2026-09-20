@@ -6525,3 +6525,86 @@ body .schedule-day-badge{
     grid-template-columns:1fr;
   }
 }
+
+
+/* Compact-medium map legend — V4.107
+   Clearly smaller than V4.106 while retaining comfortable mobile tap targets. */
+.map-legend-panel{
+  padding:10px;
+}
+.map-legend-panel summary{
+  font-size:10.5px;
+}
+.map-legend-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+.map-legend-item.map-legend-button{
+  min-height:50px;
+  grid-template-columns:30px minmax(0,1fr);
+  gap:7px;
+  padding:6px 7px;
+  border-width:2px;
+  border-radius:7px;
+  box-shadow:2px 2px 0 rgba(58,39,32,.11);
+}
+.map-legend-item.map-legend-button .map-legend-swatch{
+  width:30px;
+  height:30px;
+  border-width:1.5px;
+  border-radius:4px;
+  grid-row:1 / span 2;
+}
+.map-legend-item.map-legend-button b{
+  font-size:9.5px;
+  line-height:1.12;
+  align-self:end;
+}
+.map-legend-item.map-legend-button em{
+  grid-column:2;
+  align-self:start;
+  margin-top:0;
+  font-size:6px;
+  line-height:1;
+}
+.map-legend-note{
+  margin-top:7px;
+  padding-top:6px;
+  font-size:8.5px;
+  line-height:1.35;
+}
+
+@media(max-width:700px){
+  .map-legend-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:520px){
+  .map-legend-panel{padding:10px}
+  .map-legend-panel summary{font-size:10.5px}
+  .map-legend-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+  }
+  .map-legend-item.map-legend-button{
+    min-height:50px;
+    grid-template-columns:30px minmax(0,1fr);
+    gap:7px;
+    padding:6px 7px;
+  }
+  .map-legend-item.map-legend-button .map-legend-swatch{
+    width:30px;
+    height:30px;
+  }
+  .map-legend-item.map-legend-button b{font-size:9.5px}
+  .map-legend-item.map-legend-button em{
+    grid-column:2;
+    margin-top:0;
+    font-size:6px;
+  }
+  .map-legend-note{font-size:8.5px}
+}
+@media(max-width:360px){
+  .map-legend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
