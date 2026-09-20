@@ -6119,3 +6119,70 @@ function initializeUsageAnalytics(){
 }
 
 initializeUsageAnalytics();
+
+
+// Meta advertising is separate from first-party usage analytics and requires opt-in.
+function initializeMetaAdvertising(){
+  const pixel='264787620849228',key='sfvc-meta-advertising-consent-v1';
+  const publicScreens=new Set(['home','guests','schedule','celebrity','map','directions','more','faq','tshirts','hotels']);
+  let choice='unknown',initialized=false,lastPage='';
+  const optedOut=()=>navigator.globalPrivacyControl===true;
+  try{choice=localStorage.getItem(key)||'unknown'}catch{}
+  const allowed=()=>choice==='allowed'&&!optedOut();
+  const publicPage=()=>publicScreens.has(activeScreenId());
+  function updateChoiceUi(){
+    const notice=document.getElementById('metaAdvertisingNotice');
+    notice?.classList.toggle('hidden',choice!=='unknown'||optedOut());
+    const status=document.getElementById('metaAdvertisingStatus');
+    if(status)status.textContent=optedOut()?'Advertising tracking is off because your browser sends a privacy opt-out signal.':allowed()?'Advertising tracking is allowed.':'Advertising tracking is off.';
+  }
+  function start(){
+    if(!allowed()||!publicPage())return false;
+    if(!initialized){
+      if(!window.fbq){
+        const n=window.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!window._fbq)window._fbq=n;n.push=n;n.loaded=true;n.version='2.0';n.queue=[];
+      }
+      // No automatic button/form events or advanced matching of contact details.
+      window.fbq('consent','grant');
+      window.fbq('set','autoConfig',false,pixel);
+      window.fbq('init',pixel);
+      const script=document.createElement('script');script.async=true;
+      script.src='https://connect.facebook.net/en_US/fbevents.js';script.id='sfvcMetaPixelScript';
+      document.head.appendChild(script);initialized=true;
+    }else window.fbq('consent','grant');
+    return true;
+  }
+  function pageView(){
+    if(!allowed()||!publicPage()){
+      if(initialized)window.fbq('consent','revoke');lastPage='';return;
+    }
+    if(!start())return;
+    const page=activeScreenId();if(page===lastPage)return;lastPage=page;
+    window.fbq('trackSingle',pixel,'PageView');
+    window.fbq('trackSingleCustom',pixel,'AppSectionView',{section:page});
+  }
+  document.querySelectorAll('[data-meta-consent]').forEach(button=>button.addEventListener('click',()=>{
+    choice=button.dataset.metaConsent==='allowed'?'allowed':'denied';
+    try{localStorage.setItem(key,choice)}catch{}
+    if(!allowed()&&initialized)window.fbq('consent','revoke');
+    updateChoiceUi();pageView();
+  }));
+  window.addEventListener('storage',event=>{
+    if(event.key!==key)return;choice=event.newValue||'unknown';updateChoiceUi();pageView();
+  });
+  window.addEventListener('sfvc:page',pageView);
+  document.addEventListener('click',event=>{
+    if(!allowed()||!publicPage()||!initialized)return;
+    const ticket=event.target.closest?.('#nextEventAdLink,.purchase-quick-card.tickets');
+    if(ticket){window.fbq('trackSingleCustom',pixel,'TicketLinkClick',{event:ticket.id==='nextEventAdLink'?'next_event':'current_event'});return;}
+    const guestButton=event.target.closest?.('[data-open-guest],[data-home-guest],[data-map-open-guest]');
+    if(guestButton){
+      const id=guestButton.dataset.openGuest||guestButton.dataset.homeGuest||guestButton.dataset.mapOpenGuest;
+      const guest=state.guests.find(g=>String(g.id)===String(id));
+      if(guest)window.fbq('trackSingle',pixel,'ViewContent',{content_name:guest.name,content_ids:[String(guest.id)],content_category:'Celebrity guest'});
+    }
+  });
+  updateChoiceUi();pageView();
+}
+initializeMetaAdvertising();

@@ -277,6 +277,14 @@
         <b>›</b>
       </a>
 
+      <section id="metaAdvertisingNotice" class="paper-panel hidden" aria-labelledby="metaAdvertisingTitle">
+        <h2 id="metaAdvertisingTitle">YOUR ADVERTISING CHOICE</h2>
+        <p>May we share app visits, guest-profile views, and ticket-link clicks with Meta to help measure our Facebook and Instagram ads and show more relevant ads? Meta may use browser identifiers and cookies. This is optional; you can change your choice in Notification Settings.</p>
+        <div class="notification-button-stack">
+          <button type="button" class="retro-action" data-meta-consent="allowed">ALLOW ADVERTISING TRACKING</button>
+          <button type="button" class="retro-action secondary" data-meta-consent="denied">NO THANKS</button>
+        </div>
+      </section>
       <section class="purchase-quick-grid" aria-label="Tickets and exhibitor tables">
         <a class="purchase-quick-card tickets" href="https://scifivalleycon.com/tickets" target="_blank" rel="noopener">
           <span class="purchase-quick-icon">★</span>
@@ -1199,6 +1207,15 @@
         <div id="reminderDeliveryStatus" class="reminder-delivery-status">BACKGROUND REMINDERS CONNECTING…</div>
       </section>
 
+      <section class="paper-panel" aria-labelledby="advertisingSettingsTitle">
+        <h2 id="advertisingSettingsTitle">ADVERTISING PRIVACY</h2>
+        <p>Allow Meta to receive app visits, public guest-profile views, and ticket-link clicks for Facebook and Instagram ad measurement and personalization. Meta may use browser identifiers and cookies. Your reports and registration entries are not included. You can use the app without allowing advertising tracking.</p>
+        <p id="metaAdvertisingStatus" role="status"></p>
+        <div class="notification-button-stack">
+          <button type="button" class="retro-action" data-meta-consent="allowed">ALLOW</button>
+          <button type="button" class="retro-action secondary" data-meta-consent="denied">TURN OFF</button>
+        </div>
+      </section>
       <section class="paper-panel reminder-test-panel">
         <span class="section-kicker">DELIVERY TEST</span>
         <h2>TEST LOCK-SCREEN DELIVERY</h2>
@@ -1546,11 +1563,12 @@
 
   <script src="event-guide-ui.js?v=4.82"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=analytics-20260920"></script>
+  <script src="app.js?v=archive-meta-20260920"></script>
   <script src="home-layout.js?v=4.101"></script>
   <script src="event-guide-layout.js?v=4.101"></script>
 </body>
 </html>
+
 
 
 
