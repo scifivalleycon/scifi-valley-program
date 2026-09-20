@@ -6350,3 +6350,84 @@ body .schedule-day-badge{
     margin-top:0;
   }
 }
+
+
+/* Larger clickable map legend — V4.105 */
+.map-legend-panel{
+  padding:16px;
+}
+.map-legend-panel summary{
+  font-size:15px;
+}
+.map-legend-grid{
+  gap:12px;
+  margin-top:14px;
+}
+.map-legend-item.map-legend-button{
+  min-height:88px;
+  grid-template-columns:54px minmax(0,1fr) auto;
+  gap:12px;
+  padding:14px 14px;
+  border-width:2.5px;
+  border-radius:10px;
+}
+.map-legend-item.map-legend-button .map-legend-swatch{
+  width:54px;
+  height:48px;
+  border-width:2px;
+  border-radius:6px;
+}
+.map-legend-item.map-legend-button b{
+  font-size:18px;
+  line-height:1.15;
+}
+.map-legend-item.map-legend-button em{
+  font-size:11px;
+  letter-spacing:.04em;
+}
+.map-legend-note{
+  margin-top:12px;
+  padding-top:10px;
+  font-size:13px;
+  line-height:1.45;
+}
+
+@media(max-width:700px){
+  .map-legend-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:520px){
+  .map-legend-panel{
+    padding:14px;
+  }
+  .map-legend-panel summary{
+    font-size:14px;
+  }
+  .map-legend-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  .map-legend-item.map-legend-button{
+    min-height:82px;
+    grid-template-columns:50px minmax(0,1fr) auto;
+    gap:11px;
+    padding:12px 13px;
+  }
+  .map-legend-item.map-legend-button .map-legend-swatch{
+    width:50px;
+    height:46px;
+  }
+  .map-legend-item.map-legend-button b{
+    font-size:17px;
+  }
+  .map-legend-item.map-legend-button em{
+    grid-column:auto;
+    margin-top:0;
+    font-size:10px;
+  }
+  .map-legend-note{
+    font-size:12px;
+  }
+}
