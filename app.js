@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.103";
+const APP_BUILD_VERSION="4.104";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -4896,7 +4896,30 @@ function mapCodeFontSize(code,w,h){
 function renderMapLegend(){
   const c=document.getElementById("mapLegend");if(!c)return;
   const items=Array.isArray(state.mapSettings.legend)?state.mapSettings.legend:[];
-  c.innerHTML=items.map(item=>`<div class="map-legend-item"><span style="background:${svgEscape(item.color)}"></span><b>${svgEscape(item.label)}</b></div>`).join("");
+  c.innerHTML=items.map(item=>{
+    const key=String(item.id||"");
+    if(key==="conquest"){
+      return `<button type="button" class="map-legend-item map-legend-button map-legend-conquest" data-map-legend-conquest aria-label="Learn about Con-Quest">
+        <span class="map-legend-swatch" style="background:${svgEscape(item.color)}"></span>
+        <b>${svgEscape(item.label)}</b><em>INFO ›</em>
+      </button>`;
+    }
+    const def=mapZoneDefByKey(key);
+    return `<button type="button" class="map-legend-item map-legend-button${def?"":" unavailable"}" ${def?`data-map-legend-zone="${svgEscape(key)}" aria-pressed="${mapSelectedZoneKey===key?"true":"false"}"`:"disabled"} aria-label="${def?`Open ${svgEscape(item.label)} information`:`${svgEscape(item.label)} map legend`}">
+      <span class="map-legend-swatch" style="background:${svgEscape(item.color)}"></span>
+      <b>${svgEscape(item.label)}</b><em>${def?"VIEW ›":""}</em>
+    </button>`;
+  }).join("");
+
+  c.querySelectorAll("[data-map-legend-zone]").forEach(button=>button.addEventListener("click",()=>{
+    const def=mapZoneDefByKey(button.dataset.mapLegendZone);
+    if(!def)return;
+    selectMapZone(def.key);
+    openMapZone(def);
+  }));
+  c.querySelector("[data-map-legend-conquest]")?.addEventListener("click",openConQuestInfo);
+  applyMapZoneSelection();
+
   const note=document.getElementById("mapConQuestNote");if(note)note.textContent=state.mapSettings.conQuestNote||"Red table markers indicate Con-Quest participation.";
 }
 function mapElementTransform(item){
@@ -4908,18 +4931,46 @@ function mapElementTransform(item){
   return parts.length?` transform="${parts.join(' ')}"`:'';
 }
 const MAP_ZONE_DEFS={
-  "panel-room-1-box":{key:"panel1",title:"Panel Room 1",locations:["panel room 1"],sources:["panels","schedule"]},
-  "panel-room-2-box":{key:"panel2",title:"Panel Room 2",locations:["panel room 2"],sources:["panels","schedule"]},
-  "event-room-box":{key:"event",title:"Event Room",locations:["event room"],sources:["schedule"]},
-  "paint-room-box":{key:"paint",title:"Paint & Hobby Room",locations:["paint and hobby room","paint & hobby room"],sources:["schedule"]},
-  "mini-cafe-box":{key:"miniCafe",title:"The Mini Café",locations:[],eventIds:["mini-cafe"],menuOnly:true},
-  "cafe-box":{key:"cafe",title:"The Café",locations:[],eventIds:["regular-cafe"],menuOnly:true},
-  "photo-box":{key:"photo",title:"Photo Op Area",locations:["photo op area"],sources:["photoOps"]},
-  "lawn-box":{key:"lawn",title:"The Lawn",locations:["outside lawn","the lawn"],sources:["schedule"],eventIds:["medieval-combat"]},
-  "gaming-room-box":{key:"gaming",title:"Gaming Room",locations:["game room","gaming room"],sources:["schedule"],eventIds:["tabletop-gaming"]},
-  "retro-box":{key:"retro",title:"Retro Gaming Arcade Vault",locations:[],eventIds:["retro-gaming"]}
+  "panel-room-1-box":{key:"panel1",title:"Panel Room 1",locations:["panel room 1"],sources:["panels","schedule"],description:"Celebrity guest Q&A panels, reunion panels, and other scheduled programming take place here."},
+  "panel-room-2-box":{key:"panel2",title:"Panel Room 2",locations:["panel room 2"],sources:["panels","schedule"],description:"Scheduled panels, trivia, presentations, and other attendee programming take place here."},
+  "event-room-box":{key:"event",title:"Event Room",locations:["event room"],sources:["schedule"],description:"A rotating schedule of convention activities and special events takes place in the Event Room."},
+  "paint-room-box":{key:"paint",title:"Paint & Hobby Room",locations:["paint and hobby room","paint & hobby room"],sources:["schedule"],description:"Hands-on hobby programming, workshops, painting, and tabletop activities are hosted in this room."},
+  "mini-cafe-box":{key:"miniCafe",title:"The Mini Café",locations:[],eventIds:["mini-cafe"],menuOnly:true,description:"A convenient food and refreshment stop inside the convention center."},
+  "cafe-box":{key:"cafe",title:"The Café",locations:[],eventIds:["regular-cafe"],menuOnly:true,description:"Food and refreshments are available here during convention hours."},
+  "photo-box":{key:"photo",title:"Photo Op Area",locations:["photo op area"],sources:["photoOps"],description:"Professional celebrity photo ops are held here. Arrive before your scheduled photo-op time and follow staff instructions for lineup."},
+  "lawn-box":{key:"lawn",title:"The Lawn",locations:["outside lawn","the lawn"],sources:["schedule"],eventIds:["medieval-combat"],description:"Outdoor convention activities and demonstrations are held on the lawn."},
+  "gaming-room-box":{key:"gaming",title:"Gaming Room",locations:["game room","gaming room"],sources:["schedule"],eventIds:["tabletop-gaming"],description:"Tabletop gaming and other scheduled gaming activities are hosted here."},
+  "retro-box":{key:"retro",title:"Retro Gaming Arcade Vault",locations:[],eventIds:["retro-gaming"],description:"Drop in for retro video gaming throughout the weekend."},
+  "main-hall-box":{key:"mainHall",title:"Exhibit Hall - Main",locations:[],description:"The main exhibit hall features vendors, artists, exhibitors, and convention shopping. Tap an individual table or booth on the map for vendor details."},
+  "lower-hall-box":{key:"lowerHall",title:"Exhibit Hall - Lower",locations:[],description:"The lower exhibit hall includes additional vendors, artists, celebrity areas, and convention attractions. Tap a table or booth for details."},
+  "celeb-left-box":{key:"celebrity",title:"Celebrity Guests",locations:[],description:"Celebrity guest autograph and selfie tables are located in this area. Tap an individual guest table on the map for their profile, pricing, and appearance information."},
+  "celeb-top-box":{key:"celebrity",title:"Celebrity Guests",locations:[],description:"Celebrity guest autograph and selfie tables are located in this area. Tap an individual guest table on the map for their profile, pricing, and appearance information."},
+  "admissions-box":{key:"admissions",title:"Admissions",locations:[],description:"Start here for admission wristbands, attendee entry assistance, and event check-in."},
+  "patio-box":{key:"patio",title:"Patio Vendors",locations:[],description:"Outdoor vendors and exhibitors are located on the patio. Tap an individual booth on the map for vendor details."},
+  "tattoo-box":{key:"tattoo",title:"Tattoo Parlor",locations:[],description:"Visit the Tattoo Parlor for convention tattoo programming and participating artists."}
 };
 const MAP_ZONE_BY_ID=new Map(Object.entries(MAP_ZONE_DEFS).map(([id,def])=>[id,def]));
+const MAP_ZONE_BY_KEY=new Map(Object.values(MAP_ZONE_DEFS).map(def=>[def.key,def]));
+let mapSelectedZoneKey="";
+
+function mapZoneDefByKey(key){
+  return MAP_ZONE_BY_KEY.get(String(key||""))||null;
+}
+
+function applyMapZoneSelection(){
+  const svg=document.querySelector("#mapSvgHost svg");
+  svg?.querySelectorAll("[data-map-zone]").forEach(el=>el.classList.toggle("map-zone-selected",Boolean(mapSelectedZoneKey)&&el.dataset.mapZone===mapSelectedZoneKey));
+  document.querySelectorAll("[data-map-legend-zone]").forEach(button=>{
+    const selected=Boolean(mapSelectedZoneKey)&&button.dataset.mapLegendZone===mapSelectedZoneKey;
+    button.classList.toggle("selected",selected);
+    button.setAttribute("aria-pressed",String(selected));
+  });
+}
+
+function selectMapZone(key){
+  mapSelectedZoneKey=String(key||"");
+  applyMapZoneSelection();
+}
 
 function mapZoneScheduleItems(def){
   const names=new Set((def.locations||[]).map(x=>String(x).toLowerCase()));
@@ -4946,7 +4997,8 @@ function openMapZone(def){
   const relatedHtml=related.length
     ? `<div class="map-zone-related ${def.menuOnly?"map-zone-related-menu-only":""}">${def.menuOnly?"":"<strong>MORE INFO</strong>"}${related.map(e=>`<button type="button" data-map-event-id="${escapeAppHtml(e.id)}">${escapeAppHtml(e.title)} ›</button>`).join("")}</div>`
     : "";
-  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${scheduleHtml||emptyScheduleHtml}${relatedHtml}`;
+  const intro=def.description?`<p class="map-zone-description">${escapeAppHtml(def.description)}</p>`:"";
+  content.innerHTML=`<span class="tag">ROOM / AREA</span><h2>${escapeAppHtml(def.title)}</h2>${intro}${scheduleHtml||emptyScheduleHtml}${relatedHtml}`;
   content.querySelectorAll("[data-map-event-id]").forEach(button=>button.addEventListener("click",()=>{modal.close();setTimeout(()=>window.SFVCEventGuide?.open?.(button.dataset.mapEventId),35)}));
   if(modal.open)modal.close();
   if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");
@@ -5014,8 +5066,9 @@ function renderFloorPlanSvg(){
   host.innerHTML=buildMapSvg();
   applyMapVendorData();
   bindMapLocations();
+  applyMapZoneSelection();
   host.querySelectorAll('[data-map-zone]').forEach(el=>{
-    const activate=event=>{event.preventDefault();event.stopPropagation();const def=[...MAP_ZONE_BY_ID.values()].find(x=>x.key===el.dataset.mapZone);openMapZone(def)};
+    const activate=event=>{event.preventDefault();event.stopPropagation();const def=mapZoneDefByKey(el.dataset.mapZone);if(!def)return;selectMapZone(def.key);openMapZone(def)};
     el.addEventListener('click',activate);
     el.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){activate(event)}});
   });
