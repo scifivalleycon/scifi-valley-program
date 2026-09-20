@@ -6673,3 +6673,12 @@ body .schedule-day-badge{
 .panel-room-event .schedule-more-info>summary{background:var(--schedule-tone)}
 .schedule-session-range{font-weight:700;margin-top:4px}
 @media(max-width:360px){.panel-room-filters{grid-template-columns:1fr}}
+
+
+/* Compact footer cookie choice; stays in document flow and respects text zoom. */
+.cookie-preferences-note{margin:16px 0 8px;padding:12px;border-top:1px solid var(--ink);color:var(--ink);background:transparent}
+.cookie-preferences-note>strong{font-family:Arial,sans-serif;font-size:12px;line-height:1.4}
+.cookie-preferences-note>p{margin:6px 0 10px;font-family:Arial,sans-serif;font-size:11px;line-height:1.45}
+.cookie-preferences-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cookie-preferences-actions>button{flex:1 1 120px;min-height:44px;padding:8px 12px;border:1px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);font:700 11px/1.35 Arial,sans-serif;white-space:normal;cursor:pointer}
+.cookie-preferences-actions>button:focus-visible{outline:3px solid var(--teal);outline-offset:3px}

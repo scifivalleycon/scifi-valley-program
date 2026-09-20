@@ -7,7 +7,7 @@
   <meta name="description" content="Sci-Fi Valley Con official digital event program">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=panel-room2-20260920">
+  <link rel="stylesheet" href="styles.css?v=compact-cookies-20260920">
   <link rel="stylesheet" href="home-layout.css?v=4.101">
   <link rel="stylesheet" href="event-guide-layout.css?v=4.101">
   <title>Sci-Fi Valley Con | Digital Program</title>
@@ -277,14 +277,6 @@
         <b>›</b>
       </a>
 
-      <section id="metaAdvertisingNotice" class="paper-panel hidden" aria-labelledby="metaAdvertisingTitle">
-        <h2 id="metaAdvertisingTitle">YOUR ADVERTISING CHOICE</h2>
-        <p>May we share app visits, guest-profile views, and ticket-link clicks with Meta to help measure our Facebook and Instagram ads and show more relevant ads? Meta may use browser identifiers and cookies. This is optional; you can change your choice in Notification Settings.</p>
-        <div class="notification-button-stack">
-          <button type="button" class="retro-action" data-meta-consent="allowed">ALLOW ADVERTISING TRACKING</button>
-          <button type="button" class="retro-action secondary" data-meta-consent="denied">NO THANKS</button>
-        </div>
-      </section>
       <section class="purchase-quick-grid" aria-label="Tickets and exhibitor tables">
         <a class="purchase-quick-card tickets" href="https://scifivalleycon.com/tickets" target="_blank" rel="noopener">
           <span class="purchase-quick-icon">★</span>
@@ -1247,6 +1239,14 @@
       </div>
     </section>
 
+    <aside id="metaAdvertisingNotice" class="cookie-preferences-note hidden" aria-labelledby="metaAdvertisingTitle">
+      <strong id="metaAdvertisingTitle">Cookie preferences</strong>
+      <p>Optional Meta cookies share app activity to measure and personalize Facebook and Instagram ads. You can change your choice in Settings.</p>
+      <div class="cookie-preferences-actions">
+        <button type="button" data-meta-consent="allowed">Allow cookies</button>
+        <button type="button" data-meta-consent="denied">Decline</button>
+      </div>
+    </aside>
   </main>
 
   <dialog id="shareWebAppModal" class="share-web-app-modal">
@@ -1568,6 +1568,7 @@
   <script src="event-guide-layout.js?v=4.101"></script>
 </body>
 </html>
+
 
 
 
