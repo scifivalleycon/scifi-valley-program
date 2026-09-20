@@ -4986,12 +4986,22 @@ function mapZoneScheduleItems(def){
   const timeValue=t=>{const m=String(t||"").match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return 99999;let h=Number(m[1])%12;if(m[3].toUpperCase()==="PM")h+=12;return h*60+Number(m[2]);};
   return rows.sort((a,b)=>(dayOrder[a.day]||9)-(dayOrder[b.day]||9)||timeValue(a.time)-timeValue(b.time));
 }
+function mapCelebrityAutographsHtml(){
+  const guests=state.autographs||[];
+  if(!guests.length)return '<p class="muted-empty">Celebrity autograph times have not been published yet.</p>';
+  return '<h3>CELEBRITY AUTOGRAPH TIMES</h3>'+["Friday","Saturday","Sunday"].map(day=>
+    `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${guests.map(guest=>{
+      const times=String(guest[day]||"").trim().split(/\r?\n/).filter(Boolean);
+      return `<article><b>${escapeAppHtml(guest.guestName||"Celebrity guest")}</b><span>${times.length?times.map(time=>escapeAppHtml(time)).join("<br>"):"No autograph times published."}</span></article>`;
+    }).join("")}</section>`
+  ).join("");
+}
 function openMapZone(def){
   const modal=document.getElementById("mapLocationModal"),content=document.getElementById("mapLocationModalContent");
   if(!modal||!content||!def)return;
   const rows=mapZoneScheduleItems(def);
   const days=["Friday","Saturday","Sunday"];
-  const scheduleHtml=days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
+  const scheduleHtml=def.key==="celebrity"?mapCelebrityAutographsHtml():days.map(day=>{const dayRows=rows.filter(r=>r.day===day);if(!dayRows.length)return "";return `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${dayRows.map(r=>`<article><b>${escapeAppHtml(r.time)}${r.endTime?`–${escapeAppHtml(r.endTime)}`:""}</b><span>${escapeAppHtml(r.title)}</span></article>`).join("")}</section>`}).join("");
   const related=(def.eventIds||[]).map(id=>state.events.find(e=>e.id===id)).filter(Boolean);
   const emptyScheduleHtml=def.menuOnly?"":'<p class="muted-empty">No timed events are currently published for this room.</p>';
   const relatedHtml=related.length
