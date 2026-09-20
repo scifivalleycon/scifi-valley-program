@@ -2487,6 +2487,11 @@ function scheduleCategoriesForDay(day){
   });
 }
 
+function scheduleDayBadgeHtml(day){
+  const label=String(day||"").trim().toUpperCase();
+  return ["FRIDAY","SATURDAY","SUNDAY"].includes(label)
+    ? `<span class="schedule-day-badge">${label}</span>` : "";
+}
 function scheduleCardHtml(e){
   const saved=state.mySchedule.has(e.id);
   const category=primaryScheduleCategory(e);
@@ -2495,7 +2500,7 @@ function scheduleCardHtml(e){
     : `<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`;
 
   return `<article class="schedule-card" data-schedule-category="${category}">
-    <div class="schedule-time">${e.time}</div>
+    <div class="schedule-time-stack"><div class="schedule-time">${e.time}</div>${scheduleDayBadgeHtml(e.day)}</div>
     <div>
       <strong>${e.title.toUpperCase()}</strong>
       <div class="meta">${e.location} • ${e.category}</div>
@@ -2559,7 +2564,7 @@ function renderCelebrityPanels(){
   filters.innerHTML=days.map(d=>`<button class="chip ${d===state.celebrityPanelDay?"active":""}" data-panel-day="${d}">${d.toUpperCase()}</button>`).join("");
   filters.querySelectorAll("[data-panel-day]").forEach(b=>b.addEventListener("click",()=>{state.celebrityPanelDay=b.dataset.panelDay;renderCelebrityPanels()}));
   const records=state.panels.filter(p=>p.day===state.celebrityPanelDay);
-  document.getElementById("panelList").innerHTML=records.map((p,i)=>{const e=panelScheduleItems().find(x=>x.id===`panel-${p.id||i}`),saved=e&&state.mySchedule.has(e.id);return `<article class="celebrity-panel-card"><div class="panel-card-head"><div><span class="panel-time">${escapeAppHtml(panelTimeLabel(p))}</span><h3>${p.title}</h3></div>${e?`<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`:""}</div><div class="meta">${p.location||info.panelRoom||""}${p.participants?` • ${p.participants}`:""}</div>${p.description?`<p>${p.description}</p>`:""}</article>`}).join("")||`<div class="paper-panel muted-empty">No celebrity panels listed for this day.</div>`;
+  document.getElementById("panelList").innerHTML=records.map((p,i)=>{const e=panelScheduleItems().find(x=>x.id===`panel-${p.id||i}`),saved=e&&state.mySchedule.has(e.id);return `<article class="celebrity-panel-card"><div class="panel-card-head"><div><span class="panel-time">${escapeAppHtml(panelTimeLabel(p))}</span>${scheduleDayBadgeHtml(p.day)}<h3>${p.title}</h3></div>${e?`<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`:""}</div><div class="meta">${p.location||info.panelRoom||""}${p.participants?` • ${p.participants}`:""}</div>${p.description?`<p>${p.description}</p>`:""}</article>`}).join("")||`<div class="paper-panel muted-empty">No celebrity panels listed for this day.</div>`;
   bindScheduleSaveButtons();
 }
 
