@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.101";
+const APP_BUILD_VERSION="4.102";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -2492,19 +2492,40 @@ function scheduleDayBadgeHtml(day){
   return ["FRIDAY","SATURDAY","SUNDAY"].includes(label)
     ? `<span class="schedule-day-badge">${label}</span>` : "";
 }
+function scheduleMoreInfoHtml(e){
+  const description=String(e.description||e.summary||e.details||"").trim();
+  const participants=String(e.participants||"").trim();
+  const notes=String(e.notes||"").trim();
+
+  const rows=[];
+  if(participants)rows.push(`<div class="schedule-more-participants"><strong>FEATURED:</strong> ${escapeAppHtml(participants)}</div>`);
+  if(description)rows.push(`<p>${escapeAppHtml(description)}</p>`);
+  if(notes&&notes!==description)rows.push(`<p class="schedule-more-note">${escapeAppHtml(notes)}</p>`);
+  if(!rows.length)return "";
+
+  return `<details class="schedule-more-info">
+    <summary>
+      <span class="schedule-more-label" aria-hidden="true"></span>
+      <span class="schedule-more-icon" aria-hidden="true">＋</span>
+    </summary>
+    <div class="schedule-more-body">${rows.join("")}</div>
+  </details>`;
+}
+
 function scheduleCardHtml(e){
   const saved=state.mySchedule.has(e.id);
   const category=primaryScheduleCategory(e);
   const saveButton=e.remindable===false
     ? `<span class="schedule-no-reminder" title="Flexible availability">FLEX</span>`
-    : `<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${e.id}">${saved?"🔔":"♡"}</button>`;
+    : `<button class="schedule-save ${saved?"saved":""}" data-schedule-save="${escapeAppHtml(e.id)}" aria-label="${saved?"Remove from":"Add to"} My Schedule">${saved?"🔔":"♡"}</button>`;
 
-  return `<article class="schedule-card" data-schedule-category="${category}">
-    <div class="schedule-time-stack"><div class="schedule-time">${e.time}</div>${scheduleDayBadgeHtml(e.day)}</div>
-    <div>
-      <strong>${e.title.toUpperCase()}</strong>
-      <div class="meta">${e.location} • ${e.category}</div>
-      <span class="schedule-category-tag">${category}</span>
+  return `<article class="schedule-card" data-schedule-category="${escapeAppHtml(category)}">
+    <div class="schedule-time-stack"><div class="schedule-time">${escapeAppHtml(e.time)}</div>${scheduleDayBadgeHtml(e.day)}</div>
+    <div class="schedule-card-main">
+      <strong>${escapeAppHtml(String(e.title||"").toUpperCase())}</strong>
+      <div class="meta">${escapeAppHtml(e.location||"")} • ${escapeAppHtml(e.category||"")}</div>
+      <span class="schedule-category-tag">${escapeAppHtml(category)}</span>
+      ${scheduleMoreInfoHtml(e)}
       ${saved&&state.reminderMinutes>0&&e.remindable!==false?`<button type="button" class="schedule-reminder-label" data-open-reminder-settings aria-label="Change reminder time. Current setting: ${escapeAppHtml(formatReminder(state.reminderMinutes))}">🔔 ${formatReminder(state.reminderMinutes)} <span>CHANGE</span></button>`:""}
     </div>
     ${saveButton}
