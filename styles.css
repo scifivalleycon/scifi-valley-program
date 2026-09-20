@@ -6113,3 +6113,126 @@ body .schedule-day-badge{
   }
   .schedule-more-body{font-size:10px}
 }
+
+
+/* Retro schedule category color system — V4.103
+   The filter checkbox and its schedule cards share the same visual tone. */
+.schedule-check,
+.schedule-card{
+  --schedule-tone:#c8ded2;
+  --schedule-tone-strong:#86b9ae;
+  --schedule-tone-soft:#e5eee7;
+}
+
+[data-schedule-tone="guest-panels"]{
+  --schedule-tone:#f2a16f;
+  --schedule-tone-strong:#e77749;
+  --schedule-tone-soft:#f8c9a9;
+}
+[data-schedule-tone="trivia"]{
+  --schedule-tone:#efc85f;
+  --schedule-tone-strong:#dba73d;
+  --schedule-tone-soft:#f8dfa0;
+}
+[data-schedule-tone="photo-ops"]{
+  --schedule-tone:#75c6c9;
+  --schedule-tone-strong:#329aa3;
+  --schedule-tone-soft:#b5e0df;
+}
+[data-schedule-tone="autographs"]{
+  --schedule-tone:#e99191;
+  --schedule-tone-strong:#d76063;
+  --schedule-tone-soft:#f4b8b3;
+}
+[data-schedule-tone="artist-panels"]{
+  --schedule-tone:#d99b74;
+  --schedule-tone-strong:#b96e49;
+  --schedule-tone-soft:#edc5aa;
+}
+[data-schedule-tone="event-room"]{
+  --schedule-tone:#d5ad75;
+  --schedule-tone-strong:#b6844d;
+  --schedule-tone-soft:#ead1a5;
+}
+[data-schedule-tone="gaming"]{
+  --schedule-tone:#b9c879;
+  --schedule-tone-strong:#8fa455;
+  --schedule-tone-soft:#d9dfa7;
+}
+[data-schedule-tone="workshops"]{
+  --schedule-tone:#b7a2d1;
+  --schedule-tone-strong:#8c76ad;
+  --schedule-tone-soft:#d7cbe5;
+}
+[data-schedule-tone="costume-cosplay"]{
+  --schedule-tone:#bd9db6;
+  --schedule-tone-strong:#96738f;
+  --schedule-tone-soft:#dbc6d6;
+}
+[data-schedule-tone="charity"]{
+  --schedule-tone:#83bfdb;
+  --schedule-tone-strong:#5599ba;
+  --schedule-tone-soft:#b9daea;
+}
+[data-schedule-tone="activities"]{
+  --schedule-tone:#efc56d;
+  --schedule-tone-strong:#d99b42;
+  --schedule-tone-soft:#f7dda2;
+}
+[data-schedule-tone="after-party"]{
+  --schedule-tone:#93c9b3;
+  --schedule-tone-strong:#5fa387;
+  --schedule-tone-soft:#c4e2d5;
+}
+[data-schedule-tone="other"]{
+  --schedule-tone:#c8b79d;
+  --schedule-tone-strong:#9d886b;
+  --schedule-tone-soft:#e2d7c5;
+}
+
+/* Filter legend: checked categories become their assigned vintage color. */
+.schedule-check.checked{
+  background:var(--schedule-tone);
+}
+.schedule-check.checked .schedule-check-box{
+  background:var(--schedule-tone-strong);
+  color:var(--ink);
+}
+.schedule-check:not(.checked){
+  background:#fff7df;
+}
+.schedule-check:not(.checked) .schedule-check-box{
+  background:transparent;
+}
+
+/* Event cards carry the same category color for fast visual scanning. */
+.schedule-card[data-schedule-tone]{
+  background:
+    linear-gradient(90deg,var(--schedule-tone-soft),color-mix(in srgb,var(--schedule-tone-soft) 62%,var(--paper2)));
+}
+.schedule-card[data-schedule-tone] .schedule-time,
+.schedule-card[data-schedule-tone] .schedule-day-badge{
+  background:var(--schedule-tone-strong);
+  color:#fff7df;
+}
+.schedule-card[data-schedule-tone] .schedule-category-tag{
+  background:var(--schedule-tone);
+  border-color:color-mix(in srgb,var(--ink) 38%,transparent);
+}
+.schedule-card[data-schedule-tone] .schedule-more-info>summary{
+  background:var(--schedule-tone);
+}
+.schedule-card[data-schedule-tone] .schedule-more-info[open]>summary{
+  background:var(--schedule-tone-strong);
+}
+.schedule-card[data-schedule-tone] .schedule-more-body{
+  background:color-mix(in srgb,var(--schedule-tone-soft) 72%,transparent);
+}
+
+/* Keep the vintage palette readable when color-mix is unavailable. */
+@supports not (background:color-mix(in srgb,#fff 50%,#000)){
+  .schedule-card[data-schedule-tone]{background:var(--schedule-tone-soft)}
+  .schedule-card[data-schedule-tone] .schedule-category-tag,
+  .schedule-card[data-schedule-tone] .schedule-more-info>summary{background:var(--schedule-tone)}
+  .schedule-card[data-schedule-tone] .schedule-more-body{background:var(--schedule-tone-soft)}
+}
