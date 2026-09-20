@@ -6608,3 +6608,50 @@ body .schedule-day-badge{
 @media(max-width:360px){
   .map-legend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+
+/* Zoom-safe number wrapping — V4.108
+   Keep compact numeric/status badges intact when Program Tools text zoom is increased. */
+.pill,
+.tag,
+.map-directory-location,
+.schedule-time,
+.schedule-day-badge{
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+}
+
+/* Pills and counters should grow horizontally instead of wrapping their value. */
+.pill{
+  white-space:nowrap!important;
+  width:max-content;
+  max-width:100%;
+}
+
+/* The vendor-directory count is a circular numeric badge. Make the circle scale
+   with the text size, so 3+ digit totals such as 158 can never split into 15 / 8. */
+#mapDirectoryCount{
+  display:inline-grid!important;
+  place-items:center!important;
+  box-sizing:border-box!important;
+  width:3.15em!important;
+  min-width:3.15em!important;
+  height:3.15em!important;
+  min-height:3.15em!important;
+  padding:0!important;
+  border-radius:50%!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+  flex:0 0 auto!important;
+}
+
+/* Numeric table/booth location labels should also stay intact at larger text sizes. */
+.map-directory-location{
+  white-space:nowrap!important;
+  min-width:max-content;
+}
