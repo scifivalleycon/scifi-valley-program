@@ -463,6 +463,7 @@ function goTo(screenId,{recordHistory=true,restoreScrollY=null}={}){
 
   screens.forEach(s=>s.classList.toggle("active",s.id===screenId));
   navButtons.forEach(b=>b.classList.toggle("active",b.dataset.screen===screenId));
+  if(changingScreens)window.dispatchEvent(new Event("sfvc:page"));
 
   if(Number.isFinite(restoreScrollY)){
     window.scrollTo({top:Math.max(0,restoreScrollY),behavior:"auto"});
@@ -6050,3 +6051,71 @@ loadData().then(()=>{
   renderMySchedule();
   document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Saved My Con items remain available while the app retries the latest program data.</div></div>`;
 });
+
+
+// Behavioral analytics: random installation/session IDs, no text or URL capture.
+function initializeUsageAnalytics(){
+  try{
+    const visitor=getAnonymousAnalyticsId();
+    let saved;try{saved=JSON.parse(sessionStorage.getItem('sfvc-usage-session')||'null')}catch{}
+    let session=saved&&Date.now()-saved.at<30*60000?saved.id:crypto.randomUUID();
+    let lastInput=Date.now(), tick=Date.now(), page=activeScreenId();
+    const saveSession=()=>{try{sessionStorage.setItem('sfvc-usage-session',JSON.stringify({id:session,at:lastInput}))}catch{}};
+    saveSession();
+    let queue=[], sending=false;
+    const mode=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone?'installed':'browser';
+    const add=(kind,action='',seconds=0)=>{
+      if(queue.length>=120)queue.shift();
+      queue.push({id:crypto.randomUUID(),session,at:Date.now(),kind,page,action,seconds});
+    };
+    const flush=async()=>{
+      if(sending||!queue.length)return;
+      sending=true;
+      const batch=queue.slice(0,30);
+      try{
+        const r=await fetch(`${analyticsApiBase()}/v1/analytics/events`,{method:'POST',headers:{'Content-Type':'text/plain'},
+          credentials:'omit',keepalive:true,body:JSON.stringify({visitor,mode,events:batch})});
+        if(r.ok)queue=queue.filter(e=>!batch.some(b=>b.id===e.id));
+        else if(r.status>=400&&r.status<500&&r.status!==429)queue=queue.filter(e=>!batch.some(b=>b.id===e.id));
+      }catch{}finally{sending=false;}
+    };
+    const measure=()=>{
+      const now=Date.now(), elapsed=Math.max(0,Math.min(30,(Math.min(now,lastInput+60000)-tick)/1000));
+      if(document.visibilityState==='visible'&&elapsed>0)add('engagement','',elapsed);
+      tick=now;
+    };
+    const activity=()=>{
+      if(Date.now()-lastInput>60000)measure();
+      const renewed=Date.now()-lastInput>30*60000;
+      if(renewed){session=crypto.randomUUID();add('view');}
+      lastInput=Date.now();saveSession();return renewed;
+    };
+    add('view');
+    window.addEventListener('sfvc:page',()=>{measure();page=activeScreenId();if(!activity())add('view');flush();});
+    ['pointerdown','keydown','scroll'].forEach(type=>window.addEventListener(type,activity,{passive:true}));
+    document.addEventListener('click',event=>{
+      const el=event.target.closest?.('button,a,[role="button"]');if(!el)return;
+      // Only structural action names, never labels, form values, destinations or dynamic item IDs.
+      const keys=['go','utility-go','photo-shop','guest-filter','schedule-category','celebrity-tab','screen','day','panel-day','photo-day','open-guest','home-guest','favorite','schedule-save','remove-schedule','event-open','map-vendor','map-zone','map-open-guest','map-legend-zone','map-event-id','font-scale','dismiss-mycon-change','dismiss-recent-alert'];
+      const key=keys.find(k=>el.hasAttribute('data-'+k));
+      let action=key?key:el.id&&/^[a-zA-Z][a-zA-Z0-9_-]{0,60}$/.test(el.id)?el.id:el.tagName==='A'?'link':'button';
+      if(key==='go'||key==='utility-go'||key==='celebrity-tab'||key==='screen'||key==='day'||key==='panel-day'||key==='photo-day'){
+        const value=el.getAttribute('data-'+key);if(/^[a-zA-Z0-9_-]{1,30}$/.test(value))action+=':'+value;
+      }
+      add('click',action);
+    },true);
+    document.addEventListener('visibilitychange',()=>{
+      // The last interval was visible until this transition; account for it before suspending.
+      if(document.visibilityState==='hidden'){
+        const elapsed=Math.max(0,Math.min(30,(Math.min(Date.now(),lastInput+60000)-tick)/1000));
+        if(elapsed)add('engagement','',elapsed);tick=Date.now();flush();
+      }else{tick=Date.now();activity();}
+    });
+    window.addEventListener('pagehide',()=>{flush();});
+    window.addEventListener('online',flush);
+    setInterval(()=>{measure();flush();},15000);
+    flush();
+  }catch(err){console.warn('Usage analytics unavailable');}
+}
+
+initializeUsageAnalytics();
