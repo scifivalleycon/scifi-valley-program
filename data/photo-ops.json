@@ -2,7 +2,7 @@
   {
     "id": "photo-friday-donal-logue",
     "day": "Friday",
-    "time": "3:00 PM",
+    "time": "3:15 PM",
     "title": "Donal Logue",
     "type": "Solo",
     "notes": ""
@@ -10,7 +10,7 @@
   {
     "id": "photo-friday-chris-chalk",
     "day": "Friday",
-    "time": "3:05 PM",
+    "time": "3:20 PM",
     "title": "Chris Chalk",
     "type": "Solo",
     "notes": ""
@@ -18,7 +18,7 @@
   {
     "id": "photo-friday-gotham-group-reunion",
     "day": "Friday",
-    "time": "3:10 PM",
+    "time": "3:25 PM",
     "title": "Gotham Group Reunion",
     "type": "Group",
     "notes": ""
@@ -64,33 +64,41 @@
     "notes": ""
   },
   {
-    "id": "photo-friday-rachelle-lefevre",
+    "id": "photo-friday-samantha-mathis",
     "day": "Friday",
-    "time": "4:00 PM",
-    "title": "Rachelle Lefevre",
+    "title": "Samantha Mathis",
     "type": "Solo",
-    "notes": ""
+    "notes": "",
+    "time": "4:10 PM"
   },
   {
-    "id": "photo-friday-under-the-dome-duo",
+    "id": "photo-friday-under-the-dome-reunion-trio",
     "day": "Friday",
-    "time": "4:05 PM",
-    "title": "Under the Dome Duo",
+    "title": "Under the Dome Reunion Trio",
     "type": "Group",
-    "notes": ""
+    "notes": "",
+    "time": "4:15 PM"
   },
   {
     "id": "photo-friday-mike-vogel",
     "day": "Friday",
-    "time": "4:10 PM",
+    "time": "4:20 PM",
     "title": "Mike Vogel",
     "type": "Solo",
     "notes": ""
   },
   {
+    "id": "photo-friday-eddie-cahill",
+    "day": "Friday",
+    "title": "Eddie Cahill",
+    "type": "Solo",
+    "notes": "",
+    "time": "4:25 PM"
+  },
+  {
     "id": "photo-friday-daniel-kountz",
     "day": "Friday",
-    "time": "4:15 PM",
+    "time": "4:40 PM",
     "title": "Daniel Kountz",
     "type": "Solo",
     "notes": ""
@@ -98,7 +106,7 @@
   {
     "id": "photo-friday-kimberly-j-brown",
     "day": "Friday",
-    "time": "4:30 PM",
+    "time": "4:45 PM",
     "title": "Kimberly J. Brown",
     "type": "Solo",
     "notes": ""
@@ -106,7 +114,7 @@
   {
     "id": "photo-friday-halloweentown-couple-duo",
     "day": "Friday",
-    "time": "4:35 PM",
+    "time": "4:50 PM",
     "title": "Halloweentown Couple Duo",
     "type": "Group",
     "notes": ""
@@ -114,7 +122,7 @@
   {
     "id": "photo-friday-halloweentown-reunion-trio",
     "day": "Friday",
-    "time": "4:40 PM",
+    "time": "4:55 PM",
     "title": "Halloweentown Reunion Trio",
     "type": "Group",
     "notes": ""
@@ -122,7 +130,7 @@
   {
     "id": "photo-friday-halloweentown-mom-and-daughter-duo",
     "day": "Friday",
-    "time": "4:45 PM",
+    "time": "5:00 PM",
     "title": "Halloweentown Mom & Daughter Duo",
     "type": "Group",
     "notes": ""
@@ -130,7 +138,7 @@
   {
     "id": "photo-friday-judith-hoag",
     "day": "Friday",
-    "time": "4:50 PM",
+    "time": "5:05 PM",
     "title": "Judith Hoag",
     "type": "Solo",
     "notes": ""
@@ -256,20 +264,20 @@
     "notes": ""
   },
   {
-    "id": "photo-saturday-rachelle-lefevre",
+    "id": "photo-saturday-samantha-mathis",
     "day": "Saturday",
-    "time": "1:30 PM",
-    "title": "Rachelle Lefevre",
+    "title": "Samantha Mathis",
     "type": "Solo",
-    "notes": ""
+    "notes": "",
+    "time": "1:30 PM"
   },
   {
-    "id": "photo-saturday-under-the-dome-duo",
+    "id": "photo-saturday-under-the-dome-reunion-trio",
     "day": "Saturday",
-    "time": "1:35 PM",
-    "title": "Under the Dome Duo",
+    "title": "Under the Dome Reunion Trio",
     "type": "Group",
-    "notes": ""
+    "notes": "",
+    "time": "1:35 PM"
   },
   {
     "id": "photo-saturday-mike-vogel",
@@ -278,6 +286,14 @@
     "title": "Mike Vogel",
     "type": "Solo",
     "notes": ""
+  },
+  {
+    "id": "photo-saturday-eddie-cahill",
+    "day": "Saturday",
+    "title": "Eddie Cahill",
+    "type": "Solo",
+    "notes": "",
+    "time": "1:45 PM"
   },
   {
     "id": "photo-saturday-reggie-lee",
@@ -368,20 +384,20 @@
     "notes": ""
   },
   {
-    "id": "photo-sunday-rachelle-lefevre",
+    "id": "photo-sunday-samantha-mathis",
     "day": "Sunday",
-    "time": "11:00 AM",
-    "title": "Rachelle Lefevre",
+    "title": "Samantha Mathis",
     "type": "Solo",
-    "notes": ""
+    "notes": "",
+    "time": "11:00 AM"
   },
   {
-    "id": "photo-sunday-under-the-dome-duo",
+    "id": "photo-sunday-under-the-dome-reunion-trio",
     "day": "Sunday",
-    "time": "11:05 AM",
-    "title": "Under the Dome Duo",
+    "title": "Under the Dome Reunion Trio",
     "type": "Group",
-    "notes": ""
+    "notes": "",
+    "time": "11:05 AM"
   },
   {
     "id": "photo-sunday-mike-vogel",
@@ -392,20 +408,12 @@
     "notes": ""
   },
   {
-    "id": "photo-sunday-malcolm-kelner",
+    "id": "photo-sunday-eddie-cahill",
     "day": "Sunday",
-    "time": "11:15 AM",
-    "title": "Malcolm Kelner",
+    "title": "Eddie Cahill",
     "type": "Solo",
-    "notes": ""
-  },
-  {
-    "id": "photo-sunday-obsession-duo",
-    "day": "Sunday",
-    "time": "11:20 AM",
-    "title": "Obsession Duo",
-    "type": "Group",
-    "notes": ""
+    "notes": "",
+    "time": "11:15 AM"
   },
   {
     "id": "photo-sunday-haley-fitzgerald",
@@ -413,6 +421,22 @@
     "time": "11:25 AM",
     "title": "Haley Fitzgerald",
     "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-malcolm-kelner",
+    "day": "Sunday",
+    "time": "11:25 AM",
+    "title": "Malcolm Kelner",
+    "type": "Solo",
+    "notes": ""
+  },
+  {
+    "id": "photo-sunday-obsession-duo",
+    "day": "Sunday",
+    "time": "11:25 AM",
+    "title": "Obsession Duo",
+    "type": "Group",
     "notes": ""
   },
   {

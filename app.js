@@ -1776,7 +1776,7 @@ function liveVendorDirectorySignature(rows){
 }
 
 function applyGuestMapAssignments(rows,guests=state.guests){
-  const assignments=(Array.isArray(guests)?guests:[]).filter(g=>/^K(?:[1-9]|1[0-6])$/.test(g.mapLocation||""));
+  const assignments=(Array.isArray(guests)?guests:[]).filter(g=>/^K(?:[1-9]|1[0-7])$/.test(g.mapLocation||""));
   if(!assignments.length)return rows;
   const reserved=new Set(assignments.map(g=>g.mapLocation));
   const key=name=>mapGuestNameKey(name);
@@ -2442,6 +2442,7 @@ function autographScheduleItems(){
           location:"Celebrity Guest Tables",
           category:"Flexible Autograph Availability",
           filterCategory:"Autographs",
+          notes:a.notes||"",
           remindable:false
         });
       });
@@ -2607,7 +2608,7 @@ function renderCelebrityPhotoOps(){
 }
 function renderCelebrityAutographs(){
   document.getElementById("autographInfo").textContent=state.celebrityInfo.autographNotice||"Autograph availability is flexible and subject to change.";
-  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3><div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${formatDisplayTimeRange(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
+  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3>${a.notes?`<p class="price-note">${escapeAppHtml(a.notes)}</p>`:""}<div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${formatDisplayTimeRange(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
 }
 function panelTimeLabel(panel){
   const time=formatDisplayTimeRange(panel.startTime,panel.endTime);
@@ -5011,7 +5012,7 @@ function mapCelebrityAutographsHtml(){
   return '<h3>CELEBRITY AUTOGRAPH TIMES</h3>'+["Friday","Saturday","Sunday"].map(day=>
     `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${guests.map(guest=>{
       const times=String(guest[day]||"").trim().split(/\r?\n/).filter(Boolean);
-      return `<article><b>${escapeAppHtml(guest.guestName||"Celebrity guest")}</b><span>${times.length?times.map(time=>escapeAppHtml(formatDisplayTimeRange(time))).join("<br>"):"No autograph times published."}</span></article>`;
+      return `<article><b>${escapeAppHtml(guest.guestName||"Celebrity guest")}</b><span>${times.length?times.map(time=>escapeAppHtml(formatDisplayTimeRange(time))).join("<br>"):"No autograph times published."}${guest.notes?`<br><small>${escapeAppHtml(guest.notes)}</small>`:""}</span></article>`;
     }).join("")}</section>`
   ).join("");
 }
@@ -6223,5 +6224,6 @@ function initializeMetaAdvertising(){
   updateChoiceUi();pageView();
 }
 initializeMetaAdvertising();
+
 
 

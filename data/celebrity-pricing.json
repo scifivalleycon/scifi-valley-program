@@ -200,12 +200,21 @@
     ]
   },
   {
-    "id": "rachelle-lefevre",
-    "guestName": "Rachelle Lefevre",
+    "id": "samantha-mathis",
+    "guestName": "Samantha Mathis",
     "autograph": "$50",
     "selfie": "$50",
-    "combo": "$70",
-    "proPhoto": "$75",
+    "combo": "$80",
+    "proPhoto": "$80",
+    "notes": ""
+  },
+  {
+    "id": "eddie-cahill",
+    "guestName": "Eddie Cahill",
+    "autograph": "$40",
+    "selfie": "$40",
+    "combo": "$60",
+    "proPhoto": "$65",
     "notes": ""
   },
   {

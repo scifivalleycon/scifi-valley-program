@@ -3786,7 +3786,19 @@
       {
         "id": "K16",
         "shape": "rect",
-        "x": 812.2,
+        "x": 804.0,
+        "y": 1000.3,
+        "w": 14,
+        "h": 30,
+        "rotation": 90,
+        "labelDx": 0,
+        "labelDy": null,
+        "hidden": false
+      },
+      {
+        "id": "K17",
+        "shape": "rect",
+        "x": 838.0,
         "y": 1000.3,
         "w": 14,
         "h": 30,
