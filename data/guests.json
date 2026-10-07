@@ -201,13 +201,15 @@
     "group": "Under the Dome",
     "knownFor": "Under the Dome, Cloverfield, The Texas Chainsaw Massacre, Bates Motel, The Brave",
     "character": "Dale 'Barbie' Barbara",
-    "bio": "APPEARING SATURDAY & SUNDAY ONLY\nMike Vogel starred as Dale 'Barbie' Barbara throughout all three seasons of CBS's Under the Dome. His film and television work also includes Cloverfield, The Help, The Texas Chainsaw Massacre, Poseidon, Bates Motel and The Brave.",
+    "bio": "Mike Vogel starred as Dale 'Barbie' Barbara throughout all three seasons of CBS's Under the Dome. His film and television work also includes Cloverfield, The Help, The Texas Chainsaw Massacre, Poseidon, Bates Motel and The Brave.",
     "imdb": "https://www.imdb.com/name/nm1036181/",
     "photo": "https://app.scifivalleycon.com/assets/guests/guest-photo-ec455d36-5632-46a4-8dc8-ceb790d5b2a2.webp?v=1791378136607",
     "photoOp": "$65",
     "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
     "mapLocation": "K13",
-    "instagram": "https://www.instagram.com/realmikevogel/"
+    "instagram": "https://www.instagram.com/realmikevogel/",
+    "attendanceNoticeEnabled": true,
+    "attendanceNoticeText": "APPEARING SATURDAY & SUNDAY ONLY"
   },
   {
     "id": "malcolm-kelner",

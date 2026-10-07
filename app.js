@@ -183,7 +183,7 @@ function myConGuestSnapshot(g){
   const normalize=value=>String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
   const name=normalize(g.name);
   const appearances=celebrityPublished()?[...state.panels,...state.photoOps,...state.autographs,...state.groupPhotoOps].filter(row=>name&&normalize([row.guestName,row.title,row.participants,row.guests].filter(Boolean).join(" ")).includes(name)):[];
-  return {appearances:JSON.stringify(appearances),eventDates:JSON.stringify([state.settings.startDate,state.settings.endDate]),id:g.id,name:g.name,group:g.group||"",character:g.character||"",knownFor:g.knownFor||"",bio:g.bio||"",photo:g.photo||"",imdb:g.imdb||"",instagram:g.instagram||"",photoOp:prices?.proPhoto??g.photoOp??"",prices:prices?JSON.stringify(prices):""};
+  return {appearances:JSON.stringify(appearances),eventDates:JSON.stringify([state.settings.startDate,state.settings.endDate]),id:g.id,name:g.name,group:g.group||"",character:g.character||"",knownFor:g.knownFor||"",bio:g.bio||"",attendanceNotice:guestAttendanceNoticeText(g),photo:g.photo||"",imdb:g.imdb||"",instagram:g.instagram||"",photoOp:prices?.proPhoto??g.photoOp??"",prices:prices?JSON.stringify(prices):""};
 }
 function myConScheduleSnapshot(e){
   return {id:e.id,day:e.day||"",time:e.time||"",endTime:e.endTime||"",title:e.title||"",location:e.location||"",category:e.category||"",filterCategory:e.filterCategory||"",description:e.description||"",participants:e.participants||"",eventAt:eventDateTime(e)?.getTime()||null,remindable:e.remindable!==false};
@@ -1144,6 +1144,7 @@ function programExportBlocks(selection=fullProgramPdfSelection()){
       addSub(`${guest.name}${guest.group?` - ${guest.group}`:""}`);
       const detail=[guest.character,guest.knownFor].filter(Boolean).map(plainText).join(" | ");
       if(detail)addLine(detail);
+      if(guestAttendanceNoticeText(guest))addLine(guestAttendanceNoticeText(guest));
       if(guest.bio)addLine(plainText(guest.bio));
     });
   }
@@ -2198,6 +2199,13 @@ function renderGuestFilters(){
   }));
 }
 
+function guestAttendanceNoticeText(guest){
+  return guest?.attendanceNoticeEnabled===true?String(guest.attendanceNoticeText||"").trim():"";
+}
+function guestAttendanceNoticeHtml(guest){
+  const text=guestAttendanceNoticeText(guest);
+  return text?`<p class="guest-attendance-notice"><strong>${escapeAppHtml(text)}</strong></p>`:"";
+}
 function guestPhoto(g, cls="guest-photo"){
   return g.photo
     ? `<img class="${cls}" data-guest-photo-id="${escapeAppHtml(g.id)}" tabindex="0" role="button" aria-label="View photo and biography of ${escapeAppHtml(g.name)}" src="${g.photo}" alt="${g.name}" loading="lazy">`
@@ -2251,6 +2259,7 @@ function renderGuests(){
           <div><span class="tag">${g.group.toUpperCase()}</span><h3>${g.name.toUpperCase()}</h3></div>
           <button class="favorite ${state.favorites.has(g.id)?"saved":""}" data-favorite="${g.id}" aria-label="Save ${g.name}">${state.favorites.has(g.id)?"♥":"♡"}</button>
         </div>
+        ${guestAttendanceNoticeHtml(g)}
         <div class="guest-sub">${g.character||""}<br>${g.knownFor}</div>
         ${guestPricesHtml(g,true)}
         <button class="guest-open" data-open-guest="${g.id}">VIEW GUEST DETAILS ›</button>
@@ -2311,7 +2320,7 @@ function openGuest(id){
     <div class="modal-inner">
       <div class="modal-hero">
         ${guestPhoto(g,"modal-guest-photo").replace('class="modal-guest-photo"','class="modal-guest-photo"')}
-        <div><span class="tag">${g.group.toUpperCase()}</span><h2>${g.name.toUpperCase()}</h2><div class="modal-known">${g.character||""}<br><b>Known for:</b> ${g.knownFor}</div>${guestPricesHtml(g,true)}</div>
+        <div><span class="tag">${g.group.toUpperCase()}</span><h2>${g.name.toUpperCase()}</h2>${guestAttendanceNoticeHtml(g)}<div class="modal-known">${g.character||""}<br><b>Known for:</b> ${g.knownFor}</div>${guestPricesHtml(g,true)}</div>
       </div>
       <div class="modal-bio">${g.bio}</div>
       <div class="modal-actions">${external}<a class="primary-action" href="https://scifivalleycon.com/celebrity-guests" target="_blank" rel="noopener">OFFICIAL GUEST PAGE ↗</a>${photoAction}</div>
@@ -2608,7 +2617,7 @@ function renderCelebrityPhotoOps(){
 }
 function renderCelebrityAutographs(){
   document.getElementById("autographInfo").textContent=state.celebrityInfo.autographNotice||"Autograph availability is flexible and subject to change.";
-  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3>${a.notes?`<p class="price-note">${escapeAppHtml(a.notes)}</p>`:""}<div class="autograph-days">${["Friday","Saturday","Sunday"].map(d=>`<div><small>${d.toUpperCase()}</small><p>${formatDisplayTimeRange(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
+  document.getElementById("autographList").innerHTML=state.autographs.map(a=>`<article class="autograph-card"><h3>${a.guestName.toUpperCase()}</h3>${a.notes?`<p class="price-note">${escapeAppHtml(a.notes)}</p>`:""}<div class="autograph-days">${["Friday","Saturday","Sunday"].filter(d=>String(a[d]||"").trim()).map(d=>`<div><small>${d.toUpperCase()}</small><p>${formatDisplayTimeRange(a[d]||"TBD").replace(/\n/g,"<br>")}</p></div>`).join("")}</div></article>`).join("")||`<div class="paper-panel muted-empty">Autograph availability has not been published yet.</div>`;
 }
 function panelTimeLabel(panel){
   const time=formatDisplayTimeRange(panel.startTime,panel.endTime);
@@ -4875,6 +4884,7 @@ function mapGuestProfileHtml(code,vendor,guest){
   const photo=mapGuestUrl(guest.photo),imdb=mapGuestUrl(guest.imdb),website=mapGuestUrl(vendor.website);
   return `<span class="tag">${escapeAppHtml(code)} • CELEBRITY GUEST</span>
     <h2>${escapeAppHtml(guest.name)}</h2>
+    ${guestAttendanceNoticeHtml(guest)}
     <div class="map-modal-meta">${escapeAppHtml(vendor.area||"")}${guest.group?` • ${escapeAppHtml(guest.group)}`:""}</div>
     ${photo?`<button class="map-guest-photo-button" type="button" data-map-guest-photo="${escapeAppHtml(guest.id)}" aria-label="Enlarge photo and biography of ${escapeAppHtml(guest.name)}"><img src="${escapeAppHtml(photo)}" alt="${escapeAppHtml(guest.name)}" loading="lazy"></button>`:""}
     ${guest.character?`<p>${escapeAppHtml(guest.character)}</p>`:""}
@@ -5010,7 +5020,7 @@ function mapCelebrityAutographsHtml(){
   const guests=state.autographs||[];
   if(!guests.length)return '<p class="muted-empty">Celebrity autograph times have not been published yet.</p>';
   return '<h3>CELEBRITY AUTOGRAPH TIMES</h3>'+["Friday","Saturday","Sunday"].map(day=>
-    `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${guests.map(guest=>{
+    `<section class="map-zone-day"><h3>${day.toUpperCase()}</h3>${guests.filter(guest=>String(guest[day]||"").trim()).map(guest=>{
       const times=String(guest[day]||"").trim().split(/\r?\n/).filter(Boolean);
       return `<article><b>${escapeAppHtml(guest.guestName||"Celebrity guest")}</b><span>${times.length?times.map(time=>escapeAppHtml(formatDisplayTimeRange(time))).join("<br>"):"No autograph times published."}${guest.notes?`<br><small>${escapeAppHtml(guest.notes)}</small>`:""}</span></article>`;
     }).join("")}</section>`
@@ -6019,6 +6029,15 @@ function openPhotoLightbox(src,caption,bio="",gallery=[],startIndex=0){
   photoLightboxIndex=Number.isInteger(startIndex)&&startIndex>=0&&startIndex<photoLightboxGallery.length?startIndex:0;
   updatePhotoLightboxImage();
   const biography=document.getElementById("photoLightboxBio");
+  document.getElementById("photoLightboxAttendanceNotice")?.remove();
+  const guest=state.guests.find(g=>g.name===caption);
+  if(guestAttendanceNoticeText(guest)){
+    const notice=document.createElement("p");
+    notice.id="photoLightboxAttendanceNotice";
+    notice.className="guest-attendance-notice";
+    notice.textContent=guestAttendanceNoticeText(guest);
+    biography.before(notice);
+  }
   biography.textContent=String(bio||"").trim();
   biography.hidden=!biography.textContent;
   modal.classList.toggle("has-biography",!biography.hidden);
@@ -6224,6 +6243,7 @@ function initializeMetaAdvertising(){
   updateChoiceUi();pageView();
 }
 initializeMetaAdvertising();
+
 
 
 

@@ -6731,3 +6731,7 @@ body.sfvc-text-enlarged .screen .schedule-card>.schedule-no-reminder{
 body.sfvc-text-enlarged .screen .schedule-time-stack .schedule-day-badge{
   font-size:11px!important;
 }
+
+
+/* Editable celebrity attendance notice. */
+.guest-attendance-notice{color:#b00020;font-weight:800;line-height:1.35;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;}
