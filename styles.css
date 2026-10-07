@@ -6735,3 +6735,17 @@ body.sfvc-text-enlarged .screen .schedule-time-stack .schedule-day-badge{
 
 /* Editable celebrity attendance notice. */
 .guest-attendance-notice{color:#b00020;font-weight:800;line-height:1.35;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;}
+
+
+/* Guest schedules stay in document flow at all text sizes. */
+.guest-weekend-schedule{margin:24px 0 0;padding:18px;border:2px solid var(--ink,#3a2720);border-radius:14px;background:var(--paper2,#fff1cf);color:var(--ink,#3a2720);text-align:left;min-width:0;overflow-wrap:anywhere;}
+.guest-weekend-schedule h3{margin:0 0 16px;}
+.guest-schedule-day{margin:16px 0;}
+.guest-schedule-day h4{margin:0 0 8px;padding-bottom:6px;border-bottom:2px solid currentColor;}
+.guest-schedule-day ul{list-style:none;margin:0;padding:0;}
+.guest-schedule-day li{display:flex;flex-direction:column;gap:4px;margin:0;padding:12px 0;border-bottom:1px solid rgba(58,39,32,.2);min-width:0;}
+.guest-schedule-time{font-weight:800;line-height:1.4;}
+.guest-schedule-title{font-weight:700;line-height:1.4;}
+.guest-schedule-location,.guest-schedule-empty,.guest-schedule-note{font-size:1rem;line-height:1.5;}
+#photoLightboxSchedule{width:min(760px,92vw);max-width:100%;margin:0 auto 24px;}
+#photoLightboxSchedule[hidden]{display:none;}

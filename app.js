@@ -2206,6 +2206,47 @@ function guestAttendanceNoticeHtml(guest){
   const text=guestAttendanceNoticeText(guest);
   return text?`<p class="guest-attendance-notice"><strong>${escapeAppHtml(text)}</strong></p>`:"";
 }
+function guestScheduleNameKey(value){
+  return String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+function guestWeekendScheduleItems(guest){
+  const name=guestScheduleNameKey(guest.name);
+  if(!name)return [];
+  const mentions=value=>(" "+guestScheduleNameKey(value)+" ").includes(" "+name+" ");
+  const groupTitles=new Set(state.groupPhotoOps.filter(group=>mentions(group.participants)).map(group=>guestScheduleNameKey(group.title)));
+  const photoIds=new Set(state.photoOps.map((photo,i)=>({photo,i})).filter(({photo})=>
+    guestScheduleNameKey(photo.title)===name||mentions(photo.participants)||groupTitles.has(guestScheduleNameKey(photo.title))
+  ).map(({photo,i})=>`photoop-${photo.id||i}`));
+  const rows=[
+    ...baseScheduleItems().filter(row=>mentions(row.participants)||mentions(row.title)),
+    ...panelScheduleItems().filter(row=>mentions(row.participants)||mentions(row.title)),
+    ...photoOpScheduleItems().filter(row=>photoIds.has(row.id)),
+    ...autographScheduleItems().filter(row=>guestScheduleNameKey(row.title)===name+" autographs")
+  ];
+  const seen=new Set();
+  return rows.filter(row=>{
+    const key=[row.day,row.time,row.endTime||"",guestScheduleNameKey(row.title),guestScheduleNameKey(row.location)].join("|");
+    if(seen.has(key))return false;
+    seen.add(key);return true;
+  });
+}
+function guestWeekendScheduleHtml(guest){
+  if(!guest)return "";
+  const rows=guestWeekendScheduleItems(guest);
+  return `<section class="guest-weekend-schedule" aria-label="${escapeAppHtml(guest.name)} weekend schedule">
+    <h3>WEEKEND SCHEDULE</h3>
+    ${["Friday","Saturday","Sunday"].map(day=>{
+      const items=sortedScheduleItems(rows.filter(row=>row.day===day));
+      return `<section class="guest-schedule-day"><h4>${day.toUpperCase()}</h4>${items.length?`<ul>${items.map(row=>`<li>
+        <strong class="guest-schedule-time">${escapeAppHtml(formatDisplayTimeRange(row.time,row.endTime))}</strong>
+        <span class="guest-schedule-title">${escapeAppHtml(row.title)}</span>
+        <span class="guest-schedule-location">${escapeAppHtml(row.location||"")}${row.remindable===false?" • Flexible availability":""}</span>
+      </li>`).join("")}</ul>`:'<p class="guest-schedule-empty">No appearances currently scheduled.</p>'}</section>`;
+    }).join("")}
+    <p class="guest-schedule-note">Times are subject to change. Autograph availability is flexible.</p>
+  </section>`;
+}
+
 function guestPhoto(g, cls="guest-photo"){
   return g.photo
     ? `<img class="${cls}" data-guest-photo-id="${escapeAppHtml(g.id)}" tabindex="0" role="button" aria-label="View photo and biography of ${escapeAppHtml(g.name)}" src="${g.photo}" alt="${g.name}" loading="lazy">`
@@ -2323,6 +2364,7 @@ function openGuest(id){
         <div><span class="tag">${g.group.toUpperCase()}</span><h2>${g.name.toUpperCase()}</h2>${guestAttendanceNoticeHtml(g)}<div class="modal-known">${g.character||""}<br><b>Known for:</b> ${g.knownFor}</div>${guestPricesHtml(g,true)}</div>
       </div>
       <div class="modal-bio">${g.bio}</div>
+      ${guestWeekendScheduleHtml(g)}
       <div class="modal-actions">${external}<a class="primary-action" href="https://scifivalleycon.com/celebrity-guests" target="_blank" rel="noopener">OFFICIAL GUEST PAGE ↗</a>${photoAction}</div>
     </div>`;
   const modal=document.getElementById("guestModal");
@@ -6040,7 +6082,10 @@ function openPhotoLightbox(src,caption,bio="",gallery=[],startIndex=0){
   }
   biography.textContent=String(bio||"").trim();
   biography.hidden=!biography.textContent;
-  modal.classList.toggle("has-biography",!biography.hidden);
+  const schedule=document.getElementById("photoLightboxSchedule");
+  schedule.innerHTML=guestWeekendScheduleHtml(guest);
+  schedule.hidden=!guest;
+  modal.classList.toggle("has-biography",!biography.hidden||Boolean(guest));
   if(!modal.open&&typeof modal.showModal==="function")modal.showModal();
   modal.scrollTop=0;
 }
@@ -6243,6 +6288,7 @@ function initializeMetaAdvertising(){
   updateChoiceUi();pageView();
 }
 initializeMetaAdvertising();
+
 
 
 
