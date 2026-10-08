@@ -48,6 +48,8 @@ with sync_playwright() as p:
         page.on('request',lambda request:requests.append(request.url))
         page.goto(BASE,wait_until='domcontentloaded')
         page.wait_for_function('window.SFVCVendorGallery && myConDataLoaded')
+        # Allow the existing first-visit alerts prompt to finish before dismissing it.
+        page.wait_for_timeout(2000)
         page.evaluate('document.querySelectorAll("dialog[open]").forEach(d=>d.close());goTo("map");')
         if scale!=1: page.evaluate('(s)=>applyProgramTextScale(s,{persist:false})',scale)
         launch=page.locator('#openVendorGallery');launch.scroll_into_view_if_needed()
@@ -74,6 +76,7 @@ with sync_playwright() as p:
             b=viewer.locator(selector).bounding_box()
             assert b and b['width']>=44 and b['height']>=44 and b['x']>=0 and b['y']>=0 and b['x']+b['width']<=width+1 and b['y']+b['height']<=height+1,(selector,b)
         assert viewer.evaluate('(el)=>el.scrollWidth<=el.clientWidth+1')
+        assert viewer.locator('#vendorGalleryAnnouncement').bounding_box()['width'] <= 1
         assert viewer.locator('.vendor-gallery-details').evaluate('(el)=>el.scrollWidth<=el.clientWidth+1')
         imageBox=viewer.locator('.vendor-gallery-image').bounding_box()
         detailBox=viewer.locator('.vendor-gallery-details').bounding_box()
@@ -104,7 +107,10 @@ with sync_playwright() as p:
         page.evaluate('refreshLiveVendorDirectory("gallery-test")')
         page.wait_for_function('document.querySelector(".vendor-gallery-image").src.endsWith("/a1b.webp")')
         assert page.locator('#vendorGalleryProgress').inner_text()=='1 / 9'
-        failed.add('/test-vendor-photos/a4.webp')
+        # Use a never-loaded image so the browser cannot reuse decoded image memory.
+        failed.add('/test-vendor-photos/a4-failing.webp')
+        live[2]['photos'][0]=photos('a4-failing')[0]
+        page.evaluate('refreshLiveVendorDirectory("gallery-test")')
         viewer.locator('.vendor-gallery-next').click()
         page.wait_for_selector('.vendor-gallery-retry:not([hidden])')
         assert page.locator('#vendorGalleryName').inner_text()=='Record Timing'
@@ -132,7 +138,8 @@ with sync_playwright() as p:
         page.evaluate('state.mapSettings.published=false;renderMapScreen()')
         page.wait_for_function('!document.querySelector("#vendorPhotoGallery").open')
         assert page.locator('#vendorGalleryLaunch').is_hidden()
-        assert not page.evaluate('document.documentElement.classList.contains("vendor-gallery-open")')
+        # Native dialog close events are queued after the open attribute is removed.
+        page.wait_for_function('!document.documentElement.classList.contains("vendor-gallery-open")')
         assert not errors,errors
         results['viewports'].append({'width':width,'height':height,'textScale':scale,'status':'passed','pageErrors':errors})
         context.close()

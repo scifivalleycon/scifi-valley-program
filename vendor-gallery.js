@@ -149,7 +149,7 @@
       <section class="vendor-gallery-details" tabindex="0" aria-label="Vendor name, table and description">
         <p id="vendorGalleryTable"></p><h2 id="vendorGalleryName"></h2><p id="vendorGalleryDescription"></p><small id="vendorGalleryVendorCount"></small>
       </section>
-      <footer class="vendor-gallery-footer"><span>TABLE ORDER <span aria-hidden="true">&#8226;</span> LOOPS AUTOMATICALLY</span><b id="vendorGalleryProgress"></b></footer>
+      <footer class="vendor-gallery-footer"><span>TABLE ORDER <span aria-hidden="true">&#8226;</span> LOOPS BACK TO START</span><b id="vendorGalleryProgress"></b></footer>
       <div id="vendorGalleryAnnouncement" class="sr-only" aria-live="polite" aria-atomic="true"></div>`;
     document.body.append(modal);
     stage = modal.querySelector(".vendor-gallery-stage");
@@ -181,6 +181,8 @@
     }, {passive:true});
     stage.addEventListener("touchcancel", () => { touchStart = null; }, {passive:true});
     modal.addEventListener("close", () => {
+      // Ignore a queued close event if the viewer has already reopened.
+      if (modal.open) return;
       ++loadNumber;
       image?.remove(); image = null; touchStart = null;
       document.documentElement.classList.remove("vendor-gallery-open");
