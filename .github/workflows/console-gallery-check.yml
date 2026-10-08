@@ -9,20 +9,52 @@ on:
       - 'console-gallery.js'
       - 'console-gallery.css'
 permissions:
-  contents: read
+  contents: write
+  actions: read
+concurrency:
+  group: console-gallery-review
+  cancel-in-progress: false
 jobs:
   review:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Package current app for integration review
+      - name: Install review tools
         run: |
-          mkdir -p .console-review
+          python -m pip install Pillow gdown playwright
+          python -m playwright install --with-deps chromium
+      - name: Reuse the verified original images
+        uses: actions/download-artifact@v4
+        with:
+          name: console-gallery-review
+          run-id: 37797366743
+          github-token: ${{ github.token }}
+          path: .console-build
+      - name: Improve full-size compression and integrate gallery
+        run: |
+          sed -i 's/quality=86/quality=78/' tools/prepare-console-images.py
+          python tools/prepare-console-images.py
+          cp .console-build/optimized/*.webp assets/consoles/
+          cp .console-build/image-manifest.json assets/consoles/build-manifest.json
+          python tools/apply-console-gallery.py
+          node --check app.js
+          node --check event-guide-ui.js
+          node --check console-gallery.js
+          node --check service-worker.js
+      - name: Test mobile, desktop, lazy loading and close behavior
+        run: python tools/test-console-gallery.py
+      - name: Commit tested files to the review branch only
+        run: |
+          git config user.name 'Sci-Fi Valley Con Gallery Build'
+          git config user.email 'info@scifivalleycon.com'
+          git add app.js event-guide-ui.js index.html service-worker.js data/events.json .assetsignore assets/consoles tools/prepare-console-images.py
+          git diff --cached --quiet || git commit -m 'Integrate and test 72 console thumbnails with full-screen viewer'
+          git push origin HEAD:console-gallery-oct-2026
           git archive --format=zip HEAD -o .console-review/source.zip
+          git diff --stat e39273ec44acde80e81d41e41c42849a258912a2 HEAD || true
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: console-gallery-integration
           path: .console-review/
