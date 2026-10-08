@@ -1,0 +1,31 @@
+name: Review console gallery integration
+on:
+  push:
+    branches: [console-gallery-oct-2026]
+    paths:
+      - '.github/workflows/console-gallery-check.yml'
+      - 'tools/apply-console-gallery.py'
+      - 'tools/test-console-gallery.py'
+      - 'console-gallery.js'
+      - 'console-gallery.css'
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Package current app for integration review
+        run: |
+          mkdir -p .console-review
+          git archive --format=zip HEAD -o .console-review/source.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: console-gallery-integration
+          path: .console-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
