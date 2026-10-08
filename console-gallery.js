@@ -55,7 +55,7 @@
     modal.id = "consoleImageViewer";
     modal.className = "console-image-viewer";
     modal.setAttribute("aria-labelledby", "consoleImageTitle");
-    modal.innerHTML = `<header class="console-viewer-header"><div><small>RETRO GAMING ARCADE VAULT</small><h2 id="consoleImageTitle"></h2></div><button class="console-viewer-close" type="button" aria-label="Close console image" autofocus><span aria-hidden="true">&#215;</span></button></header>
+    modal.innerHTML = `<header class="console-viewer-header"><div><small>RETRO GAMING ARCADE VAULT</small><h2 id="consoleImageTitle"></h2></div><button class="console-viewer-close" type="button" aria-label="Close console image" data-font-scale="locked" autofocus><span aria-hidden="true">&#215;</span></button></header>
       <div class="console-viewer-stage" tabindex="0" aria-label="Console image, scroll to explore when zoomed"><p class="console-viewer-status" role="status" aria-live="polite"></p><img class="console-full-image" alt="" decoding="async" hidden></div>
       <footer class="console-viewer-footer"><button type="button" class="console-viewer-zoom" aria-pressed="false">ZOOM IN</button><button type="button" class="console-viewer-retry" hidden>RETRY IMAGE</button><span>Close with the X or Escape.</span></footer>`;
     document.body.append(modal);

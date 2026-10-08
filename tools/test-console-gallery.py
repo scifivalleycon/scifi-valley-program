@@ -31,6 +31,7 @@ with sync_playwright() as p:
   page.wait_for_function('window.SFVCEventGuide && window.SFVCConsoleGallery')
   page.wait_for_timeout(1500)
   page.evaluate('document.querySelectorAll("dialog[open]").forEach(d=>d.close())')
+  if width==320:page.evaluate('applyProgramTextScale(2,{persist:false})')
   page.evaluate('window.SFVCEventGuide.open("retro-gaming")')
   page.wait_for_selector('#eventModal[open] .console-thumbnail')
   buttons=page.locator('#eventModal .console-thumbnail')
@@ -68,7 +69,7 @@ with sync_playwright() as p:
   assert not page.evaluate('document.documentElement.classList.contains("console-viewer-open")')
   page.locator('#eventModal [data-console-image="72"]').click()
   page.wait_for_selector('#consoleImageViewer[open] .console-full-image:not([hidden])')
-  assert page.locator('#consoleImageTitle').inner_text()=='Sony PS Vita'
+  assert page.locator('#consoleImageTitle').inner_text()==page.locator('#eventModal [data-console-image="72"]').get_attribute('data-console-label')
   assert image.get_attribute('src').endswith('console-72.webp')
   close.click()
   page.wait_for_function('!document.querySelector("#consoleImageViewer").open')
