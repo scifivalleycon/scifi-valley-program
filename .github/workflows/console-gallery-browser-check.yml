@@ -1,0 +1,45 @@
+name: Verify live console gallery in Chromium
+on:
+  push:
+    branches: [console-gallery-oct-2026]
+    paths: ['.github/workflows/console-gallery-browser-check.yml']
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install Pillow playwright
+          python -m playwright install --with-deps chromium
+      - name: Check live browser rendering without changing site security
+        env:
+          CONSOLE_TEST_BASE: https://app.scifivalleycon.com
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('tools/test-console-gallery.py')
+          source=path.read_text()
+          # Permit the site's ordinary browser security checks. App analytics,
+          # profile writes and notification subscriptions remain blocked.
+          anchor="   req=route.request;u=urlparse(req.url)"
+          source=source.replace(anchor,anchor+"\n   if u.path.startswith('/cdn-cgi/') or u.netloc=='challenges.cloudflare.com':return route.continue_()")
+          anchor="  page.wait_for_function('window.SFVCEventGuide && window.SFVCConsoleGallery')"
+          replacement="  try:page.wait_for_function('window.SFVCEventGuide && window.SFVCConsoleGallery',timeout=20000)\n  except Exception:\n   page.screenshot(path=str(OUT/'live-browser-access.png'))\n   print('LIVE BROWSER PAGE:',page.title(),page.url,flush=True)\n   print('ACCESS MESSAGE:',page.locator('body').inner_text()[:500],flush=True)\n   raise"
+          assert anchor in source
+          source=source.replace(anchor,replacement)
+          exec(compile(source,str(path),'exec'),{'__file__':str(path.resolve()),'__name__':'__main__'})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: console-gallery-live-browser-check
+          path: .console-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
