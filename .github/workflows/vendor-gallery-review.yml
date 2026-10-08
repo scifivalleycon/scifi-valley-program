@@ -1,0 +1,46 @@
+name: Test vendor photo gallery
+on:
+  push:
+    branches: [vendor-gallery-oct-2026]
+    paths:
+      - 'vendor-gallery.js'
+      - 'vendor-gallery.css'
+      - 'tools/integrate-vendor-gallery.py'
+      - 'tools/test-vendor-gallery.py'
+      - '.github/workflows/vendor-gallery-review.yml'
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrate only into verified source files
+        run: |
+          python tools/integrate-vendor-gallery.py
+          node --check app.js
+          node --check vendor-gallery.js
+          node --check service-worker.js
+      - name: Install isolated browser tests
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Test order, captions, mobile layout, looping and live updates
+        run: python tools/test-vendor-gallery.py
+      - name: Commit tested integration to review branch only
+        run: |
+          git config user.name 'Sci-Fi Valley Con Gallery Build'
+          git config user.email 'info@scifivalleycon.com'
+          git add app.js index.html service-worker.js
+          git diff --cached --quiet || git commit -m 'V4.110: Integrate tested full vendor photo gallery'
+          git push origin HEAD:vendor-gallery-oct-2026
+          git archive --format=zip HEAD -o .vendor-gallery-review/source.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vendor-gallery-review
+          path: .vendor-gallery-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn

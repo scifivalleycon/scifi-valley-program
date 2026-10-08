@@ -1,0 +1,39 @@
+/* Isolated gallery UI. Reuses submitted photo URLs, never alters profiles. */
+#vendorGalleryLaunch{margin:0 0 22px}
+#vendorGalleryLaunch[hidden],#vendorPhotoGallery [hidden]{display:none!important}
+.vendor-gallery-launch-button{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:17px 20px;border:3px solid var(--ink,#3b2924);border-radius:13px;background:var(--aqua,#73c7cb);color:var(--ink,#3b2924);box-shadow:4px 5px 0 rgba(59,41,36,.18);font:900 16px/1.3 "Trebuchet MS",Arial,sans-serif;letter-spacing:.04em;text-align:center;cursor:pointer;overflow-wrap:anywhere;min-height:56px}
+.vendor-gallery-launch-button svg{width:29px;height:29px;flex:0 0 29px}
+.vendor-gallery-launch-button:disabled{opacity:.6;cursor:default;box-shadow:none}
+#vendorGallerySummary{margin:10px 4px 0;font-size:14px;line-height:1.4;color:var(--ink,#3b2924)}
+.vendor-gallery-launch-button:focus-visible,#vendorPhotoGallery button:focus-visible,#vendorPhotoGallery .vendor-gallery-details:focus-visible{outline:3px solid #f1c35a;outline-offset:3px}
+html.vendor-gallery-open,html.vendor-gallery-open body{overflow:hidden}
+#vendorPhotoGallery{position:fixed;inset:0;width:100%;height:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;box-sizing:border-box;border:0;border-radius:0;overflow:hidden;background:#171b1d;color:#fff}
+#vendorPhotoGallery[open]{display:grid;grid-template-rows:auto minmax(72px,1fr) auto auto}
+#vendorPhotoGallery::backdrop{background:rgba(0,0,0,.94)}
+#vendorPhotoGallery button{font-family:"Trebuchet MS",Arial,sans-serif;cursor:pointer}
+#vendorPhotoGallery button:disabled{opacity:.4;cursor:default}
+.vendor-gallery-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(10px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:#242b2f;border-bottom:1px solid #485358;z-index:1}
+.vendor-gallery-header>div{min-width:0;overflow-wrap:anywhere}
+.vendor-gallery-header>div>span{display:block;color:#a8dadb;font:700 10px/1.3 Arial,sans-serif;letter-spacing:.08em}
+#vendorGalleryTitle{display:block;margin:4px 0 0;font:800 17px/1.25 "Trebuchet MS",Arial,sans-serif;letter-spacing:.03em}
+#vendorPhotoGallery .vendor-gallery-close{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;min-width:48px;min-height:48px;padding:0;border:2px solid #fff;border-radius:50%;background:#171b1d;color:#fff;font-size:34px;line-height:1}
+.vendor-gallery-stage{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;padding:10px 65px;overflow:hidden;box-sizing:border-box;touch-action:pan-y pinch-zoom;overscroll-behavior:contain}
+#vendorPhotoGallery .vendor-gallery-image{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;user-select:none}
+.vendor-gallery-message{position:absolute;inset:10px 65px;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:auto;text-align:center;pointer-events:none;line-height:1.45}
+.vendor-gallery-message button{pointer-events:auto}
+.vendor-gallery-status{margin:0 0 12px}
+#vendorPhotoGallery .vendor-gallery-retry{padding:10px 16px;border:2px solid #a8dadb;border-radius:8px;background:#242b2f;color:#fff;min-height:44px;font-weight:800}
+#vendorPhotoGallery .vendor-gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:48px;height:58px;min-width:48px;min-height:48px;padding:0;border:2px solid #a8dadb;border-radius:10px;background:rgba(36,43,47,.94);color:#fff;font-size:26px;line-height:1;z-index:1}
+.vendor-gallery-previous{left:max(8px,env(safe-area-inset-left,0px))}
+.vendor-gallery-next{right:max(8px,env(safe-area-inset-right,0px))}
+.vendor-gallery-details{min-height:0;max-height:32vh;max-height:32dvh;padding:16px max(20px,env(safe-area-inset-right,0px)) 14px max(20px,env(safe-area-inset-left,0px));background:#fff4d6;color:#3b2924;overflow:auto;overscroll-behavior:contain;overflow-wrap:anywhere;box-sizing:border-box;border-top:3px solid #ee7846}
+#vendorGalleryTable{margin:0 0 6px;color:#874020;font:900 12px/1.35 "Trebuchet MS",Arial,sans-serif;letter-spacing:.06em}
+#vendorGalleryName{margin:0 0 8px;font:900 24px/1.15 "Trebuchet MS",Arial,sans-serif;letter-spacing:0;text-transform:none}
+#vendorGalleryDescription{margin:0 0 9px;font:400 16px/1.5 Georgia,serif;white-space:pre-wrap}
+#vendorGalleryVendorCount{font:700 12px/1.4 "Trebuchet MS",Arial,sans-serif;color:#6a5444}
+.vendor-gallery-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px max(18px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));background:#242b2f;color:#d5e1e1;min-width:0}
+.vendor-gallery-footer>span{font:700 10px/1.4 Arial,sans-serif;letter-spacing:.04em;min-width:0}
+#vendorGalleryProgress{white-space:nowrap;font:800 15px/1.25 "Trebuchet MS",Arial,sans-serif;color:#fff}
+@media(max-width:360px){.vendor-gallery-launch-button{padding:14px 10px;font-size:14px;gap:8px}#vendorGalleryTitle{font-size:15px}.vendor-gallery-stage{padding:8px 58px}.vendor-gallery-details{padding:12px 16px}#vendorGalleryName{font-size:21px}.vendor-gallery-message{inset:8px 60px}}
+@media(max-height:500px){.vendor-gallery-header{padding-top:max(6px,env(safe-area-inset-top,0px));padding-bottom:6px}.vendor-gallery-header>div>span{display:none}.vendor-gallery-details{max-height:28dvh;padding-top:8px;padding-bottom:8px}.vendor-gallery-footer{padding-top:6px;padding-bottom:max(6px,env(safe-area-inset-bottom,0px))}}
+@media print{#vendorGalleryLaunch,#vendorPhotoGallery{display:none!important}}
