@@ -6,6 +6,7 @@ on:
       - 'vendor-gallery.js'
       - 'vendor-gallery.css'
       - 'tools/integrate-vendor-gallery.py'
+      - 'tools/refine-vendor-gallery.py'
       - 'tools/test-vendor-gallery.py'
       - '.github/workflows/vendor-gallery-review.yml'
 permissions:
@@ -19,6 +20,7 @@ jobs:
       - name: Integrate only into verified source files
         run: |
           python tools/integrate-vendor-gallery.py
+          python tools/refine-vendor-gallery.py
           node --check app.js
           node --check vendor-gallery.js
           node --check service-worker.js
@@ -32,7 +34,7 @@ jobs:
         run: |
           git config user.name 'Sci-Fi Valley Con Gallery Build'
           git config user.email 'info@scifivalleycon.com'
-          git add app.js index.html service-worker.js
+          git add app.js index.html service-worker.js vendor-gallery.js vendor-gallery.css tools/test-vendor-gallery.py
           git diff --cached --quiet || git commit -m 'V4.110: Integrate tested full vendor photo gallery'
           git push origin HEAD:vendor-gallery-oct-2026
           git archive --format=zip HEAD -o .vendor-gallery-review/source.zip
