@@ -1,0 +1,35 @@
+name: Inspect console gallery public responses
+on:
+  push:
+    branches: [console-gallery-oct-2026]
+    paths: ['.github/workflows/console-gallery-endpoint-check.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read public deployment response metadata
+        run: |
+          python - <<'PY'
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from pathlib import Path
+          import hashlib,re,time
+          for name in ['','console-gallery.js','console-gallery.js?console_gallery_verify='+str(int(time.time())),'app.js']:
+              url='https://app.scifivalleycon.com/'+name
+              try:
+                  with urlopen(Request(url,headers={'Accept-Encoding':'identity','Cache-Control':'no-cache'}),timeout=15) as response:
+                      data=response.read()
+                      print('URL',url,'STATUS',response.status,'MIME',response.headers.get('Content-Type'),'ENCODING',response.headers.get('Content-Encoding'),'BYTES',len(data),'SHA256',hashlib.sha256(data).hexdigest(),flush=True)
+                      path=Path(name.split('?')[0] or 'index.html')
+                      print('MATCHES CHECKED-OUT FILE',data==path.read_bytes(),flush=True)
+                      if not name:print('SCRIPT INCLUDES',re.findall(r'<script[^>]*src=[\"\x27]([^\"\x27]+)',data.decode('utf-8','replace')),flush=True)
+                      if name=='app.js':print('APP VERSION',re.findall(r'APP_BUILD_VERSION\s*=\s*[^;]+',data.decode('utf-8','replace'))[:1],flush=True)
+              except HTTPError as error:print('HTTP ERROR',url,error.code,error.read(200).decode('utf-8','replace'),flush=True)
+              except Exception as error:print('REQUEST ERROR',url,repr(error),flush=True)
+          PY
