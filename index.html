@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="event-guide-layout.css?v=4.101">
   <title>Sci-Fi Valley Con | Digital Program</title>
   <link rel="stylesheet" href="console-gallery.css?v=console-gallery-20261008">
+  <link rel="stylesheet" href="vendor-gallery.css?v=vendor-gallery-20261008">
 </head>
 <body>
   <aside id="appUtilityDrawer" class="app-utility-drawer" aria-label="Program tools">
@@ -482,6 +483,13 @@
         <div class="map-directory-head">
           <div><span class="section-kicker">TABLE & BOOTH DIRECTORY</span><h2>VENDORS & LOCATIONS</h2></div>
           <span id="mapDirectoryCount" class="pill">0</span>
+        </div>
+        <div id="vendorGalleryLaunch" hidden>
+          <button id="openVendorGallery" class="vendor-gallery-launch-button" type="button" aria-haspopup="dialog" aria-controls="vendorPhotoGallery" aria-describedby="vendorGallerySummary" disabled>
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="7" y="4" width="22" height="21" rx="3"/><path d="M3 10v16a3 3 0 0 0 3 3h17M8 21l6-7 5 5 4-4 5 6"/><circle cx="22" cy="10" r="2"/></svg>
+            <span>VIEW ENTIRE VENDOR PHOTO GALLERY</span>
+          </button>
+          <p id="vendorGallerySummary"></p>
         </div>
         <div id="mapDirectoryNotice" class="info-note hidden"></div>
         <div id="mapDirectoryList" class="map-directory-list"></div>
@@ -1563,10 +1571,11 @@
     </div>
   </dialog>
 
+  <script src="vendor-gallery.js?v=vendor-gallery-20261008"></script>
   <script src="console-gallery.js?v=console-gallery-20261008"></script>
   <script src="event-guide-ui.js?v=console-gallery-20261008"></script>
   <script src="tshirt-live-store.js?v=4.25"></script>
-  <script src="app.js?v=console-gallery-20261008"></script>
+  <script src="app.js?v=vendor-gallery-20261008"></script>
   <script src="home-layout.js?v=4.101"></script>
   <script src="event-guide-layout.js?v=4.101"></script>
 </body>

@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.109";
+const APP_BUILD_VERSION="4.110";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -5344,6 +5344,7 @@ function currentMapRenderSignature(){
   return JSON.stringify({layout:state.mapLayout,settings:state.mapSettings,vendors:liveVendorDirectorySignature(state.vendors)});
 }
 function renderMapScreen({force=false}={}){
+  window.SFVCVendorGallery?.update(state.vendors,{published:mapDirectoryVisible()&&mapVisible()});
   const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
   const mapActive=document.getElementById('map')?.classList.contains('active')||mapPreviewMode;
   if(!mapActive)return;
