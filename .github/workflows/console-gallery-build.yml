@@ -1,0 +1,56 @@
+name: Prepare console gallery images
+on:
+  push:
+    branches: [console-gallery-oct-2026]
+    paths:
+      - '.github/workflows/console-gallery-build.yml'
+      - 'tools/prepare-console-images.py'
+      - 'tools/console-source-ids.txt'
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect current gallery integration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,json
+          text=Path('app.js').read_text()
+          lines=text.splitlines()
+          for i,line in enumerate(lines):
+            if re.search(r'function (renderEvent|openEvent|renderContent|openImage|.*Lightbox)|block.type|case .systems.|item.type|systems-grid|systems-list',line):
+              print('\nAPP.JS LINE',i+1)
+              print('\n'.join(lines[max(0,i-4):min(len(lines),i+65)]))
+          print('\nROOT FILES:',[p.name for p in Path('.').iterdir()])
+          for filename in ['wrangler.toml','wrangler.jsonc','version.json','sw.js','.assetsignore','package.json']:
+            if Path(filename).exists(): print('\nFILE',filename,'\n',Path(filename).read_text()[:22000])
+          for p in Path('data').glob('*.json'):
+            if 'retro' in p.name or 'console' in p.name: print('\nFILE',p,'\n',p.read_text()[:32000])
+          for e in json.loads(Path('data/events.json').read_text()):
+            if 'retro' in str(e.get('id','')): print('\nRETRO EVENT\n',json.dumps(e,ensure_ascii=False,indent=2))
+          PY
+      - name: Install image tools
+        run: python -m pip install Pillow gdown
+      - name: Download and optimize the supplied console images
+        run: python tools/prepare-console-images.py
+      - name: Store optimized images on the review branch only
+        run: |
+          mkdir -p assets/consoles
+          cp .console-build/optimized/*.webp assets/consoles/
+          cp .console-build/image-manifest.json assets/consoles/build-manifest.json
+          git config user.name 'Sci-Fi Valley Con Gallery Build'
+          git config user.email 'info@scifivalleycon.com'
+          git add assets/consoles
+          git diff --cached --quiet || git commit -m 'Add optimized console images and lightweight thumbnails'
+          git push origin HEAD:console-gallery-oct-2026
+      - uses: actions/upload-artifact@v4
+        with:
+          name: console-gallery-review
+          path: .console-build/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
