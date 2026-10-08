@@ -1,0 +1,68 @@
+name: Verify live console gallery
+on:
+  push:
+    branches: [console-gallery-oct-2026]
+    paths: ['.github/workflows/console-gallery-live-check.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install read-only browser checks
+        run: |
+          python -m pip install Pillow playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify production serves the exact tested files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import urlopen,Request
+          from concurrent.futures import ThreadPoolExecutor
+          import hashlib,time,json
+          root=Path('.')
+          base='https://app.scifivalleycon.com/'
+          def fetch(path):
+              request=Request(base+path+'?console_gallery_verify='+str(int(time.time())),headers={'Cache-Control':'no-cache','Accept-Encoding':'identity'})
+              with urlopen(request,timeout=30) as response:
+                  return response.read(),response.headers.get('Content-Type','')
+          expected=(root/'console-gallery.js').read_bytes()
+          for attempt in range(30):
+              try:
+                  actual,_=fetch('console-gallery.js')
+                  if actual==expected:break
+              except Exception:pass
+              time.sleep(10)
+          else:raise RuntimeError('Deployment did not become available with the tested console gallery.')
+          paths=['app.js','event-guide-ui.js','index.html','service-worker.js','data/events.json','console-gallery.js','console-gallery.css']
+          paths += [str(p) for p in sorted((root/'assets/consoles').glob('*.webp'))]
+          assert len(paths)==151
+          def verify(path):
+              data,mime=fetch(path)
+              expected=(root/path).read_bytes()
+              assert hashlib.sha256(data).digest()==hashlib.sha256(expected).digest(),('Published file mismatch',path)
+              if path.endswith('.webp'):assert 'image/webp' in mime,(path,mime)
+              return {'path':path,'bytes':len(data),'mime':mime,'sha256':hashlib.sha256(data).hexdigest()}
+          with ThreadPoolExecutor(max_workers=4) as pool:verified=list(pool.map(verify,paths))
+          source=json.loads((root/'assets/consoles/build-manifest.json').read_text())
+          summary={'production':base,'verifiedFiles':len(verified),'imageFiles':144,'consoleCount':72,'originalBytes':sum(x['originalBytes'] for x in source),'fullBytes':sum(x['fullBytes'] for x in source),'thumbnailBytes':sum(x['thumbnailBytes'] for x in source)}
+          out=root/'.console-review';out.mkdir(exist_ok=True)
+          (out/'production-assets.json').write_text(json.dumps({'summary':summary,'files':verified},indent=2)+'\n')
+          print(json.dumps(summary,indent=2))
+          PY
+      - name: Test the live app on mobile, desktop and enlarged text
+        env:
+          CONSOLE_TEST_BASE: https://app.scifivalleycon.com
+        run: python tools/test-console-gallery.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: console-gallery-production-verification
+          path: .console-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
