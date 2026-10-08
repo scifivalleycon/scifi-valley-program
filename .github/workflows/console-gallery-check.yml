@@ -4,13 +4,12 @@ on:
     branches: [console-gallery-oct-2026]
     paths:
       - '.github/workflows/console-gallery-check.yml'
-      - 'tools/apply-console-gallery.py'
+      - 'tools/finalize-console-gallery.py'
       - 'tools/test-console-gallery.py'
       - 'console-gallery.js'
       - 'console-gallery.css'
 permissions:
   contents: write
-  actions: read
 concurrency:
   group: console-gallery-review
   cancel-in-progress: false
@@ -22,41 +21,32 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install review tools
         run: |
-          python -m pip install Pillow gdown playwright
+          python -m pip install Pillow playwright
           python -m playwright install --with-deps chromium
-      - name: Reuse the verified original images
-        uses: actions/download-artifact@v4
-        with:
-          name: console-gallery-review
-          run-id: 37797366743
-          github-token: ${{ github.token }}
-          path: .console-build
-      - name: Improve full-size compression and integrate gallery
+      - name: Preserve existing console details and polish accessibility
         run: |
-          sed -i 's/quality=86/quality=78/' tools/prepare-console-images.py
-          python tools/prepare-console-images.py
-          cp .console-build/optimized/*.webp assets/consoles/
-          cp .console-build/image-manifest.json assets/consoles/build-manifest.json
-          python tools/apply-console-gallery.py
+          git fetch origin e39273ec44acde80e81d41e41c42849a258912a2 --depth=1
+          python tools/finalize-console-gallery.py
           node --check app.js
           node --check event-guide-ui.js
           node --check console-gallery.js
           node --check service-worker.js
-      - name: Test mobile, desktop, lazy loading and close behavior
+      - name: Test mobile, desktop, 200 percent text and image behavior
         run: python tools/test-console-gallery.py
-      - name: Commit tested files to the review branch only
+      - name: Commit tested final files to review branch only
         run: |
           git config user.name 'Sci-Fi Valley Con Gallery Build'
           git config user.email 'info@scifivalleycon.com'
-          git add app.js event-guide-ui.js index.html service-worker.js data/events.json .assetsignore assets/consoles tools/prepare-console-images.py
-          git diff --cached --quiet || git commit -m 'Integrate and test 72 console thumbnails with full-screen viewer'
+          git add console-gallery.js data/events.json tools/test-console-gallery.py
+          git diff --cached --quiet || git commit -m 'Preserve existing console descriptions and validate 200 percent text'
           git push origin HEAD:console-gallery-oct-2026
           git archive --format=zip HEAD -o .console-review/source.zip
-          git diff --stat e39273ec44acde80e81d41e41c42849a258912a2 HEAD || true
+          git rev-parse HEAD
+          git diff --stat e39273ec44acde80e81d41e41c42849a258912a2 HEAD
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: console-gallery-integration
+          name: console-gallery-final-review
           path: .console-review/
           include-hidden-files: true
           retention-days: 7
