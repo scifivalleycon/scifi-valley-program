@@ -4,3 +4,8 @@ wrangler.jsonc
 .git/
 .github/
 node_modules/
+
+tools/
+.console-build/
+.console-review/
+assets/consoles/build-manifest.json

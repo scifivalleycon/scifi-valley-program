@@ -527,12 +527,12 @@
       },
       {
         "type": "systems",
-        "title": "1970s Highlights",
+        "title": "1970s",
         "items": [
           {
             "name": "Magnavox Odyssey",
             "year": "1972",
-            "desc": "The pioneering first home video game console."
+            "desc": "The pioneering first-generation home console."
           },
           {
             "name": "National Semiconductor Adversary",
@@ -542,220 +542,376 @@
           {
             "name": "Atari 2600",
             "year": "1977",
-            "desc": "The cartridge-based console that helped popularize home gaming."
+            "desc": "The cartridge-based console that helped define early home gaming."
           },
           {
             "name": "Magnavox Odyssey²",
             "year": "1978",
-            "desc": "A console and computer hybrid with a built-in keyboard."
+            "desc": "A console-computer hybrid with a built-in keyboard."
           },
           {
             "name": "Mattel Intellivision",
             "year": "1979",
-            "desc": "An early home system known for advanced graphics and sports titles."
+            "desc": "Known for its distinctive disc controller and advanced-for-the-time sports games."
           }
         ]
       },
       {
         "type": "systems",
-        "title": "1980s Highlights",
+        "title": "1980s",
         "items": [
           {
             "name": "ColecoVision",
             "year": "1982",
-            "desc": "Known for impressive arcade-style home ports."
+            "desc": "A home console remembered for strong arcade conversions."
           },
           {
             "name": "Atari 5200",
             "year": "1982",
-            "desc": "Atari's more powerful successor to the 2600."
+            "desc": "Atari's more powerful follow-up to the 2600."
           },
           {
             "name": "Vectrex",
             "year": "1982",
-            "desc": "A unique self-contained vector-display console."
+            "desc": "A unique vector-graphics console with its own CRT display."
           },
           {
             "name": "Apple IIe",
             "year": "1983",
-            "desc": "A landmark home computer for games, education and programming."
+            "desc": "A landmark home computer used for games, education and programming."
           },
           {
-            "name": "Nintendo Entertainment System",
+            "name": "Nintendo Famicom",
+            "year": "1983",
+            "desc": "Japan's version of the hardware that became the NES."
+          },
+          {
+            "name": "Commodore SX-64",
+            "year": "1984",
+            "desc": "A portable color computer based on the Commodore 64."
+          },
+          {
+            "name": "Nintendo Entertainment System (NES)",
             "year": "1985",
-            "desc": "The iconic 8-bit console that helped revive the home video game market."
+            "desc": "Nintendo's 8-bit home console with Mario, Zelda and a huge library."
           },
           {
             "name": "Sega Master System",
             "year": "1985",
-            "desc": "Sega's 8-bit competitor to the NES."
+            "desc": "Sega's crisp 8-bit competitor to Nintendo."
           },
           {
-            "name": "TurboGrafx-16 / PC Engine",
+            "name": "Atari 7800",
+            "year": "1986",
+            "desc": "An Atari console with backward compatibility for many 2600 titles."
+          },
+          {
+            "name": "Twin Famicom",
+            "year": "1986",
+            "desc": "A combined Famicom and Disk System unit."
+          },
+          {
+            "name": "Commodore 64C",
+            "year": "1986",
+            "desc": "A redesigned version of the hugely successful Commodore 64."
+          },
+          {
+            "name": "NEC TurboGrafx-16 / PC Engine",
             "year": "1987",
-            "desc": "An early entry in the 16-bit era with strong arcade conversions."
+            "desc": "An early entrant in the 16-bit era with strong arcade-style games."
           },
           {
             "name": "Sega Genesis",
             "year": "1988",
-            "desc": "Sega's influential 16-bit system and home of Sonic."
+            "desc": "Sega's signature 16-bit console and home of Sonic."
           },
           {
             "name": "Nintendo Game Boy",
             "year": "1989",
-            "desc": "The hugely successful portable system that helped make handheld gaming mainstream."
+            "desc": "The portable system that became a global phenomenon."
           }
         ]
       },
       {
         "type": "systems",
-        "title": "1990s Highlights",
+        "title": "1990s",
         "items": [
           {
             "name": "Sega Game Gear",
             "year": "1990",
-            "desc": "A full-color handheld competitor to the Game Boy."
+            "desc": "Sega's full-color handheld rival to the Game Boy."
           },
           {
             "name": "SNK Neo Geo AES",
             "year": "1990",
-            "desc": "Premium arcade hardware adapted for the home."
+            "desc": "Premium home hardware closely related to SNK arcade systems."
           },
           {
-            "name": "Super Nintendo",
+            "name": "Nintendo Super Famicom",
+            "year": "1990",
+            "desc": "The Japanese version of the Super Nintendo."
+          },
+          {
+            "name": "Super Nintendo (SNES)",
             "year": "1991",
-            "desc": "Nintendo's classic 16-bit console."
+            "desc": "Nintendo's colorful 16-bit console with an iconic game library."
           },
           {
             "name": "Philips CD-i",
             "year": "1991",
-            "desc": "An ambitious multimedia CD-based system."
+            "desc": "An ambitious CD-based multimedia system."
+          },
+          {
+            "name": "NEC PC Engine Duo-R",
+            "year": "1991",
+            "desc": "A PC Engine with integrated CD-ROM support."
+          },
+          {
+            "name": "Atari Lynx II",
+            "year": "1991",
+            "desc": "A refined version of Atari's color handheld."
+          },
+          {
+            "name": "Goldstar 3DO",
+            "year": "1993",
+            "desc": "An early 32-bit CD-based console."
           },
           {
             "name": "Atari Jaguar",
             "year": "1993",
-            "desc": "Atari's unusual late-era home console."
+            "desc": "Atari's unusual high-powered final major home console."
+          },
+          {
+            "name": "Nintendo AV Famicom",
+            "year": "1993",
+            "desc": "A revised Famicom with improved audio/video connections."
+          },
+          {
+            "name": "Sega Pico",
+            "year": "1993",
+            "desc": "An educational storybook-style system aimed at children."
           },
           {
             "name": "Sega Saturn",
             "year": "1994",
-            "desc": "A powerful system especially known for arcade-style games."
+            "desc": "Sega's powerful 2D and 3D CD console."
+          },
+          {
+            "name": "SNK Neo Geo CD",
+            "year": "1994",
+            "desc": "A CD-based alternative to the cartridge Neo Geo."
           },
           {
             "name": "Sony PlayStation",
             "year": "1994",
-            "desc": "The CD-based console that helped define mainstream 3D gaming."
+            "desc": "Sony's breakout 3D console that reshaped the industry."
           },
           {
             "name": "Nintendo Virtual Boy",
             "year": "1995",
-            "desc": "Nintendo's experimental tabletop 3D system."
+            "desc": "Nintendo's experimental red-and-black stereoscopic tabletop system."
+          },
+          {
+            "name": "Game Boy 'Play It Loud!'",
+            "year": "1995",
+            "desc": "Colorful shell variants of the original Game Boy."
+          },
+          {
+            "name": "Sega Genesis Nomad",
+            "year": "1995",
+            "desc": "A portable Genesis capable of using standard cartridges."
+          },
+          {
+            "name": "Nintendo Game Boy Pocket",
+            "year": "1996",
+            "desc": "A slimmer redesign of Nintendo's original handheld."
           },
           {
             "name": "Nintendo 64",
             "year": "1996",
-            "desc": "A landmark 3D console known for major Nintendo classics."
+            "desc": "Nintendo's cartridge-based 3D console with the trident controller."
           },
           {
-            "name": "Sega Dreamcast",
+            "name": "Apple Bandai Pippin",
+            "year": "1996",
+            "desc": "A short-lived Apple/Bandai multimedia console-computer hybrid."
+          },
+          {
+            "name": "Game Boy Light",
             "year": "1998",
-            "desc": "An innovative console with built-in online features and a beloved library."
+            "desc": "A Japan-only Game Boy model with a built-in light."
           },
           {
             "name": "Game Boy Color",
             "year": "1998",
-            "desc": "A color evolution of Nintendo's classic handheld."
+            "desc": "Color-screen Game Boy hardware with backward compatibility."
+          },
+          {
+            "name": "Sega Dreamcast",
+            "year": "1998",
+            "desc": "An inventive online-capable Sega console with a devoted following."
+          },
+          {
+            "name": "iMac G3",
+            "year": "1998",
+            "desc": "Apple's colorful all-in-one computer and a late-'90s design icon."
+          },
+          {
+            "name": "Sony PlayStation 2",
+            "year": "2000",
+            "desc": "The best-selling console generation's giant, with DVD playback and an enormous library."
           }
         ]
       },
       {
         "type": "systems",
-        "title": "2000s to Today",
+        "title": "2000s",
         "items": [
-          {
-            "name": "PlayStation 2",
-            "year": "2000",
-            "desc": "The best-selling home console with an enormous game library."
-          },
           {
             "name": "Nintendo GameCube",
             "year": "2001",
-            "desc": "Nintendo's compact sixth-generation home console."
+            "desc": "Nintendo's compact disc-based console."
           },
           {
             "name": "Microsoft Xbox",
             "year": "2001",
-            "desc": "Microsoft's first console and the foundation for Xbox Live."
+            "desc": "Microsoft's first console, built around a hard drive and later Xbox Live."
           },
           {
             "name": "Game Boy Advance",
             "year": "2001",
-            "desc": "Nintendo's 32-bit portable successor to the Game Boy line."
+            "desc": "Nintendo's 32-bit successor to the Game Boy line."
+          },
+          {
+            "name": "Game Boy Advance SP",
+            "year": "2003",
+            "desc": "A clamshell GBA with rechargeable power and an illuminated display."
           },
           {
             "name": "Nintendo DS",
             "year": "2004",
-            "desc": "A dual-screen handheld built around touch controls."
+            "desc": "A dual-screen handheld built around touch input."
           },
           {
-            "name": "Sony PSP",
+            "name": "Sony PSP-1000",
             "year": "2004",
-            "desc": "Sony's widescreen multimedia handheld."
+            "desc": "Sony's widescreen portable system with strong multimedia capabilities."
+          },
+          {
+            "name": "Game Boy Micro",
+            "year": "2005",
+            "desc": "A tiny premium redesign of the Game Boy Advance."
           },
           {
             "name": "Xbox 360",
             "year": "2005",
-            "desc": "A major HD-era console with a strong online ecosystem."
+            "desc": "Microsoft's major HD-era console with extensive online play."
+          },
+          {
+            "name": "Nintendo DS Lite",
+            "year": "2006",
+            "desc": "A slimmer, brighter redesign of the Nintendo DS."
           },
           {
             "name": "Nintendo Wii",
             "year": "2006",
-            "desc": "The motion-controlled console that brought gaming to a huge new audience."
+            "desc": "Nintendo's motion-control phenomenon."
           },
           {
-            "name": "PlayStation 3",
+            "name": "Sony PlayStation 3",
             "year": "2006",
-            "desc": "Sony's Blu-ray based seventh-generation console."
+            "desc": "Sony's Blu-ray equipped third PlayStation console."
+          },
+          {
+            "name": "PSP-2000 (Slim & Lite)",
+            "year": "2007",
+            "desc": "A lighter PSP revision with improved performance and TV output."
+          },
+          {
+            "name": "Nintendo DSi",
+            "year": "2008",
+            "desc": "A DS revision adding cameras and downloadable DSiWare."
+          },
+          {
+            "name": "PSP-3000 (Brite)",
+            "year": "2008",
+            "desc": "An updated PSP with a revised screen and built-in microphone."
+          },
+          {
+            "name": "Nintendo DSi XL",
+            "year": "2009",
+            "desc": "A larger-screen version of the DSi."
+          },
+          {
+            "name": "Sony PSP Go",
+            "year": "2009",
+            "desc": "A compact slider-style, download-only PSP."
+          }
+        ]
+      },
+      {
+        "type": "systems",
+        "title": "2010s–2020s",
+        "items": [
+          {
+            "name": "PSP Street",
+            "year": "2011",
+            "desc": "A budget PSP model released primarily in Europe."
           },
           {
             "name": "Nintendo 3DS",
             "year": "2011",
-            "desc": "Nintendo's glasses-free 3D handheld."
+            "desc": "Nintendo's handheld with glasses-free 3D and DS compatibility."
           },
           {
-            "name": "PlayStation Vita",
+            "name": "Sony PS Vita",
             "year": "2011",
-            "desc": "Sony's high-end portable system with dual analog sticks."
+            "desc": "Sony's dual-stick handheld, originally known for its OLED display."
+          },
+          {
+            "name": "Nintendo 3DS XL",
+            "year": "2012",
+            "desc": "A larger version of the 3DS."
           },
           {
             "name": "Nintendo Wii U",
             "year": "2012",
-            "desc": "Nintendo's dual-screen home console built around the GamePad."
+            "desc": "Nintendo's home console centered on the GamePad second screen."
           },
           {
-            "name": "PlayStation 4",
+            "name": "Nintendo 2DS",
             "year": "2013",
-            "desc": "Sony's widely adopted eighth-generation console."
+            "desc": "A slate-style 3DS-family handheld without stereoscopic 3D."
           },
           {
             "name": "Xbox One",
             "year": "2013",
-            "desc": "Microsoft's eighth-generation home console."
+            "desc": "Microsoft's third major Xbox generation."
+          },
+          {
+            "name": "PlayStation 4",
+            "year": "2013",
+            "desc": "Sony's highly successful developer-friendly fourth PlayStation."
           },
           {
             "name": "Nintendo Switch",
             "year": "2017",
-            "desc": "Nintendo's hybrid home and portable system."
+            "desc": "Nintendo's hybrid home and portable console."
+          },
+          {
+            "name": "Nintendo 2DS XL",
+            "year": "2017",
+            "desc": "A clamshell 3DS-family system without the 3D feature."
           },
           {
             "name": "Xbox Series X",
             "year": "2020",
-            "desc": "Microsoft's modern 4K console with extensive backward compatibility."
+            "desc": "Microsoft's current high-performance 4K console."
           },
           {
             "name": "PlayStation 5",
             "year": "2020",
-            "desc": "Sony's current-generation console with fast SSD storage and DualSense features."
+            "desc": "Sony's SSD-driven current-generation PlayStation."
           }
         ]
       }

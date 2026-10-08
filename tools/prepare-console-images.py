@@ -31,7 +31,7 @@ def prepare(row):
                 full = image.copy()
                 full.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
                 full_path = OPTIMIZED / f'console-{number:02d}.webp'
-                full.save(full_path, 'WEBP', quality=86, method=6)
+                full.save(full_path, 'WEBP', quality=78, method=6)
                 thumb = image.copy()
                 thumb.thumbnail((240, 320), Image.Resampling.LANCZOS)
                 thumb_path = OPTIMIZED / f'console-{number:02d}-thumb.webp'

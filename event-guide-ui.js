@@ -413,6 +413,10 @@
       return renderMenu(block.items||[]);
     }
 
+    if(block.type==="systems" && window.SFVCConsoleGallery){
+      return `<section class="system-section">${block.title?`<h3>${esc(block.title)}</h3>`:""}<div class="system-grid">${(block.items||[]).map(item=>window.SFVCConsoleGallery.renderCard(item)).join("")}</div></section>`;
+    }
+
     if(block.type==="systems"){
       return `<section class="system-section">
         ${block.title?`<h3>${esc(block.title)}</h3>`:""}
