@@ -187,15 +187,21 @@ function ensureMainZone(){
   const root=guide();
   if(!root)return null;
   let zone=document.getElementById("sfvcEventGuideMainLayoutZone");
-  if(zone)return zone;
+  if(!zone){
+    zone=document.createElement("div");
+    zone.id="sfvcEventGuideMainLayoutZone";
+    zone.className="sfvc-event-guide-main-layout-zone";
+  }
 
-  zone=document.createElement("div");
-  zone.id="sfvcEventGuideMainLayoutZone";
-  zone.className="sfvc-event-guide-main-layout-zone";
-
-  const title=root.querySelector(":scope > .page-title");
-  if(title?.nextSibling)root.insertBefore(zone,title.nextSibling);
-  else root.prepend(zone);
+  // Keep the shortcut bars BELOW search and Events & Activities, including
+  // after an Admin layout refresh. Move the nodes so their handlers survive.
+  const anchor=root.querySelector(":scope > #eventGuideDiscovery")
+    || root.querySelector(":scope > .page-title");
+  if(anchor){
+    if(anchor.nextElementSibling!==zone)root.insertBefore(zone,anchor.nextSibling);
+  }else if(zone.parentElement!==root){
+    root.prepend(zone);
+  }
   return zone;
 }
 
