@@ -31,7 +31,7 @@
       ${wiki ? `<button class="system-wiki-button" type="button" data-wiki-console="${esc(item.name)}" data-wiki-year="${esc(item.year || "")}" data-font-scale-max="1.75" aria-label="Read about ${esc(item.name)} on Wikipedia inside the app">READ WIKIPEDIA</button>` : ""}
       </div></article>`;
   }
-  let modal, imageNode, stage, status, zoomButton, retryButton, returnFocus, activeImage;
+  let modal, imageNode, stage, surface, status, zoomButton, retryButton, returnFocus, activeImage;
   let zoomed = false, wasLocked = false, gallery = [], galleryIndex = 0, loadNumber = 0;
 
   function buildNavigation(trigger) {
@@ -52,19 +52,128 @@
     return entries;
   }
 
-  function setZoom(value) {
-    zoomed = Boolean(value);
+  const MAX_IMAGE_ZOOM = 6;
+  const IMAGE_PADDING = 10;
+  let imageZoom = 1, geometry = null, gesture = null, resizeFrame = 0;
+
+  function imageAnchor(x = stage.clientWidth / 2, y = stage.clientHeight / 2) {
+    return geometry ? {
+      x, y,
+      u:(stage.scrollLeft + x - geometry.left) / geometry.width,
+      v:(stage.scrollTop + y - geometry.top) / geometry.height
+    } : {x, y, u:0.5, v:0.5};
+  }
+
+  function layoutImage(anchor = null) {
+    if (!imageNode?.naturalWidth || !modal?.open) return;
+    const width = stage.clientWidth, height = stage.clientHeight;
+    if (!width || !height) return;
+    const fit = Math.min(1, Math.max(1, width - IMAGE_PADDING * 2) / imageNode.naturalWidth,
+      Math.max(1, height - IMAGE_PADDING * 2) / imageNode.naturalHeight);
+    const imageWidth = imageNode.naturalWidth * fit * imageZoom;
+    const imageHeight = imageNode.naturalHeight * fit * imageZoom;
+    const surfaceWidth = Math.max(width, imageWidth + IMAGE_PADDING * 2);
+    const surfaceHeight = Math.max(height, imageHeight + IMAGE_PADDING * 2);
+    geometry = {width:imageWidth, height:imageHeight,
+      left:(surfaceWidth - imageWidth) / 2, top:(surfaceHeight - imageHeight) / 2};
+    surface.style.width = `${surfaceWidth}px`;
+    surface.style.height = `${surfaceHeight}px`;
+    Object.assign(imageNode.style, {width:`${imageWidth}px`, height:`${imageHeight}px`,
+      left:`${geometry.left}px`, top:`${geometry.top}px`});
+    if (anchor && imageZoom > 1) {
+      stage.scrollLeft = geometry.left + anchor.u * imageWidth - anchor.x;
+      stage.scrollTop = geometry.top + anchor.v * imageHeight - anchor.y;
+    } else {
+      stage.scrollLeft = 0;
+      stage.scrollTop = 0;
+    }
+  }
+
+  function setZoom(value, anchor = null) {
+    const target = value === true ? 3 : value === false ? 1 : Number(value);
+    if (!Number.isFinite(target)) return;
+    const focus = anchor || (geometry ? imageAnchor() : null);
+    imageZoom = Math.max(1, Math.min(MAX_IMAGE_ZOOM, target));
+    zoomed = imageZoom > 1.01;
     modal.classList.toggle("console-zoomed", zoomed);
     zoomButton.textContent = zoomed ? "FIT TO SCREEN" : "ZOOM IN";
     zoomButton.setAttribute("aria-pressed", String(zoomed));
-    stage.scrollTop = 0;
-    stage.scrollLeft = 0;
+    layoutImage(focus);
+  }
+
+  function beginImageGesture(touches) {
+    gesture = null;
+    if (!geometry || imageNode?.hidden) return;
+    const rect = stage.getBoundingClientRect();
+    if (touches.length === 2) {
+      const a = touches[0], b = touches[1];
+      gesture = {kind:"pinch", zoom:imageZoom,
+        distance:Math.max(1, Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY)),
+        anchor:imageAnchor((a.clientX + b.clientX) / 2 - rect.left,
+          (a.clientY + b.clientY) / 2 - rect.top)};
+    } else if (touches.length === 1 && zoomed) {
+      gesture = {kind:"pan", x:touches[0].clientX, y:touches[0].clientY,
+        left:stage.scrollLeft, top:stage.scrollTop};
+    }
+  }
+
+  function bindImageGestures() {
+    // Pinch/drag changes only the poster, not the navigation or close controls.
+    // This is scoped to this image stage; page zoom elsewhere is unchanged.
+    stage.classList.add("console-image-gestures");
+    stage.addEventListener("touchstart", event => {
+      beginImageGesture(event.touches);
+      if (event.cancelable) event.preventDefault();
+    }, {passive:false});
+    stage.addEventListener("touchmove", event => {
+      if (event.cancelable) event.preventDefault();
+      if (!gesture) return;
+      const touches = event.touches;
+      if (gesture.kind === "pinch" && touches.length === 2) {
+        const a = touches[0], b = touches[1], rect = stage.getBoundingClientRect();
+        const distance = Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
+        setZoom(gesture.zoom * distance / gesture.distance, {...gesture.anchor,
+          x:(a.clientX + b.clientX) / 2 - rect.left,
+          y:(a.clientY + b.clientY) / 2 - rect.top});
+      } else if (gesture.kind === "pan" && touches.length === 1) {
+        stage.scrollLeft = gesture.left + gesture.x - touches[0].clientX;
+        stage.scrollTop = gesture.top + gesture.y - touches[0].clientY;
+      }
+    }, {passive:false});
+    stage.addEventListener("touchend", event => {
+      if (event.cancelable) event.preventDefault();
+      beginImageGesture(event.touches);
+    }, {passive:false});
+    stage.addEventListener("touchcancel", () => { gesture = null; }, {passive:true});
+    stage.addEventListener("wheel", event => {
+      // Trackpad pinch. Ordinary wheel/keyboard scrolling still pans the poster.
+      if (!event.ctrlKey || !geometry || imageNode?.hidden) return;
+      event.preventDefault();
+      const rect = stage.getBoundingClientRect();
+      setZoom(imageZoom * Math.exp(-event.deltaY * 0.01),
+        imageAnchor(event.clientX - rect.left, event.clientY - rect.top));
+    }, {passive:false});
+    const resize = () => {
+      if (!modal?.open || resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        layoutImage(geometry ? imageAnchor() : null);
+      });
+    };
+    if (typeof ResizeObserver === "function") new ResizeObserver(resize).observe(stage);
+    else window.addEventListener("resize", resize);
   }
 
   function loadImage() {
     if (!activeImage || !modal?.open) return;
     const currentLoad = ++loadNumber;
     imageNode?.remove();
+    geometry = null;
+    gesture = null;
+    surface.style.width = "100%";
+    surface.style.height = "100%";
+    stage.scrollLeft = 0;
+    stage.scrollTop = 0;
     status.hidden = false;
     status.textContent = "Loading image...";
     zoomButton.disabled = true;
@@ -76,6 +185,7 @@
     requestedImage.className = "console-full-image";
     requestedImage.alt = `${activeImage.name} information poster`;
     requestedImage.decoding = "async";
+    requestedImage.draggable = false;
     requestedImage.hidden = true;
     const fail = () => {
       if (currentLoad !== loadNumber || !modal.open) return;
@@ -89,12 +199,13 @@
       if (currentLoad !== loadNumber || !modal.open) return;
       if (!requestedImage.naturalWidth) { fail(); return; }
       requestedImage.hidden = false;
+      layoutImage();
       status.hidden = true;
       retryButton.hidden = true;
       zoomButton.disabled = false;
     };
     requestedImage.onerror = fail;
-    stage.append(requestedImage);
+    surface.append(requestedImage);
     // Do not download the other full-size posters until they are selected.
     requestedImage.src = activeImage.full;
   }
@@ -129,6 +240,11 @@
     if (!wasLocked) document.documentElement.classList.remove("console-viewer-open");
     imageNode?.remove();
     imageNode = null;
+    geometry = null;
+    gesture = null;
+    imageZoom = 1;
+    if (resizeFrame) cancelAnimationFrame(resizeFrame);
+    resizeFrame = 0;
     activeImage = null;
     gallery = [];
     galleryIndex = 0;
@@ -153,13 +269,21 @@
     modal.setAttribute("aria-labelledby", "consoleImageTitle");
     modal.innerHTML = `<header class="console-viewer-header"><div><small>RETRO GAMING ARCADE VAULT</small><h2 id="consoleImageTitle"></h2></div><button class="console-viewer-close" type="button" aria-label="Close console image" data-font-scale="locked" autofocus><span aria-hidden="true">&#215;</span></button></header>
       <div class="console-viewer-body">
-        <div class="console-viewer-stage" tabindex="0" aria-label="Console image, scroll to explore when zoomed"><p class="console-viewer-status" role="status" aria-live="polite"></p></div>
-        <button class="console-viewer-arrow console-viewer-previous" type="button" data-console-step="-1" data-font-scale="locked" aria-label="Previous console image" aria-controls="consoleImageTitle"><span aria-hidden="true">&#10094;</span></button>
-        <button class="console-viewer-arrow console-viewer-next" type="button" data-console-step="1" data-font-scale="locked" aria-label="Next console image" aria-controls="consoleImageTitle"><span aria-hidden="true">&#10095;</span></button>
+        <div class="console-viewer-stage" tabindex="0" aria-label="Console poster. Pinch to zoom, then drag or scroll to read."><p class="console-viewer-status" role="status" aria-live="polite"></p><div class="console-viewer-surface"></div></div>
       </div>
-      <footer class="console-viewer-footer"><button type="button" class="console-viewer-zoom" aria-pressed="false">ZOOM IN</button><button type="button" class="console-viewer-retry" hidden>RETRY IMAGE</button><span id="consoleImageProgress" class="console-viewer-progress" role="status" aria-live="polite" aria-atomic="true" data-font-scale="locked"></span><span class="console-viewer-hint">Use side arrows to browse. X or Escape to close.</span></footer>`;
+      <footer class="console-viewer-footer">
+        <div class="console-viewer-controls" role="group" aria-label="Console image controls">
+          <button class="console-viewer-arrow console-viewer-previous" type="button" data-console-step="-1" data-font-scale="locked" aria-label="Previous console image" aria-controls="consoleImageTitle"><span aria-hidden="true">&#10094;</span></button>
+          <button type="button" class="console-viewer-zoom" data-font-scale-max="1.5" aria-pressed="false">ZOOM IN</button>
+          <span id="consoleImageProgress" class="console-viewer-progress" role="status" aria-live="polite" aria-atomic="true" data-font-scale="locked"></span>
+          <button class="console-viewer-arrow console-viewer-next" type="button" data-console-step="1" data-font-scale="locked" aria-label="Next console image" aria-controls="consoleImageTitle"><span aria-hidden="true">&#10095;</span></button>
+        </div>
+        <button type="button" class="console-viewer-retry" hidden>RETRY IMAGE</button>
+        <span class="console-viewer-hint">Pinch the poster to zoom. Drag to read.</span>
+      </footer>`;
     document.body.append(modal);
     stage = modal.querySelector(".console-viewer-stage");
+    surface = modal.querySelector(".console-viewer-surface");
     status = modal.querySelector(".console-viewer-status");
     zoomButton = modal.querySelector(".console-viewer-zoom");
     retryButton = modal.querySelector(".console-viewer-retry");
@@ -173,6 +297,7 @@
     });
     zoomButton.addEventListener("click", () => setZoom(!zoomed));
     retryButton.addEventListener("click", loadImage);
+    bindImageGestures();
     modal.addEventListener("keydown", event => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -190,7 +315,7 @@
     });
     modal.addEventListener("cancel", event => { event.preventDefault(); closeViewer(); });
     modal.addEventListener("click", event => {
-      if (event.target === modal || event.target === stage) closeViewer();
+      if (event.target === modal) closeViewer();
     });
     modal.addEventListener("close", cleanupViewer);
     return modal;
