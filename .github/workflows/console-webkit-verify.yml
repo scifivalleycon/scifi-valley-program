@@ -27,11 +27,17 @@ jobs:
               def send(self, method, params):
                   page.evaluate(''' + repr('''({type,touchPoints}) => {
                     const target=document.querySelector('.console-viewer-stage');
-                    const touches=touchPoints.map(p=>new Touch({identifier:p.id,target,
-                      clientX:p.x,clientY:p.y,pageX:p.x+scrollX,pageY:p.y+scrollY,
-                      screenX:p.x,screenY:p.y,radiusX:5,radiusY:5,force:1}));
-                    target.dispatchEvent(new TouchEvent(type.toLowerCase(),{bubbles:true,
-                      cancelable:true,touches,targetTouches:touches,changedTouches:touches}));
+                    // WebKit does not expose constructible Touch objects in this
+                    // test engine. Exercise the same handlers with touch-shaped
+                    // fixture data without changing the production implementation.
+                    const touches=touchPoints.map(p=>({identifier:p.id,target,
+                      clientX:p.x,clientY:p.y,pageX:p.x+scrollX,pageY:p.y+scrollY}));
+                    const event=new Event(type.toLowerCase(),{bubbles:true,cancelable:true});
+                    Object.defineProperties(event,{
+                      touches:{value:touches},targetTouches:{value:touches},
+                      changedTouches:{value:touches}
+                    });
+                    target.dispatchEvent(event);
                   }''') + ''',params)
              cdp=TouchDriver()'''
           code=code.replace('cdp=context.new_cdp_session(page)',driver)
