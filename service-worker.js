@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-event-guide-order-v4.113";
+const CACHE="sfvc-program-guide-colors-v4.114";
 const LOCAL=[
   "./vendor-gallery.js","./vendor-gallery.css",
   "./console-gallery.js","./console-gallery.css",
