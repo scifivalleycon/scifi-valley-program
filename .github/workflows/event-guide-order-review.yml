@@ -1,0 +1,47 @@
+name: Test Event Guide section order
+on:
+  push:
+    branches: [event-guide-order-oct-2026]
+    paths:
+      - '.github/workflows/event-guide-order-review.yml'
+      - 'tools/reorder-event-guide.py'
+      - 'tools/test-event-guide-order.py'
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reorder only verified source files
+        run: |
+          python tools/reorder-event-guide.py
+          node --check event-guide-layout.js
+          node --check app.js
+          node --check service-worker.js
+          git diff --stat
+      - name: Install isolated browser tests
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium > /tmp/playwright-install.log 2>&1 || { tail -n 60 /tmp/playwright-install.log; exit 1; }
+      - name: Test activities-first order, links, search and Admin refresh
+        run: python tools/test-event-guide-order.py
+      - name: Store tested source on the review branch only
+        run: |
+          test "$GITHUB_REF_NAME" = 'event-guide-order-oct-2026'
+          git config user.name 'scifivalleycon'
+          git config user.email 'info@scifivalleycon.com'
+          git add index.html event-guide-layout.js app.js service-worker.js data/version.json
+          git commit -m 'Verified Event Guide search and activities above shortcut bars (v4.113)'
+          git push origin HEAD:refs/heads/event-guide-order-oct-2026
+          git rev-parse HEAD > .event-guide-order-review/tested-commit.txt
+          git ls-tree -r HEAD -- index.html event-guide-layout.js app.js service-worker.js data/version.json > .event-guide-order-review/tested-blobs.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: event-guide-order-review
+          path: .event-guide-order-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
