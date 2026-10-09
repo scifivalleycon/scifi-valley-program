@@ -1,0 +1,46 @@
+
+/* V4.114 - One consistent theme for Event Guide shortcut bars.
+   Explicit Admin color choices still take priority. Activity cards and other
+   screens keep their existing colors. */
+#more .settings-menu-card{
+  grid-template-columns:40px minmax(0,1fr) auto;
+  gap:12px;
+}
+#more .settings-menu-card>span:nth-child(2){
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#more .settings-menu-card:not(.sfvc-event-colorized){
+  background:var(--aqua,#73c7cb)!important;
+  background-image:none!important;
+  color:var(--ink,#3a2720)!important;
+  border-color:var(--ink,#3a2720)!important;
+  box-shadow:3px 4px 0 rgba(58,39,32,.12);
+}
+#more .settings-menu-card:not(.sfvc-event-colorized) :is(strong,small,b){
+  color:var(--ink,#3a2720)!important;
+}
+#more .settings-menu-card>.settings-menu-icon{
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  min-width:40px;
+  padding:0;
+  border:2px solid var(--ink,#3a2720);
+  border-radius:50%;
+  font:800 16px/1 "Trebuchet MS",Arial,sans-serif!important;
+  letter-spacing:0;
+  white-space:nowrap;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+#more .settings-menu-card:not(.sfvc-event-colorized)>.settings-menu-icon{
+  background:var(--cream,#fff7df)!important;
+  color:var(--ink,#3a2720)!important;
+  border-color:var(--ink,#3a2720)!important;
+}
+#more .settings-menu-card:focus-visible{
+  outline:3px solid var(--ink,#3a2720);
+  outline-offset:3px;
+}
