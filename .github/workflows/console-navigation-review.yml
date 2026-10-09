@@ -1,0 +1,45 @@
+name: Test console image navigation
+on:
+  push:
+    branches: [console-navigation-oct-2026]
+    paths:
+      - 'tools/console-navigation-*'
+      - 'tools/apply-console-navigation.py'
+      - 'tools/test-console-navigation.py'
+      - '.github/workflows/console-navigation-review.yml'
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply changes only to verified source files
+        run: |
+          python tools/apply-console-navigation.py
+          node --check console-gallery.js
+          node --check app.js
+          node --check service-worker.js
+      - name: Install isolated browser tests
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Test all console images, side arrows, zoom and close behavior
+        run: python tools/test-console-navigation.py
+      - name: Commit verified app files to the review branch only
+        run: |
+          git config user.name 'Sci-Fi Valley Con App Build'
+          git config user.email 'info@scifivalleycon.com'
+          git add console-gallery.js console-gallery.css app.js index.html service-worker.js data/version.json
+          git diff --cached --quiet || git commit -m 'Verify console navigation across 72 images on mobile and desktop'
+          git push origin HEAD:console-navigation-oct-2026
+          git archive --format=zip HEAD -o .console-navigation-review/source.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: console-navigation-review
+          path: .console-navigation-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
