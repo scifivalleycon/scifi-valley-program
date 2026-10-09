@@ -32,7 +32,26 @@
       </div></article>`;
   }
   let modal, imageNode, stage, status, zoomButton, retryButton, returnFocus, activeImage;
-  let zoomed = false, wasLocked = false;
+  let zoomed = false, wasLocked = false, gallery = [], galleryIndex = 0, loadNumber = 0;
+
+  function buildNavigation(trigger) {
+    const entries = [], seen = new Set();
+    const add = (image, label) => {
+      if (!image || seen.has(image.id)) return;
+      seen.add(image.id);
+      entries.push({image, label:label || image.name});
+    };
+    // Follow the console list that the visitor opened, across every decade.
+    // Deduplicate aliases and append any posters not present in that renderer.
+    const scope = trigger?.closest?.(".event-content")
+      || document.querySelector("#eventModal[open] .event-content");
+    scope?.querySelectorAll("[data-console-image]").forEach(button => {
+      add(byId.get(Number(button.dataset.consoleImage)), button.dataset.consoleLabel);
+    });
+    for (const image of byId.values()) add(image);
+    return entries;
+  }
+
   function setZoom(value) {
     zoomed = Boolean(value);
     modal.classList.toggle("console-zoomed", zoomed);
@@ -41,14 +60,91 @@
     stage.scrollTop = 0;
     stage.scrollLeft = 0;
   }
+
   function loadImage() {
+    if (!activeImage || !modal?.open) return;
+    const currentLoad = ++loadNumber;
+    imageNode?.remove();
     status.hidden = false;
     status.textContent = "Loading image...";
-    imageNode.hidden = true;
     zoomButton.disabled = true;
     retryButton.hidden = true;
-    imageNode.src = activeImage.full;
+    // Each selection has its own image and token so rapid arrow clicks cannot
+    // display an older image or error underneath the next console's title.
+    const requestedImage = new Image();
+    imageNode = requestedImage;
+    requestedImage.className = "console-full-image";
+    requestedImage.alt = `${activeImage.name} information poster`;
+    requestedImage.decoding = "async";
+    requestedImage.hidden = true;
+    const fail = () => {
+      if (currentLoad !== loadNumber || !modal.open) return;
+      requestedImage.hidden = true;
+      status.hidden = false;
+      status.textContent = "The image could not load. Retry or use the arrows to continue.";
+      retryButton.hidden = false;
+      zoomButton.disabled = true;
+    };
+    requestedImage.onload = () => {
+      if (currentLoad !== loadNumber || !modal.open) return;
+      if (!requestedImage.naturalWidth) { fail(); return; }
+      requestedImage.hidden = false;
+      status.hidden = true;
+      retryButton.hidden = true;
+      zoomButton.disabled = false;
+    };
+    requestedImage.onerror = fail;
+    stage.append(requestedImage);
+    // Do not download the other full-size posters until they are selected.
+    requestedImage.src = activeImage.full;
   }
+
+  function showCurrent() {
+    const entry = gallery[galleryIndex];
+    if (!entry) return;
+    activeImage = entry.image;
+    modal.querySelector("#consoleImageTitle").textContent = entry.label;
+    const progress = modal.querySelector("#consoleImageProgress");
+    progress.textContent = `${galleryIndex + 1} / ${gallery.length}`;
+    progress.setAttribute("aria-label", `${entry.label}, image ${galleryIndex + 1} of ${gallery.length}`);
+    modal.querySelectorAll("[data-console-step]").forEach(button => {
+      const direction = Number(button.dataset.consoleStep);
+      const target = gallery[(galleryIndex + direction + gallery.length) % gallery.length];
+      button.disabled = gallery.length < 2;
+      button.setAttribute("aria-label", `${direction < 0 ? "Previous" : "Next"} console image: ${target.label}`);
+    });
+    setZoom(false);
+    loadImage();
+  }
+
+  function step(direction) {
+    if (!modal?.open || gallery.length < 2) return;
+    galleryIndex = (galleryIndex + direction + gallery.length) % gallery.length;
+    showCurrent();
+  }
+
+  function cleanupViewer() {
+    if (modal?.open || !activeImage) return;
+    ++loadNumber;
+    if (!wasLocked) document.documentElement.classList.remove("console-viewer-open");
+    imageNode?.remove();
+    imageNode = null;
+    activeImage = null;
+    gallery = [];
+    galleryIndex = 0;
+    const trigger = returnFocus;
+    returnFocus = null;
+    if (trigger?.isConnected) trigger.focus({preventScroll:true});
+  }
+
+  function closeViewer() {
+    if (!modal?.open) return;
+    modal.close();
+    // Clean up synchronously; a queued native close event must not clear a
+    // newly reopened viewer or leave its document scroll lock behind.
+    cleanupViewer();
+  }
+
   function ensureViewer() {
     if (modal) return modal;
     modal = document.createElement("dialog");
@@ -56,66 +152,66 @@
     modal.className = "console-image-viewer";
     modal.setAttribute("aria-labelledby", "consoleImageTitle");
     modal.innerHTML = `<header class="console-viewer-header"><div><small>RETRO GAMING ARCADE VAULT</small><h2 id="consoleImageTitle"></h2></div><button class="console-viewer-close" type="button" aria-label="Close console image" data-font-scale="locked" autofocus><span aria-hidden="true">&#215;</span></button></header>
-      <div class="console-viewer-stage" tabindex="0" aria-label="Console image, scroll to explore when zoomed"><p class="console-viewer-status" role="status" aria-live="polite"></p><img class="console-full-image" alt="" decoding="async" hidden></div>
-      <footer class="console-viewer-footer"><button type="button" class="console-viewer-zoom" aria-pressed="false">ZOOM IN</button><button type="button" class="console-viewer-retry" hidden>RETRY IMAGE</button><span>Close with the X or Escape.</span></footer>`;
+      <div class="console-viewer-body">
+        <div class="console-viewer-stage" tabindex="0" aria-label="Console image, scroll to explore when zoomed"><p class="console-viewer-status" role="status" aria-live="polite"></p></div>
+        <button class="console-viewer-arrow console-viewer-previous" type="button" data-console-step="-1" data-font-scale="locked" aria-label="Previous console image" aria-controls="consoleImageTitle"><span aria-hidden="true">&#10094;</span></button>
+        <button class="console-viewer-arrow console-viewer-next" type="button" data-console-step="1" data-font-scale="locked" aria-label="Next console image" aria-controls="consoleImageTitle"><span aria-hidden="true">&#10095;</span></button>
+      </div>
+      <footer class="console-viewer-footer"><button type="button" class="console-viewer-zoom" aria-pressed="false">ZOOM IN</button><button type="button" class="console-viewer-retry" hidden>RETRY IMAGE</button><span id="consoleImageProgress" class="console-viewer-progress" role="status" aria-live="polite" aria-atomic="true" data-font-scale="locked"></span><span class="console-viewer-hint">Use side arrows to browse. X or Escape to close.</span></footer>`;
     document.body.append(modal);
-    imageNode = modal.querySelector(".console-full-image");
     stage = modal.querySelector(".console-viewer-stage");
     status = modal.querySelector(".console-viewer-status");
     zoomButton = modal.querySelector(".console-viewer-zoom");
     retryButton = modal.querySelector(".console-viewer-retry");
-    modal.querySelector(".console-viewer-close").addEventListener("click", () => modal.close());
+    modal.querySelector(".console-viewer-close").addEventListener("click", closeViewer);
+    modal.querySelectorAll("[data-console-step]").forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        step(Number(button.dataset.consoleStep));
+      });
+    });
     zoomButton.addEventListener("click", () => setZoom(!zoomed));
     retryButton.addEventListener("click", loadImage);
-    imageNode.addEventListener("load", () => {
-      if (!modal.open) return;
-      imageNode.hidden = false;
-      status.hidden = true;
-      zoomButton.disabled = false;
-    });
-    imageNode.addEventListener("error", () => {
-      if (!modal.open) return;
-      imageNode.hidden = true;
-      status.hidden = false;
-      status.textContent = "The image could not load. Check your connection and try again.";
-      retryButton.hidden = false;
-      zoomButton.disabled = true;
-    });
     modal.addEventListener("keydown", event => {
       if (event.key === "Escape") {
         event.preventDefault();
         event.stopPropagation();
-        modal.close();
+        closeViewer();
+        return;
+      }
+      if (["ArrowLeft", "ArrowRight"].includes(event.key) && !event.altKey && !event.ctrlKey && !event.metaKey) {
+        // Preserve keyboard panning when a zoomed image's scroll area is focused.
+        if (zoomed && event.target === stage) return;
+        event.preventDefault();
+        event.stopPropagation();
+        step(event.key === "ArrowLeft" ? -1 : 1);
       }
     });
-    modal.addEventListener("cancel", event => { event.preventDefault(); modal.close(); });
+    modal.addEventListener("cancel", event => { event.preventDefault(); closeViewer(); });
     modal.addEventListener("click", event => {
-      if (event.target === modal || event.target === stage) modal.close();
+      if (event.target === modal || event.target === stage) closeViewer();
     });
-    modal.addEventListener("close", () => {
-      if (!wasLocked) document.documentElement.classList.remove("console-viewer-open");
-      imageNode.removeAttribute("src");
-      imageNode.hidden = true;
-      if (returnFocus?.isConnected) returnFocus.focus({preventScroll:true});
-      returnFocus = null;
-      activeImage = null;
-    });
+    modal.addEventListener("close", cleanupViewer);
     return modal;
   }
+
   function open(id, label, trigger) {
-    const image = byId.get(Number(id));
-    if (!image) return;
+    const selectedImage = byId.get(Number(id));
+    if (!selectedImage) return;
     ensureViewer();
     if (modal.open) return;
-    activeImage = image;
+    // An external caller may have closed the native dialog just before reopening.
+    cleanupViewer();
+    gallery = buildNavigation(trigger);
+    galleryIndex = gallery.findIndex(entry => entry.image.id === selectedImage.id);
+    if (galleryIndex < 0) return;
+    if (label) gallery[galleryIndex].label = label;
     returnFocus = trigger || document.activeElement;
-    modal.querySelector("#consoleImageTitle").textContent = label || image.name;
-    imageNode.alt = `${image.name} information poster`;
-    setZoom(false);
     wasLocked = document.documentElement.classList.contains("console-viewer-open");
     document.documentElement.classList.add("console-viewer-open");
     modal.showModal();
-    loadImage();
+    showCurrent();
     modal.querySelector(".console-viewer-close").focus({preventScroll:true});
   }
   document.addEventListener("click", event => {

@@ -30,3 +30,15 @@ html.console-viewer-open,html.console-viewer-open body{overflow:hidden}
 @media(min-width:700px){.console-card.has-console-image{grid-template-columns:110px minmax(0,1fr);gap:16px}.console-thumbnail{width:110px}}
 @media(max-width:360px){.console-card{padding:9px}.console-card.has-console-image{grid-template-columns:72px minmax(0,1fr);gap:9px}.console-thumbnail{width:72px}#consoleImageTitle{font-size:16px}.console-viewer-footer>span{display:none}}
 @media print{#consoleImageViewer,.console-thumbnail{display:none!important}.console-card.has-console-image{display:block}}
+
+/* Side controls stay fixed to the image area, including while zoomed. */
+.console-viewer-body{position:relative;min-width:0;min-height:0;overflow:hidden}
+.console-viewer-body>.console-viewer-stage{width:100%;height:100%}
+#consoleImageViewer .console-viewer-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;display:grid;place-items:center;width:48px;height:56px;min-width:48px;min-height:56px;padding:0;border:2px solid #fff;border-radius:10px;background:rgba(23,27,29,.88);color:#fff;font-size:28px;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.45);touch-action:manipulation}
+#consoleImageViewer .console-viewer-previous{left:max(10px,env(safe-area-inset-left,0px))}
+#consoleImageViewer .console-viewer-next{right:max(10px,env(safe-area-inset-right,0px))}
+#consoleImageViewer .console-viewer-arrow:hover{background:#34484e}
+#consoleImageViewer .console-viewer-arrow:disabled{opacity:.4;cursor:default}
+#consoleImageViewer .console-viewer-progress{display:inline-block;min-width:64px;text-align:center;font:700 13px/1.3 "Trebuchet MS",Arial,sans-serif;font-variant-numeric:tabular-nums;color:#a8dadb}
+.console-viewer-body .console-viewer-status{padding:0 56px;box-sizing:border-box}
+@media(max-width:600px){#consoleImageViewer .console-viewer-hint{display:none}}

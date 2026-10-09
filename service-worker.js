@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-vendor-gallery-20261008";
+const CACHE="sfvc-program-console-navigation-v4.111";
 const LOCAL=[
   "./vendor-gallery.js","./vendor-gallery.css",
   "./console-gallery.js","./console-gallery.css",
