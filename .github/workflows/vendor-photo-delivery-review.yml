@@ -1,0 +1,34 @@
+name: Test optimized vendor photo display
+on:
+  push:
+    branches: [vendor-photo-delivery-oct-2026]
+    paths: ['.github/workflows/vendor-photo-delivery-review.yml','tools/apply-vendor-photo-delivery.py','tools/test-vendor-photo-delivery.py']
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: python tools/apply-vendor-photo-delivery.py
+      - run: |
+          node --check app.js
+          node --check vendor-gallery.js
+          python -m pip install Pillow playwright
+          python -m playwright install --with-deps chromium
+      - name: Test small thumbnails, full-size lightboxes, loops and unchanged data
+        run: python tools/test-vendor-photo-delivery.py
+      - name: Commit tested files to review branch only
+        run: |
+          git add app.js vendor-gallery.js index.html service-worker.js data/version.json
+          git -c user.name='SFVC photo delivery review' -c user.email='info@scifivalleycon.com' commit -m 'Apply tested thumbnail and full-resolution vendor photo selection'
+          git push origin HEAD:vendor-photo-delivery-oct-2026
+          git rev-parse HEAD > .photo-delivery-tests/tested-commit.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vendor-photo-delivery-tested
+          path: .photo-delivery-tests/
+          include-hidden-files: true
+          retention-days: 3
