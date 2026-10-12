@@ -14,6 +14,10 @@
     if (!text(value)) return "";
     try {
       const url = new URL(value, location.href);
+      if (url.origin === "https://vendor.scifivalleycon.com" && /^\/api\/public\/photos\/[a-zA-Z0-9-]+$/.test(url.pathname)) {
+        url.searchParams.set("size", "display");
+        url.searchParams.set("opt", "1");
+      }
       return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : "";
     } catch { return ""; }
   }

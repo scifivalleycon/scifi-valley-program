@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.114";
+const APP_BUILD_VERSION="4.115";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -5239,10 +5239,22 @@ function openMapLocation(code,{nonModal=false}={}){
   const requestedCode=mapOpenLocationCode;
   setTimeout(()=>forceMapVendorProfileRefresh(requestedCode,{automatic:true}),0);
 }
+function vendorPhotoDeliveryUrl(value,size="display"){
+  const original=String(value||"");
+  try{
+    const url=new URL(original,location.href);
+    if(url.origin==="https://vendor.scifivalleycon.com"&&/^\/api\/public\/photos\/[a-zA-Z0-9-]+$/.test(url.pathname)){
+      url.searchParams.set("size",size==="thumb"?"thumb":"display");
+      url.searchParams.set("opt","1");
+      return url.href;
+    }
+  }catch{}
+  return original;
+}
 function mapVendorPhotoGallery(vendor){
   const photos=Array.isArray(vendor?.photos)?vendor.photos.slice(0,5):[];
   if(!photos.length)return "";
-  return `<div class="map-vendor-photos" aria-label="${escapeAppHtml(vendor.name)} photos">${photos.map((photo,index)=>`<button class="map-vendor-photo-button" type="button" aria-label="Enlarge ${escapeAppHtml(vendor.name)} photo ${index+1}"><img src="${escapeAppHtml(photo.url||"")}" alt="${escapeAppHtml(vendor.name)} photo ${index+1}" loading="lazy"></button>`).join("")}</div>`;
+  return `<div class="map-vendor-photos" aria-label="${escapeAppHtml(vendor.name)} photos">${photos.map((photo,index)=>`<button class="map-vendor-photo-button" type="button" aria-label="Enlarge ${escapeAppHtml(vendor.name)} photo ${index+1}"><img src="${escapeAppHtml(vendorPhotoDeliveryUrl(photo.url,"thumb"))}" data-full-src="${escapeAppHtml(vendorPhotoDeliveryUrl(photo.url))}" alt="${escapeAppHtml(vendor.name)} photo ${index+1}" loading="lazy" decoding="async"></button>`).join("")}</div>`;
 }
 function bindMapVendorPhotoLightboxes(scope){
   scope?.querySelectorAll(".map-vendor-photo-button").forEach(button=>{
@@ -5250,15 +5262,15 @@ function bindMapVendorPhotoLightboxes(scope){
       event.stopPropagation();
       const image=button.querySelector("img");
       const images=Array.from(button.closest(".map-vendor-photos")?.querySelectorAll("img")||[]);
-      const gallery=images.map(img=>({src:img.currentSrc||img.src,caption:img.alt}));
-      if(image)openPhotoLightbox(image.currentSrc||image.src,image.alt,"",gallery,images.indexOf(image));
+      const gallery=images.map(img=>({src:img.dataset.fullSrc||img.currentSrc||img.src,caption:img.alt}));
+      if(image)openPhotoLightbox(image.dataset.fullSrc||image.currentSrc||image.src,image.alt,"",gallery,images.indexOf(image));
     });
   });
 }
 function mapVendorDirectoryThumbnails(vendor){
   const photos=Array.isArray(vendor?.photos)?vendor.photos.filter(photo=>photo&&typeof photo.url==="string"&&photo.url.trim()).slice(0,5):[];
   if(!photos.length)return "";
-  return `<span class="map-directory-photos" aria-hidden="true">${photos.map(photo=>`<img src="${escapeAppHtml(photo.url)}" alt="" width="40" height="40" loading="lazy" decoding="async">`).join("")}</span><span class="sr-only">${photos.length} vendor photo${photos.length===1?"":"s"} available.</span>`;
+  return `<span class="map-directory-photos" aria-hidden="true">${photos.map(photo=>`<img src="${escapeAppHtml(vendorPhotoDeliveryUrl(photo.url,"thumb"))}" alt="" width="40" height="40" loading="lazy" decoding="async">`).join("")}</span><span class="sr-only">${photos.length} vendor photo${photos.length===1?"":"s"} available.</span>`;
 }
 function mapVendorMatches(v){
   const q=state.mapQuery.trim().toLowerCase();

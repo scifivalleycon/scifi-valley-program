@@ -1,4 +1,4 @@
-const CACHE="sfvc-program-guide-colors-v4.114";
+const CACHE="sfvc-program-vendor-photo-optimization-v4.115";
 const LOCAL=[
   "./vendor-gallery.js","./vendor-gallery.css",
   "./console-gallery.js","./console-gallery.css",
