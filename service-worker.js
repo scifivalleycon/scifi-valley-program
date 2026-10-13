@@ -1,5 +1,6 @@
-const CACHE="sfvc-program-vendor-photo-optimization-v4.115";
+const CACHE="sfvc-program-shuttle-v4.116";
 const LOCAL=[
+  "./event-guide-media.js","./assets/events/shuttle-october-2026.webp",
   "./vendor-gallery.js","./vendor-gallery.css",
   "./console-gallery.js","./console-gallery.css",
   "./","./index.html","./styles.css","./home-layout.css","./event-guide-layout.css","./app.js","./home-layout.js","./event-guide-layout.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
