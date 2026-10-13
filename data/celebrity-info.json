@@ -13,7 +13,7 @@
     "panelSeatingNote": "",
     "generalNote": "Guest table prices supersede prices listed in the app if they vary. Combo pricing generally includes one autograph and one selfie unless otherwise noted. Professional photo ops are separate from table purchases.",
     "scheduleNoticeEnabled": false,
-    "scheduleNoticeMessage": "This is a tentative schedule and is pending approval from the talent and agents, subject to change.",
+    "scheduleNoticeMessage": "This schedule is subject to change.",
     "panelScheduleButtonVisible": true,
     "panelScheduleButtonLabel": "VIEW PANEL SCHEDULE",
     "scheduleShowAllLabel": "SHOW ALL",
