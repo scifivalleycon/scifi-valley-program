@@ -1,0 +1,65 @@
+name: Verify shuttle banner paints in WebKit
+on:
+  push:
+    branches: [shuttle-info-oct-2026]
+    paths: ['.github/workflows/verify-shuttle-banner-paint.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          python -m pip install playwright Pillow
+          python -m playwright install --with-deps webkit
+      - name: Wait for image decode and verify visible banner pixels
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.parse import urlparse
+          from playwright.sync_api import sync_playwright
+          from PIL import Image,ImageStat
+          import json,mimetypes,io
+          root=Path.cwd();out=root/'.shuttle-paint-review';out.mkdir(exist_ok=True)
+          base='http://127.0.0.1:8765'
+          with sync_playwright() as p:
+            browser=p.webkit.launch()
+            context=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='block')
+            def handle(route):
+              request=route.request;url=urlparse(request.url)
+              if request.method not in ['GET','HEAD'] or url.netloc!='127.0.0.1:8765':return route.fulfill(status=200,content_type='application/json',body='{}')
+              if url.path=='/api/vendor-directory':return route.fulfill(status=200,content_type='application/json',body='[]')
+              if url.path.startswith('/api/'):return route.fulfill(status=200,content_type='application/json',body='{}')
+              path=(root/(url.path.lstrip('/') or 'index.html')).resolve()
+              if path.is_relative_to(root) and path.is_file():return route.fulfill(status=200,content_type=mimetypes.guess_type(path.name)[0] or 'application/octet-stream',body=path.read_bytes())
+              return route.fulfill(status=404,body='Not found')
+            context.route('**/*',handle)
+            page=context.new_page();page.goto(base,wait_until='domcontentloaded')
+            page.wait_for_function('window.SFVCEventGuide && myConDataLoaded');page.wait_for_timeout(1500)
+            page.evaluate('document.querySelectorAll("dialog[open]").forEach(d=>d.close());goTo("more")')
+            page.evaluate('()=>SFVCEventGuide.open("shuttle")')
+            image=page.locator('#eventModal .event-guide-banner img');image.scroll_into_view_if_needed()
+            image.evaluate('(image)=>image.decode()')
+            page.evaluate('()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+            page.wait_for_timeout(750)
+            png=image.screenshot(path=str(out/'banner-visible-webkit.png'))
+            im=Image.open(io.BytesIO(png)).convert('RGB');stats=ImageStat.Stat(im.crop((5,5,im.width-5,im.height-5)))
+            assert max(stats.stddev)>30,('Banner has not painted',stats.stddev)
+            page.screenshot(path=str(out/'shuttle-banner-webkit-ready.png'))
+            page.locator('#eventModal').evaluate('(m)=>m.scrollTop=0');page.wait_for_timeout(200)
+            page.screenshot(path=str(out/'shuttle-info-webkit-ready.png'))
+            (out/'paint-result.json').write_text(json.dumps({'passed':True,'engine':'webkit','bannerPixelsVerified':True,'standardDeviation':stats.stddev},indent=2))
+            browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shuttle-banner-paint-review
+          path: .shuttle-paint-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
