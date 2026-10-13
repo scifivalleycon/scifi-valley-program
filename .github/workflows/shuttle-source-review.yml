@@ -1,0 +1,51 @@
+name: Prepare October shuttle banner for review
+on:
+  push:
+    branches: [shuttle-info-oct-2026]
+    paths: ['.github/workflows/shuttle-source-review.yml']
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install Pillow
+      - name: Prepare the official event-page banner without touching other images
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from PIL import Image, ImageOps
+          import hashlib, json, io
+          url="https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6ab035dfc397cfc1dace3180_Shuttle%20banner%2010-2026%204%27x8%27%20%281%29.avif"
+          out=Path('.shuttle-review'); out.mkdir(exist_ok=True)
+          request=Request(url,headers={'User-Agent':'SFVC-Shuttle-Review/1.0'})
+          with urlopen(request,timeout=60) as response: raw=response.read(20000000)
+          (out/'website-shuttle-banner.avif').write_bytes(raw)
+          im=ImageOps.exif_transpose(Image.open(io.BytesIO(raw))).convert('RGB')
+          original_size=im.size
+          im.thumbnail((1024,2048),Image.Resampling.LANCZOS)
+          path=Path('assets/events/shuttle-october-2026.webp'); path.parent.mkdir(parents=True,exist_ok=True)
+          im.save(path,'WEBP',quality=86,method=6)
+          with Image.open(path) as check: check.load(); assert check.size==im.size
+          (out/'banner-manifest.json').write_text(json.dumps({'source':url,'originalDimensions':original_size,'dimensions':im.size,'originalBytes':len(raw),'webpBytes':path.stat().st_size,'sourceSha256':hashlib.sha256(raw).hexdigest(),'outputSha256':hashlib.sha256(path.read_bytes()).hexdigest()},indent=2))
+          PY
+      - name: Store only the banner on the review branch
+        run: |
+          test "$GITHUB_REF_NAME" = shuttle-info-oct-2026
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- assets/events/shuttle-october-2026.webp
+          git commit -m 'Prepare optimized official shuttle banner for review only'
+          git push origin HEAD:shuttle-info-oct-2026
+          git rev-parse HEAD > .shuttle-review/source-commit.txt
+          git archive --format=zip HEAD -o .shuttle-review/source.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shuttle-source-review
+          path: .shuttle-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
