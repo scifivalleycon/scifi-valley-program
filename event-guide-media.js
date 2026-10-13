@@ -27,7 +27,9 @@
     const width = dimension(block.width), height = dimension(block.height);
     const size = width && height ? ` width="${width}" height="${height}"` : "";
     const label = block.alt || "Event information banner";
-    return `<figure class="event-guide-banner"><a href="${escape(url)}" target="_blank" rel="noopener noreferrer" aria-label="${escape(`Open ${label} in a new tab`)}"><img src="${escape(url)}" alt="${escape(label)}"${size} loading="lazy" decoding="async"></a>${block.caption ? `<figcaption>${escape(block.caption)}</figcaption>` : ""}</figure>`;
+    const image = `<img src="${escape(url)}" alt="${escape(label)}"${size} loading="lazy" decoding="async">`;
+    const content = block.clickable === false ? image : `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer" aria-label="${escape(`Open ${label} in a new tab`)}">${image}</a>`;
+    return `<figure class="event-guide-banner">${content}${block.caption ? `<figcaption>${escape(block.caption)}</figcaption>` : ""}</figure>`;
   }
   window.SFVCEventMedia = Object.freeze({renderBlock});
 })();

@@ -1,0 +1,133 @@
+name: Test non-clickable shuttle banner
+on:
+  push:
+    branches: [shuttle-static-banner-oct-2026]
+    paths: ['.github/workflows/shuttle-static-banner.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Change only shuttle image behavior and refresh markers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import json, copy, re, subprocess
+          BASE='90de9b543c7c04ef0c7433610d03bb2e51830865'
+          FILES=['event-guide-media.js','data/events.json','app.js','index.html','service-worker.js','data/version.json']
+          def replace_once(path,old,new):
+              p=Path(path); s=p.read_text()
+              assert s.count(old)==1, (path,old)
+              p.write_text(s.replace(old,new,1))
+          p=Path('data/events.json'); before=json.loads(p.read_text())
+          expected=copy.deepcopy(before)
+          shuttle=next(item for item in expected if item['id']=='shuttle')
+          images=[item for item in shuttle['content'] if item['type']=='image']
+          assert len(images)==1
+          assert images[0]['src']=='assets/events/shuttle-october-2026.webp'
+          assert images[0].pop('caption')=='Tap the banner to open a larger image in a new tab.'
+          images[0]['clickable']=False
+          replace_once(p,'"caption": "Tap the banner to open a larger image in a new tab."','"clickable": false')
+          assert json.loads(p.read_text())==expected
+          replace_once('app.js','const APP_BUILD_VERSION="4.116";','const APP_BUILD_VERSION="4.117";')
+          replace_once('service-worker.js','const CACHE="sfvc-program-shuttle-v4.116";','const CACHE="sfvc-program-shuttle-static-v4.117";')
+          p=Path('index.html'); s=p.read_text()
+          for script in ['app.js','event-guide-media.js']:
+              pattern=r'(src="'+re.escape(script)+r'\?v=)[^"]+'
+              s,n=re.subn(pattern,lambda m:m.group(1)+'shuttle-static-v4.117',s)
+              assert n==1,(script,n)
+          p.write_text(s)
+          p=Path('data/version.json'); data=json.loads(p.read_text())
+          data.update(version='program-v4.117-shuttle-static-banner',generatedAt=datetime.now(timezone.utc).isoformat(),source='shuttle-static-banner')
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          changed=set(subprocess.check_output(['git','diff','--name-only',BASE],text=True).splitlines())
+          assert changed==set(FILES+['.github/workflows/shuttle-static-banner.yml']),changed
+          for name in ['app.js','event-guide-ui.js']:
+              assert 'SFVCEventMedia' in Path(name).read_text(), name
+          print('Only the shuttle image flag and obsolete caption changed in event data. All other event content, image bytes and vendor data preserved.')
+          PY
+      - name: Check JavaScript and image/link rendering
+        run: |
+          node --check event-guide-media.js
+          node --check app.js
+          node <<'JS'
+          const fs=require('node:fs'), vm=require('node:vm'), assert=require('node:assert/strict');
+          const ctx={window:{},URL,location:{href:'http://127.0.0.1:8765/',origin:'http://127.0.0.1:8765'}};
+          vm.createContext(ctx);vm.runInContext(fs.readFileSync('event-guide-media.js','utf8'),ctx);
+          const render=ctx.window.SFVCEventMedia.renderBlock;
+          const shuttle=JSON.parse(fs.readFileSync('data/events.json','utf8')).find(x=>x.id==='shuttle');
+          const banner=shuttle.content.find(x=>x.type==='image'), html=render(banner);
+          assert(html.includes('<figure class="event-guide-banner"><img '));
+          assert(!/<a\b|<button\b|target=|tabindex=|onclick=|<figcaption|Tap the banner/.test(html));
+          assert(html.includes('shuttle-october-2026.webp'));
+          const directions=render(shuttle.content.find(x=>x.type==='link'));
+          assert(directions.includes('GET DIRECTIONS TO SHUTTLE PARKING'));
+          assert(directions.includes('https://www.google.com/maps/dir/'));
+          assert(render({...banner,clickable:true}).includes('<a href='));
+          assert.equal(render({type:'image',src:'javascript:alert(1)',clickable:false}),'');
+          assert(!render({...banner,alt:'<script>bad</script>'}).includes('<script>'));
+          fs.mkdirSync('.shuttle-static-review',{recursive:true});
+          fs.writeFileSync('.shuttle-static-review/banner.html',html+directions);
+          console.log('PASS: static banner, preserved directions, existing clickable-image behavior and escaping.');
+          JS
+      - name: Verify tapping image does not navigate or open a tab
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          python - <<'PY'
+          from pathlib import Path
+          from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+          import threading, json
+          from playwright.sync_api import sync_playwright
+          server=ThreadingHTTPServer(('127.0.0.1',8765),SimpleHTTPRequestHandler)
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          fragment=Path('.shuttle-static-review/banner.html').read_text()
+          Path('.shuttle-static-review/fixture.html').write_text('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/event-guide-layout.css"></head><body><main class="event-content">'+fragment+'</main></body></html>')
+          with sync_playwright() as p:
+              browser=p.chromium.launch()
+              for width,height in [(390,844),(1280,900)]:
+                  context=browser.new_context(viewport={'width':width,'height':height},service_workers='block')
+                  page=context.new_page(); page.goto('http://127.0.0.1:8765/.shuttle-static-review/fixture.html')
+                  image=page.locator('.event-guide-banner img')
+                  image.scroll_into_view_if_needed()
+                  image.evaluate('(img)=>img.decode()')
+                  assert image.evaluate('(img)=>img.naturalWidth')>0
+                  assert page.locator('.event-guide-banner a,.event-guide-banner button,.event-guide-banner figcaption').count()==0
+                  before=page.url; image.click();page.wait_for_timeout(150)
+                  assert page.url==before and len(context.pages)==1
+                  assert page.locator('.event-guide-action').get_attribute('href').startswith('https://www.google.com/maps/dir/')
+                  box=image.bounding_box();assert box['x']>=0 and box['x']+box['width']<=width+1
+                  page.screenshot(path=f'.shuttle-static-review/static-banner-{width}.png',full_page=True)
+                  context.close()
+              browser.close()
+          server.shutdown()
+          print('PASS: visible, responsive banner remains on the same page when tapped on mobile and desktop.')
+          PY
+      - name: Commit tested files to review branch only
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          files=['event-guide-media.js','data/events.json','app.js','index.html','service-worker.js','data/version.json']
+          report={'sourceBase':'90de9b543c7c04ef0c7433610d03bb2e51830865','tests':'passed','files':[{'path':name,'mode':'100644','type':'blob','sha':subprocess.check_output(['git','hash-object','-w',name],text=True).strip()} for name in files]}
+          Path('tools').mkdir(exist_ok=True)
+          Path('tools/shuttle-static-release.json').write_text(json.dumps(report,indent=2)+'\n')
+          subprocess.run(['git','add',*files,'tools/shuttle-static-release.json'],check=True)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Verify non-clickable shuttle banner and prepare v4.117'
+          git push origin HEAD:shuttle-static-banner-oct-2026
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shuttle-static-banner-review
+          path: .shuttle-static-review/
+          include-hidden-files: true
+          retention-days: 7
