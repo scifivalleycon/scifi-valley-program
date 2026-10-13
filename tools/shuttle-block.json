@@ -1,0 +1,20 @@
+{
+  "id": "shuttle",
+  "title": "Friday & Saturday Shuttle Service",
+  "category": "Practical",
+  "summary": "Park at the Altoona Curve Baseball Stadium Parking Garage and ride to the Blair County Convention Center. Friday and Saturday only.",
+  "content": [
+    {"type": "note", "text": "Friday & Saturday only. No Sunday shuttle service. All times Eastern."},
+    {"type": "heading", "text": "Shuttle Hours"},
+    {"type": "schedule", "items": ["Friday, October 16, 2026: 2:00-9:00 PM", "Saturday, October 17, 2026: 10:00 AM-8:00 PM"]},
+    {"type": "heading", "text": "Where to Park & Catch the Shuttle"},
+    {"type": "p", "text": "Altoona Curve Baseball Stadium Parking Garage"},
+    {"type": "p", "text": "1000 Park Ave, Altoona, PA 16602"},
+    {"type": "link", "text": "GET DIRECTIONS TO SHUTTLE PARKING", "url": "https://www.google.com/maps/dir/?api=1&destination=Altoona+Curve+Baseball+Stadium+Parking+Garage%2C+1000+Park+Ave%2C+Altoona%2C+PA+16602"},
+    {"type": "heading", "text": "Plan Your Visit"},
+    {"type": "p", "text": "If convention center parking is full, go directly to the Altoona Curve parking garage and board the shuttle to the Blair County Convention Center entrance. Use the banner below to identify the garage and pickup location."},
+    {"type": "p", "text": "Allow extra time for parking and the ride, especially before a scheduled photo op or panel."},
+    {"type": "p", "text": "Shuttle service sponsored by First Frontier, Blair County, PA."},
+    {"type": "image", "src": "assets/events/shuttle-october-2026.webp", "alt": "Sci-Fi Valley Con shuttle banner showing the Altoona Curve parking garage and pickup location", "width": 1024, "height": 2048, "caption": "Tap the banner to open a larger image in a new tab."}
+  ]
+}

@@ -1,0 +1,45 @@
+name: Test shuttle instructions and banner
+on:
+  push:
+    branches: [shuttle-info-oct-2026]
+    paths: ['.github/workflows/test-shuttle-info.yml', 'tools/apply-shuttle.py', 'tools/test-shuttle.py', 'tools/shuttle-block.json']
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply only verified shuttle and rendering changes
+        run: python tools/apply-shuttle.py
+      - name: Check JavaScript syntax
+        run: |
+          node --check app.js
+          node --check event-guide-ui.js
+          node --check event-guide-media.js
+          node --check service-worker.js
+      - name: Install isolated browser tests
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Test shuttle content, banner, directions and preserved data
+        run: python tools/test-shuttle.py
+      - name: Store tested files on review branch only
+        run: |
+          test "$GITHUB_REF_NAME" = shuttle-info-oct-2026
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- app.js index.html event-guide-ui.js event-guide-layout.css service-worker.js data/events.json data/directions.json data/version.json
+          git commit -m 'Tested October shuttle instructions, banner and directions (v4.116)'
+          git push origin HEAD:shuttle-info-oct-2026
+          git rev-parse HEAD > .shuttle-review/tested-commit.txt
+          git ls-tree HEAD -- app.js index.html event-guide-ui.js event-guide-layout.css event-guide-media.js service-worker.js data/events.json data/directions.json data/version.json assets/events/shuttle-october-2026.webp > .shuttle-review/tested-blobs.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shuttle-info-tested
+          path: .shuttle-review/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
