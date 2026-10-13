@@ -483,7 +483,7 @@
         "alt": "Sci-Fi Valley Con shuttle banner showing the Altoona Curve parking garage and pickup location",
         "width": 1024,
         "height": 2048,
-        "caption": "Tap the banner to open a larger image in a new tab."
+        "clickable": false
       }
     ]
   },
