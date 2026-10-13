@@ -1,0 +1,42 @@
+{
+  "sourceBase": "90de9b543c7c04ef0c7433610d03bb2e51830865",
+  "tests": "passed",
+  "files": [
+    {
+      "path": "event-guide-media.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6733d518cdc806c9b5f17bb48b054083ae275b1e"
+    },
+    {
+      "path": "data/events.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "073b887d4b841eb5acd2b028afb28173b48a027e"
+    },
+    {
+      "path": "app.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a27f96a48615ed50dab13d679d1f085e12ebe65"
+    },
+    {
+      "path": "index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "781e30c764b8704816c8246cc04f2d182d4b4259"
+    },
+    {
+      "path": "service-worker.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ea9963c034526a2b8bdec17b1538236b86f589b"
+    },
+    {
+      "path": "data/version.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d6716c4d01062cbf23120409998aa98697fc734"
+    }
+  ]
+}
