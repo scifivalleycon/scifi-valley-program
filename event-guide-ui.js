@@ -395,6 +395,8 @@
   }
 
   function renderBlock(block){
+    const media=window.SFVCEventMedia?.renderBlock(block);
+    if(media!=null)return media;
     if(!block || typeof block!=="object")return "";
 
     if(block.type==="heading")return `<h3>${esc(block.text)}</h3>`;

@@ -73,3 +73,11 @@
   outline:3px solid var(--ink,#3a2720);
   outline-offset:3px;
 }
+
+/* V4.116: responsive event banners and directions, in both guide renderers. */
+.event-content .event-guide-banner{display:block;width:100%;max-width:520px;margin:18px auto;box-sizing:border-box}
+.event-content .event-guide-banner>a{display:block}
+.event-content .event-guide-banner img{display:block;width:100%;max-width:100%;height:auto;box-sizing:border-box;border:2px solid var(--ink,#3a2720);border-radius:10px;background:var(--cream,#fff7df)}
+.event-content .event-guide-banner figcaption{margin-top:8px;font-size:14px;line-height:1.4;text-align:center;overflow-wrap:anywhere}
+.event-content .event-guide-action{display:inline-block;box-sizing:border-box;max-width:100%;padding:12px 16px;border:2px solid var(--ink,#3a2720);border-radius:8px;background:var(--aqua,#73c7cb);color:var(--ink,#3a2720);font-family:"Trebuchet MS",Arial,sans-serif;font-weight:800;line-height:1.4;text-align:center;text-decoration:underline;overflow-wrap:anywhere}
+.event-content .event-guide-action:focus-visible,.event-content .event-guide-banner>a:focus-visible{outline:3px solid var(--ink,#3a2720);outline-offset:3px}

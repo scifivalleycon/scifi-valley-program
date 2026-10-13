@@ -17,7 +17,7 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.115";
+const APP_BUILD_VERSION="4.116";
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -4014,6 +4014,8 @@ function renderEventFilters(){
 }
 
 function renderBlock(b){
+  const media=window.SFVCEventMedia?.renderBlock(b);
+  if(media!=null)return media;
   if(b.type==="p")return `<p>${b.text}</p>`;
   if(b.type==="heading")return `<h4>${b.text}</h4>`;
   if(b.type==="note")return `<div class="info-note">${b.text}</div>`;
