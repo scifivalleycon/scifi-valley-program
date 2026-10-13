@@ -1,9 +1,9 @@
 [
   {
-    "mode": "off",
+    "mode": "scheduled",
     "startDate": "",
     "heading": "Order Tickets Now for Our Next Event",
-    "imageUrl": "",
+    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6ace5b1905f6f73f243d591b_2027%20Tickets%20App%20Announcement%20(1).avif",
     "destinationUrl": "https://scifivalleycon.com/june-2027-tickets",
     "alt": "Sci-Fi Valley Con, June 11–13, 2027, at Blair County Convention Center in Altoona, Pennsylvania. Buy tickets now."
   }
