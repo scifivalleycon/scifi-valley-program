@@ -15,7 +15,8 @@
     "category": "Trivia",
     "id": "sched-friday-trivia-tournament",
     "endTime": "4:25 PM",
-    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament."
+    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament.",
+    "participants": ""
   },
   {
     "id": "sched-friday-panel2-dragons-cryptids-dinos",
@@ -209,11 +210,12 @@
     "day": "Saturday",
     "time": "5:00 PM",
     "title": "Trivia Tournament",
-    "location": "Panel Room 2",
+    "location": "Event Room",
     "category": "Trivia",
     "id": "sched-saturday-trivia-tournament",
     "endTime": "6:00 PM",
-    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament."
+    "description": "Test your fandom knowledge in the Sci-Fi Valley Con Trivia Tournament.",
+    "participants": ""
   },
   {
     "day": "Saturday",
