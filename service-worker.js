@@ -1,5 +1,6 @@
-const CACHE="sfvc-program-shuttle-static-v4.117";
+const CACHE="sfvc-program-schedule-lifecycle-v4.118";
 const LOCAL=[
+  "./schedule-time.js",
   "./event-guide-media.js","./assets/events/shuttle-october-2026.webp",
   "./vendor-gallery.js","./vendor-gallery.css",
   "./console-gallery.js","./console-gallery.css",
