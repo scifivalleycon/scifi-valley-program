@@ -17,7 +17,11 @@ const state = {
 };
 
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.117";
+const APP_BUILD_VERSION="4.118";
+let scheduleDefaultDateKey="";
+let savedScheduleLifecycleTimer=null;
+let savedScheduleLifecycleSignature="";
+let savedScheduleInitialLoadComplete=false;
 const APP_REFRESH_INTERVAL_MS=60*1000;
 const APP_REFRESH_MIN_GAP_MS=10*1000;
 const APP_FULL_REFRESH_FALLBACK_MS=10*60*1000;
@@ -186,7 +190,7 @@ function myConGuestSnapshot(g){
   return {appearances:JSON.stringify(appearances),eventDates:JSON.stringify([state.settings.startDate,state.settings.endDate]),id:g.id,name:g.name,group:g.group||"",character:g.character||"",knownFor:g.knownFor||"",bio:g.bio||"",attendanceNotice:guestAttendanceNoticeText(g),photo:g.photo||"",imdb:g.imdb||"",instagram:g.instagram||"",photoOp:prices?.proPhoto??g.photoOp??"",prices:prices?JSON.stringify(prices):""};
 }
 function myConScheduleSnapshot(e){
-  return {id:e.id,day:e.day||"",time:e.time||"",endTime:e.endTime||"",title:e.title||"",location:e.location||"",category:e.category||"",filterCategory:e.filterCategory||"",description:e.description||"",participants:e.participants||"",eventAt:eventDateTime(e)?.getTime()||null,remindable:e.remindable!==false};
+  return {id:e.id,day:e.day||"",time:e.time||"",endTime:e.endTime||"",title:e.title||"",location:e.location||"",category:e.category||"",filterCategory:e.filterCategory||"",description:e.description||"",participants:e.participants||"",eventAt:eventDateTime(e)?.getTime()||null,endAt:SFVCScheduleTime.timing(e,state.settings,state.events).endAt,endBasis:SFVCScheduleTime.timing(e,state.settings,state.events).basis,remindable:e.remindable!==false};
 }
 function myConChangedFields(before,after){
   // Older snapshots establish a baseline for fields that were not stored yet.
@@ -233,7 +237,7 @@ function reconcileMyCon(){
     const before=savedScheduleSnapshots[id],next=myConScheduleSnapshot(event);
     const fields=before?myConChangedFields(before,next):[];
     if(fields.length){
-      const timing=fields.some(key=>["day","time","endTime","eventAt"].includes(key));
+      const timing=fields.some(key=>["day","time","endTime","eventAt","endAt"].includes(key));
       const room=fields.includes("location");
       myConChanges[`event:${id}`]={message:`UPDATED — ${timing?"Time or date changed":room?"Location changed":"Event details changed"}. ${next.day} • ${formatDisplayTimeRange(next.time,next.endTime)} • ${next.location}`,updatedAt:new Date().toISOString()};changed=true;
     }
@@ -450,6 +454,10 @@ function goTo(screenId,{recordHistory=true,restoreScrollY=null}={}){
 
   const currentId=activeScreenId();
   const changingScreens=currentId!==screenId;
+  if(screenId==="schedule" && updateScheduleDefaultDay({force:changingScreens&&!Number.isFinite(restoreScrollY)})){
+    renderDayFilters();renderScheduleCategoryFilters();renderSchedule();
+  }
+  if(screenId==="home"||screenId==="settings")renderMySchedule();
 
   if(changingScreens&&recordHistory){
     appScreenHistory.push({
@@ -2471,6 +2479,8 @@ function photoOpScheduleItems(){
     id:`photoop-${p.id||i}`,
     day:p.day,
     time:p.time,
+    endTime:p.endTime||"",
+    durationMinutes:p.durationMinutes,
     title:`${p.title} Photo Op`,
     location:state.celebrityInfo.photoOpLocation||"Photo Op Area",
     category:`Professional Photo Op${p.type?` • ${p.type}`:""}`,
@@ -2813,7 +2823,18 @@ function renderStatus(){
   );
 }
 
+function updateScheduleDefaultDay({force=false,now=Date.now()}={}){
+  const key=[state.settings.startDate,state.settings.endDate,SFVCScheduleTime.dateKey(now)].join("|");
+  if(!force&&key===scheduleDefaultDateKey)return false;
+  scheduleDefaultDateKey=key;
+  const day=SFVCScheduleTime.defaultDay(state.settings,now);
+  const changed=state.dayFilter!==day;
+  state.dayFilter=day;
+  return changed;
+}
+
 function renderDayFilters(){
+  updateScheduleDefaultDay();
   const days=["Friday","Saturday","Sunday"];
   const c=document.getElementById("dayFilters");
   c.innerHTML=days.map(d=>`<button class="chip ${d===state.dayFilter?"active":""}" data-day="${d}">${d.toUpperCase()}</button>`).join("");
@@ -2907,46 +2928,96 @@ function removeScheduleItem(id){
   localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
   renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();scheduleAnonymousDeviceSync();
 }
-function renderMySchedule(){
+function savedScheduleView(){
   const liveById=new Map(reminderScheduleItems().map(e=>[e.id,e]));
-  const saved=[...state.mySchedule].map(id=>{
-    const live=liveById.get(id);
-    if(live)return live;
-    const snapshot=savedScheduleSnapshots[id];
-    return snapshot?{...snapshot,_snapshot:true}:null;
+  return [...state.mySchedule].map(id=>{
+    const live=liveById.get(id),snapshot=savedScheduleSnapshots[id];
+    const event=live||snapshot;
+    if(!event)return null;
+    // Incomplete startup reads must never expire items using fallback event dates.
+    const timing=live&&(myConCatalogReady||myConDataLoaded)
+      ? SFVCScheduleTime.timing(live,state.settings,state.events)
+      : {endAt:snapshot?.endAt??null,basis:snapshot?.endBasis||"unknown"};
+    return {...event,_snapshot:!live,_endAt:timing.endAt,_endBasis:timing.basis};
   }).filter(Boolean);
-
+}
+function savedScheduleViewSignature(items,now){
+  return JSON.stringify(items.map(e=>[e.id,e._endAt,SFVCScheduleTime.status(e._endAt,now)]));
+}
+function expireSavedScheduleItems(now=Date.now()){
+  // Let startup load the latest end times before pruning older saved snapshots.
+  if(!myConCatalogReady&&!myConDataLoaded&&!savedScheduleInitialLoadComplete)return 0;
+  const expired=savedScheduleView().filter(e=>SFVCScheduleTime.status(e._endAt,now).expired);
+  if(!expired.length)return 0;
+  for(const event of expired){
+    state.mySchedule.delete(event.id);
+    delete savedScheduleSnapshots[event.id];
+    delete myConChanges[`event:${event.id}`];
+  }
+  // Only personal saved-event state is removed. Guest favorites and the public
+  // schedule, vendor profiles, photos, and reminder preference are untouched.
+  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  saveScheduleSnapshots();
+  return expired.length;
+}
+function queueSavedScheduleLifecycle(items=savedScheduleView(),now=Date.now()){
+  clearTimeout(savedScheduleLifecycleTimer);
+  if(document.visibilityState==="hidden")return;
+  let delay=60000;
+  for(const event of items){
+    if(typeof event._endAt!=="number"||!Number.isFinite(event._endAt))continue;
+    for(const boundary of [event._endAt,event._endAt+SFVCScheduleTime.RETENTION_MS]){
+      if(boundary>now)delay=Math.min(delay,boundary-now);
+    }
+  }
+  savedScheduleLifecycleTimer=setTimeout(refreshSavedScheduleLifecycle,Math.max(25,delay));
+}
+function refreshSavedScheduleLifecycle(){
+  const now=Date.now();
+  if(updateScheduleDefaultDay({now})){
+    renderDayFilters();renderScheduleCategoryFilters();renderSchedule();
+  }
+  const items=savedScheduleView();
+  if(savedScheduleViewSignature(items,now)!==savedScheduleLifecycleSignature)renderMySchedule();
+  else queueSavedScheduleLifecycle(items,now);
+}
+function renderMySchedule(){
+  const now=Date.now(),removed=expireSavedScheduleItems(now);
+  const saved=savedScheduleView();
+  savedScheduleLifecycleSignature=savedScheduleViewSignature(saved,now);
+  queueSavedScheduleLifecycle(saved,now);
+  if(removed){
+    renderSchedule();renderCelebrityGuide();
+    scheduleAllReminders();scheduleAnonymousDeviceSync();
+  }
   saved.sort((a,b)=>{
     const da=eventDateTime(a)?.getTime()||Number.MAX_SAFE_INTEGER;
     const db=eventDateTime(b)?.getTime()||Number.MAX_SAFE_INTEGER;
     return da-db;
   });
-
-  const preview=document.getElementById("schedulePreview"),
-        list=document.getElementById("settingsScheduleList");
-
+  const preview=document.getElementById("schedulePreview"),list=document.getElementById("settingsScheduleList");
   updateCombinedSavedCount();
-
   if(!saved.length){
     if(preview)preview.innerHTML='<div class="muted-empty">Tap the bell on a schedule item to add it to My Schedule.</div>';
     if(list)list.innerHTML='<div class="muted-empty">Your saved schedule is empty.</div>';
     return;
   }
-
-  const markup=saved.map(e=>`
-    <div class="saved-schedule-item${e._snapshot?" saved-schedule-snapshot":""}">
-      <div>
-        <strong>${escapeAppHtml(e.title)}</strong>
-        <div class="meta">${escapeAppHtml(e.day)} • ${escapeAppHtml(formatDisplayTimeRange(e.time,e.endTime))} • ${escapeAppHtml(e.location)}</div>
+  const markup=saved.map(e=>{
+    const ended=SFVCScheduleTime.status(e._endAt,now).ended;
+    return `<div class="saved-schedule-item${e._snapshot?" saved-schedule-snapshot":""}${ended?" saved-event-completed":""}" data-saved-event="${escapeAppHtml(e.id)}" data-end-basis="${escapeAppHtml(e._endBasis)}">
+      <div class="saved-event-details">
+        <strong class="saved-event-title">${escapeAppHtml(e.title)}</strong>
+        <div class="meta"><span class="saved-event-when">${escapeAppHtml(e.day)} • ${escapeAppHtml(formatDisplayTimeRange(e.time,e.endTime))}</span> • ${escapeAppHtml(e.location)}</div>
+        ${ended?'<span class="saved-event-ended" role="status">This event is over</span>':""}
         ${myConChangeHtml("event",e.id)}
         ${e._snapshot?'<div class="saved-sync-note">REFRESHING CURRENT SCHEDULE…</div>':""}
       </div>
-      <button class="schedule-remove" data-remove-schedule="${escapeAppHtml(e.id)}" aria-label="Remove ${escapeAppHtml(e.title)}">×</button>
-    </div>`).join("");
-
+      <button type="button" class="schedule-remove" data-remove-schedule="${escapeAppHtml(e.id)}" aria-label="Remove ${escapeAppHtml(e.title)}">×</button>
+    </div>`;
+  }).join("");
   if(preview)preview.innerHTML=markup;
   if(list)list.innerHTML=markup;
-
   document.querySelectorAll("[data-remove-schedule]").forEach(button=>{
     button.addEventListener("click",()=>removeScheduleItem(button.dataset.removeSchedule));
   });
@@ -2959,7 +3030,10 @@ function updateCombinedSavedCount(){
   const scheduleCount=[...state.mySchedule].filter(id=>liveIds.has(id)||savedScheduleSnapshots[id]).length;
   b.textContent=`${state.favorites.size+scheduleCount} SAVED`;
 }
-function eventDateTime(e){const d=eventDayDates()[e.day];const m=e.time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!d||!m)return null;let h=+m[1];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return new Date(`${d}T${String(h).padStart(2,"0")}:${m[2]}:00`)}
+function eventDateTime(e){
+  const at=SFVCScheduleTime.startAt(e,state.settings);
+  return Number.isFinite(at)?new Date(at):null;
+}
 let reminderSyncTimer=null;
 let reminderSyncInFlight=null;
 
@@ -3697,6 +3771,8 @@ function applyRecoveredRegistrationState(result){
       if(!savedGuestSnapshots[guestId])savedGuestSnapshots[guestId]={id:guestId,name:String(item.title||""),group:String(item.location||"")};
       return;
     }
+    const live=reminderScheduleItems().find(e=>e.id===id);
+    if(live&&(myConCatalogReady||myConDataLoaded)&&SFVCScheduleTime.status(SFVCScheduleTime.timing(live,state.settings,state.events).endAt).expired)return;
     if(!state.mySchedule.has(id)){state.mySchedule.add(id);changed++;}
     if(!savedScheduleSnapshots[id])savedScheduleSnapshots[id]={
       id,day:String(item.day||""),time:String(item.time||item.timeText||""),title:String(item.title||""),
@@ -6148,6 +6224,15 @@ document.addEventListener("dblclick",event=>{
 document.getElementById("appRegistrationForm")?.addEventListener("submit",submitAppRegistration);
 document.getElementById("removeAppRegistration")?.addEventListener("click",removeAppRegistration);
 
+// Browser timers pause while an app is closed. Re-check immediately on return,
+// as well as at each end/expiry boundary while the app remains visible.
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible")refreshSavedScheduleLifecycle();
+  else clearTimeout(savedScheduleLifecycleTimer);
+});
+window.addEventListener("pageshow",refreshSavedScheduleLifecycle);
+window.addEventListener("focus",refreshSavedScheduleLifecycle);
+
 initializeMyConSetup();
 initializeAppAnalytics();
 initializeRecentAlerts();
@@ -6158,6 +6243,8 @@ initializeAttendeeReporter();
 initializeLostFoundInquiry();
 
 loadData().then(()=>{
+  savedScheduleInitialLoadComplete=true;
+  renderMySchedule();
   startVisibleAppRefresh();
   startLiveVendorDirectoryRefresh();
   startSafetySyncLoops();
@@ -6166,6 +6253,7 @@ loadData().then(()=>{
   if(startupScreen==="notifications")setTimeout(()=>goTo("notifications",{recordHistory:false}),0);
 }).catch(err=>{
   console.error(err);
+  savedScheduleInitialLoadComplete=true;
   renderMySchedule();
   document.getElementById("happeningNow").innerHTML=`<div class="status-card"><strong>APP DATA COULD NOT LOAD.</strong><div class="meta">Saved My Con items remain available while the app retries the latest program data.</div></div>`;
 });

@@ -1,6 +1,6 @@
 {
-  "version": "admin-1792268360220",
-  "generatedAt": "2026-10-17T20:19:20.220Z",
-  "source": "schedule",
+  "version": "program-v4.118-schedule-lifecycle",
+  "generatedAt": "2026-10-18T12:01:44.132580+00:00",
+  "source": "saved-event-expiry-and-current-day-default",
   "updatedBy": "info@scifivalleycon.com"
 }

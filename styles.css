@@ -6749,3 +6749,11 @@ body.sfvc-text-enlarged .screen .schedule-time-stack .schedule-day-badge{
 .guest-schedule-location,.guest-schedule-empty,.guest-schedule-note{font-size:1rem;line-height:1.5;}
 #photoLightboxSchedule{width:min(760px,92vw);max-width:100%;margin:0 auto 24px;}
 #photoLightboxSchedule[hidden]{display:none;}
+
+/* V4.118: completed personal events remain readable and removable for two hours. */
+:is(#schedulePreview,#settingsScheduleList) .saved-schedule-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid rgba(58,39,32,.22)}
+:is(#schedulePreview,#settingsScheduleList) .saved-event-details{min-width:0;overflow-wrap:anywhere}
+:is(#schedulePreview,#settingsScheduleList) .saved-event-completed :is(.saved-event-title,.saved-event-when){text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:currentColor}
+:is(#schedulePreview,#settingsScheduleList) .saved-event-ended{display:inline-block;margin-top:6px;padding:4px 8px;border:1px solid var(--ink,#3a2720);border-radius:6px;background:var(--cream,#fff7df);color:var(--ink,#3a2720);font:700 12px/1.4 "Trebuchet MS",Arial,sans-serif;text-decoration:none}
+:is(#schedulePreview,#settingsScheduleList) .schedule-remove{display:grid;place-items:center;flex-shrink:0;min-width:36px;min-height:36px;border:1.5px solid var(--ink,#3a2720);border-radius:50%;background:var(--paper2,#fff7df);color:var(--ink,#3a2720);font:700 22px/1 Arial,sans-serif;cursor:pointer}
+:is(#schedulePreview,#settingsScheduleList) .schedule-remove:focus-visible{outline:3px solid var(--ink,#3a2720);outline-offset:3px}
