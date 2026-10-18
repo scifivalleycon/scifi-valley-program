@@ -1,0 +1,70 @@
+name: Test saved schedule lifecycle and default day
+on:
+  push:
+    branches: [my-schedule-lifecycle-oct-2026]
+    paths: ['.github/workflows/schedule-lifecycle-review.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply changes only to verified production source
+        run: |
+          mkdir -p .schedule-review
+          python tools/apply-schedule-lifecycle.py
+          node --check app.js
+          node --check schedule-time.js
+          node --check service-worker.js
+          git diff --check
+      - name: Verify time boundaries in four device timezones
+        run: |
+          set -o pipefail
+          for zone in America/New_York America/Los_Angeles Pacific/Auckland UTC; do
+            TZ="$zone" node tools/test-schedule-time.cjs
+          done | tee .schedule-review/unit-tests.txt
+      - name: Install isolated browser engines
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium webkit
+      - name: Test complete app with all remote writes intercepted
+        run: |
+          set -o pipefail
+          python tools/test-schedule-lifecycle.py | tee .schedule-review/browser-tests.txt
+      - name: Verify preserved content and record tested release files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,subprocess,shutil
+          base='97471a2f41fdf544f8fd021ca7c071ad08c54e89'
+          files=['app.js','styles.css','schedule-time.js','index.html','service-worker.js','data/version.json']
+          changed=subprocess.check_output(['git','diff','--name-only',base],text=True).splitlines()
+          assert all(p in files or p.startswith('tools/') or p.startswith('.github/') for p in changed),changed
+          for name in subprocess.check_output(['git','ls-tree','-r','--name-only',base,'data','assets'],text=True).splitlines():
+              if name=='data/version.json':continue
+              assert Path(name).read_bytes()==subprocess.check_output(['git','show',base+':'+name]),name
+          result=json.loads(Path('.schedule-review/results.json').read_text())
+          report={'base':base,'version':'4.118','tests':result,'allProgramDataAndAssetsPreserved':True,'files':[{'path':p,'mode':'100644','type':'blob','sha':subprocess.check_output(['git','hash-object','-w',p],text=True).strip()} for p in files]}
+          Path('tools/schedule-lifecycle-release.json').write_text(json.dumps(report,indent=2)+'\n')
+          Path('.schedule-review/release.json').write_text(json.dumps(report,indent=2)+'\n')
+          for name in files:
+              target=Path('.schedule-review/runtime')/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(name,target)
+          subprocess.run(['git','add',*files,'tools/schedule-lifecycle-release.json'],check=True)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Verify saved event expiry and current-day defaults (v4.118)'
+          git push origin HEAD:my-schedule-lifecycle-oct-2026
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-lifecycle-review
+          path: .schedule-review/
+          include-hidden-files: true
+          retention-days: 7
