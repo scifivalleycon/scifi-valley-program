@@ -11,6 +11,7 @@ s=once(s,'function expireSavedScheduleItems(now=Date.now()){','''function expire
 s=once(s,'loadData().then(()=>{\n  startVisibleAppRefresh();','loadData().then(()=>{\n  savedScheduleInitialLoadComplete=true;\n  renderMySchedule();\n  startVisibleAppRefresh();')
 s=once(s,'''}).catch(err=>{
   console.error(err);
+  renderMySchedule();
   document.getElementById("happeningNow").innerHTML''','''}).catch(err=>{
   console.error(err);
   savedScheduleInitialLoadComplete=true;
