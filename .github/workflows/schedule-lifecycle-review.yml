@@ -19,6 +19,7 @@ jobs:
         run: |
           mkdir -p .schedule-review
           python tools/apply-schedule-lifecycle.py
+          python tools/finalize-schedule-review.py
           node --check app.js
           node --check schedule-time.js
           node --check service-worker.js
