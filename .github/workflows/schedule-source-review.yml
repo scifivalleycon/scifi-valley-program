@@ -1,0 +1,25 @@
+name: Capture schedule source for review
+on:
+  push:
+    branches: [my-schedule-lifecycle-oct-2026]
+    paths: ['.github/workflows/schedule-source-review.yml']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 97471a2f41fdf544f8fd021ca7c071ad08c54e89
+          persist-credentials: false
+      - run: |
+          mkdir -p /tmp/schedule-review
+          git archive --format=zip HEAD -o /tmp/schedule-review/repository.zip
+          git ls-tree -r HEAD > /tmp/schedule-review/tree.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: schedule-source-review
+          path: /tmp/schedule-review/
+          retention-days: 7
