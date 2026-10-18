@@ -2,7 +2,7 @@ name: Test saved schedule lifecycle and default day
 on:
   push:
     branches: [my-schedule-lifecycle-oct-2026]
-    paths: ['.github/workflows/schedule-lifecycle-review.yml']
+    paths: ['.github/workflows/schedule-lifecycle-review.yml','tools/finalize-schedule-review.py','tools/test-schedule-lifecycle.py']
 permissions:
   contents: read
 jobs:
@@ -37,7 +37,7 @@ jobs:
       - name: Test complete app with all remote writes intercepted
         run: |
           set -o pipefail
-          python tools/test-schedule-lifecycle.py | tee .schedule-review/browser-tests.txt
+          python tools/test-schedule-lifecycle.py 2>&1 | tee .schedule-review/browser-tests.txt
       - name: Verify preserved content and record tested release files
         run: |
           python - <<'PY'
