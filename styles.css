@@ -4605,9 +4605,9 @@ body.sfvc-text-xxl summary{
   white-space:nowrap;
 }
 
-/* The SCHEDULE label is the widest bottom-navigation word. Its text-size
-   ceiling is enforced by data-font-scale-max="1.75" so 200% mode cannot clip. */
-.bottom-nav .nav-button[data-screen="schedule"] small{
+/* Navigation labels stay intact at narrow widths and enlarged text sizes.
+   SCHEDULE also has a data-font-scale-max="1.75" ceiling. */
+.bottom-nav .nav-button small{
   white-space:nowrap!important;
 }
 

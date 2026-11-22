@@ -50,6 +50,8 @@ async function main(){
    assert.equal(await page.locator('#homeGuestBanner').isDisabled(),true);
    assert.equal(await page.locator('#homeGuestBanner .home-guest-banner-cta').isVisible(),false);
    await page.screenshot({path:path.join(root,`tools/june-${engine}-${width}-home.png`),fullPage:false});
+   await page.locator('#homeGuestBanner').scrollIntoViewIfNeeded();
+   await page.screenshot({path:path.join(root,`tools/june-${engine}-${width}-banner.png`),fullPage:false});
    results.push(`${engine} ${width}: June homepage, archived choices retained, new header, no old checkout`);
 
    await page.evaluate(()=>goTo('schedule'));
@@ -59,6 +61,7 @@ async function main(){
    assert.equal(await page.locator('#mapPublishedContent').isVisible(),false);
    assert.match(await page.locator('#mapDraftNote').innerText(),/have not been created yet/);
    assert.equal(await page.locator('#mapSvgHost svg').count(),0);
+   await page.screenshot({path:path.join(root,`tools/june-${engine}-${width}-map.png`),fullPage:false});
    await page.evaluate(()=>goTo('guests'));
    assert.match(await page.locator('#guestList').innerText(),/guests.*will be announced soon/i);
    results.push(`${engine} ${width}: schedule/guests empty, pending floor plan, no old vendor fallback`);
@@ -68,6 +71,7 @@ async function main(){
    await page.waitForFunction(()=>document.querySelector('#eventModalContent')?.textContent.includes('Saturday, June 12'));
    const costume=await page.locator('#eventModalContent').innerText();
    assert.match(costume,/2:30-5:00 PM/);assert.match(costume,/6:00 PM/);assert.ok(!/Oct\.|October/.test(costume));
+   await page.screenshot({path:path.join(root,`tools/june-${engine}-${width}-costume.png`),fullPage:false});
    await page.evaluate(()=>document.querySelector('#eventModal').close());
    assert.equal(await page.locator('[data-event-open="shuttle"]:visible').count(),0);
    assert.equal(await page.locator('[data-event-open="after-party"]:visible').count(),0);
