@@ -1,19 +1,17 @@
-const CACHE="sfvc-program-schedule-lifecycle-v4.118";
+const CACHE="sfvc-program-june-2027-v4.119";
 const LOCAL=[
   "./schedule-time.js",
-  "./event-guide-media.js","./assets/events/shuttle-october-2026.webp",
+  "./event-guide-media.js","./assets/events/june-2027-header.avif",
   "./vendor-gallery.js","./vendor-gallery.css",
   "./console-gallery.js","./console-gallery.css",
   "./","./index.html","./styles.css","./home-layout.css","./event-guide-layout.css","./app.js","./home-layout.js","./event-guide-layout.js","./event-guide-ui.js","./tshirt-live-store.js","./manifest.webmanifest",
   "./data/guests.json","./data/schedule.json","./data/events.json","./data/vendors.json","./data/sponsors.json","./data/featured-sponsor.json","./data/next-event-ad.json","./data/social-links.json","./data/tshirts.json","./data/faq.json","./data/hotels.json","./data/home-banner.json","./data/map-layout.json","./data/map-settings.json","./data/directions.json","./data/version.json","./data/settings.json","./data/celebrity-info.json","./data/celebrity-pricing.json","./data/photo-ops.json","./data/autograph-schedule.json","./data/group-photo-ops.json","./data/panels.json",
-  "./assets/guests/Samantha_Mathis.jpg","./assets/guests/Eddie_Cahill.jpg",
-  "./assets/guests/Malcolm_Kelner.webp","./assets/guests/Haley_Fitzgerald.webp",
   "./assets/floor-plan.svg","./assets/icons/app-icon-192.png","./assets/icons/app-icon-512.png",
   "./assets/icons/app-icon-maskable-512.png","./assets/icons/apple-touch-icon.png","./assets/icons/back-button.png"
 ];
 
 self.addEventListener("install",event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(LOCAL)));
+  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(LOCAL.map(url=>new Request(url,{cache:"reload"})))));
   self.skipWaiting();
 });
 self.addEventListener("activate",event=>{
@@ -45,7 +43,7 @@ self.addEventListener("fetch",event=>{
         }
         return network;
       }catch{
-        const cached=await caches.match(cacheKey);
+        const cached=await (await caches.open(CACHE)).match(cacheKey);
         if(cached){
           const headers=new Headers(cached.headers);
           headers.set("X-SFVC-Offline","1");
@@ -64,7 +62,7 @@ self.addEventListener("fetch",event=>{
         caches.open(CACHE).then(cache=>cache.put(cacheKey,copy)).catch(()=>{});
       }
       return response;
-    }).catch(()=>caches.match(cacheKey).then(cached=>cached||caches.match("./index.html")))
+    }).catch(async()=>{const cache=await caches.open(CACHE);return (await cache.match(cacheKey))||(await cache.match("./index.html"));})
   );
 });
 

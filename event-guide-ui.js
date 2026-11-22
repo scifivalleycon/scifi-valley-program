@@ -364,6 +364,12 @@
   }
 
   async function loadEvents(){
+    // Use the same verified event snapshot as the app; never keep a standalone
+    // copy of the previous convention after an in-session event change.
+    if(window.SFVCProgramEventContext){
+      eventMap=new Map(window.SFVCProgramEventContext.events.map(item=>[String(item.id),item]));
+      return eventMap;
+    }
     if(eventMap.size)return eventMap;
     if(loadPromise)return loadPromise;
 

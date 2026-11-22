@@ -4605,9 +4605,9 @@ body.sfvc-text-xxl summary{
   white-space:nowrap;
 }
 
-/* The SCHEDULE label is the widest bottom-navigation word. Its text-size
-   ceiling is enforced by data-font-scale-max="1.75" so 200% mode cannot clip. */
-.bottom-nav .nav-button[data-screen="schedule"] small{
+/* Navigation labels stay intact at narrow widths and enlarged text sizes.
+   SCHEDULE also has a data-font-scale-max="1.75" ceiling. */
+.bottom-nav .nav-button small{
   white-space:nowrap!important;
 }
 
@@ -6757,3 +6757,8 @@ body.sfvc-text-enlarged .screen .schedule-time-stack .schedule-day-badge{
 :is(#schedulePreview,#settingsScheduleList) .saved-event-ended{display:inline-block;margin-top:6px;padding:4px 8px;border:1px solid var(--ink,#3a2720);border-radius:6px;background:var(--cream,#fff7df);color:var(--ink,#3a2720);font:700 12px/1.4 "Trebuchet MS",Arial,sans-serif;text-decoration:none}
 :is(#schedulePreview,#settingsScheduleList) .schedule-remove{display:grid;place-items:center;flex-shrink:0;min-width:36px;min-height:36px;border:1.5px solid var(--ink,#3a2720);border-radius:50%;background:var(--paper2,#fff7df);color:var(--ink,#3a2720);font:700 22px/1 Arial,sans-serif;cursor:pointer}
 :is(#schedulePreview,#settingsScheduleList) .schedule-remove:focus-visible{outline:3px solid var(--ink,#3a2720);outline-offset:3px}
+
+/* Event rollover: availability takes priority over configurable card layouts. */
+[data-photo-shop][hidden], .photo-sales-hidden { display: none !important; }
+.home-guest-banner.static-event-banner { cursor: default; opacity: 1; }
+.home-guest-banner.static-event-banner .home-guest-banner-cta { display: none !important; }

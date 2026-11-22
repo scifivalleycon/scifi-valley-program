@@ -1,5 +1,7 @@
 {
-  "version": "program-v4.82-event-guide-layout-designer",
-  "generatedAt": "2026-08-19T16:20:00Z",
-  "notes": "Expands the Admin-controlled App Layout Designer from the Home screen to the Event Guide main buttons and Events & Activities buttons."
+  "version": "program-v4.119-june-2027",
+  "generatedAt": "2026-11-22T00:00:00Z",
+  "source": "event-rollover",
+  "eventId": "sfvc-2027-06",
+  "conventionId": "sfvc-2027-06"
 }

@@ -1,13 +1,17 @@
 [
   {
     "eventName": "Sci-Fi Valley Con",
-    "editionLabel": "FALL 2026",
-    "startDate": "2026-10-16",
-    "endDate": "2026-10-18",
+    "editionLabel": "JUNE 2027",
+    "startDate": "2027-06-11",
+    "endDate": "2027-06-13",
     "venue": "Blair County Convention Center",
     "city": "Altoona",
     "state": "PA",
-    "photoShop": "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-    "pushApiUrl": "https://notify.scifivalleycon.com"
+    "photoShop": "",
+    "pushApiUrl": "https://notify.scifivalleycon.com",
+    "eventId": "sfvc-2027-06",
+    "conventionId": "sfvc-2027-06",
+    "timezone": "America/New_York",
+    "photoOpsEnabled": false
   }
 ]
