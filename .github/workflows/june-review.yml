@@ -1,0 +1,99 @@
+name: June 2027 isolated program review
+
+on:
+  push:
+    branches: [event-rollover-review-20261122]
+    paths:
+      - .github/workflows/june-review.yml
+      - .review/june.patch.gz.b64
+
+permissions:
+  contents: write
+
+concurrency:
+  group: june-2027-program-review
+  cancel-in-progress: false
+
+jobs:
+  review:
+    if: github.ref == 'refs/heads/event-rollover-review-20261122'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Apply isolated review changes
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = 'refs/heads/event-rollover-review-20261122'
+          git restore --source=6438a5a92d057580f696313c2da9979ecdc2c55c --staged --worktree -- . ':!.github' ':!.review'
+          python - <<'PY'
+          import base64,gzip,pathlib
+          patch=pathlib.Path('.review/june.patch.gz.b64').read_bytes()
+          pathlib.Path('.review/june.patch').write_bytes(gzip.decompress(base64.b64decode(patch)))
+          PY
+          git apply --index .review/june.patch
+          git diff --cached --check
+      - name: Check JavaScript and event isolation
+        shell: bash
+        run: |
+          node --check app.js
+          node --check worker.js
+          node --check service-worker.js
+          node --check event-guide-ui.js
+          node --check event-guide-layout.js
+          node --check home-layout.js
+          node --test tools/june-rollover.test.cjs | tee .review/node-results.tap
+      - name: Install browser test dependencies
+        shell: bash
+        run: |
+          npm install --prefix .review/deps --no-save --no-package-lock playwright@1.62.1
+          .review/deps/node_modules/.bin/playwright install --with-deps chromium webkit
+      - name: Check mobile Chromium and WebKit
+        shell: bash
+        env:
+          NODE_PATH: ${{ github.workspace }}/.review/deps/node_modules
+        run: node tools/june-rollover-browser.cjs | tee .review/browser.log
+      - name: Save tested changes to review branch only
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = 'refs/heads/event-rollover-review-20261122'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --cached --quiet; then
+            git commit -m 'Prepare and verify June 2027 attendee program'
+            git push origin HEAD:refs/heads/event-rollover-review-20261122
+          fi
+          git rev-parse HEAD > .review/review-commit.txt
+          python - <<'PY'
+          import json,pathlib,subprocess
+          base='6438a5a92d057580f696313c2da9979ecdc2c55c'
+          head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          paths=subprocess.check_output(['git','diff','--name-only','-z',base,head]).decode().split('\0')
+          files=[]
+          for path in paths:
+            if not path or path.startswith(('.github/','.review/','tools/')):continue
+            mode,kind,sha=subprocess.check_output(['git','ls-tree',head,'--',path],text=True).split('\t',1)[0].split()
+            files.append({'path':path,'mode':mode,'type':kind,'sha':sha})
+          pathlib.Path('.review/runtime-manifest.json').write_text(json.dumps({'baseCommit':base,'reviewCommit':head,'files':files},indent=2)+'\n')
+          print(json.dumps({'reviewCommit':head,'runtimeFiles':len(files)}))
+          PY
+      - name: Upload review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: june-program-review
+          if-no-files-found: error
+          retention-days: 30
+          include-hidden-files: true
+          path: |
+            .review/node-results.tap
+            .review/browser.log
+            .review/review-commit.txt
+            .review/runtime-manifest.json
+            tools/june-browser-results.json
+            tools/june-*.png
