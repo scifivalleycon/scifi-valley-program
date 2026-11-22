@@ -1,98 +1,12 @@
 [
   {
-    "published": true,
-    "directoryPublished": true,
-    "title": "Blair County Convention Center Interactive Floor Plan",
-    "subtitle": "Main Level, Lower Level, Patio Vendors, celebrity areas, event rooms, gaming, food and convention services.",
-    "conQuestNote": "Tables and booths marked in red are participating in Con-Quest.",
-    "draftNote": "Draft map with editable coordinates, labels, and table/booth layout. Review every vendor and celebrity assignment before publishing.",
-    "legend": [
-      {
-        "id": "panel1",
-        "label": "Panel Room 1",
-        "color": "#73c7cb"
-      },
-      {
-        "id": "retro",
-        "label": "Retro Gaming Arcade",
-        "color": "#d36a9b"
-      },
-      {
-        "id": "mainHall",
-        "label": "Exhibit Hall - Main",
-        "color": "#e7dfb4"
-      },
-      {
-        "id": "panel2",
-        "label": "Panel Room 2",
-        "color": "#efc448"
-      },
-      {
-        "id": "event",
-        "label": "Event Room",
-        "color": "#ed6f8a"
-      },
-      {
-        "id": "miniCafe",
-        "label": "The Mini Café",
-        "color": "#71b86c"
-      },
-      {
-        "id": "paint",
-        "label": "Paint & Hobby Room",
-        "color": "#eaa069"
-      },
-      {
-        "id": "admissions",
-        "label": "Admissions",
-        "color": "#f2bd3f"
-      },
-      {
-        "id": "celebrity",
-        "label": "Celebrity Guests",
-        "color": "#ef744f"
-      },
-      {
-        "id": "lowerHall",
-        "label": "Exhibit Hall - Lower",
-        "color": "#d6e5ef"
-      },
-      {
-        "id": "photo",
-        "label": "Photo Op Area",
-        "color": "#f3b444"
-      },
-      {
-        "id": "cafe",
-        "label": "The Café",
-        "color": "#efc08b"
-      },
-      {
-        "id": "lawn",
-        "label": "The Lawn",
-        "color": "#a3ca4b"
-      },
-      {
-        "id": "gaming",
-        "label": "Gaming Room",
-        "color": "#60b9dc"
-      },
-      {
-        "id": "patio",
-        "label": "Patio Vendors",
-        "color": "#e5d6ee"
-      },
-      {
-        "id": "tattoo",
-        "label": "Tattoo Parlor",
-        "color": "#6fb7a7"
-      },
-      {
-        "id": "conquest",
-        "label": "Con-Quest Participant",
-        "color": "#e65338"
-      }
-    ],
+    "published": false,
+    "directoryPublished": false,
+    "title": "June 2027 Floor Plan",
+    "subtitle": "The floor plan and vendor table assignments are coming soon.",
+    "conQuestNote": "Con-Quest participants will be announced with the June 2027 vendor list.",
+    "draftNote": "The floor plan and table assignments have not been created yet for this upcoming show.",
+    "legend": [],
     "homeLayout": {
       "version": 2,
       "updatedAt": "2026-08-19T16:21:35.947Z",
@@ -102,9 +16,9 @@
           "id": "guest-banner",
           "type": "builtin",
           "visible": true,
-          "kicker": "MEET OUR",
-          "title": "CELEBRITY GUESTS",
-          "description": "Guest banner, bios, reunions, photo ops and more.",
+          "kicker": "JUNE 11–13, 2027",
+          "title": "SCI-FI VALLEY CON",
+          "description": "The home of nostalgia",
           "icon": "★",
           "style": "paper",
           "order": 10
@@ -201,9 +115,9 @@
           "id": "cosplay-clinic",
           "type": "builtin",
           "visible": true,
-          "kicker": "ATTENDEE SERVICES • TABLE D9",
+          "kicker": "ATTENDEE SERVICES",
           "title": "COSPLAY CLINIC",
-          "description": "Quick costume repairs and emergency cosplay fixes.",
+          "description": "Location will be announced with the floor plan.",
           "icon": "CC",
           "style": "coral",
           "order": 100
@@ -243,7 +157,7 @@
           "visible": true,
           "kicker": "EVENT GUIDE",
           "title": "VENUE & DRIVING DIRECTIONS",
-          "description": "Convention Center, shuttle, bowling, movie screening & navigation",
+          "description": "Convention Center address and driving directions",
           "icon": "➜",
           "style": "aqua",
           "order": 20
@@ -276,7 +190,7 @@
           "visible": true,
           "kicker": "EVENT GUIDE",
           "title": "COSPLAY CLINIC",
-          "description": "Quick costume repairs and emergency cosplay fixes at Table D9",
+          "description": "Quick costume repairs and emergency cosplay fixes. Location coming soon.",
           "icon": "CC",
           "style": "coral",
           "order": 50
@@ -396,7 +310,7 @@
         {
           "id": "shuttle",
           "type": "builtin",
-          "visible": true,
+          "visible": false,
           "kicker": "TRANSPORTATION",
           "title": "Shuttle Service",
           "description": "Event Guide activity button",
@@ -407,7 +321,7 @@
         {
           "id": "after-party",
           "type": "builtin",
-          "visible": true,
+          "visible": false,
           "kicker": "BOWLING & KARAOKE",
           "title": "Saturday Night After Party",
           "description": "Event Guide activity button",
@@ -471,6 +385,7 @@
           "order": 110
         }
       ]
-    }
+    },
+    "eventId": "sfvc-2027-06"
   }
 ]

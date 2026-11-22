@@ -1,6 +1,7 @@
 {
-  "version": "admin-1792343092160",
-  "generatedAt": "2026-10-18T17:04:52.160Z",
-  "source": "schedule",
-  "updatedBy": "info@scifivalleycon.com"
+  "version": "program-v4.119-june-2027",
+  "generatedAt": "2026-11-22T00:00:00Z",
+  "source": "event-rollover",
+  "eventId": "sfvc-2027-06",
+  "conventionId": "sfvc-2027-06"
 }

@@ -159,7 +159,10 @@
           }
         ]
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "mini-cafe",
@@ -270,7 +273,10 @@
           }
         ]
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "con-quest",
@@ -289,7 +295,7 @@
       {
         "type": "list",
         "items": [
-          "Use the convention map to find participating Con-Quest tables.",
+          "Participating vendors and table locations will be announced with the June 2027 floor plan.",
           "Complete playful challenges such as character impressions, dances, quotes and other table activities.",
           "Earn GBU Con-Quest bottle caps for completed quests.",
           "Trade bottle caps at the Mega-Table for additional raffle tickets and more chances to win donated prizes.",
@@ -302,7 +308,7 @@
       },
       {
         "type": "p",
-        "text": "Begin at the Gearbox Union Con-Quest Mega-Table at Tables D1-D7, upstairs outside the ballroom. Pick up your materials, learn how the quest works and start exploring."
+        "text": "Begin at the Gearbox Union Con-Quest Mega-Table. Its location will be announced with the June 2027 floor plan. Pick up your materials, learn how the quest works and start exploring."
       },
       {
         "type": "heading",
@@ -311,14 +317,11 @@
       {
         "type": "p",
         "text": "Exhibitors can participate as quest stops by contributing to the charity raffle and offering a simple interactive challenge at their table. Contact GearboxUnion@gmail.com to participate."
-      },
-      {
-        "type": "schedule",
-        "items": [
-          "The GBU Presents: The Con-Quest Charity Raffle • Sunday, Oct. 18 • 3:30-4:55 PM • Panel Room 2"
-        ]
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "costume-contest",
@@ -327,14 +330,18 @@
     "summary": "Sci-Fi Valley Con's annual costume competition with junior, teen and adult divisions, plus special adult awards.",
     "content": [
       {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
+      {
         "type": "p",
         "text": "Show off costumes inspired by fantasy, science fiction, anime, steampunk, horror, movies, television, books and other fandoms. The contest celebrates creativity, craftsmanship and presentation."
       },
       {
         "type": "schedule",
         "items": [
-          "Registration & optional prejudging: Saturday, Oct. 17 • 2:30-4:55 PM • Panel Room 2",
-          "Costume Contest: Saturday, Oct. 17 • 6:00 PM • Panel Room 1"
+          "Registration & optional prejudging: Saturday, June 12 • 2:30-5:00 PM • Panel Room 2",
+          "Costume Contest: Saturday, June 12 • 6:00 PM • Panel Room 1"
         ]
       },
       {
@@ -359,7 +366,10 @@
         "type": "p",
         "text": "Entrants should be ready to provide a costume title, the source or genre that inspired the costume, and details for the judges about construction, materials, craftsmanship and the story behind the piece."
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "quick-sketches",
@@ -367,6 +377,10 @@
     "category": "Charity",
     "summary": "Watch convention artists create one-of-a-kind sketches live, then bid on the finished artwork for charity.",
     "content": [
+      {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
       {
         "type": "p",
         "text": "Charity Quick Sketches brings artists together for fast-paced live drawing sessions. Attendees can shout out ideas and watch original pieces take shape in real time."
@@ -382,16 +396,19 @@
       {
         "type": "schedule",
         "items": [
-          "Friday • 6:00-7:00 PM • Event Room",
-          "Saturday • 2:00-3:00 PM • Event Room",
-          "Sunday • 1:30-2:30 PM • Event Room"
+          "Friday, June 11 • 6:00-7:00 PM • Event Room",
+          "Saturday, June 12 • 2:00-3:00 PM • Event Room",
+          "Sunday, June 13 • 1:30-2:30 PM • Event Room"
         ]
       },
       {
         "type": "p",
         "text": "If you cannot find artwork of a favorite character on the exhibitor floor, this is your chance to request something fun and potentially take home a unique piece created right in front of you."
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "charity-auction",
@@ -399,6 +416,10 @@
     "category": "Charity",
     "summary": "A live auction of donated art, collectibles and memorabilia benefiting Extra Life and Children's Miracle Network Hospitals.",
     "content": [
+      {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
       {
         "type": "p",
         "text": "The Sci-Fi Valley Con Charity Auction combines collectible hunting with fundraising. Artists and creators donate artwork, sculptures, memorabilia and other unique items for attendees to bid on live."
@@ -414,123 +435,17 @@
       {
         "type": "schedule",
         "items": [
-          "Saturday, Oct. 17 • 3:30 PM • Event Room"
+          "Saturday, June 12 • 3:30 PM • Event Room"
         ]
       },
       {
         "type": "p",
         "text": "The auction is open to Sci-Fi Valley Con attendees. Bring your preferred payment method, join the bidding and help raise money for a great cause."
       }
-    ]
-  },
-  {
-    "id": "shuttle",
-    "title": "Friday & Saturday Shuttle Service",
-    "category": "Practical",
-    "summary": "Park at the Altoona Curve Baseball Stadium Parking Garage and ride to the Blair County Convention Center. Friday and Saturday only.",
-    "content": [
-      {
-        "type": "note",
-        "text": "Friday & Saturday only. No Sunday shuttle service. All times Eastern."
-      },
-      {
-        "type": "heading",
-        "text": "Shuttle Hours"
-      },
-      {
-        "type": "schedule",
-        "items": [
-          "Friday, October 16, 2026: 2:00-9:00 PM",
-          "Saturday, October 17, 2026: 10:00 AM-8:00 PM"
-        ]
-      },
-      {
-        "type": "heading",
-        "text": "Where to Park & Catch the Shuttle"
-      },
-      {
-        "type": "p",
-        "text": "Altoona Curve Baseball Stadium Parking Garage"
-      },
-      {
-        "type": "p",
-        "text": "1000 Park Ave, Altoona, PA 16602"
-      },
-      {
-        "type": "link",
-        "text": "GET DIRECTIONS TO SHUTTLE PARKING",
-        "url": "https://www.google.com/maps/dir/?api=1&destination=Altoona+Curve+Baseball+Stadium+Parking+Garage%2C+1000+Park+Ave%2C+Altoona%2C+PA+16602"
-      },
-      {
-        "type": "heading",
-        "text": "Plan Your Visit"
-      },
-      {
-        "type": "p",
-        "text": "If convention center parking is full, go directly to the Altoona Curve parking garage and board the shuttle to the Blair County Convention Center entrance. Use the banner below to identify the garage and pickup location."
-      },
-      {
-        "type": "p",
-        "text": "Allow extra time for parking and the ride, especially before a scheduled photo op or panel."
-      },
-      {
-        "type": "p",
-        "text": "Shuttle service sponsored by First Frontier, Blair County, PA."
-      },
-      {
-        "type": "image",
-        "src": "assets/events/shuttle-october-2026.webp",
-        "alt": "Sci-Fi Valley Con shuttle banner showing the Altoona Curve parking garage and pickup location",
-        "width": 1024,
-        "height": 2048,
-        "clickable": false
-      }
-    ]
-  },
-  {
-    "id": "after-party",
-    "title": "Saturday Night After Party",
-    "category": "Activities",
-    "summary": "The official Sci-Fi Valley Con Saturday night after party with bowling, karaoke and a special lane rate at Holiday Bowl.",
-    "content": [
-      {
-        "type": "schedule",
-        "items": [
-          "Saturday, Oct. 17 • 10:00 PM-2:00 AM",
-          "Holiday Bowl • 181 Bowling Lane, Altoona, PA"
-        ]
-      },
-      {
-        "type": "heading",
-        "text": "Bowling & Karaoke"
-      },
-      {
-        "type": "list",
-        "items": [
-          "$20 per lane per hour.",
-          "Up to six people per lane.",
-          "Free shoe rentals.",
-          "Karaoke throughout the after party.",
-          "No registration is necessary."
-        ]
-      },
-      {
-        "type": "p",
-        "text": "The after party is a relaxed way to wrap up Saturday, meet other attendees, bowl with friends and enjoy karaoke after a full day at the convention."
-      }
-    ]
-  },
-  {
-    "id": "guest-panels",
-    "title": "Guest Panels",
-    "category": "Activities",
-    "summary": "Celebrity Q&A panels and reunion discussions are published through the Celebrity Guide and Schedule as times are finalized.",
-    "content": [
-      {
-        "type": "note",
-        "text": "Use the Celebrity Guide and Schedule tabs for the current guest-panel lineup and approved panel times."
-      }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "medieval-combat",
@@ -539,10 +454,14 @@
     "summary": "Dagorhir battle-game demonstrations on the lawn with full-contact foam combat, safety instruction and opportunities for attendees to participate.",
     "content": [
       {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
+      {
         "type": "schedule",
         "items": [
-          "Saturday, Oct. 17 • 1:00-2:00 PM • Outside on the Lawn",
-          "Saturday, Oct. 17 • 4:00-5:00 PM • Outside on the Lawn"
+          "Saturday, June 12 • 1:00-2:00 PM • Outside on the Lawn",
+          "Saturday, June 12 • 4:00-5:00 PM • Outside on the Lawn"
         ]
       },
       {
@@ -553,7 +472,10 @@
         "type": "p",
         "text": "The Gearbox Union helps energize the crowd, and after the demonstration attendees can try foam weapons themselves. Waivers are required, and minors must have parental supervision."
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "retro-gaming",
@@ -963,7 +885,10 @@
           }
         ]
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "tabletop-gaming",
@@ -971,6 +896,10 @@
     "category": "Gaming",
     "summary": "All-weekend tabletop gaming hosted by Snake Eyes Gaming and Sentinels' Keep Gaming Society, with card games, miniatures, board games and special events.",
     "content": [
+      {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
       {
         "type": "p",
         "text": "The Game Room offers casual play, demos and organized tabletop events for experienced players and newcomers. Stop in throughout the weekend to learn something new, bring your own game or jump into an event."
@@ -997,10 +926,10 @@
       {
         "type": "schedule",
         "items": [
-          "Gaming demos & casual play: Friday through Sunday • All day • Game Room",
-          "Magic: The Gathering Casual Commander: Saturday • 11:00 AM-7:00 PM • Free admission",
-          "HeroClix Battle Royale: Saturday • 12:00-3:00 PM",
-          "HeroClix Battle Royale: Sunday • 1:00-4:00 PM"
+          "Gaming demos & casual play: Friday through Sunday, June 13 • All day • Game Room",
+          "Magic: The Gathering Casual Commander: Saturday, June 12 • 11:00 AM-7:00 PM • Free admission",
+          "HeroClix Battle Royale: Saturday, June 12 • 12:00-3:00 PM",
+          "HeroClix Battle Royale: Sunday, June 13 • 1:00-4:00 PM"
         ]
       },
       {
@@ -1027,7 +956,10 @@
         "type": "p",
         "text": "Draft a booster and join a four-player group battle in a 50-minute round. Pods launch on demand, with promos added to the prize pool. Admission is $5 or $15 depending on the booster selected."
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "trivia",
@@ -1036,22 +968,29 @@
     "summary": "Three days of geek trivia spanning sci-fi, fantasy, comics, movies, television, games and more, with trophies and Best Buy gift cards for top players.",
     "content": [
       {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
+      {
         "type": "p",
         "text": "Test your fandom knowledge against other attendees in a trivia tournament covering a wide range of geek culture. Come with friends or compete solo."
       },
       {
         "type": "schedule",
         "items": [
-          "Friday • 3:30-4:25 PM • Panel Room 2",
-          "Saturday • 5:00-6:00 PM • Panel Room 2",
-          "Sunday • 2:30-3:25 PM • Panel Room 2"
+          "Friday, June 11 • 3:30-4:30 PM • Event Room",
+          "Saturday, June 12 • 5:00-6:00 PM • Event Room",
+          "Sunday, June 13 • 2:30-3:30 PM • Event Room"
         ]
       },
       {
         "type": "p",
         "text": "Questions span science fiction, fantasy, comics, movies, television, games and other fandom topics. Top trivia players can take home trophies and Best Buy gift cards."
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   },
   {
     "id": "workshops",
@@ -1059,6 +998,10 @@
     "category": "Workshops",
     "summary": "Hands-on painting, model-building, 3D-printing and foam-smithing activities throughout the convention.",
     "content": [
+      {
+        "type": "note",
+        "text": "June 11–13, 2027. All times Eastern. Activity details are subject to change."
+      },
       {
         "type": "p",
         "text": "Sci-Fi Valley Con workshops give attendees a chance to paint, build, craft and learn hands-on skills with guidance from experienced creators."
@@ -1074,9 +1017,9 @@
       {
         "type": "schedule",
         "items": [
-          "Friday • 2:00-8:00 PM • Paint and Hobby Room",
-          "Saturday • 10:00 AM-7:00 PM • Paint and Hobby Room",
-          "Sunday • 10:00 AM-3:00 PM • Paint and Hobby Room"
+          "Friday, June 11 • 2:00-8:00 PM • Paint and Hobby Room",
+          "Saturday, June 12 • 10:00 AM-7:00 PM • Paint and Hobby Room",
+          "Sunday, June 13 • 10:00 AM-3:00 PM • Paint and Hobby Room"
         ]
       },
       {
@@ -1095,13 +1038,13 @@
         "type": "list",
         "items": [
           "$15 entry fee.",
-          "Participants must register Friday.",
-          "Saturday sessions: 1:00-3:00 PM and 4:00-6:00 PM.",
+          "Participants must register Friday, June 11.",
+          "Saturday, June 12 sessions: 1:00-3:00 PM and 4:00-6:00 PM.",
           "Youth division: age 15 and under.",
           "Adult division: age 16 and up.",
           "Maximum 20 participants per category.",
           "Models and hobby supplies are provided. Personal models or hobby supplies may not be used.",
-          "Winners are announced Sunday at 2:00 PM in the Paint and Hobby Room.",
+          "Winners are announced Sunday, June 13 at 2:00 PM in the Paint and Hobby Room.",
           "1st, 2nd and 3rd place prizes are awarded in each category, based on attendance."
         ]
       },
@@ -1111,8 +1054,11 @@
       },
       {
         "type": "p",
-        "text": "Snowtiger Designs offers live demonstrations and hands-on learning focused on 3D printing and foam-smithing techniques used in cosplay and prop construction. Find them at Table D9 throughout the convention."
+        "text": "Snowtiger Designs offers live demonstrations and hands-on learning focused on 3D printing and foam-smithing techniques used in cosplay and prop construction. Their table location will be announced with the June 2027 floor plan."
       }
-    ]
+    ],
+    "eventId": "sfvc-2027-06",
+    "sourceUrl": "https://scifivalleycon.com/events",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   }
 ]

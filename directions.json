@@ -4,9 +4,19 @@
     "venueAddress": "1 Convention Center Dr, Altoona, PA 16602",
     "venueNotes": "Parking and convention entrance destination",
     "shuttleEnabled": false,
-    "shuttleName": "Shuttle Pickup / Park & Ride",
+    "shuttleName": "",
     "shuttleAddress": "",
     "shuttleNotes": "",
-    "shuttleHours": ""
+    "shuttleHours": "",
+    "bowlingEnabled": false,
+    "bowlingName": "",
+    "bowlingAddress": "",
+    "bowlingNotes": "",
+    "bowlingHours": "",
+    "movieEnabled": false,
+    "movieName": "",
+    "movieAddress": "",
+    "movieNotes": "",
+    "movieHours": ""
   }
 ]

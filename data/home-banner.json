@@ -2,12 +2,13 @@
   {
     "id": "home-guest-banner",
     "enabled": true,
-    "imageUrl": "https://cdn.prod.website-files.com/619e7b191607b3812aafab16/6abd2c8a0371e31ad1d05e0f_Website%20Slider%20Guest%20Banner%2010-2026%20(9-30-26)%20(1).avif",
-    "alt": "Sci-Fi Valley Con October 2026 celebrity guest banner",
+    "imageUrl": "https://app.scifivalleycon.com/assets/events/june-2027-header.avif",
+    "alt": "Sci-Fi Valley Con, the home of nostalgia, June 11–13, 2027",
+    "clickable": false,
     "linkTarget": "guests",
-    "autoUpdate": true,
+    "autoUpdate": false,
     "sourceUrl": "https://scifivalleycon.com/",
-    "sourceMode": "website-auto",
-    "sourceUpdatedAt": "2026-09-13T14:09:18.427Z"
+    "sourceMode": "manual",
+    "sourceUpdatedAt": "2026-11-22T00:00:00Z"
   }
 ]

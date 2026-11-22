@@ -7,7 +7,7 @@ export default {
 
     try{
       if(url.pathname===DIRECTORY_PATH&&request.method==="GET"){
-        return await proxyVendorDirectory(env);
+        return await proxyVendorDirectory(env,url.searchParams.get("eventId")||"");
       }
 
       if(url.pathname.startsWith(PHOTO_PREFIX)&&request.method==="GET"){
@@ -27,10 +27,11 @@ export default {
   }
 };
 
-async function proxyVendorDirectory(env){
+async function proxyVendorDirectory(env,eventId){
+  if(eventId&&!/^[a-zA-Z0-9_-]{1,80}$/.test(eventId))return json({error:"Invalid event."},400);
   if(!env.VENDOR_API)return json({error:"Vendor service binding is not configured."},503);
 
-  const response=await env.VENDOR_API.fetch(new Request("https://vendor.internal/api/public/directory",{
+  const response=await env.VENDOR_API.fetch(new Request(`https://vendor.internal/api/public/directory${eventId?`?eventId=${encodeURIComponent(eventId)}`:""}`,{
     method:"GET",
     headers:{Accept:"application/json"}
   }));
@@ -43,7 +44,10 @@ async function proxyVendorDirectory(env){
   const rows=await response.json();
   if(!Array.isArray(rows))return json({error:"Vendor directory returned an invalid response."},502);
 
-  return json(rows.map(rewriteVendorPhotoUrls));
+  const result=json(rows.map(rewriteVendorPhotoUrls));
+  const currentEvent=response.headers.get("X-SFVC-Event-Id");
+  if(currentEvent)result.headers.set("X-SFVC-Event-Id",currentEvent);
+  return result;
 }
 
 async function proxyVendorPhoto(env,photoId){
