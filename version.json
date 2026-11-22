@@ -1,5 +1,7 @@
 {
-  "version": "program-v4.83-app-layout-custom-button-colors",
-  "generatedAt": "2026-08-19T16:24:00Z",
-  "notes": "Adds Admin-controlled background, text, accent/icon, and border colors to Home and Event Guide layout objects while preserving V4.82 Event Guide ordering and visibility controls."
+  "version": "event-sfvc-2027-06-1795372707650",
+  "updatedAt": "2026-11-22T18:38:27.650Z",
+  "archiveOperation": "fdb897ac-ab4f-4b31-8ab6-367be1600c76",
+  "eventId": "sfvc-2027-06",
+  "conventionId": "sfvc-2027-06"
 }

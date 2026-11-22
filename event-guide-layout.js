@@ -275,6 +275,7 @@ async function refresh(force=false){
     if(!response.ok)return;
     const raw=await response.json();
     const settings=Array.isArray(raw)?raw[0]:raw;
+    if(response.headers.get("X-SFVC-Offline")&&settings?.eventId!==window.SFVCProgramEventContext?.conventionId)return;
     const layout=settings?.eventGuideLayout||{};
     const normalized={
       mainItems:normalize(layout.mainItems,MAIN_DEFAULTS,"main"),

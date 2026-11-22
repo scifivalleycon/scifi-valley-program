@@ -1,23 +1,47 @@
 const DEFAULT_SETTINGS = {
-  eventName: "Sci-Fi Valley Con",
-  editionLabel: "FALL 2026",
-  startDate: "2026-10-16",
-  endDate: "2026-10-18",
-  venue: "Blair County Convention Center",
-  city: "Altoona",
-  state: "PA",
-  photoShop: "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops",
-  pushApiUrl: "https://notify.scifivalleycon.com"
+  "eventName": "Sci-Fi Valley Con",
+  "editionLabel": "JUNE 2027",
+  "startDate": "2027-06-11",
+  "endDate": "2027-06-13",
+  "venue": "Blair County Convention Center",
+  "city": "Altoona",
+  "state": "PA",
+  "photoShop": "",
+  "pushApiUrl": "https://notify.scifivalleycon.com",
+  "eventId": "sfvc-2027-06",
+  "conventionId": "sfvc-2027-06",
+  "timezone": "America/New_York",
+  "photoOpsEnabled": false
 };
+
+// My Con choices belong to one convention. Registration, notification opt-ins,
+// accessibility settings and the prior convention's stored choices are retained.
+let activeConventionId=DEFAULT_SETTINGS.conventionId;
+function conventionIdFor(settings){
+  return String(settings?.conventionId||settings?.eventId||(settings?.startDate?`sfvc-${settings.startDate.slice(0,7)}`:DEFAULT_SETTINGS.conventionId));
+}
+function eventStorageKey(key){return `${activeConventionId}:${key}`;}
+function readEventStorage(key,fallback=null){
+  try{
+    const value=localStorage.getItem(eventStorageKey(key));
+    if(value!==null)return value;
+    // Legacy October choices remain available when that archived event is restored.
+    return activeConventionId==="sfvc-2026-10"?localStorage.getItem(key)??fallback:fallback;
+  }catch{return fallback;}
+}
+function writeEventStorage(key,value){try{localStorage.setItem(eventStorageKey(key),value)}catch{}}
+function readEventJson(key,fallback){try{return JSON.parse(readEventStorage(key,JSON.stringify(fallback)))}catch{return fallback;}}
 
 const state = {
   guests: [], schedule: [], events: [], vendors: [], sponsors: [], featuredSponsor: {}, nextEventAd: {}, socialLinks: [], tshirts: [], faq: [], hotels: [], homeBanner: {}, mapSettings: {}, mapLayout: {}, directions: {}, settings: {...DEFAULT_SETTINGS}, celebrityInfo: {}, celebrityPricing: [], photoOps: [], autographs: [], groupPhotoOps: [], panels: [], recentAlerts: [], mapQuery:"", mapSelectedVendorId:"", mapSelectedCodes: new Set(), celebrityTab:"prices", celebrityPhotoDay:"Friday", celebrityPanelDay:"Friday",
   guestFilter: "All", dayFilter: "Friday", eventFilter: "All", faqFilter: "All", scheduleHiddenCategories: new Set(JSON.parse(localStorage.getItem("sfvc-schedule-hidden-categories") || "[]")),
-  favorites: new Set(JSON.parse(localStorage.getItem("sfvc-favorites") || "[]")), mySchedule: new Set(JSON.parse(localStorage.getItem("sfvc-my-schedule") || "[]")), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
+  favorites: new Set(readEventJson("sfvc-favorites",[])), mySchedule: new Set(readEventJson("sfvc-my-schedule",[])), reminderMinutes: Number(localStorage.getItem("sfvc-reminder-minutes") ?? 15), reminderTimers: new Map()
 };
 
+window.SFVCProgramEventContext=Object.freeze({get conventionId(){return activeConventionId},get events(){return state.events}});
+
 const MY_SCHEDULE_SNAPSHOT_KEY="sfvc-my-schedule-snapshots-v2";
-const APP_BUILD_VERSION="4.118";
+const APP_BUILD_VERSION="4.119";
 let scheduleDefaultDateKey="";
 let savedScheduleLifecycleTimer=null;
 let savedScheduleLifecycleSignature="";
@@ -65,14 +89,14 @@ function programVersionSignatureFor(info){
 
 function loadSavedScheduleSnapshots(){
   try{
-    const value=JSON.parse(localStorage.getItem(MY_SCHEDULE_SNAPSHOT_KEY)||"{}");
+    const value=JSON.parse(readEventStorage(MY_SCHEDULE_SNAPSHOT_KEY)||"{}");
     return value&&typeof value==="object"?value:{};
   }catch{return {}}
 }
 let savedScheduleSnapshots=loadSavedScheduleSnapshots();
 
 function saveScheduleSnapshots(){
-  localStorage.setItem(MY_SCHEDULE_SNAPSHOT_KEY,JSON.stringify(savedScheduleSnapshots));
+  writeEventStorage(MY_SCHEDULE_SNAPSHOT_KEY,JSON.stringify(savedScheduleSnapshots));
 }
 
 function stableScheduleHash(value){
@@ -160,7 +184,7 @@ function migrateLegacyScheduleIds(schedule){
   }
 
   if(changed){
-    localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+    writeEventStorage("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
     saveScheduleSnapshots();
   }
 }
@@ -169,17 +193,37 @@ function migrateLegacyScheduleIds(schedule){
 const MY_CON_GUEST_SNAPSHOTS_KEY="sfvc-my-con-guests-v1";
 const MY_CON_CHANGES_KEY="sfvc-my-con-changes-v1";
 function readMyConObject(key){
-  try{const value=JSON.parse(localStorage.getItem(key)||"{}");return value&&typeof value==="object"&&!Array.isArray(value)?value:{}}catch{return {}}
+  try{const value=JSON.parse(readEventStorage(key)||"{}");return value&&typeof value==="object"&&!Array.isArray(value)?value:{}}catch{return {}}
 }
 let savedGuestSnapshots=readMyConObject(MY_CON_GUEST_SNAPSHOTS_KEY);
 let myConChanges=readMyConObject(MY_CON_CHANGES_KEY);
+function switchActiveConvention(settings){
+  const next=conventionIdFor(settings);
+  if(next===activeConventionId)return;
+  state.reminderTimers.forEach(timer=>clearTimeout(timer));
+  state.reminderTimers.clear();
+  activeConventionId=next;
+  state.favorites=new Set(readEventJson("sfvc-favorites",[]));
+  state.mySchedule=new Set(readEventJson("sfvc-my-schedule",[]));
+  savedScheduleSnapshots=loadSavedScheduleSnapshots();
+  savedGuestSnapshots=readMyConObject(MY_CON_GUEST_SNAPSHOTS_KEY);
+  myConChanges=readMyConObject(MY_CON_CHANGES_KEY);
+  scheduleDefaultDateKey="";
+  savedScheduleLifecycleSignature="";
+  state.vendors=[];
+  state.mapSelectedVendorId="";
+  state.mapSelectedCodes.clear();
+  mapOpenLocationCode="";
+  document.getElementById("mapLocationModal")?.close();
+  document.getElementById("guestModal")?.close();
+}
 let myConCatalogReady=false;
 let myConDataLoaded=false;
 function persistMyCon(){
-  localStorage.setItem("sfvc-favorites",JSON.stringify([...state.favorites]));
-  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
-  localStorage.setItem(MY_CON_GUEST_SNAPSHOTS_KEY,JSON.stringify(savedGuestSnapshots));
-  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  writeEventStorage("sfvc-favorites",JSON.stringify([...state.favorites]));
+  writeEventStorage("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  writeEventStorage(MY_CON_GUEST_SNAPSHOTS_KEY,JSON.stringify(savedGuestSnapshots));
+  writeEventStorage(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
   saveScheduleSnapshots();
 }
 function myConGuestSnapshot(g){
@@ -187,10 +231,10 @@ function myConGuestSnapshot(g){
   const normalize=value=>String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
   const name=normalize(g.name);
   const appearances=celebrityPublished()?[...state.panels,...state.photoOps,...state.autographs,...state.groupPhotoOps].filter(row=>name&&normalize([row.guestName,row.title,row.participants,row.guests].filter(Boolean).join(" ")).includes(name)):[];
-  return {appearances:JSON.stringify(appearances),eventDates:JSON.stringify([state.settings.startDate,state.settings.endDate]),id:g.id,name:g.name,group:g.group||"",character:g.character||"",knownFor:g.knownFor||"",bio:g.bio||"",attendanceNotice:guestAttendanceNoticeText(g),photo:g.photo||"",imdb:g.imdb||"",instagram:g.instagram||"",photoOp:prices?.proPhoto??g.photoOp??"",prices:prices?JSON.stringify(prices):""};
+  return {conventionId:activeConventionId,appearances:JSON.stringify(appearances),eventDates:JSON.stringify([state.settings.startDate,state.settings.endDate]),id:g.id,name:g.name,group:g.group||"",character:g.character||"",knownFor:g.knownFor||"",bio:g.bio||"",attendanceNotice:guestAttendanceNoticeText(g),photo:g.photo||"",imdb:g.imdb||"",instagram:g.instagram||"",photoOp:prices?.proPhoto??g.photoOp??"",prices:prices?JSON.stringify(prices):""};
 }
 function myConScheduleSnapshot(e){
-  return {id:e.id,day:e.day||"",time:e.time||"",endTime:e.endTime||"",title:e.title||"",location:e.location||"",category:e.category||"",filterCategory:e.filterCategory||"",description:e.description||"",participants:e.participants||"",eventAt:eventDateTime(e)?.getTime()||null,endAt:SFVCScheduleTime.timing(e,state.settings,state.events).endAt,endBasis:SFVCScheduleTime.timing(e,state.settings,state.events).basis,remindable:e.remindable!==false};
+  return {conventionId:activeConventionId,id:e.id,day:e.day||"",time:e.time||"",endTime:e.endTime||"",title:e.title||"",location:e.location||"",category:e.category||"",filterCategory:e.filterCategory||"",description:e.description||"",participants:e.participants||"",eventAt:eventDateTime(e)?.getTime()||null,endAt:SFVCScheduleTime.timing(e,state.settings,state.events).endAt,endBasis:SFVCScheduleTime.timing(e,state.settings,state.events).basis,remindable:e.remindable!==false};
 }
 function myConChangedFields(before,after){
   // Older snapshots establish a baseline for fields that were not stored yet.
@@ -204,7 +248,7 @@ function myConChangeHtml(kind,id){
 function dismissMyConChange(key){
   if(!Object.hasOwn(myConChanges,key))return;
   delete myConChanges[key];
-  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  writeEventStorage(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
   // Keep saved items and their latest snapshots: only dismiss this change.
   document.querySelectorAll("[data-dismiss-mycon-change]").forEach(button=>{
     if(button.dataset.dismissMyconChange===key)button.closest(".mycon-change")?.remove();
@@ -249,7 +293,7 @@ function reconcileMyCon(){
 function myConGuestPayload(){
   return [...state.favorites].map(id=>{
     const guest=state.guests.find(g=>g.id===id)||savedGuestSnapshots[id];
-    return guest?{eventId:`guest:${id}`,title:guest.name,day:"",time:"",location:guest.group||"",category:"Celebrity Guest",remindable:false,reminderMinutes:0,eventAt:null,notifyAt:null,savedAt:""}:null;
+    return guest?{conventionId:activeConventionId,eventId:`guest:${id}`,title:guest.name,day:"",time:"",location:guest.group||"",category:"Celebrity Guest",remindable:false,reminderMinutes:0,eventAt:null,notifyAt:null,savedAt:""}:null;
   }).filter(Boolean);
 }
 
@@ -363,6 +407,7 @@ function deviceSchedulePayload(){
 
     return {
       eventId:String(id),
+      conventionId:activeConventionId,
       title:String(event.title||""),
       day:String(event.day||""),
       time:String(event.time||""),
@@ -401,6 +446,7 @@ async function syncAnonymousDevice({force=false}={}){
           reminderMinutes:Number(state.reminderMinutes||0),
           favorites:[...deviceSchedulePayload(),...myConGuestPayload()],
           myConVersion:1,
+          conventionId:activeConventionId,
           appVersion:APP_BUILD_VERSION,
           timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
         })
@@ -425,7 +471,11 @@ function scheduleAnonymousDeviceSync(delay=DEVICE_SYNC_DEBOUNCE_MS){
   deviceSyncTimer=setTimeout(()=>syncAnonymousDevice().catch(()=>{}),delay);
 }
 
-const PHOTO_SHOP = "https://checkout.conventions.leapevent.tech/eh/2026_October_Sci_Fi_Valley_Con_Photo_Ops";
+function photoShopUrl(){
+  if(state.settings.photoOpsEnabled===false)return "";
+  const value=String(state.settings.photoShop||"").trim();
+  try{return new URL(value).protocol==="https:"?value:"";}catch{return "";}
+}
 const screens = [...document.querySelectorAll(".screen")];
 const navButtons = [...document.querySelectorAll(".nav-button")];
 
@@ -1814,9 +1864,9 @@ function applyGuestMapAssignments(rows,guests=state.guests){
   }
   return directory;
 }
-async function fetchLiveVendorDirectory(){
+async function fetchLiveVendorDirectory(conventionId=activeConventionId){
   const stamp=`v=${Date.now()}`;
-  const response=await fetch(`${VENDOR_DIRECTORY_URL}?${stamp}`,{
+  const response=await fetch(`${VENDOR_DIRECTORY_URL}?${stamp}&eventId=${encodeURIComponent(conventionId)}`,{
     cache:"no-store",
     credentials:"same-origin",
     headers:{Accept:"application/json"}
@@ -1827,14 +1877,17 @@ async function fetchLiveVendorDirectory(){
   }
   const rows=await response.json();
   if(!Array.isArray(rows))throw new Error("Live vendor directory returned an invalid response.");
-  return rows;
+  const directoryEvent=response.headers.get("X-SFVC-Event-Id");
+  if(directoryEvent&&directoryEvent!==conventionId)return [];
+  return rows.filter(row=>row.eventId===conventionId);
 }
 
 async function refreshLiveVendorDirectory(reason="automatic"){
   if(document.visibilityState==="hidden")return false;
   if(vendorDirectoryRefreshPromise)return vendorDirectoryRefreshPromise;
   vendorDirectoryRefreshPromise=(async()=>{
-    const rows=applyGuestMapAssignments(await fetchLiveVendorDirectory());
+    const fetched=await fetchLiveVendorDirectory();
+    const rows=state.mapSettings.directoryPublished===true?applyGuestMapAssignments(fetched):[];
     const signature=liveVendorDirectorySignature(rows);
     if(signature===vendorDirectoryLastSignature)return false;
     vendorDirectoryLastSignature=signature;
@@ -1875,7 +1928,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
 
   appDataRefreshPromise=(async()=>{
     const stamp=`v=${Date.now()}`;
-    const criticalNames=["guests","schedule","settings","celebrity-info","celebrity-pricing","photo-ops","autograph-schedule","group-photo-ops","panels"];
+    const criticalNames=["guests","schedule","settings","celebrity-info","celebrity-pricing","photo-ops","autograph-schedule","group-photo-ops","panels","events","map-layout","map-settings","home-banner"];
     const readStatus=new Map();
     const safeJson=async(url,fallback=[])=>{
       try{
@@ -1898,7 +1951,7 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     const resolvedVersionInfo=versionInfo||await safeObjectJson("data/version.json",{});
 
     const [guests,schedule,events,vendors,sponsors,featuredSponsorData,nextEventAdData,socialLinks,tshirts,faq,hotels,homeBannerData,mapLayoutData,mapSettingsData,directionsData,settingsData,celebrityInfo,celebrityPricing,photoOps,autographs,groupPhotoOps,panels]=await Promise.all([
-      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),fetchLiveVendorDirectory().catch(err=>{console.warn("SFVC live vendor directory initial load failed",err);return state.vendors.length?state.vendors:safeJson("data/vendors.json")}),
+      safeJson("data/guests.json"),safeJson("data/schedule.json"),safeJson("data/events.json"),fetchLiveVendorDirectory().catch(err=>{console.warn("SFVC live vendor directory initial load failed",err);return []}),
       safeJson("data/sponsors.json"),safeJson("data/featured-sponsor.json"),safeJson("data/next-event-ad.json"),safeJson("data/social-links.json"),safeJson("data/tshirts.json"),safeJson("data/faq.json"),safeJson("data/hotels.json"),safeJson("data/home-banner.json"),
       safeJson("data/map-layout.json"),safeJson("data/map-settings.json"),safeJson("data/directions.json"),safeJson("data/settings.json"),safeJson("data/celebrity-info.json"),
       safeJson("data/celebrity-pricing.json"),safeJson("data/photo-ops.json"),safeJson("data/autograph-schedule.json"),
@@ -1906,20 +1959,25 @@ async function loadData({silent=false,force=false,versionInfo=null}={}){
     ]);
 
     const endVersion=await safeObjectJson("data/version.json",{});
+    const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:DEFAULT_SETTINGS;
+    const incomingConventionId=conventionIdFor(savedSettings);
     const versionStable=Boolean(programVersionSignatureFor(resolvedVersionInfo))&&programVersionSignatureFor(resolvedVersionInfo)===programVersionSignatureFor(endVersion);
+    // An older service worker may briefly serve its October cache during an
+    // installed-app upgrade. Never promote a different offline event into June.
+    if(readStatus.get("data/settings.json")!==true&&incomingConventionId!==activeConventionId){renderAll();return;}
     myConCatalogReady=versionStable&&criticalNames.every(name=>readStatus.get(`data/${name}.json`)===true);
     if(!myConCatalogReady&&myConDataLoaded)return; // Keep the last complete program during partial/offline reads.
-
+    const hasOfflineReads=criticalNames.some(name=>readStatus.get(`data/${name}.json`)!==true);
+    if(hasOfflineReads&&(!versionStable||String(resolvedVersionInfo.conventionId||resolvedVersionInfo.eventId||"")!==incomingConventionId)){renderAll();return;}
+    state.settings={...DEFAULT_SETTINGS,...savedSettings,eventId:incomingConventionId,conventionId:incomingConventionId};
+    switchActiveConvention(state.settings);
     const rawSchedule=Array.isArray(schedule)?schedule:[];
     if(myConCatalogReady)migrateLegacyScheduleIds(rawSchedule);
     const normalizedSchedule=rawSchedule.map(e=>({...e,id:stableBaseScheduleId(e)}));
-
-    const savedSettings=Array.isArray(settingsData)&&settingsData[0]?settingsData[0]:{};
-    state.settings={...DEFAULT_SETTINGS,...savedSettings};
     state.guests=Array.isArray(guests)?guests:[];
     state.schedule=normalizedSchedule;
     state.events=Array.isArray(events)?events:[];
-    state.vendors=applyGuestMapAssignments(Array.isArray(vendors)?vendors:[]);
+    state.vendors=(mapSettingsData?.[0]?.directoryPublished===true)?applyGuestMapAssignments((Array.isArray(vendors)?vendors:[]).filter(row=>row.eventId===activeConventionId)):[];
     vendorDirectoryLastSignature=liveVendorDirectorySignature(state.vendors);
     state.sponsors=Array.isArray(sponsors)?sponsors:[];
     state.nextEventAd=Array.isArray(nextEventAdData)&&nextEventAdData[0]?nextEventAdData[0]:{};
@@ -2193,9 +2251,13 @@ function applyEventSettings(){
 
   renderEventCountdown();
 
-  if(state.settings.photoShop){
-    document.querySelectorAll("[data-photo-shop]").forEach(a=>a.href=state.settings.photoShop);
-  }
+  const photoUrl=photoShopUrl();
+  document.querySelectorAll("[data-photo-shop]").forEach(link=>{
+    link.hidden=!photoUrl;
+    link.classList.toggle("photo-sales-hidden",!photoUrl);
+    if(photoUrl)link.href=photoUrl;
+    else link.removeAttribute("href");
+  });
 }
 
 function renderGuestFilters(){
@@ -2313,7 +2375,7 @@ function renderGuests(){
         ${guestPricesHtml(g,true)}
         <button class="guest-open" data-open-guest="${g.id}">VIEW GUEST DETAILS ›</button>
       </div>
-    </article>`).join("") || `<div class="paper-panel muted-empty">No guests match that search.</div>`;
+    </article>`).join("") || `<div class="paper-panel muted-empty">${state.guests.length?"No guests match that search.":"Celebrity guests for this event will be announced soon."}</div>`;
   document.querySelectorAll("[data-favorite]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();toggleFavorite(b.dataset.favorite)}));
   document.querySelectorAll("[data-open-guest]").forEach(b=>b.addEventListener("click",()=>openGuest(b.dataset.openGuest)));
   if(programTextScale>1){
@@ -2361,10 +2423,10 @@ function openGuest(id){
   // Guest records may still contain legacy photoShop values from older builds,
   // but those must not pin a celebrity to a previous event's checkout page.
   const currentPhotoPrice=guestPriceRecord(g)?.proPhoto??g.photoOp;
-  const livePhotoShop=String(state.settings.photoShop||PHOTO_SHOP||"").trim();
+  const livePhotoShop=photoShopUrl();
   const photoAction=livePhotoShop
     ?`<a class="full-action" href="${escapeAppHtml(livePhotoShop)}" target="_blank" rel="noopener">ORDER ${g.name.toUpperCase()} PHOTO OP${currentPhotoPrice?` • ${escapeAppHtml(currentPhotoPrice)}`:""} ↗</a>`
-    :`<span class="full-action photo-shop-unavailable" aria-disabled="true">PHOTO OP STORE LINK COMING SOON</span>`;
+    :"";
   document.getElementById("guestModalContent").innerHTML=`
     <div class="modal-inner">
       <div class="modal-hero">
@@ -2895,7 +2957,7 @@ function renderSchedule(){
     )
   );
   document.getElementById("scheduleList").innerHTML=items.map(scheduleCardHtml).join("")||
-    `<div class="paper-panel muted-empty">No schedule items match the selected categories.</div>`;
+    `<div class="paper-panel muted-empty">${showScheduleItems().length?"No schedule items match the selected categories.":"The schedule for this event will be announced soon. Check the Event Guide for activity information."}</div>`;
   bindScheduleSaveButtons();
 }
 
@@ -2914,18 +2976,18 @@ function toggleScheduleItem(id){
     const event=reminderScheduleItems().find(e=>e.id===id);
     if(event)snapshotScheduleEvent(event);
   }
-  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  writeEventStorage("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
   persistMyCon();
   renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();scheduleAnonymousDeviceSync();
   if(adding)promptMyConSetup().catch(console.warn);
 }
 function removeScheduleItem(id){
   delete myConChanges[`event:${id}`];
-  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  writeEventStorage(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
   state.mySchedule.delete(id);
   delete savedScheduleSnapshots[id];
   saveScheduleSnapshots();
-  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  writeEventStorage("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
   renderSchedule();renderCelebrityGuide();renderMySchedule();scheduleAllReminders();scheduleAnonymousDeviceSync();
 }
 function savedScheduleView(){
@@ -2956,8 +3018,8 @@ function expireSavedScheduleItems(now=Date.now()){
   }
   // Only personal saved-event state is removed. Guest favorites and the public
   // schedule, vendor profiles, photos, and reminder preference are untouched.
-  localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
-  localStorage.setItem(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
+  writeEventStorage("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+  writeEventStorage(MY_CON_CHANGES_KEY,JSON.stringify(myConChanges));
   saveScheduleSnapshots();
   return expired.length;
 }
@@ -3054,6 +3116,7 @@ function buildServerReminderPayload(){
       return {
         key:`${e.id}:${state.reminderMinutes}`,
         eventId:e.id,
+        conventionId:activeConventionId,
         title:`${e.title} starts soon`,
         body:`${e.time} • ${e.location}`,
         url:"/?screen=notifications",
@@ -3184,7 +3247,7 @@ async function refreshAnonymousDeviceStatus(){
     const response=await fetch(`${pushApiBase()}/v1/device/status`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({deviceId:getAnonymousDeviceId()})
+      body:JSON.stringify({deviceId:getAnonymousDeviceId(),conventionId:activeConventionId})
     });
 
     const result=await response.json().catch(()=>({}));
@@ -3220,7 +3283,7 @@ async function refreshRemoteReminderStatus(){
     const response=await fetch(`${pushApiBase()}/v1/reminders/status`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({endpoint:subscription.endpoint,deviceId:getAnonymousDeviceId()})
+      body:JSON.stringify({endpoint:subscription.endpoint,deviceId:getAnonymousDeviceId(),conventionId:activeConventionId})
     });
     if(!response.ok)return;
 
@@ -3277,7 +3340,7 @@ async function scheduleReminderDeliveryTest(){
     const response=await fetch(`${pushApiBase()}/v1/reminders/test`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({endpoint:subscription.endpoint,delaySeconds:60})
+      body:JSON.stringify({endpoint:subscription.endpoint,delaySeconds:60,conventionId:activeConventionId})
     });
 
     const result=await response.json().catch(()=>({}));
@@ -3747,6 +3810,7 @@ async function sendAppRegistrationToServer(profile){
       email:profile.email,
       phone:profile.phone,
       appVersion:APP_BUILD_VERSION,
+      conventionId:activeConventionId,
       timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||""
     })
   });
@@ -3757,14 +3821,20 @@ async function sendAppRegistrationToServer(profile){
 
 function applyRecoveredRegistrationState(result){
   if(!result||typeof result!=="object")return 0;
-  const restored=Array.isArray(result.restoredSchedule)?result.restoredSchedule:[];
+  const restored=(!result.conventionId||result.conventionId===activeConventionId)&&Array.isArray(result.restoredSchedule)?result.restoredSchedule:[];
   let changed=0;
   restored.forEach(item=>{
     const id=String(item?.eventId||item?.id||"").trim();
     if(!id)return;
-    if(myConCatalogReady){
-      const exists=id.startsWith("guest:")?state.guests.some(g=>g.id===id.slice(6)):reminderScheduleItems().some(e=>e.id===id);
-      if(!exists)return;
+    if(item.conventionId&&item.conventionId!==activeConventionId)return;
+    if(!item.conventionId&&result.conventionId!==activeConventionId&&activeConventionId!=="sfvc-2026-10")return;
+    // Only restore choices in the currently loaded event catalog. A server may
+    // still hold legacy October choices for an account on its first June visit.
+    const exists=id.startsWith("guest:")?state.guests.some(g=>g.id===id.slice(6)):reminderScheduleItems().some(e=>e.id===id);
+    if(!exists)return;
+    if(!id.startsWith("guest:")&&item.eventAt){
+      const expected=eventDateTime(reminderScheduleItems().find(e=>e.id===id))?.getTime();
+      if(Number.isFinite(expected)&&Math.abs(Number(item.eventAt)-expected)>86400000)return;
     }
     if(id.startsWith("guest:")){
       const guestId=id.slice(6);if(!state.favorites.has(guestId))changed++;state.favorites.add(guestId);
@@ -3781,7 +3851,7 @@ function applyRecoveredRegistrationState(result){
     };
   });
   if(restored.length){
-    localStorage.setItem("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
+    writeEventStorage("sfvc-my-schedule",JSON.stringify([...state.mySchedule]));
     saveScheduleSnapshots();
   }
   const reminder=Number(result.reminderMinutes);
@@ -3862,7 +3932,7 @@ async function removeAppRegistration(){
       const response=await fetch(`${base}/v1/profile/remove`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({deviceId:getAnonymousDeviceId()})
+        body:JSON.stringify({deviceId:getAnonymousDeviceId(),conventionId:activeConventionId})
       });
       const result=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(result.error||`Registration service returned ${response.status}.`);
@@ -3924,7 +3994,7 @@ async function unregisterPushSubscription(){
     fetch(`${base}/v1/unsubscribe`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({endpoint:subscription.endpoint,deviceId:getAnonymousDeviceId()})
+      body:JSON.stringify({endpoint:subscription.endpoint,deviceId:getAnonymousDeviceId(),conventionId:activeConventionId})
     }).catch(()=>{});
     await subscription.unsubscribe().catch(()=>false);
   }
@@ -4420,7 +4490,7 @@ function renderHotels(){
 const DEFAULT_DIRECTIONS={
   venueName:"Blair County Convention Center",venueAddress:"1 Convention Center Dr, Altoona, PA 16602",venueNotes:"Parking and convention entrance destination",
   shuttleEnabled:false,shuttleName:"Shuttle Pickup",shuttleAddress:"",shuttleNotes:"",shuttleHours:"",
-  bowlingEnabled:true,bowlingName:"Holiday Bowl Altoona",bowlingAddress:"181 Bowling Lane, Altoona, PA 16601",bowlingNotes:"Official after-party / bowling destination when scheduled.",bowlingHours:"",
+  bowlingEnabled:false,bowlingName:"Holiday Bowl Altoona",bowlingAddress:"181 Bowling Lane, Altoona, PA 16601",bowlingNotes:"Official after-party / bowling destination when scheduled.",bowlingHours:"",
   movieEnabled:false,movieName:"AMC Altoona 12",movieAddress:"234 Convention Center Drive, Duncansville, PA 16635",movieNotes:"Movie Night / screening destination when scheduled.",movieHours:""
 };
 let selectedDirectionsDestination="venue";
@@ -5438,7 +5508,7 @@ function renderMapScreen({force=false}={}){
   const content=document.getElementById('mapPublishedContent'),draft=document.getElementById('mapDraftNotice'),subtitle=document.getElementById('mapSubtitle'),draftNote=document.getElementById('mapDraftNote');
   const mapActive=document.getElementById('map')?.classList.contains('active')||mapPreviewMode;
   if(!mapActive)return;
-  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible)return;
+  if(subtitle)subtitle.textContent=state.mapSettings.subtitle||'Interactive convention floor plan.';if(draftNote)draftNote.textContent=state.mapSettings.draftNote||'This map is still being prepared.';const visible=mapVisible();content?.classList.toggle('hidden',!visible);draft?.classList.toggle('hidden',state.mapSettings.published===true);if(!visible){document.getElementById('mapSvgHost')?.replaceChildren();document.getElementById('mapDirectoryList')?.replaceChildren();return;}
   const signature=currentMapRenderSignature(),hasMap=Boolean(document.querySelector('#mapSvgHost svg'));
   if(!force&&hasMap&&signature===mapLastRenderSignature){renderMapDirectory();applyMapSelection();return}
   renderMapLegend();renderFloorPlanSvg();renderMapDirectory();applyMapSelection();mapLastRenderSignature=signature;
@@ -5697,8 +5767,14 @@ function renderHomeGuestBanner(){
   const src=String(cfg.imageUrl||"").trim();
   if(src && image.src!==src) image.src=src;
 
-  image.alt=String(cfg.alt||"Sci-Fi Valley Con celebrity guest banner");
-  button.dataset.go=String(cfg.linkTarget||"guests");
+  image.alt=String(cfg.alt||"Sci-Fi Valley Con event banner");
+  const clickable=cfg.clickable!==false&&state.guests.length>0;
+  button.disabled=!clickable;
+  button.classList.toggle("static-event-banner",!clickable);
+  button.querySelector(".home-guest-banner-cta")?.classList.toggle("hidden",!clickable);
+  button.setAttribute("aria-label",clickable?"View celebrity guests":image.alt);
+  if(clickable)button.dataset.go=String(cfg.linkTarget||"guests");
+  else delete button.dataset.go;
 }
 
 
